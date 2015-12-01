@@ -1,0 +1,31 @@
+{
+  "name": "kuwa",
+  "version": "0.0.1",
+  "description": "Graphic User Interface for NPM tasks for frontend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/q-nick/kuwa.git"
+  },
+  "keywords": [
+    "gulp",
+    "gui",
+    "view",
+    "client",
+    "task",
+    "runner"
+  ],
+  "author": "Paweł Stefański",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/q-nick/kuwa/issues"
+  },
+  "homepage": "https://github.com/q-nick/kuwa#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  }
+}
