@@ -1,0 +1,7 @@
+
+        "angular": "^1.4.8",
+        "angular-animate": "^1.4.8",
+        "bootstrap": "^3.3.6",
+      "moment": "^2.10.6",
+      "red": "0.0.0",
+      "spinkit": "^1.2.5"

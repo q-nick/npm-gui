@@ -4,7 +4,9 @@
   "description": "Graphic User Interface for NPM tasks for frontend.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js"
+    "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js",
+    "start": "node kuwa.js",
+    "startmebyrun": "git"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,12 @@
     "mocha": "^2.3.4"
   },
   "dependencies": {
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "angular": "^1.4.8",
+    "angular-animate": "^1.4.8",
+    "bootstrap": "^3.3.6",
+    "moment": "^2.10.6",
+    "red": "0.0.0",
+    "spinkit": "^1.2.5"
   }
 }
