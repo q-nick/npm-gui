@@ -1,6 +1,6 @@
 {
   "name": "kuwa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Graphic User Interface for NPM tasks for frontend.",
   "main": "index.js",
   "scripts": {
