@@ -1,0 +1,33 @@
+<button class="btn btn-primary"
+        ng-click="modules.loadModules()"
+        >Refresh
+</button>
+<button class="btn btn-info"
+        ng-click="tasks.loadTasks()"
+        >Search
+</button>
+<br/><br/>
+<table class="table" ng-show="!modules.list.loading && !modules.list.error">
+    <tr>
+        <th>Name</th>
+        <th>Version</th>
+        <th>Action</th>
+    </tr>
+
+    <tr>
+        <td><input type="text" ng-model="modules.newModuleName" class="form-control input-sm"/></td>
+        <td><input type="text" ng-model="modules.newModuleVersion" class="form-control input-sm" disabled="disabled"/>
+        </td>
+        <td>
+            <button class="btn btn-success btn-sm" ng-click="modules.addModule()">Add</button>
+        </td>
+    </tr>
+
+    <tr ng-repeat="module in modules.list.data">
+        <td>{{module.name}}</td>
+        <td><input type="text" ng-model="module.version" class="form-control input-sm" disabled="disabled"/></td>
+        <td>
+            <button class="btn btn-danger btn-sm" ng-click="modules.removeModule(module)">Remove</button>
+        </td>
+    </tr>
+</table>

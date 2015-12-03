@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js",
-    "start": "node kuwa.js",
+    "browserify:js": "./node_modules/browserify/bin/cmd.js ./public/app/vendor.js -o ./public/bundle.js",
+    "start": "npm run browserify:js && node kuwa.js",
     "startmebyrun": "git"
   },
   "repository": {
@@ -33,9 +34,12 @@
   "dependencies": {
     "angular": "^1.4.8",
     "angular-animate": "^1.4.8",
-    "bootstrap": "^3.3.6",
+    "angular-route": "^1.4.8",
+    "angular-ui-bootstrap": "^0.14.3",
+    "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
     "express": "^4.13.3",
+    "mocha": "^2.3.4",
     "node-sass": "^3.4.2"
   }
 }
