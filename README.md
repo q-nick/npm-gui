@@ -1,4 +1,4 @@
-# kuwa
+# kufa
 ### Welcome
 Kufa is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder even for developers who arent familiar with task runner like Gulp and GruntJS. 
 For now Kufa contain few GUI modules:
