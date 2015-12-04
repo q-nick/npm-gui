@@ -25,8 +25,8 @@
     </tr>
 
     <tr ng-repeat="task in tasks.list.data">
-        <td>{{task.name}}</td>
-        <td><input type="text" ng-model="task.command" class="form-control input-sm" disabled="disabled"/></td>
+        <td>{{task.key}}</td>
+        <td><input type="text" ng-model="task.value" class="form-control input-sm" disabled="disabled"/></td>
         <td>
             <button class="btn btn-primary btn-sm" ng-click="tasks.runTask(task)">Run</button>
         </td>

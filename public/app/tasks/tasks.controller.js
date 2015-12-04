@@ -5,7 +5,7 @@
         .module('kufa')
         .controller('TasksController', TasksController);
 
-    function TasksController(TasksService) {
+    function TasksController(ListService, TasksService) {
         var vm = this;
 
         loadTasks();
@@ -16,21 +16,21 @@
         vm.loadTasks = loadTasks;
 
         function addTask() {
-            TasksService.addTask(vm.newTaskName, vm.newTaskCommand);
+            ListService.tasks.add(vm.newTaskName, vm.newTaskCommand);
             vm.newTaskName = '';
             vm.newTaskCommand = '';
         }
 
         function removeTask(task) {
-            TasksService.removeTask(task.name);
+            ListService.tasks.remove(task.key);
         }
 
         function runTask(task) {
-            TasksService.runTask(task.name);
+            TasksService.run(task.key);
         }
 
         function loadTasks() {
-            vm.list = TasksService.getTasks();
+            vm.list = ListService.tasks.get();
         }
     }
 

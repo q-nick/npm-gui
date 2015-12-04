@@ -24,8 +24,8 @@
     </tr>
 
     <tr ng-repeat="module in modules.list.data">
-        <td>{{module.name}}</td>
-        <td><input type="text" ng-model="module.version" class="form-control input-sm" disabled="disabled"/></td>
+        <td>{{module.key}}</td>
+        <td><input type="text" ng-model="module.value" class="form-control input-sm" disabled="disabled"/></td>
         <td>
             <button class="btn btn-danger btn-sm" ng-click="modules.removeModule(module)">Remove</button>
         </td>

@@ -16,6 +16,11 @@
                         controller: 'TasksController',
                         controllerAs: 'tasks'
                     })
+                    .when('/builder', {
+                        templateUrl: 'app/builder/index.builder.html',
+                        controller: 'BuilderController',
+                        controllerAs: 'builder'
+                    })
                     .otherwise('/modules');
 
                 $locationProvider.html5Mode(false);

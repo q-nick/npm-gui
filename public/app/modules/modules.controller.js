@@ -5,7 +5,7 @@
         .module('kufa')
         .controller('ModulesController', ModulesController);
 
-    function ModulesController(ModulesService) {
+    function ModulesController(ListService) {
         var vm = this;
 
         loadModules();
@@ -15,17 +15,17 @@
         vm.loadModules = loadModules;
 
         function addModule() {
-            ModulesService.addModule(vm.newModuleName, vm.newModuleVersion);
+            ListService.modules.add(vm.newModuleName, vm.newModuleVersion);
             vm.newModuleName = '';
             vm.newModuleVersion = '';
         }
 
         function removeModule(module) {
-            ModulesService.removeModule(module.name);
+            ListService.modules.remove(module.key);
         }
 
         function loadModules() {
-            vm.list = ModulesService.getModules();
+            vm.list = ListService.modules.get();
         }
     }
 

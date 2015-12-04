@@ -1,6 +1,6 @@
 {
   "name": "kuwa",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Graphic User Interface for NPM tasks for frontend.",
   "main": "index.js",
   "scripts": {
@@ -14,12 +14,15 @@
     "url": "git+https://github.com/q-nick/kuwa.git"
   },
   "keywords": [
-    "gulp",
     "gui",
+    "npm",
     "view",
     "client",
     "task",
-    "runner"
+    "runner",
+    "dependencies",
+    "installer",
+    "console"
   ],
   "author": "Paweł Stefański",
   "license": "ISC",
@@ -36,10 +39,12 @@
     "angular-animate": "^1.4.8",
     "angular-route": "^1.4.8",
     "angular-ui-bootstrap": "^0.14.3",
+    "angular-websocket": "^1.0.14",
     "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
     "express": "^4.13.3",
     "mocha": "^2.3.4",
-    "node-sass": "^3.4.2"
+    "node-sass": "^3.4.2",
+    "ws": "^0.8.1"
   }
 }
