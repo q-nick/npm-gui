@@ -1,7 +1,16 @@
 # kufa
+### Installation
+```
+npm install kufa
+```
+or
+```
+npm install -g kufa
+```
+
 ### Welcome
-Kufa is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder even for developers who arent familiar with task runner like Gulp and GruntJS. 
-For now Kufa contain few GUI modules:
+Kufa is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
+For now Kufa contain a few GUI modules:
 - dependencies manager
 - devDependencies manager
 - scripts editor
@@ -16,7 +25,7 @@ Kufa is starting simple webserver from folder of your project. Webserver is a co
 - pushing console logs through websocket to client side application
 
 ### Another task runner?
-No it's not!!! By design it`s not another task runner, package manager etc. It's based on native npm mechanism to install/uninstall/search packages.
+No it's not another task runner, package manager etc. It's based on native npm mechanism to install/uninstall/search packages.
 
 ### Authors and Contributors
 @q-nick
