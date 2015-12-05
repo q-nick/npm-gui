@@ -9,8 +9,8 @@ npm install -g npm-gui
 ```
 
 ### Welcome
-NPM-GUI is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
-For now NPM-GUI contain a few modules:
+npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
+For now npm-gui contain a few modules:
 - dependencies manager
 - devDependencies manager
 - scripts editor
@@ -18,7 +18,7 @@ For now NPM-GUI contain a few modules:
 - console based on websocket communication
 
 ### How it works
-NPM-GUI is starting simple webserver from folder of your project. Webserver is a core, for example it: 
+npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it: 
 - serve GUI for browser (it is available by default on: http://localhost:1337/)
 - modify package.json
 - run commands from client side application (example: "npm install angular --save" when you want to add angular to your project)
