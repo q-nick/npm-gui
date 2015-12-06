@@ -8,6 +8,10 @@ or
 npm install -g npm-gui
 ```
 
+### How to use
+
+Open terminal and go to folder with ```package.json``` file and type ```npm-gui``` (if installed globally) or ```./node_modules/npm-gui/bin/npm-gui``` (if installed locally).
+
 ### Welcome
 npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
 For now npm-gui contain a few modules:
