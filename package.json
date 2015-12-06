@@ -1,17 +1,17 @@
 {
-  "name": "kuwa",
+  "name": "npm-gui",
   "version": "0.0.4",
-  "description": "Graphic User Interface for NPM tasks for frontend.",
+  "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js",
     "browserify:js": "./node_modules/browserify/bin/cmd.js ./public/app/vendor.js -o ./public/bundle.js",
-    "start": "npm run browserify:js && node kuwa.js",
+    "start": "npm run browserify:js && node npm-gui.js",
     "startmebyrun": "git"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/q-nick/kuwa.git"
+    "url": "git+https://github.com/q-nick/npm-gui.git"
   },
   "keywords": [
     "gui",
@@ -27,13 +27,14 @@
   "author": "Paweł Stefański",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/q-nick/kuwa/issues"
+    "url": "https://github.com/q-nick/npm-gui/issues"
   },
-  "homepage": "https://github.com/q-nick/kuwa#readme",
+  "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4"
   },
+  "bin": "bin/npm-gui",
   "dependencies": {
     "angular": "^1.4.8",
     "angular-animate": "^1.4.8",

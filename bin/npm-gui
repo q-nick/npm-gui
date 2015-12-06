@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
 var express = require('express');
 var app = express();
 var exec = require('child_process').exec;
@@ -165,7 +168,7 @@ app.post('/tasks/:name', function(req, res) {
     });
 });
 
-app.use(express.static('public', {'index': ['index.html', 'index.htm']}));
+app.use(express.static(__dirname + '/public', {'index': ['index.html', 'index.htm']}));
 app.use('/node_modules', express.static('node_modules'));
 
 var server = app.listen(PORT, HOST, function() {
