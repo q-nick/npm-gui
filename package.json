@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
@@ -42,6 +42,7 @@
     "angular-websocket": "^1.0.14",
     "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
+    "express": "^4.13.3",
     "ws": "^0.8.1"
   }
 }
