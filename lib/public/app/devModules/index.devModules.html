@@ -1,0 +1,34 @@
+<p>Dev dependencies should be used to save all packages required only for development, i.e: node-sass, watch, serve, zip, livereload. </p>
+<button class="btn btn-primary"
+        ng-click="devModules.loadModules()"
+>Refresh
+</button>
+<button class="btn btn-info"
+        ng-click="tasks.loadTasks()"
+>Search
+</button>
+<br/><br/>
+<table class="table" ng-show="!devModules.list.loading && !devModules.list.error">
+    <tr>
+        <th>Name</th>
+        <th>Version</th>
+        <th>Action</th>
+    </tr>
+
+    <tr>
+        <td><input type="text" ng-model="modules.newModuleName" class="form-control input-sm"/></td>
+        <td><input type="text" ng-model="modules.newModuleVersion" class="form-control input-sm" disabled="disabled"/>
+        </td>
+        <td>
+            <button class="btn btn-success btn-sm" ng-click="devModules.addModule()">Add</button>
+        </td>
+    </tr>
+
+    <tr ng-repeat="devModule in devModules.list.data">
+        <td>{{devModule.key}}</td>
+        <td><input type="text" ng-model="module.value" class="form-control input-sm" disabled="disabled"/></td>
+        <td>
+            <button class="btn btn-danger btn-sm" ng-click="devModules.removeModule(devModule)">Remove</button>
+        </td>
+    </tr>
+</table>
