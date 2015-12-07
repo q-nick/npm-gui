@@ -1,4 +1,5 @@
 # npm-gui
+![npm-gui screen](http://q-nick.github.io/npm-gui/screen.png)
 ### Installation
 ```
 npm install npm-gui
