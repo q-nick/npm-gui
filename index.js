@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 
 
 //Define a port/host we want to listen to
-const PORT = 1337;
-const HOST = '0.0.0.0';
+var PORT = 1337;
+var HOST = '0.0.0.0';
 
 
 //middleware
@@ -15,23 +15,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-//controllers
-var modulesController = require('./lib/controller/modules.controller.js');
-var devModulesController = require('./lib/controller/devModules.controller.js');
-var tasksController = require('./lib/controller/tasks.controller.js');
-var staticController = require('./lib/controller/static.controller.js');
-var consoleController = require('./lib/controller/console.controller.js');
+//modules
+var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
+var devModulesRoutes = require('./lib/modules/devModules/devModules.routes.js');
+var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
+var staticRoutes = require('./lib/modules/static/static.routes.js');
+var consoleController = require('./lib/modules/console/console.controller.js');
 
-//use route
-app.use('/', staticController);
-app.use('/modules', modulesController);
-app.use('/devModules', devModulesController);
-app.use('/tasks', tasksController);
+
+//use routes
+app.use('/', staticRoutes);
+app.use('/modules', modulesRoutes);
+app.use('/devModules', devModulesRoutes);
+app.use('/tasks', tasksRoutes);
+
 
 function start(port, host) {
     //start server
     var server = app.listen(port || PORT, host || HOST, function() {
-        console.log('npm-gui panel running at http://' + (host ||HOST) + ':' + (port || PORT) + '/');
+        console.log('npm-gui panel running at http://' + (host || HOST) + ':' + (port || PORT) + '/');
         console.log('\n\nI will be waiting here to help you with your work with pleasure.');
     });
 

@@ -4,7 +4,8 @@
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec ./test/*.test.js",
+    "start": "./bin/npm-gui",
+    "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js",
     "browserify:js": "./node_modules/browserify/bin/cmd.js ./lib/public/app/vendor.js -o ./lib/public/bundle.js",
     "install": "npm run browserify:js"
   },
@@ -31,6 +32,7 @@
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
     "chai": "^3.4.1",
+    "sinon": "^1.17.2",
     "mocha": "^2.3.4"
   },
   "bin": "bin/npm-gui",
