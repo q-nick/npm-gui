@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
 # npm-gui
 ![npm-gui screen](http://q-nick.github.io/npm-gui/screen.png)
 ### Installation
