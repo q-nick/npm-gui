@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {

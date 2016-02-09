@@ -4,7 +4,8 @@
 var npmGuiServer = require('../index.js');
 
 var args = process.argv.slice(2);
-var host = args[0].split(':')[0];
-var port = args[0].split(':')[1];
-
+if (args[0]) {
+    var host = args[0].split(':')[0];
+    var port = args[0].split(':')[1];
+}
 npmGuiServer(host, port);
