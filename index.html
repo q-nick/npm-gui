@@ -19,13 +19,15 @@
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="npm-gui" class="anchor" href="#npm-gui" aria-hidden="true"><span class="octicon octicon-link"></span></a>npm-gui</h1>
+      <p><a href="https://travis-ci.org/q-nick/npm-gui"><img src="https://travis-ci.org/q-nick/npm-gui.svg" alt="Build Status"></a></p>
+
+<h1>
+<a id="npm-gui" class="anchor" href="#npm-gui" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>npm-gui</h1>
 
 <p><img src="http://q-nick.github.io/npm-gui/screen.png" alt="npm-gui screen"></p>
 
 <h3>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
 
 <pre><code>npm install npm-gui
 </code></pre>
@@ -36,13 +38,18 @@
 </code></pre>
 
 <h3>
-<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h3>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h3>
 
 <p>Open terminal and go to folder with <code>package.json</code> file and type <code>npm-gui</code> (if installed globally) or <code>./node_modules/npm-gui/bin/npm-gui</code> (if installed locally).
 Now you should be able to open GUI in your browser - navigate to http://localhost:1337/</p>
 
+<p>If you need to start server on another host, port, you should add host:port argument to command, example:</p>
+
+<pre><code>npm-gui localhost:9000
+</code></pre>
+
 <h3>
-<a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome</h3>
+<a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome</h3>
 
 <p>npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
 For now npm-gui contain a few modules:</p>
@@ -56,7 +63,7 @@ For now npm-gui contain a few modules:</p>
 </ul>
 
 <h3>
-<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h3>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How it works</h3>
 
 <p>npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it: </p>
 
@@ -68,12 +75,12 @@ For now npm-gui contain a few modules:</p>
 </ul>
 
 <h3>
-<a id="another-task-runner" class="anchor" href="#another-task-runner" aria-hidden="true"><span class="octicon octicon-link"></span></a>Another task runner?</h3>
+<a id="another-task-runner" class="anchor" href="#another-task-runner" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Another task runner?</h3>
 
 <p>No it's not another task runner, package manager etc. It's based on native npm mechanism to install/uninstall/search packages.</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
 <p><a href="https://github.com/q-nick" class="user-mention">@q-nick</a></p>
 
