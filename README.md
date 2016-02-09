@@ -17,7 +17,9 @@ Now you should be able to open GUI in your browser - navigate to http://localhos
 
 If you need to start server on another host, port, you should add host:port argument to command, example:
 
-```npm-gui localhost:9000```
+```
+npm-gui localhost:9000
+```
 
 ### Welcome
 npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
