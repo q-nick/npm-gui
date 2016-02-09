@@ -16,6 +16,7 @@ Open terminal and go to folder with ```package.json``` file and type ```npm-gui`
 Now you should be able to open GUI in your browser - navigate to http://localhost:1337/
 
 If you need to start server on another host, port, you should add host:port argument to command, example:
+
 ```npm-gui localhost:9000```
 
 ### Welcome
