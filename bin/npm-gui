@@ -3,5 +3,8 @@
 
 var npmGuiServer = require('../index.js');
 
-//TODO host/port get from params
-npmGuiServer();
+var args = process.argv.slice(2);
+var host = args[0].split(':')[0];
+var port = args[0].split(':')[1];
+
+npmGuiServer(host, port);

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "./bin/npm-gui",
-    "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js",
+    "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js",
     "browserify:js": "./node_modules/browserify/bin/cmd.js ./lib/public/app/vendor.js -o ./lib/public/bundle.js",
     "install": "npm run browserify:js"
   },
@@ -32,8 +32,9 @@
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
     "chai": "^3.4.1",
-    "sinon": "^1.17.2",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "rewire": "^2.5.1",
+    "sinon": "^1.17.2"
   },
   "bin": "bin/npm-gui",
   "dependencies": {
@@ -45,6 +46,7 @@
     "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
     "express": "^4.13.3",
+    "webpack": "^1.12.13",
     "ws": "^0.8.1"
   }
 }

@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //modules
 var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
-var devModulesRoutes = require('./lib/modules/devModules/devModules.routes.js');
 var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
 var staticRoutes = require('./lib/modules/static/static.routes.js');
 var consoleController = require('./lib/modules/console/console.controller.js');
@@ -26,11 +25,11 @@ var consoleController = require('./lib/modules/console/console.controller.js');
 //use routes
 app.use('/', staticRoutes);
 app.use('/modules', modulesRoutes);
-app.use('/devModules', devModulesRoutes);
+app.use('/devModules', modulesRoutes);
 app.use('/tasks', tasksRoutes);
 
 
-function start(port, host) {
+function start(host, port) {
     //start server
     var server = app.listen(port || PORT, host || HOST, function() {
         console.log('npm-gui panel running at http://' + (host || HOST) + ':' + (port || PORT) + '/');
