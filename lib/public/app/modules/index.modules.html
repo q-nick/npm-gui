@@ -1,4 +1,5 @@
-<p>Regular dependencies should be used to save all packages required only for running your modules in any environment.</p>
+<p>Regular dependencies should be used to save all packages required only for running your modules in any
+    environment.</p>
 <button class="btn btn-primary"
         ng-click="modules.loadModules()"
         >Refresh
@@ -7,6 +8,13 @@
         ng-click="tasks.loadTasks()"
         >Search
 </button>
+
+<button class="btn btn-danger pull-right"
+        ng-click="modules.reinstall()"
+        >Reinstall all
+</button>
+
+
 <br/><br/>
 <table class="table" ng-show="!modules.list.loading && !modules.list.error">
     <tr>

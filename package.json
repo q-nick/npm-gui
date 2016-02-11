@@ -7,8 +7,7 @@
     "start": "./bin/npm-gui",
     "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js",
     "browserify:js": "./node_modules/browserify/bin/cmd.js ./lib/public/app/vendor.js -o ./lib/public/bundle.js",
-    "install": "npm run browserify:js",
-    "serve": "./node_modules/serve/bin/serve -s 3333 ./lib/public/"
+    "install": "npm run browserify:js"
   },
   "repository": {
     "type": "git",
@@ -35,7 +34,6 @@
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
     "rewire": "^2.5.1",
-    "serve": "^1.4.0",
     "sinon": "^1.17.2"
   },
   "bin": "bin/npm-gui",
