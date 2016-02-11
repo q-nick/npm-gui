@@ -46,7 +46,6 @@
     "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
     "express": "^4.13.3",
-    "webpack": "^1.12.13",
     "ws": "^0.8.1"
   }
 }
