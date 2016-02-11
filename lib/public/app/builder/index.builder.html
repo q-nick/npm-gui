@@ -1,1 +1,69 @@
 builder TODO
+<hr/>
+<form class="form">
+    <div class="form-group col-xs-2" ng-if="builder.devDependencies.data.length">
+        <select name="any"
+                class="form-control"
+                disabled
+                >
+            <option value="">Name</option>
+        </select>
+        <hr/>
+        <input name="name"
+               class="form-control"
+               ng-model="builder.newTaskName"
+                >
+    </div>
+    <div class="form-group col-xs-2" ng-if="builder.devDependencies.data.length">
+        <select name="any"
+                class="form-control"
+                disabled
+                >
+            <option value="">Command</option>
+        </select>
+        <hr/>
+        <select name="any"
+                id="anynoe"
+                class="form-control"
+                ng-model="builder.command"
+                ng-options="dependency.key as dependency.key for dependency in builder.devDependencies.data track by dependency.key"
+                >
+            <option value="">Other</option>
+        </select>
+    </div>
+    <div class="form-group col-xs-2" ng-repeat="arg in builder.args">
+        <select name="any"
+                class="form-control"
+                ng-model="arg.type"
+                ng-options="type for type in builder.types track by type"
+                >
+        </select>
+        <hr/>
+        <input name="any"
+               class="form-control"
+               ng-model="arg.value"
+               ng-disabled="!arg.type"
+                >
+        <hr/>
+        <button class="btn btn-danger btn-sm" ng-click="builder.removeArg($index)">X</button>
+    </div>
+    <div class="form-group col-xs-1">
+
+        <button class="btn btn-success btn-sm" ng-click="builder.addArg()">+</button>
+    </div>
+</form>
+
+<div class="row"></div>
+
+<hr/>
+
+<pre>
+    Your command ({{builder.newTaskName}}):
+
+    {{builder.command? './node_modules/' : ''}}{{builder.command}}{{builder.command? '/bin/' : ''}}{{builder.command}}<span
+        class="" ng-repeat="arg in builder.args"> {{arg.value}}</span>
+    
+
+</pre>
+
+<button class="btn btn-info btn-lg pull-right" ng-click="builder.save()">Save</button>
