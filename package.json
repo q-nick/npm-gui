@@ -4,10 +4,10 @@
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
-    "start": "./bin/npm-gui",
+    "start": "npm run browserify:js && ./bin/npm-gui",
     "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js",
     "browserify:js": "./node_modules/browserify/bin/cmd.js ./lib/public/app/vendor.js -o ./lib/public/bundle.js",
-    "install": "npm run browserify:js"
+    "install": ""
   },
   "repository": {
     "type": "git",
@@ -46,6 +46,6 @@
     "body-parser": "^1.14.1",
     "browserify": "^12.0.1",
     "express": "^4.13.3",
-    "ws": "^0.8.1"
+    "ws": "^1.0.1"
   }
 }
