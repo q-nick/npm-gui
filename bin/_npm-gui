@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
-
-var npmGuiServer = require('../npm-gui.js');
+//running npm-gui development version
+var npmGuiServer = require('../index.js');
 
 var args = process.argv.slice(2);
 if (args[0]) {

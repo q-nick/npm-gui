@@ -4,10 +4,9 @@
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
-    "start": "npm run browserify:js && ./bin/npm-gui",
+    "start": "./bin/npm-gui",
     "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js",
-    "browserify:js": "./node_modules/browserify/bin/cmd.js ./lib/public/app/vendor.js -o ./lib/public/bundle.js",
-    "install": ""
+    "build": "./node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && ./node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js"
   },
   "repository": {
     "type": "git",
@@ -31,21 +30,21 @@
   },
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
-    "chai": "^3.4.1",
-    "mocha": "^2.3.4",
-    "rewire": "^2.5.1",
-    "sinon": "^1.17.2"
-  },
-  "bin": "bin/npm-gui",
-  "dependencies": {
     "angular": "^1.4.8",
     "angular-animate": "^1.4.8",
     "angular-route": "^1.4.8",
     "angular-ui-bootstrap": "^0.14.3",
     "angular-websocket": "^1.0.14",
     "body-parser": "^1.14.1",
-    "browserify": "^12.0.1",
+    "chai": "^3.4.1",
     "express": "^4.13.3",
+    "json-loader": "^0.5.4",
+    "mocha": "^2.3.4",
+    "rewire": "^2.5.1",
+    "sinon": "^1.17.2",
+    "webpack": "^1.12.14",
     "ws": "^1.0.1"
-  }
+  },
+  "bin": "bin/npm-gui",
+  "dependencies": {}
 }
