@@ -40,7 +40,6 @@
     "express": "^4.13.3",
     "json-loader": "^0.5.4",
     "mocha": "^2.3.4",
-    "request": "^2.69.0",
     "rewire": "^2.5.1",
     "sinon": "^1.17.2",
     "supertest": "^1.2.0",
