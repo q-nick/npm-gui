@@ -14,17 +14,26 @@ describe('GET index.html', function() {
     })
 });
 
-describe('GET bundle.js', function() {
+describe('GET npm-gui.js', function() {
     it('respond with js', function(done) {
         request(instance)
-            .get('/bundle.js')
+            .get('/npm-gui.js')
+            .expect('Content-Type', /javascript/)
+            .expect(200, done);
+    })
+});
+
+describe('GET vendor.js', function() {
+    it('respond with js', function(done) {
+        request(instance)
+            .get('/vendor.js')
             .expect('Content-Type', /javascript/)
             .expect(200, done);
     })
 });
 
 describe('API: /modules', function() {
-    it('respond with js', function(done) {
+    it('GET should return json', function(done) {
         request(instance)
             .get('/modules')
             .expect('Content-Type', /json/)
@@ -33,7 +42,7 @@ describe('API: /modules', function() {
 });
 
 describe('API: /devModules', function() {
-    it('GET should return list', function(done) {
+    it('GET should return json', function(done) {
         request(instance)
             .get('/devModules')
             .expect('Content-Type', /json/)
@@ -42,7 +51,7 @@ describe('API: /devModules', function() {
 });
 
 describe('API: /tasks', function() {
-    it('GET should return list', function(done) {
+    it('GET should return json', function(done) {
         request(instance)
             .get('/tasks')
             .expect('Content-Type', /json/)
