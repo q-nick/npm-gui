@@ -1,11 +1,11 @@
 {
   "name": "npm-gui",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
     "start": "./bin/npm-gui",
-    "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js",
+    "test": "./node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js && ./node_modules/mocha/bin/mocha responses.test.js",
     "build": "./node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && ./node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js"
   },
   "repository": {
@@ -40,8 +40,10 @@
     "express": "^4.13.3",
     "json-loader": "^0.5.4",
     "mocha": "^2.3.4",
+    "request": "^2.69.0",
     "rewire": "^2.5.1",
     "sinon": "^1.17.2",
+    "supertest": "^1.2.0",
     "webpack": "^1.12.14",
     "ws": "^1.0.1"
   },
