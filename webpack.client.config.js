@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -9,6 +10,10 @@ module.exports = {
         filename: './lib/public/npm-gui.js'
     },
     plugins: [
+        new ngAnnotatePlugin({
+            add: true
+            // other ng-annotate options here
+        }),
         new webpack.optimize.CommonsChunkPlugin('vendor', './lib/public/vendor.js')
     ]
 };
