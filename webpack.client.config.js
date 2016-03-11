@@ -9,6 +9,9 @@ module.exports = {
     output: {
         filename: './lib/public/npm-gui.js'
     },
+    watchOptions: {
+        poll: 1000
+    },
     plugins: [
         new ngAnnotatePlugin({
             add: true

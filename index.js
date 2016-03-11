@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //modules
 var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
+var binModulesRoutes = require('./lib/modules/binModules/binModules.routes.js');
 var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
 var staticRoutes = require('./lib/modules/static/static.routes.js');
 var consoleController = require('./lib/modules/console/console.controller.js');
@@ -26,6 +27,7 @@ var consoleController = require('./lib/modules/console/console.controller.js');
 app.use('/', staticRoutes);
 app.use('/modules', modulesRoutes);
 app.use('/devModules', modulesRoutes);
+app.use('/binModules', binModulesRoutes);
 app.use('/tasks', tasksRoutes);
 
 

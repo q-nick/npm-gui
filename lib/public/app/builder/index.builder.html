@@ -1,34 +1,35 @@
 builder TODO
 <hr/>
-<form class="form">
-    <div class="form-group col-xs-2" ng-if="builder.devDependencies.data.length">
+<form class="form row">
+
+    <div class="form-group col-xs-2" ng-if="builder.binPackages.data.length">
         <select name="any"
                 class="form-control"
                 disabled
-                >
+        >
             <option value="">Name</option>
         </select>
         <hr/>
         <input name="name"
                class="form-control"
                ng-model="builder.newTaskName"
-                >
+        >
     </div>
-    <div class="form-group col-xs-2" ng-if="builder.devDependencies.data.length">
+    <div class="form-group col-xs-2" ng-if="builder.binPackages.data.length">
         <select name="any"
                 class="form-control"
                 disabled
-                >
-            <option value="">Command</option>
+        >
+            <option value="">Bin packages locally</option>
         </select>
         <hr/>
         <select name="any"
-                id="anynoe"
                 class="form-control"
                 ng-model="builder.command"
-                ng-options="dependency.key as dependency.key for dependency in builder.devDependencies.data track by dependency.key"
-                >
-            <option value="">Other</option>
+                ng-options="binPackage.key as binPackage.key for binPackage in builder.binPackages.data track by binPackage.key"
+                ng-change="builder.commandChanged()"
+        >
+            <option value="" selected>Other</option>
         </select>
     </div>
     <div class="form-group col-xs-2" ng-repeat="arg in builder.args">
@@ -36,14 +37,22 @@ builder TODO
                 class="form-control"
                 ng-model="arg.type"
                 ng-options="type for type in builder.types track by type"
-                >
+        >
         </select>
         <hr/>
         <input name="any"
                class="form-control"
                ng-model="arg.value"
                ng-disabled="!arg.type"
-                >
+               ng-if="arg.type !== 'flag'"
+        >
+        <select name="any"
+                class="form-control"
+                ng-model="arg.value"
+                ng-if="arg.type === 'flag'"
+                ng-options="flag for flag in builder.flags track by flag">
+            <option value="" selected>Choose</option>
+        </select>
         <hr/>
         <button class="btn btn-danger btn-sm" ng-click="builder.removeArg($index)">X</button>
     </div>
@@ -53,17 +62,22 @@ builder TODO
     </div>
 </form>
 
-<div class="row"></div>
+<hr/>
+
+<div class="row">
+<pre>
+Your command ({{builder.newTaskName}}):
+
+node {{builder.command ? './node_modules/' : ''}}{{builder.command}}{{builder.command? '/bin/' : ''}}{{builder.command}}<span
+        class="" ng-repeat="arg in builder.args"> {{arg.value}}</span>
+</pre>
+    <button class="btn btn-info btn-lg pull-right" ng-click="builder.save()">Save</button>
+</div>
 
 <hr/>
 
+<div class="row">
 <pre>
-    Your command ({{builder.newTaskName}}):
-
-    {{builder.command? './node_modules/' : ''}}{{builder.command}}{{builder.command? '/bin/' : ''}}{{builder.command}}<span
-        class="" ng-repeat="arg in builder.args"> {{arg.value}}</span>
-    
-
+    {{builder.packageInfo}}
 </pre>
-
-<button class="btn btn-info btn-lg pull-right" ng-click="builder.save()">Save</button>
+</div>

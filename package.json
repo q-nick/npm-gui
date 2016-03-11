@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node bin/npm-gui",
     "test": "node node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js && node node_modules/mocha/bin/mocha responses.test.js",
-    "build": "node node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js"
+    "build": "node node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js",
+    "dev": "node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js && node bin/npm-gui 0.0.0.0:9001 & node node_modules/webpack/bin/webpack.js --progress --colors --watch --config webpack.client.config.js",
   },
   "repository": {
     "type": "git",
