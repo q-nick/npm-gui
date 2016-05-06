@@ -22,7 +22,7 @@ npm-gui localhost:9000
 ```
 
 ### Welcome
-npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
+npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS won't have any problems. 
 For now npm-gui contain a few modules:
 - dependencies manager
 - devDependencies manager
