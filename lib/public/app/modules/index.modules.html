@@ -1,42 +1,99 @@
 <p>Regular dependencies should be used to save all packages required only for running your modules in any
     environment.</p>
-<button class="btn btn-primary"
+
+
+<button class="btn btn-primary btn-xs"
         ng-click="modules.loadModules()"
         >Refresh
 </button>
-<button class="btn btn-info"
+<!--button class="btn btn-info"
         ng-click="tasks.loadTasks()"
         >Search
-</button>
+</button-->
 
-<button class="btn btn-danger pull-right"
+<button class="btn btn-danger pull-right btn-xs"
         ng-click="modules.reinstall()"
         >Reinstall all
 </button>
 
+<br/>
 
-<br/><br/>
-<table class="table" ng-show="!modules.list.loading && !modules.list.error">
-    <tr>
-        <th>Name</th>
-        <th>Version</th>
-        <th>Action</th>
-    </tr>
+<br/>
+<div class="panel panel-default" style="margin:0;border-bottom:0; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+    <table class="table" ng-show="!modules.list.loading && !modules.list.error">
 
-    <tr>
-        <td><input type="text" ng-model="modules.newModuleName" class="form-control input-sm"/></td>
-        <td><input type="text" ng-model="modules.newModuleVersion" class="form-control input-sm" disabled="disabled"/>
-        </td>
-        <td>
-            <button class="btn btn-success btn-sm" ng-click="modules.addModule()">Add</button>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <input type="text" placeholder="Module to install" ng-model="modules.newModuleName" class="form-control input-sm">
+            </td>
+            <td>
+                <input type="text" ng-model="modules.newModuleVersion" class="form-control input-sm" disabled="disabled">
+            </td>
+            <td>
 
-    <tr ng-repeat="module in modules.list.data">
-        <td>{{module.key}}</td>
-        <td><input type="text" ng-model="module.value" class="form-control input-sm" disabled="disabled"/></td>
-        <td>
-            <button class="btn btn-danger btn-sm" ng-click="modules.removeModule(module)">Remove</button>
-        </td>
-    </tr>
-</table>
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <button class="btn btn-success btn-sm" ng-click="modules.addModule()">Add</button>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Name <input type="text" name="name"  class="form-control input-sm" style="width: 200px;display:inline-block;" placeholder="filter by name..."  ng-model="tasks.filter.key" value=""></th>
+            <th>Version</th>
+            <th>NSP</th>
+            <th>Installed</th>
+            <th>Wanted</th>
+            <th>Latest</th>
+            <th>Action</th>
+        </tr>
+    </table>
+</div>
+<div style="height:63.5vh;overflow-y: scroll; border-top-left-radius: 0; border-top-right-radius: 0;" class="panel panel-default">
+    <div class="loader-inner ball-clip-rotate" ng-if="modules.list.loading"><div></div></div>
+    <table class="table" ng-show="!modules.list.loading && !modules.list.error">
+
+        <tr ng-repeat="module in modules.list.data | filter:tasks.filter">
+            <td>{{module.key}}</td>
+            <td>
+                <input type="text" ng-model="module.value" class="form-control input-sm" disabled="disabled"/>
+            </td>
+            <td>
+                <div class="loader-inner ball-clip-rotate" ng-if="modules.list.nspLoading"><div></div></div>
+                <span
+                    style="color:red; line-height: 1.4em; font-size: 1.5em;"
+                    class="glyphicon glyphicon-exclamation-sign"
+                    aria-hidden="true"
+                    ng-if="module.nsp"
+                    uib-tooltip="{{module.nsp.title}}, {{module.nsp.advisory}}, {{module.nsp.vulnerable_versions}}, {{module.nsp.patched_versions}}"
+                    ></span>
+            </td>
+            <td>
+                <div class="loader-inner ball-clip-rotate" ng-if="modules.list.versionsLoading"><div></div></div>
+                <span ng-if="module.version === module.value.slice(1)">{{module.version}}</span>
+                <button
+                        ng-if="!modules.list.versionsLoading && module.version !== module.value.slice(1)"
+                        class="btn btn-success btn-sm"
+                        ng-click="modules.updateModule(module, module.version)"
+                    >{{module.version}} <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
+            </td>
+            <td>
+                <button class="btn btn-success btn-sm" ng-click="modules.updateModule(module, module.wanted)" ng-if="module.wanted">Update to: {{module.wanted}}</button>
+            </td>
+            <td>
+                <button class="btn btn-default btn-sm" ng-click="modules.updateModule(module, module.latest)" ng-if="module.latest">Update to: {{module.latest}}</button>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-sm" ng-click="modules.removeModule(module)">Remove</button>
+            </td>
+        </tr>
+    </table>
+</div>

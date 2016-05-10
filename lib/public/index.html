@@ -4,24 +4,57 @@
     <meta charset="UTF-8">
     <title>NPM Graphic User Interface</title>
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-
     <script src="vendor.js"></script>
     <script src="npm-gui.js"></script>
+    <link rel="stylesheet" href="node_modules/loaders.css/loaders.min.css" media="screen" title="no title" charset="utf-8">
+    <style media="screen">
+        .loader-inner > div {
+            border-color: gray;
+            border-bottom-color: white;
+        }
+
+        tr > td:nth-child(1), th > td:nth-child(1) {width: 25%;}
+        tr > td:nth-child(2), th > td:nth-child(2) {width: 15%;}
+        tr > td:nth-child(3), th > td:nth-child(3) {width: 10%;}
+        tr > td:nth-child(4), th > td:nth-child(4) {width: 12%;}
+        tr > td:nth-child(5), th > td:nth-child(5) {width: 12%;}
+        tr > td:nth-child(6), th > td:nth-child(6) {width: 12%;}
+    </style>
 </head>
 <body ng-app="npm-gui">
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">npm-gui</a>
+<div ng-controller="NavigationController as navigation">
+
+    <link ng-if="!navigation.theme" ng-href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link ng-if="navigation.theme" ng-href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/{{navigation.theme}}/bootstrap.min.css" rel="stylesheet">
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">npm-gui</a>
+            </div>
+            <a href="#/dependencies" class="btn btn-default navbar-btn">Dependencies</a>
+            <a href="#/dependencies-dev" class="btn btn-default navbar-btn">Dev Dependencies</a>
+            <a href="#/tasks" class="btn btn-default navbar-btn">Tasks</a>
+            <a href="#/builder" class="btn btn-default navbar-btn">Command builder</a>
+            <div class="btn-group pull-right" uib-dropdown is-open="navigation.themeIsOpen">
+                <button class="btn btn-default dropdown-toggle navbar-btn" uib-dropdown-toggle><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                    <li><a href="#" ng-click="navigation.theme = null">Default</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'cosmo'">Cosmo</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'cyborg'">Cyborg</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'darkly'">Darkly</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'flatly'">Flatly</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'lumen'">Lumen</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'sandstone'">Sandstone</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'simplex'">Simplex</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'superhero'">Superhero</a></li>
+                    <li><a href="#" ng-click="navigation.theme = 'united'">United</a></li>
+                </ul>
+            </div>
         </div>
-        <a href="#/dependencies" class="btn btn-default navbar-btn">Dependencies</a>
-        <a href="#/dependencies-dev" class="btn btn-default navbar-btn">Dev Dependencies</a>
-        <a href="#/tasks" class="btn btn-default navbar-btn">Tasks</a>
-        <a href="#/builder" class="btn btn-default navbar-btn">Command builder</a>
-    </div>
-</nav>
+    </nav>
+</div>
 
 <div class="container-fluid">
     <div class="col-xs-4" ng-include="'app/console/console.html'" ng-controller="ConsoleController as console"></div>

@@ -3,7 +3,7 @@
 var request = require('supertest');
 
 var npmGuiServer = require('./npm-gui.js');
-var instance = npmGuiServer();
+var instance = npmGuiServer('localhost','1338');
 
 describe('GET index.html', function() {
     it('respond with html', function(done) {
