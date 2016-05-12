@@ -12,7 +12,9 @@ var HOST = '0.0.0.0';
 
 //middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 
 //modules

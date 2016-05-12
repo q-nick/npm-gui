@@ -1,58 +1,60 @@
 {
-  "name": "npm-gui",
-  "version": "0.1.8",
-  "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
-  "main": "index.js",
-  "scripts": {
-    "start": "node bin/npm-gui",
-    "test": "node node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js && node node_modules/mocha/bin/mocha responses.test.js",
-    "build": "node node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js",
-    "dev": "node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js && node bin/npm-gui 0.0.0.0:9001 & node node_modules/webpack/bin/webpack.js --progress --colors --watch --config webpack.client.config.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/q-nick/npm-gui.git"
-  },
-  "keywords": [
-    "gui",
-    "npm",
-    "view",
-    "client",
-    "task",
-    "runner",
-    "dependencies",
-    "installer",
-    "console"
-  ],
-  "author": "Paweł Stefański",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/q-nick/npm-gui/issues"
-  },
-  "homepage": "https://github.com/q-nick/npm-gui#readme",
-  "devDependencies": {
-      "loaders.css": "^0.1.2",
-      "angular": "^1.5.5",
-      "angular-animate": "^1.5.5",
-      "angular-route": "^1.5.5",
-      "angular-ui-bootstrap": "^0.14.3",
-      "angular-websocket": "^1.1.0",
-      "body-parser": "^1.15.1",
-      "chai": "^3.5.0",
-      "express": "^4.13.4",
-      "json-loader": "^0.5.4",
-      "mocha": "^2.4.5",
-      "ng-annotate-webpack-plugin": "^0.1.2",
-      "rewire": "^2.5.1",
-      "sinon": "^1.17.4",
-      "supertest": "^1.2.0",
-      "uglify-js": "^2.6.2",
-      "undefined": "^0.1.0",
-      "webpack": "^1.13.0",
-      "ws": "^1.1.0"
-  },
-  "bin": "bin/npm-gui",
-  "dependencies": {
-      "nsp": "^2.4.0"
-  }
+    "name": "npm-gui",
+    "version": "0.2.0",
+    "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
+    "main": "index.js",
+    "scripts": {
+        "start": "node bin/npm-gui",
+        "test": "node node_modules/mocha/bin/mocha ./lib/modules/**/*.js ./lib/helpers/**/*.js && node node_modules/mocha/bin/mocha responses.test.js",
+        "build": "node node_modules/webpack/bin/webpack.js -p --config webpack.client.config.js && node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js",
+        "dev": "node node_modules/webpack/bin/webpack.js -p --config webpack.server.config.js && node bin/npm-gui 0.0.0.0:9001 & node node_modules/webpack/bin/webpack.js --progress --colors --watch --config webpack.client.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/q-nick/npm-gui.git"
+    },
+    "keywords": [
+        "gui",
+        "npm",
+        "view",
+        "client",
+        "task",
+        "runner",
+        "dependencies",
+        "installer",
+        "console"
+    ],
+    "author": "Paweł Stefański",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/q-nick/npm-gui/issues"
+    },
+    "homepage": "https://github.com/q-nick/npm-gui#readme",
+    "devDependencies": {
+        "angular": "^1.5.5",
+        "angular-animate": "^1.5.5",
+        "angular-route": "^1.5.5",
+        "angular-ui-bootstrap": "^0.14.3",
+        "angular-websocket": "^1.1.0",
+        "bluebird": "^3.3.5",
+        "body-parser": "^1.15.1",
+        "chai": "^3.5.0",
+        "express": "^4.13.4",
+        "json-loader": "^0.5.4",
+        "loaders.css": "^0.1.2",
+        "mocha": "^2.4.5",
+        "ng-annotate-webpack-plugin": "^0.1.2",
+        "react": "^15.0.2",
+        "rewire": "^2.5.1",
+        "sinon": "^1.17.4",
+        "supertest": "^1.2.0",
+        "uglify-js": "^2.6.2",
+        "undefined": "^0.1.0",
+        "webpack": "^1.13.0",
+        "ws": "^1.1.0"
+    },
+    "bin": "bin/npm-gui",
+    "dependencies": {
+        "nsp": "^2.4.0"
+    }
 }

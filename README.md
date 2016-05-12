@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
 # [npm-gui](http://q-nick.github.io/npm-gui/)
-![npm-gui screen](http://q-nick.github.io/npm-gui/screen.png)
+![npm-gui screen](http://q-nick.github.io/npm-gui/screen-update.png)
 ### Installation
 ```
 npm install npm-gui
@@ -22,20 +22,29 @@ npm-gui localhost:9000
 ```
 
 ### Welcome
-npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS won't have any problems. 
+npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS won't have any problems.
 For now npm-gui contain a few modules:
-- dependencies manager
-- devDependencies manager
-- scripts editor
-- scripts builder (based on npm packages)
+- dependencies manager for:
+    - regular packages
+    - development packages
+- tasks manager
+- command builder (based on npm packages)
 - console based on websocket communication
 
 ### How it works
-npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it: 
+npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it:
 - serve GUI for browser (it is available by default on: http://localhost:1337/)
 - modify package.json
 - run commands from client side application (example: "npm install angular --save" when you want to add angular to your project)
 - pushing console logs through websocket to client side application
+
+### Dependencies features
+- shows all types of versions:
+    - saved in package.json,
+    - installed (if is different - you can save it in package.json)
+    - wanted (newest compatible version - you can install it and save by click)
+    - latest
+- checks nsp errors (nodesecurity.io) - currently works only for regular dependencies
 
 ### Another task runner?
 No it's not another task runner, package manager etc. It's based on native npm mechanism to install/uninstall/search packages.

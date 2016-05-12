@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 'use strict';
 //running npm-gui development version
 var npmGuiServer = require('../index.js');
