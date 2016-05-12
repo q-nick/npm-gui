@@ -22,9 +22,10 @@
       <p><a href="https://travis-ci.org/q-nick/npm-gui"><img src="https://travis-ci.org/q-nick/npm-gui.svg" alt="Build Status"></a></p>
 
 <h1>
-<a id="npm-gui" class="anchor" href="#npm-gui" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>npm-gui</h1>
+<a id="npm-gui" class="anchor" href="#npm-gui" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="http://q-nick.github.io/npm-gui/">npm-gui</a>
+</h1>
 
-<p><img src="http://q-nick.github.io/npm-gui/screen.png" alt="npm-gui screen"></p>
+<p><img src="http://q-nick.github.io/npm-gui/screen-update.png" alt="npm-gui screen"></p>
 
 <h3>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
@@ -51,27 +52,48 @@ Now you should be able to open GUI in your browser - navigate to http://localhos
 <h3>
 <a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome</h3>
 
-<p>npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS should won't have any problems. 
+<p>npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS won't have any problems.
 For now npm-gui contain a few modules:</p>
 
 <ul>
-<li>dependencies manager</li>
-<li>devDependencies manager</li>
-<li>scripts editor</li>
-<li>scripts builder (based on npm packages)</li>
+<li>dependencies manager for:
+
+<ul>
+<li>regular packages</li>
+<li>development packages</li>
+</ul>
+</li>
+<li>tasks manager</li>
+<li>command builder (based on npm packages)</li>
 <li>console based on websocket communication</li>
 </ul>
 
 <h3>
 <a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How it works</h3>
 
-<p>npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it: </p>
+<p>npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it:</p>
 
 <ul>
 <li>serve GUI for browser (it is available by default on: http://localhost:1337/)</li>
 <li>modify package.json</li>
 <li>run commands from client side application (example: "npm install angular --save" when you want to add angular to your project)</li>
 <li>pushing console logs through websocket to client side application</li>
+</ul>
+
+<h3>
+<a id="dependencies-features" class="anchor" href="#dependencies-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies features</h3>
+
+<ul>
+<li>shows all types of versions:
+
+<ul>
+<li>saved in package.json,</li>
+<li>installed (if is different - you can save it in package.json)</li>
+<li>wanted (newest compatible version - you can install it and save by click)</li>
+<li>latest</li>
+</ul>
+</li>
+<li>checks nsp errors (nodesecurity.io) - currently works only for regular dependencies</li>
 </ul>
 
 <h3>
