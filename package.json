@@ -1,6 +1,6 @@
 {
     "name": "npm-gui",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
     "main": "index.js",
     "scripts": {
@@ -41,7 +41,6 @@
         "chai": "^3.5.0",
         "express": "^4.13.4",
         "json-loader": "^0.5.4",
-        "loaders.css": "^0.1.2",
         "mocha": "^2.4.5",
         "ng-annotate-webpack-plugin": "^0.1.2",
         "react": "^15.0.2",
@@ -49,7 +48,6 @@
         "sinon": "^1.17.4",
         "supertest": "^1.2.0",
         "uglify-js": "^2.6.2",
-        "undefined": "^0.1.0",
         "webpack": "^1.13.0",
         "ws": "^1.1.0"
     },
