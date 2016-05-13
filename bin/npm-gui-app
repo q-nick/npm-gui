@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var electron = require('electron-prebuilt')
+var proc = require('child_process')
+
+var child = proc.spawn(electron, ['electron'], {
+    stdio: 'inherit'
+});
+
+child.on('close', function(code) {
+    process.exit(code)
+});
