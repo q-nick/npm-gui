@@ -48,6 +48,7 @@
     "react": "^15.0.2",
     "rewire": "^2.5.1",
     "sinon": "^1.17.4",
+    "sinon-stub-promise": "^2.0.0",
     "supertest": "^1.2.0",
     "uglify-js": "^2.6.2",
     "webpack": "^1.13.0",
