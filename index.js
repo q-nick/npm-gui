@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({
 //modules
 var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
 var binModulesRoutes = require('./lib/modules/binModules/binModules.routes.js');
+var globalModulesRoutes = require('./lib/modules/globalModules/globalModules.routes.js');
 var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
 var staticRoutes = require('./lib/modules/static/static.routes.js');
 var consoleController = require('./lib/modules/console/console.controller.js');
@@ -30,7 +31,7 @@ app.use('/', staticRoutes);
 app.use('/modules', modulesRoutes);
 app.use('/devModules', modulesRoutes);
 app.use('/binModules', binModulesRoutes);
-app.use('/globalModules', modulesRoutes);
+app.use('/globalModules', globalModulesRoutes);
 app.use('/tasks', tasksRoutes);
 
 
