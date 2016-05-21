@@ -30,6 +30,7 @@ app.use('/', staticRoutes);
 app.use('/modules', modulesRoutes);
 app.use('/devModules', modulesRoutes);
 app.use('/binModules', binModulesRoutes);
+app.use('/globalModules', modulesRoutes);
 app.use('/tasks', tasksRoutes);
 
 
