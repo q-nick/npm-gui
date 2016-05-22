@@ -1,2 +1,12 @@
 new project initialization
 standalone - electron app (probably without webserver)
+
+commands:
+npm dedupe
+npm init
+npm prune
+npm shrinkwrap
+
+additional:
+npm star
+npm unstar
