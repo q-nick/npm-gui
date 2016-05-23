@@ -10,3 +10,18 @@ npm shrinkwrap
 additional:
 npm star
 npm unstar
+
+Tests to confirm that CLI works as expected, example:
+
+`npm ls --json` should list installed packages in json format and should contain...
+`npm install npm-gui -S` should save package and save it in package.json
+etc...
+
+
+Modules:
+- Show which are installed.
+- Show which are extraneous.
+- Install All / Reinstall All
+
+NSP:
+- better support for deep dependency
