@@ -68,7 +68,7 @@ builder TODO
 <pre>
 Your command ({{builder.newTaskName}}):
 
-node {{builder.command ? './node_modules/' : ''}}{{builder.command}}{{builder.command? '/bin/' : ''}}{{builder.command}}<span
+node {{builder.command ? 'node_modules/.bin/' : ''}}{{builder.command}}<span
         class="" ng-repeat="arg in builder.args"> {{arg.value}}</span>
 </pre>
     <button class="btn btn-info btn-lg pull-right" ng-click="builder.save()">Save</button>
