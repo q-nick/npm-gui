@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
 # [npm-gui](http://q-nick.github.io/npm-gui/)
-![npm-gui screen](http://q-nick.github.io/npm-gui/screen-update.png)
+![npm-gui screen](http://q-nick.github.io/npm-gui/030.png)
 ### Installation
 ```
 npm install npm-gui
