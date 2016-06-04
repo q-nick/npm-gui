@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
+Linux: [![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
+
+Windows: [![Build status](http://img.shields.io/travis/q-nick/npm-gui/master.svg)](https://ci.appveyor.com/project/q-nick/npm-gui)
 # [npm-gui](http://q-nick.github.io/npm-gui/)
 ![npm-gui screen](http://q-nick.github.io/npm-gui/030.png)
 ### Installation
