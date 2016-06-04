@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Graphic User Interface for NPM packages/tasks for front and back -end users.",
   "main": "index.js",
   "scripts": {
@@ -40,6 +40,7 @@
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
     "chai": "^3.5.0",
+    "cross-spawn": "^4.0.0",
     "electron-prebuilt": "^1.1.1",
     "express": "^4.13.4",
     "json-loader": "^0.5.4",
