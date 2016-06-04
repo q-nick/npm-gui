@@ -1,8 +1,8 @@
 environment:
   matrix:
   # node.js
-  - nodejs_version: "6.x"
-  - nodejs_version: "5.x"
+  - nodejs_version: "6.2"
+  - nodejs_version: "5.11"
   - nodejs_version: "4.1"
   - nodejs_version: "4.0"
   - nodejs_version: "0.12"
@@ -10,7 +10,7 @@ environment:
   - nodejs_version: "0.10"
   # io.js
   - nodejs_version: "1.0"
-  
+
 platform:
   - x86
   - x64
