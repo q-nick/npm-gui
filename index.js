@@ -23,6 +23,8 @@ var binModulesRoutes = require('./lib/modules/binModules/binModules.routes.js');
 var globalModulesRoutes = require('./lib/modules/globalModules/globalModules.routes.js');
 var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
 var staticRoutes = require('./lib/modules/static/static.routes.js');
+var crawlerRoutes = require('./lib/modules/crawler/crawler.routes.js');
+var projectRoutes = require('./lib/modules/project/project.routes.js');
 var consoleController = require('./lib/modules/console/console.controller.js');
 
 
@@ -33,6 +35,8 @@ app.use('/devModules', modulesRoutes);
 app.use('/binModules', binModulesRoutes);
 app.use('/globalModules', globalModulesRoutes);
 app.use('/tasks', tasksRoutes);
+app.use('/crawler', crawlerRoutes);
+app.use('/project', projectRoutes);
 
 
 function start(host, port) {

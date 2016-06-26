@@ -44,6 +44,8 @@
             <a href="#/tasks" class="btn btn-default navbar-btn">Tasks</a>
             <a href="#/builder" class="btn btn-default navbar-btn">Command builder</a>
             <div class="btn-group pull-right" uib-dropdown is-open="navigation.themeIsOpen">
+                <p class="navbar-text">Current Project: {{navigation.project.data.name}}</p>
+                <button class="btn btn-default dropdown-toggle navbar-btn" ng-click="navigation.openProject()"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
                 <button class="btn btn-default dropdown-toggle navbar-btn" uib-dropdown-toggle><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button>
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                     <li><a href="#" ng-click="navigation.theme = null">Default</a></li>
