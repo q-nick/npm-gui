@@ -7,10 +7,20 @@
         >Search
 </button-->
 
-<button class="btn btn-danger pull-right btn-xs"
-        ng-click="modules.reinstall()"
-        >Reinstall all
-</button>
+<div class="pull-right">
+    <button class="btn btn-danger btn-xs"
+            ng-click="modules.updateAll()"
+            >Update all To Wanted(TODO)
+    </button>
+    <button class="btn btn-danger btn-xs"
+            ng-click="modules.updateAll()"
+            >Update all To Latest(TODO)
+    </button>
+    <button class="btn btn-danger btn-xs"
+            ng-click="modules.reinstallAll()"
+            >Reinstall all (TODO)
+    </button>
+</div>
 
 <br/>
 
@@ -20,7 +30,11 @@
 
         <tr>
             <td>
-                <input type="text" placeholder="Module to install" ng-model="modules.newModuleName" class="form-control input-sm">
+                    <input type="text" placeholder="Module to install" ng-model="modules.newModuleName" class="form-control input-sm" style="width: 67%;display:inline-block;">
+                    <select class="form-control input-sm" style="width: 30%;display:inline-block;" ng-model="modules.newModuleRepo">
+                        <option value="npm">NPM</option>
+                        <option value="bower">Bower</option>
+                    </select>
             </td>
             <td>
                 <input type="text" ng-model="modules.newModuleVersion" class="form-control input-sm" disabled="disabled">
@@ -58,7 +72,10 @@
     <table class="table" ng-show="!modules.list.loading && !modules.list.error">
 
         <tr ng-repeat="module in modules.list.data | filter:tasks.filter">
-            <td>{{module.key}}</td>
+            <td>{{module.key}}
+                <span class="label label-warning pull-right" ng-if="module.repo === 'bower'">Bower</span>
+                <span class="label label-danger pull-right" ng-if="module.repo === 'npm'">npm</span>
+            </td>
             <td>
                 <input type="text" ng-model="module.value" class="form-control input-sm" disabled="disabled"/>
             </td>

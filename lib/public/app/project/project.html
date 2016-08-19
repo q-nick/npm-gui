@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h3 class="modal-title">Find your project</h3>
+</div>
+<div class="modal-body">
+    <form class="form-inline">
+        <div class="form-group" style="width:100%;">
+            <label for="projectPathInput">Project Path: </label>
+            <input type="text" id="projectPathInput" ng-model-options='{ debounce: 300 }' class="form-control input-sm" ng-model="$ctrl.projectPath" name="name" value="" style="width:400px;" ng-change="$ctrl.loadNewPath('')">
+        </div>
+    </form>
+    <ul class="list-unstyled" style="height: 50vh;overflow-y:scroll;">
+        <li ng-repeat="file in $ctrl.files">
+            <a href="#" ng-if="file.directory" ng-click="$ctrl.loadNewPath(file.name);$event.preventDefault();">/{{ file.name }}</a>
+            <span ng-if="!file.directory" ng-class="{'text-warning':file.name === 'package.json'}">{{ file.name }}</span>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()" ng-disabled="!$ctrl.packageJsonFound">Open</button>
+    <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+</div>
