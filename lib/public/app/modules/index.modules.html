@@ -10,31 +10,34 @@
 <div class="pull-right">
     <button class="btn btn-info btn-xs"
             ng-click="modules.reinstallAll()"
-            >Dedupe (TODO)
+            title="Searches the local package tree and attempts to simplify the overall structure by moving dependencies further up the tree, where they can be more effectively shared by multiple dependent packages."
+            >Dedupe
     </button>
     <button class="btn btn-info btn-xs"
             ng-click="modules.removeExtraneous()"
-            >Remove extraneous (TODO)
+            title="This command removes 'extraneous' packages."
+            >Prune
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
-            >Lock versions (TODO)
+            title="This command locks down the versions of a package's dependencies so that you can control exactly which versions of each dependency will be used when your package is installed."
+            >Lock all
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
-            >Unlock versions (TODO)
+            >Unlock all
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.updateAll('wanted')"
-            >Update all To Target
+            >All To Target
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.updateAll('latest')"
-            >Update all To Latest
+            >All To Latest
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.reinstallAll()"
-            >Reinstall all (TODO)
+            >Reinstall all
     </button>
 </div>
 
