@@ -8,13 +8,21 @@
 </button-->
 
 <div class="pull-right">
-    <button class="btn btn-danger btn-xs"
-            ng-click="modules.updateAll()"
-            >Update all To Wanted(TODO)
+    <button class="btn btn-info btn-xs"
+            ng-click="modules.reinstallAll()"
+            >Lock versions (TODO)
+    </button>
+    <button class="btn btn-info btn-xs"
+            ng-click="modules.reinstallAll()"
+            >Unlock versions (TODO)
     </button>
     <button class="btn btn-danger btn-xs"
-            ng-click="modules.updateAll()"
-            >Update all To Latest(TODO)
+            ng-click="modules.updateAll('wanted')"
+            >Update all To Target
+    </button>
+    <button class="btn btn-danger btn-xs"
+            ng-click="modules.updateAll('latest')"
+            >Update all To Latest
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.reinstallAll()"
@@ -61,7 +69,7 @@
             <th>Version</th>
             <th>NSP</th>
             <th>Installed</th>
-            <th>Wanted</th>
+            <th>Target</th>
             <th>Latest</th>
             <th>Action</th>
         </tr>
@@ -96,7 +104,7 @@
                         ng-if="!modules.list.versionsLoading && module.version !== module.value.slice(1)"
                         class="btn btn-success btn-sm"
                         ng-click="modules.updateModule(module, module.version)"
-                    >{{module.version}} <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
+                    >{{module.version || module.value.slice(1)}} <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
             </td>
             <td>
                 <button class="btn btn-success btn-sm" ng-click="modules.updateModule(module, module.wanted)" ng-if="module.wanted">Update to: {{module.wanted}}</button>
