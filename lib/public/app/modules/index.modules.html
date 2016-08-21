@@ -9,22 +9,26 @@
 
 <div class="pull-right">
     <button class="btn btn-info btn-xs"
-            ng-click="modules.reinstallAll()"
+            ng-click="modules.dedupe()"
+            disabled="disabled"
             title="Searches the local package tree and attempts to simplify the overall structure by moving dependencies further up the tree, where they can be more effectively shared by multiple dependent packages."
             >Dedupe
     </button>
     <button class="btn btn-info btn-xs"
-            ng-click="modules.removeExtraneous()"
+            ng-click="modules.prune()"
+            disabled="disabled"
             title="This command removes 'extraneous' packages."
             >Prune
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
+            disabled="disabled"
             title="This command locks down the versions of a package's dependencies so that you can control exactly which versions of each dependency will be used when your package is installed."
             >Lock all
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
+            disabled="disabled"
             >Unlock all
     </button>
     <button class="btn btn-danger btn-xs"
@@ -37,7 +41,8 @@
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.reinstallAll()"
-            >Reinstall all
+            disabled="disabled"
+            >Re/install all
     </button>
 </div>
 
@@ -110,7 +115,7 @@
             </td>
             <td>
                 <div class="loader-inner ball-clip-rotate" ng-if="modules.list.versionsLoading"><div></div></div>
-                <span ng-if="module.version === module.value.slice(1)">{{module.version}}</span>
+                <span ng-if="!modules.list.versionsLoading && module.version === module.value.slice(1)">{{module.version}}</span>
                 <button
                         ng-if="!modules.list.versionsLoading && module.version !== module.value.slice(1)"
                         class="btn btn-success btn-sm"
