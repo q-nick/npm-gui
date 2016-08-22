@@ -61,7 +61,8 @@
   "bin": "bin/npm-gui",
   "dependencies": {
     "npm-check-updates": "^2.8.0",
-    "nsp": "^2.6.1"
+    "nsp": "^2.6.1",
+    "rx": "^4.1.0"
   },
   "build": {
     "app-bundle-id": "your.id",

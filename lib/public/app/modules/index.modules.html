@@ -1,6 +1,6 @@
 <button class="btn btn-primary btn-xs"
         ng-click="modules.loadModules()"
-        >Refresh
+        ><span class='glyphicon glyphicon-refresh' aria-hidden="true"></span> Refresh
 </button>
 <!--button class="btn btn-info"
         ng-click="tasks.loadTasks()"
@@ -12,24 +12,24 @@
             ng-click="modules.dedupe()"
             disabled="disabled"
             title="Searches the local package tree and attempts to simplify the overall structure by moving dependencies further up the tree, where they can be more effectively shared by multiple dependent packages."
-            >Dedupe
+            ><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> Dedupe
     </button>
     <button class="btn btn-info btn-xs"
             ng-click="modules.prune()"
             disabled="disabled"
             title="This command removes 'extraneous' packages."
-            >Prune
+            ><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> Prune
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
             disabled="disabled"
             title="This command locks down the versions of a package's dependencies so that you can control exactly which versions of each dependency will be used when your package is installed."
-            >Lock all
+            ><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Lock all
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
             disabled="disabled"
-            >Unlock all
+            ><span class='glyphicon glyphicon-play-circle' aria-hidden="true"></span> Unlock all
     </button>
     <button class="btn btn-danger btn-xs"
             ng-click="modules.updateAll('wanted')"
@@ -42,7 +42,7 @@
     <button class="btn btn-danger btn-xs"
             ng-click="modules.reinstallAll()"
             disabled="disabled"
-            >Re/install all
+            ><span class='glyphicon glyphicon-refresh' aria-hidden="true"></span> Re/install all
     </button>
 </div>
 
@@ -129,7 +129,9 @@
                 <button class="btn btn-default btn-sm" ng-click="modules.updateModule(module, module.latest)" ng-if="module.latest">Update to: {{module.latest}}</button>
             </td>
             <td>
-                <button class="btn btn-danger btn-sm" ng-click="modules.removeModule(module)">Remove</button>
+                <button class="btn btn-danger btn-xs" ng-click="modules.removeModule(module)" title="Remove">&nbsp;<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;</button>
+                <button class="btn btn-primary btn-xs" ng-click="modules.freezeModule(module)" title="Frezze version by adding 'v' - prefix">&nbsp;<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;</button>
+                <button class="btn btn-warning btn-xs" ng-click="modules.moveModule(module)" title="Move dependency to devDependencies">&nbsp;<span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp;</button>
             </td>
         </tr>
     </table>
