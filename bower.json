@@ -27,10 +27,10 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "^3.1.0"
+    "jquery": "^3.0.0"
   },
   "devDependencies": {
-    "moment": "^2.10.1",
+    "moment": "^2.2.1",
     "jquery-ui": "^1.11.0"
   }
 }

@@ -1,4 +1,8 @@
 'use strict';
+
+var path = require('path');
+global.appRoot = path.resolve(__dirname);
+
 //require few modules
 var express = require('express');
 var app = express();
@@ -16,9 +20,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
+var ConsoleService = require('./lib/service/console/console.service.js');
 //modules
-var consoleController = require('./lib/modules/console/console.controller.js');
 var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
 var binModulesRoutes = require('./lib/modules/binModules/binModules.routes.js');
 var globalModulesRoutes = require('./lib/modules/globalModules/globalModules.routes.js');
@@ -46,7 +49,7 @@ function start(host, port) {
         console.log('\n\nI will be waiting here to help you with your work with pleasure.');
     });
 
-    consoleController.bind(server);
+    ConsoleService.bind(server);
 
     return server;
 }
