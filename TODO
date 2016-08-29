@@ -2,9 +2,9 @@ new project initialization
 standalone - electron app (probably without webserver)
 
 commands:
-npm dedupe
+npm dedupe - OK
 npm init
-npm prune
+npm prune - OK
 npm shrinkwrap
 
 additional:
@@ -19,9 +19,9 @@ etc...
 
 
 Modules:
-- Show which are installed.
-- Show which are extraneous.
-- Install All / Reinstall All
+- Show which are installed. - OK
+- Show which are extraneous. - ?WHERE? - little red label on dedupe later - list in modal?
+- Install All / Reinstall All - remove all in node_modules and bower_components then run npm and bower install
 
 NSP:
 - better support for deep dependency
