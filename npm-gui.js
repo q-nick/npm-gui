@@ -46,8 +46,12 @@ module.exports =
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+
+	var path = __webpack_require__(1);
+	global.appRoot = path.resolve(__dirname);
+
 	//require few modules
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var app = express();
 	var bodyParser = __webpack_require__(83);
 
@@ -102,6 +106,12 @@ module.exports =
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -114,11 +124,11 @@ module.exports =
 
 	'use strict';
 
-	module.exports = __webpack_require__(2);
+	module.exports = __webpack_require__(3);
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -135,11 +145,11 @@ module.exports =
 	 * Module dependencies.
 	 */
 
-	var EventEmitter = __webpack_require__(3).EventEmitter;
-	var mixin = __webpack_require__(4);
-	var proto = __webpack_require__(5);
-	var Route = __webpack_require__(21);
-	var Router = __webpack_require__(20);
+	var EventEmitter = __webpack_require__(4).EventEmitter;
+	var mixin = __webpack_require__(5);
+	var proto = __webpack_require__(6);
+	var Route = __webpack_require__(22);
+	var Router = __webpack_require__(21);
 	var req = __webpack_require__(66);
 	var res = __webpack_require__(78);
 
@@ -227,13 +237,13 @@ module.exports =
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	module.exports = require("events");
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/*!
@@ -299,7 +309,7 @@ module.exports =
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -317,21 +327,21 @@ module.exports =
 	 * @private
 	 */
 
-	var finalhandler = __webpack_require__(6);
-	var Router = __webpack_require__(20);
-	var methods = __webpack_require__(25);
+	var finalhandler = __webpack_require__(7);
+	var Router = __webpack_require__(21);
+	var methods = __webpack_require__(26);
 	var middleware = __webpack_require__(37);
 	var query = __webpack_require__(38);
-	var debug = __webpack_require__(7)('express:application');
+	var debug = __webpack_require__(8)('express:application');
 	var View = __webpack_require__(43);
-	var http = __webpack_require__(26);
+	var http = __webpack_require__(27);
 	var compileETag = __webpack_require__(44).compileETag;
 	var compileQueryParser = __webpack_require__(44).compileQueryParser;
 	var compileTrust = __webpack_require__(44).compileTrust;
-	var deprecate = __webpack_require__(28)('express');
-	var flatten = __webpack_require__(22);
-	var merge = __webpack_require__(27);
-	var resolve = __webpack_require__(34).resolve;
+	var deprecate = __webpack_require__(29)('express');
+	var flatten = __webpack_require__(23);
+	var merge = __webpack_require__(28);
+	var resolve = __webpack_require__(1).resolve;
 	var slice = Array.prototype.slice;
 
 	/**
@@ -948,7 +958,7 @@ module.exports =
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -964,11 +974,11 @@ module.exports =
 	 * @private
 	 */
 
-	var debug = __webpack_require__(7)('finalhandler')
-	var escapeHtml = __webpack_require__(14)
-	var onFinished = __webpack_require__(15)
-	var statuses = __webpack_require__(17)
-	var unpipe = __webpack_require__(19)
+	var debug = __webpack_require__(8)('finalhandler')
+	var escapeHtml = __webpack_require__(15)
+	var onFinished = __webpack_require__(16)
+	var statuses = __webpack_require__(18)
+	var unpipe = __webpack_require__(20)
 
 	/**
 	 * Module variables.
@@ -1143,7 +1153,7 @@ module.exports =
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1151,8 +1161,8 @@ module.exports =
 	 * Module dependencies.
 	 */
 
-	var tty = __webpack_require__(8);
-	var util = __webpack_require__(9);
+	var tty = __webpack_require__(9);
+	var util = __webpack_require__(10);
 
 	/**
 	 * This is the Node.js implementation of `debug()`.
@@ -1160,7 +1170,7 @@ module.exports =
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(10);
+	exports = module.exports = __webpack_require__(11);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -1308,14 +1318,14 @@ module.exports =
 	      break;
 
 	    case 'FILE':
-	      var fs = __webpack_require__(12);
+	      var fs = __webpack_require__(13);
 	      stream = new fs.SyncWriteStream(fd, { autoClose: false });
 	      stream._type = 'fs';
 	      break;
 
 	    case 'PIPE':
 	    case 'TCP':
-	      var net = __webpack_require__(13);
+	      var net = __webpack_require__(14);
 	      stream = new net.Socket({
 	        fd: fd,
 	        readable: false,
@@ -1358,19 +1368,19 @@ module.exports =
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = require("tty");
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = require("util");
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1386,7 +1396,7 @@ module.exports =
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(11);
+	exports.humanize = __webpack_require__(12);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -1573,7 +1583,7 @@ module.exports =
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/**
@@ -1704,19 +1714,19 @@ module.exports =
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("fs");
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = require("net");
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/*!
@@ -1800,7 +1810,7 @@ module.exports =
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -1825,7 +1835,7 @@ module.exports =
 	 * @private
 	 */
 
-	var first = __webpack_require__(16)
+	var first = __webpack_require__(17)
 
 	/**
 	 * Variables.
@@ -2002,7 +2012,7 @@ module.exports =
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/*!
@@ -2103,7 +2113,7 @@ module.exports =
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -2120,7 +2130,7 @@ module.exports =
 	 * @private
 	 */
 
-	var codes = __webpack_require__(18)
+	var codes = __webpack_require__(19)
 
 	/**
 	 * Module exports.
@@ -2219,7 +2229,7 @@ module.exports =
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -2289,7 +2299,7 @@ module.exports =
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/*!
@@ -2364,7 +2374,7 @@ module.exports =
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -2382,13 +2392,13 @@ module.exports =
 	 * @private
 	 */
 
-	var Route = __webpack_require__(21);
-	var Layer = __webpack_require__(23);
-	var methods = __webpack_require__(25);
-	var mixin = __webpack_require__(27);
-	var debug = __webpack_require__(7)('express:router');
-	var deprecate = __webpack_require__(28)('express');
-	var flatten = __webpack_require__(22);
+	var Route = __webpack_require__(22);
+	var Layer = __webpack_require__(24);
+	var methods = __webpack_require__(26);
+	var mixin = __webpack_require__(28);
+	var debug = __webpack_require__(8)('express:router');
+	var deprecate = __webpack_require__(29)('express');
+	var flatten = __webpack_require__(23);
 	var parseUrl = __webpack_require__(35);
 
 	/**
@@ -3015,7 +3025,7 @@ module.exports =
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -3033,10 +3043,10 @@ module.exports =
 	 * @private
 	 */
 
-	var debug = __webpack_require__(7)('express:router:route');
-	var flatten = __webpack_require__(22);
-	var Layer = __webpack_require__(23);
-	var methods = __webpack_require__(25);
+	var debug = __webpack_require__(8)('express:router:route');
+	var flatten = __webpack_require__(23);
+	var Layer = __webpack_require__(24);
+	var methods = __webpack_require__(26);
 
 	/**
 	 * Module variables.
@@ -3231,7 +3241,7 @@ module.exports =
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -3301,7 +3311,7 @@ module.exports =
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -3319,8 +3329,8 @@ module.exports =
 	 * @private
 	 */
 
-	var pathRegexp = __webpack_require__(24);
-	var debug = __webpack_require__(7)('express:router:layer');
+	var pathRegexp = __webpack_require__(25);
+	var debug = __webpack_require__(8)('express:router:layer');
 
 	/**
 	 * Module variables.
@@ -3483,7 +3493,7 @@ module.exports =
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	/**
@@ -3618,7 +3628,7 @@ module.exports =
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -3635,7 +3645,7 @@ module.exports =
 	 * @private
 	 */
 
-	var http = __webpack_require__(26);
+	var http = __webpack_require__(27);
 
 	/**
 	 * Module exports.
@@ -3693,13 +3703,13 @@ module.exports =
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = require("http");
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	/**
@@ -3728,7 +3738,7 @@ module.exports =
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -3741,9 +3751,9 @@ module.exports =
 	 * Module dependencies.
 	 */
 
-	var callSiteToString = __webpack_require__(29).callSiteToString
-	var eventListenerCount = __webpack_require__(29).eventListenerCount
-	var relative = __webpack_require__(34).relative
+	var callSiteToString = __webpack_require__(30).callSiteToString
+	var eventListenerCount = __webpack_require__(30).eventListenerCount
+	var relative = __webpack_require__(1).relative
 
 	/**
 	 * Module exports.
@@ -4255,7 +4265,7 @@ module.exports =
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -4271,8 +4281,8 @@ module.exports =
 	 * @private
 	 */
 
-	var Buffer = __webpack_require__(30)
-	var EventEmitter = __webpack_require__(3).EventEmitter
+	var Buffer = __webpack_require__(31)
+	var EventEmitter = __webpack_require__(4).EventEmitter
 
 	/**
 	 * Module exports.
@@ -4280,7 +4290,7 @@ module.exports =
 	 */
 
 	lazyProperty(module.exports, 'bufferConcat', function bufferConcat() {
-	  return Buffer.concat || __webpack_require__(31)
+	  return Buffer.concat || __webpack_require__(32)
 	})
 
 	lazyProperty(module.exports, 'callSiteToString', function callSiteToString() {
@@ -4304,11 +4314,11 @@ module.exports =
 	  Error.prepareStackTrace = prep
 	  Error.stackTraceLimit = limit
 
-	  return stack[0].toString ? toString : __webpack_require__(32)
+	  return stack[0].toString ? toString : __webpack_require__(33)
 	})
 
 	lazyProperty(module.exports, 'eventListenerCount', function eventListenerCount() {
-	  return EventEmitter.listenerCount || __webpack_require__(33)
+	  return EventEmitter.listenerCount || __webpack_require__(34)
 	})
 
 	/**
@@ -4345,13 +4355,13 @@ module.exports =
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	module.exports = require("buffer");
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/*!
@@ -4392,7 +4402,7 @@ module.exports =
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/*!
@@ -4501,7 +4511,7 @@ module.exports =
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/*!
@@ -4527,12 +4537,6 @@ module.exports =
 	  return emitter.listeners(type).length
 	}
 
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-	module.exports = require("path");
 
 /***/ },
 /* 35 */
@@ -5298,9 +5302,9 @@ module.exports =
 	 * @private
 	 */
 
-	var debug = __webpack_require__(7)('express:view');
-	var path = __webpack_require__(34);
-	var fs = __webpack_require__(12);
+	var debug = __webpack_require__(8)('express:view');
+	var path = __webpack_require__(1);
+	var fs = __webpack_require__(13);
 	var utils = __webpack_require__(44);
 
 	/**
@@ -5478,10 +5482,10 @@ module.exports =
 
 	var contentDisposition = __webpack_require__(45);
 	var contentType = __webpack_require__(46);
-	var deprecate = __webpack_require__(28)('express');
-	var flatten = __webpack_require__(22);
+	var deprecate = __webpack_require__(29)('express');
+	var flatten = __webpack_require__(23);
 	var mime = __webpack_require__(47).mime;
-	var basename = __webpack_require__(34).basename;
+	var basename = __webpack_require__(1).basename;
 	var etag = __webpack_require__(54);
 	var proxyaddr = __webpack_require__(60);
 	var qs = __webpack_require__(39);
@@ -5786,7 +5790,7 @@ module.exports =
 	 * Module dependencies.
 	 */
 
-	var basename = __webpack_require__(34).basename
+	var basename = __webpack_require__(1).basename
 
 	/**
 	 * RegExp to match non attr-char, *after* encodeURIComponent (i.e. not including "%")
@@ -6455,23 +6459,23 @@ module.exports =
 	 */
 
 	var createError = __webpack_require__(48)
-	var debug = __webpack_require__(7)('send')
-	var deprecate = __webpack_require__(28)('send')
+	var debug = __webpack_require__(8)('send')
+	var deprecate = __webpack_require__(29)('send')
 	var destroy = __webpack_require__(51)
 	var encodeUrl = __webpack_require__(53)
-	var escapeHtml = __webpack_require__(14)
+	var escapeHtml = __webpack_require__(15)
 	var etag = __webpack_require__(54)
-	var EventEmitter = __webpack_require__(3).EventEmitter
+	var EventEmitter = __webpack_require__(4).EventEmitter
 	var fresh = __webpack_require__(56)
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 	var mime = __webpack_require__(57)
-	var ms = __webpack_require__(11)
-	var onFinished = __webpack_require__(15)
+	var ms = __webpack_require__(12)
+	var onFinished = __webpack_require__(16)
 	var parseRange = __webpack_require__(59)
-	var path = __webpack_require__(34)
-	var statuses = __webpack_require__(17)
+	var path = __webpack_require__(1)
+	var statuses = __webpack_require__(18)
 	var Stream = __webpack_require__(52)
-	var util = __webpack_require__(9)
+	var util = __webpack_require__(10)
 
 	/**
 	 * Path function references.
@@ -7409,7 +7413,7 @@ module.exports =
 	 */
 
 	var setPrototypeOf = __webpack_require__(49)
-	var statuses = __webpack_require__(17)
+	var statuses = __webpack_require__(18)
 	var inherits = __webpack_require__(50)
 
 	/**
@@ -7640,7 +7644,7 @@ module.exports =
 /* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(9).inherits
+	module.exports = __webpack_require__(10).inherits
 
 
 /***/ },
@@ -7660,7 +7664,7 @@ module.exports =
 	 * @private
 	 */
 
-	var ReadStream = __webpack_require__(12).ReadStream
+	var ReadStream = __webpack_require__(13).ReadStream
 	var Stream = __webpack_require__(52)
 
 	/**
@@ -7821,7 +7825,7 @@ module.exports =
 	 */
 
 	var crypto = __webpack_require__(55)
-	var Stats = __webpack_require__(12).Stats
+	var Stats = __webpack_require__(13).Stats
 
 	/**
 	 * Module variables.
@@ -8007,8 +8011,8 @@ module.exports =
 /* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var path = __webpack_require__(34);
-	var fs = __webpack_require__(12);
+	var path = __webpack_require__(1);
+	var fs = __webpack_require__(13);
 
 	function Mime() {
 	  // Map of extension -> mime type
@@ -11800,10 +11804,10 @@ module.exports =
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./application": 5,
-		"./application.js": 5,
-		"./express": 2,
-		"./express.js": 2,
+		"./application": 6,
+		"./application.js": 6,
+		"./express": 3,
+		"./express.js": 3,
 		"./middleware/init": 37,
 		"./middleware/init.js": 37,
 		"./middleware/query": 38,
@@ -11812,12 +11816,12 @@ module.exports =
 		"./request.js": 66,
 		"./response": 78,
 		"./response.js": 78,
-		"./router/index": 20,
-		"./router/index.js": 20,
-		"./router/layer": 23,
-		"./router/layer.js": 23,
-		"./router/route": 21,
-		"./router/route.js": 21,
+		"./router/index": 21,
+		"./router/index.js": 21,
+		"./router/layer": 24,
+		"./router/layer.js": 24,
+		"./router/route": 22,
+		"./router/route.js": 22,
 		"./utils": 44,
 		"./utils.js": 44,
 		"./view": 43,
@@ -11857,10 +11861,10 @@ module.exports =
 	 */
 
 	var accepts = __webpack_require__(67);
-	var deprecate = __webpack_require__(28)('express');
-	var isIP = __webpack_require__(13).isIP;
+	var deprecate = __webpack_require__(29)('express');
+	var isIP = __webpack_require__(14).isIP;
 	var typeis = __webpack_require__(76);
-	var http = __webpack_require__(26);
+	var http = __webpack_require__(27);
 	var fresh = __webpack_require__(56);
 	var parseRange = __webpack_require__(59);
 	var parse = __webpack_require__(35);
@@ -13581,7 +13585,7 @@ module.exports =
 	 */
 
 	var db = __webpack_require__(74)
-	var extname = __webpack_require__(34).extname
+	var extname = __webpack_require__(1).extname
 
 	/**
 	 * Module variables.
@@ -22853,14 +22857,14 @@ module.exports =
 	 */
 
 	var contentDisposition = __webpack_require__(45);
-	var deprecate = __webpack_require__(28)('express');
+	var deprecate = __webpack_require__(29)('express');
 	var encodeUrl = __webpack_require__(53);
-	var escapeHtml = __webpack_require__(14);
-	var http = __webpack_require__(26);
+	var escapeHtml = __webpack_require__(15);
+	var http = __webpack_require__(27);
 	var isAbsolute = __webpack_require__(44).isAbsolute;
-	var onFinished = __webpack_require__(15);
-	var path = __webpack_require__(34);
-	var merge = __webpack_require__(27);
+	var onFinished = __webpack_require__(16);
+	var path = __webpack_require__(1);
+	var merge = __webpack_require__(28);
 	var sign = __webpack_require__(79).sign;
 	var normalizeType = __webpack_require__(44).normalizeType;
 	var normalizeTypes = __webpack_require__(44).normalizeTypes;
@@ -24313,9 +24317,9 @@ module.exports =
 	 */
 
 	var encodeUrl = __webpack_require__(53)
-	var escapeHtml = __webpack_require__(14)
+	var escapeHtml = __webpack_require__(15)
 	var parseUrl = __webpack_require__(35)
-	var resolve = __webpack_require__(34).resolve
+	var resolve = __webpack_require__(1).resolve
 	var send = __webpack_require__(47)
 	var url = __webpack_require__(36)
 
@@ -24504,7 +24508,7 @@ module.exports =
 	 * @private
 	 */
 
-	var deprecate = __webpack_require__(28)('body-parser')
+	var deprecate = __webpack_require__(29)('body-parser')
 
 	/**
 	 * Cache of loaded parsers.
@@ -24671,7 +24675,7 @@ module.exports =
 	var bytes = __webpack_require__(85)
 	var contentType = __webpack_require__(46)
 	var createError = __webpack_require__(48)
-	var debug = __webpack_require__(7)('body-parser:json')
+	var debug = __webpack_require__(8)('body-parser:json')
 	var read = __webpack_require__(86)
 	var typeis = __webpack_require__(76)
 
@@ -25014,7 +25018,7 @@ module.exports =
 	var createError = __webpack_require__(48)
 	var getBody = __webpack_require__(87)
 	var iconv = __webpack_require__(88)
-	var onFinished = __webpack_require__(15)
+	var onFinished = __webpack_require__(16)
 	var zlib = __webpack_require__(110)
 
 	/**
@@ -25208,7 +25212,7 @@ module.exports =
 
 	var bytes = __webpack_require__(85)
 	var iconv = __webpack_require__(88)
-	var unpipe = __webpack_require__(19)
+	var unpipe = __webpack_require__(20)
 
 	/**
 	 * Module exports.
@@ -36339,7 +36343,7 @@ module.exports =
 	        }
 
 	        // -- SlowBuffer -----------------------------------------------------------
-	        var SlowBuffer = __webpack_require__(30).SlowBuffer;
+	        var SlowBuffer = __webpack_require__(31).SlowBuffer;
 
 	        original.SlowBufferToString = SlowBuffer.prototype.toString;
 	        SlowBuffer.prototype.toString = function(encoding, start, end) {
@@ -36502,7 +36506,7 @@ module.exports =
 
 	        delete Buffer.isNativeEncoding;
 
-	        var SlowBuffer = __webpack_require__(30).SlowBuffer;
+	        var SlowBuffer = __webpack_require__(31).SlowBuffer;
 
 	        SlowBuffer.prototype.toString = original.SlowBufferToString;
 	        SlowBuffer.prototype.write = original.SlowBufferWrite;
@@ -36547,7 +36551,7 @@ module.exports =
 	 */
 
 	var bytes = __webpack_require__(85)
-	var debug = __webpack_require__(7)('body-parser:raw')
+	var debug = __webpack_require__(8)('body-parser:raw')
 	var read = __webpack_require__(86)
 	var typeis = __webpack_require__(76)
 
@@ -36655,7 +36659,7 @@ module.exports =
 
 	var bytes = __webpack_require__(85)
 	var contentType = __webpack_require__(46)
-	var debug = __webpack_require__(7)('body-parser:text')
+	var debug = __webpack_require__(8)('body-parser:text')
 	var read = __webpack_require__(86)
 	var typeis = __webpack_require__(76)
 
@@ -36785,8 +36789,8 @@ module.exports =
 	var bytes = __webpack_require__(85)
 	var contentType = __webpack_require__(46)
 	var createError = __webpack_require__(48)
-	var debug = __webpack_require__(7)('body-parser:urlencoded')
-	var deprecate = __webpack_require__(28)('body-parser')
+	var debug = __webpack_require__(8)('body-parser:urlencoded')
+	var deprecate = __webpack_require__(29)('body-parser')
 	var read = __webpack_require__(86)
 	var typeis = __webpack_require__(76)
 
@@ -37152,8 +37156,8 @@ module.exports =
 	 */
 
 	var url = __webpack_require__(36)
-	  , util = __webpack_require__(9)
-	  , http = __webpack_require__(26)
+	  , util = __webpack_require__(10)
+	  , http = __webpack_require__(27)
 	  , https = __webpack_require__(117)
 	  , crypto = __webpack_require__(55)
 	  , stream = __webpack_require__(52)
@@ -37165,7 +37169,7 @@ module.exports =
 	  , ReceiverHixie = __webpack_require__(130)
 	  , Extensions = __webpack_require__(131)
 	  , PerMessageDeflate = __webpack_require__(124)
-	  , EventEmitter = __webpack_require__(3).EventEmitter;
+	  , EventEmitter = __webpack_require__(4).EventEmitter;
 
 	/**
 	 * Constants
@@ -38282,7 +38286,7 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var fs = __webpack_require__(12);
+	var fs = __webpack_require__(13);
 
 	function Options(defaults) {
 	  var internalValues = {};
@@ -38375,8 +38379,8 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var events = __webpack_require__(3)
-	  , util = __webpack_require__(9)
+	var events = __webpack_require__(4)
+	  , util = __webpack_require__(10)
 	  , EventEmitter = events.EventEmitter
 	  , ErrorCodes = __webpack_require__(121)
 	  , bufferUtil = __webpack_require__(122).BufferUtil
@@ -39149,7 +39153,7 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var util = __webpack_require__(9)
+	var util = __webpack_require__(10)
 	  , Validation = __webpack_require__(126).Validation
 	  , ErrorCodes = __webpack_require__(121)
 	  , BufferPool = __webpack_require__(128)
@@ -39984,7 +39988,7 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 
 	function BufferPool(initialSize, growStrategy, shrinkStrategy) {
 	  if (this instanceof BufferPool === false) {
@@ -40053,8 +40057,8 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var events = __webpack_require__(3)
-	  , util = __webpack_require__(9)
+	var events = __webpack_require__(4)
+	  , util = __webpack_require__(10)
 	  , EventEmitter = events.EventEmitter;
 
 	/**
@@ -40183,7 +40187,7 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 
 	/**
 	 * State constants
@@ -40378,7 +40382,7 @@ module.exports =
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 
 	/**
 	 * Module exports.
@@ -40459,9 +40463,9 @@ module.exports =
 	 * MIT Licensed
 	 */
 
-	var util = __webpack_require__(9)
-	  , events = __webpack_require__(3)
-	  , http = __webpack_require__(26)
+	var util = __webpack_require__(10)
+	  , events = __webpack_require__(4)
+	  , http = __webpack_require__(27)
 	  , crypto = __webpack_require__(55)
 	  , Options = __webpack_require__(119)
 	  , WebSocket = __webpack_require__(116)
@@ -41019,7 +41023,7 @@ module.exports =
 /* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var modulesRouter = express.Router();
 
 	var modulesController = __webpack_require__(135);
@@ -41030,10 +41034,10 @@ module.exports =
 	//install
 	modulesRouter.get('/install', modulesController.whenGetInstall);
 	//others
-	//modulesRouter.get('/versions', modulesController.whenGetVersions);
 	modulesRouter.post('/updateAll', modulesController.whenPostUpdateAll);
 	modulesRouter.get('/nsp', modulesController.whenGetNSP);
 	modulesRouter.get('/prune', modulesController.whenGetPrune);
+	modulesRouter.get('/dedupe', modulesController.whenGetDedupe);
 
 	module.exports = modulesRouter;
 
@@ -41053,7 +41057,7 @@ module.exports =
 	module.exports.whenGetPrune = whenGetPrune;
 	module.exports.whenGetDedupe = whenGetDedupe;
 
-	var fs = __webpack_require__(12);
+	var fs = __webpack_require__(13);
 
 	var UtilsService = __webpack_require__(136);
 	var CommandsService = __webpack_require__(150);
@@ -41106,105 +41110,57 @@ module.exports =
 	}
 
 	function whenGet(req, res) {
-	    var preparedDependenciesArray = ModulesService.getModules(UtilsService.isDevModules(req));
+	    var isDev = UtilsService.isDevModules(req);
 
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send(preparedDependenciesArray);
+	    ModulesService
+	        .getModules(isDev)
+	        .subscribe(function(dependencies) {
+	            res.setHeader('Content-Type', 'application/json');
+	            res.status(200).send(dependencies);
+	        });
 	}
 
 	function whenGetNSP(req, res) {
 	    CommandsService
 	        .run(CommandsService.cmd.nsp.check)
-	        .then(function(data) {
+	        .subscribe(function(data) {
 	            var dependencies = {};
 	            if (data.stderr) {
 	                UtilsService.buildObjectFromArray(UtilsService.JSONparse(data.stderr), dependencies, 'module');
 	            }
+	            res.setHeader('Content-Type', 'application/json');
 	            res.status(200).send(dependencies);
 	        });
 	}
 
 	function whenGetPrune(req, res) {
-	    CommandsService
-	        .run(CommandsService.cmd.npm.prune)
-	        .then(function(data) {
+	    ModulesService
+	        .prune()
+	        .subscribe(function() {
+	            res.setHeader('Content-Type', 'application/json');
 	            res.status(200).send({});
 	        });
 	}
 
 	function whenGetDedupe(req, res) {
-	    CommandsService
-	        .run(CommandsService.cmd.npm.dedupe)
-	        .then(function(data) {
+	    ModulesService
+	        .dedupe()
+	        .subscribe(function() {
+	            res.setHeader('Content-Type', 'application/json');
 	            res.status(200).send({});
 	        });
 	}
 
 	function whenPostUpdateAll(req, res) {
 	    var type = req.body.type;
-	    //TODO refactor too fat method
-	    //get all versions
-	    var dependencies = {};
+	    var isDev = UtilsService.isDevModules(req);
 
-	    getNPMDependenciesVersions()
-	        .then(function(versions) {
-	            if (versions) {
-	                var packageJson = new PackageJson();
-
-	                var depsInPackageJson = UtilsService.isDevModules(req) ? packageJson.getDevDependencies() : packageJson.getDependencies();
-
-	                for (var key in depsInPackageJson) {
-	                    if (depsInPackageJson.hasOwnProperty(key)) {
-	                        if (depsInPackageJson[key].slice(1) !== versions[key].version) {
-	                            depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, versions[key].version);
-	                        }
-	                        if (versions[key] && versions[key][type]) {
-	                            depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, versions[key][type]);
-	                        }
-	                    }
-	                }
-
-	                //save file
-	                packageJson.save();
-	                console.log('npm saved');
-	                //run install command
-	                return commands.run(commands.npm.update);
-	            }
-	        })
-	        .then(function() {
-	            return getBowerDependenciesVersions();
-	        })
-	        .then(function(versions) {
-	            //have to change type name
-	            if (type = 'wanted') {
-	                type = 'target'
-	            }
-	            if (versions) {
-	                var packageJson = new PackageJson(null, '/bower.json');
-
-	                var depsInPackageJson = UtilsService.isDevModules(req) ? packageJson.getDevDependencies() : packageJson.getDependencies();
-
-	                for (var key in depsInPackageJson) {
-	                    if (depsInPackageJson.hasOwnProperty(key)) {
-	                        if (depsInPackageJson[key].slice(1) !== versions[key].version) {
-	                            depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, versions[key].version);
-	                        }
-	                        if (versions[key] && versions[key][type]) {
-	                            depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, versions[key].update[type]);
-	                        }
-	                    }
-	                }
-
-	                //save file
-	                packageJson.save();
-	                console.log('bower saved');
-	                //run install command
-	                return commands.run(commands.npm.update);
-	            }
-	        })
-	        .then(function() {
-	            res.status(200).send({});
-	        })
+	    ModulesService
+	        .updateAllModules(isDev, type)
+	        .subscribe(function(dependencies) {
+	            res.setHeader('Content-Type', 'application/json');
+	            res.status(200).send(dependencies);
+	        });
 	}
 
 
@@ -41220,11 +41176,12 @@ module.exports =
 	module.exports.isGlobalModules = isGlobalModules;
 	module.exports.JSONparse = JSONparse;
 	module.exports.setInArrayByRepoAndKey = setInArrayByRepoAndKey;
+	module.exports.findInArrayByRepoAndKey = findInArrayByRepoAndKey;
 	module.exports.extend = extend;
 
 	/////////////////////
 
-	var fs = __webpack_require__(12);
+	var fs = __webpack_require__(13);
 	var Rx = __webpack_require__(137);
 	/////////////////////
 
@@ -41264,13 +41221,19 @@ module.exports =
 	}
 
 	function setInArrayByRepoAndKey(repo, keyToFind, valueToFind, keyToSet, valueToSet, arr) {
+	    var item = findInArrayByRepoAndKey(repo, keyToFind, valueToFind, arr);
+
+	    if (item) {
+	        item[keyToSet] = valueToSet;
+	    }
+	}
+
+	function findInArrayByRepoAndKey(repo, keyToFind, valueToFind, arr) {
 	    var index = arr.findIndex(function(item) {
 	        return item.repo === repo && item[keyToFind] === valueToFind;
 	    });
 
-	    if (index !== -1) {
-	        arr[index][keyToSet] = valueToSet;
-	    }
+	    return arr[index];
 	}
 
 	function extend(source, destination) {
@@ -54542,7 +54505,7 @@ module.exports =
 	'use strict';
 
 	module.exports.run = run;
-	module.exports.type = __webpack_require__(151);
+	module.exports.cmd = __webpack_require__(151);
 
 	/////////////////////
 
@@ -54561,9 +54524,10 @@ module.exports =
 	        if (bindConsole) {
 	            ConsoleService.send('start: ' + command.command + ' ' + command.args.toString() + '\n');
 	        }
+
 	        //spawn process
 	        var spawned = spawn(command.command, command.args, {
-	            cwd: ProjectService.getProjectPath()
+	            cwd: ProjectService.getPath()
 	        });
 
 	        //wait for stdout, stderr
@@ -54603,10 +54567,6 @@ module.exports =
 /***/ function(module, exports) {
 
 	'use strict';
-
-	module.exports.npm = npm;
-	module.exports.nsp = nsp;
-	module.exports.bower = bower;
 
 	var npm = {
 	    ls: {
@@ -54653,7 +54613,7 @@ module.exports =
 
 	var nsp = {
 	    check: {
-	        command: __dirname + '/node_modules/nsp/bin/nsp',
+	        command: appRoot + '/node_modules/nsp/bin/nsp',
 	        args: ['check', '--output', 'json']
 	    }
 	};
@@ -54680,6 +54640,10 @@ module.exports =
 	        args: ['update'],
 	    },
 	}
+
+	module.exports.npm = npm;
+	module.exports.nsp = nsp;
+	module.exports.bower = bower;
 
 
 /***/ },
@@ -54759,7 +54723,7 @@ module.exports =
 
 	'use strict';
 
-	var fs = __webpack_require__(12);
+	var fs = __webpack_require__(13);
 	var LRU = __webpack_require__(155);
 	var resolveCommand = __webpack_require__(159);
 	var hasBrokenSpawn = __webpack_require__(165);
@@ -54908,7 +54872,7 @@ module.exports =
 	// This will be a proper iterable 'Map' in engines that support it,
 	// or a fakey-fake PseudoMap in older versions.
 	var Map = __webpack_require__(156)
-	var util = __webpack_require__(9)
+	var util = __webpack_require__(10)
 
 	// A linked list to keep track of recently-used-ness
 	var Yallist = __webpack_require__(158)
@@ -55880,7 +55844,7 @@ module.exports =
 
 	'use strict';
 
-	var path = __webpack_require__(34);
+	var path = __webpack_require__(1);
 	var which = __webpack_require__(160);
 	var LRU = __webpack_require__(155);
 
@@ -55922,10 +55886,10 @@ module.exports =
 	    process.env.OSTYPE === 'cygwin' ||
 	    process.env.OSTYPE === 'msys'
 
-	var path = __webpack_require__(34)
+	var path = __webpack_require__(1)
 	var COLON = isWindows ? ';' : ':'
 	var isexe = __webpack_require__(161)
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 
 	function getNotFoundError (cmd) {
 	  var er = new Error('not found: ' + cmd)
@@ -56054,7 +56018,7 @@ module.exports =
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 	var core
 	if (process.platform === 'win32' || global.TESTING_WINDOWS) {
 	  core = __webpack_require__(162)
@@ -56122,7 +56086,7 @@ module.exports =
 	module.exports = isexe
 	isexe.sync = sync
 
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 
 	function checkPathExt (path, options) {
 	  var pathext = options.pathExt !== undefined ?
@@ -56164,7 +56128,7 @@ module.exports =
 	module.exports = isexe
 	isexe.sync = sync
 
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 
 	function isexe (path, _, cb) {
 	  fs.access(path, fs.X_OK, function (er) {
@@ -56185,7 +56149,7 @@ module.exports =
 	module.exports = isexe
 	isexe.sync = sync
 
-	var fs = __webpack_require__(12)
+	var fs = __webpack_require__(13)
 
 	function isexe (path, options, cb) {
 	  fs.stat(path, function (er, st) {
@@ -56319,51 +56283,63 @@ module.exports =
 
 /***/ },
 /* 167 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports.getProjectPath = getProjectPath;
-	module.exports.setProjectPath = setProjectPath;
+	module.exports.getPath = getPath;
+	module.exports.setPath = setPath;
 	module.exports.isBowerAvailable = isBowerAvailable;
 	module.exports.isNPMAvailable = isNPMAvailable;
+	module.exports.getBowerJson = getBowerJson;
+	module.exports.getPackageJson = getPackageJson;
 
-	var projectPath = __dirname;
+	var Rx = __webpack_require__(137);
+	var fs = __webpack_require__(13);
+	var PackageJson = __webpack_require__(168);
 
-	function getProjectPath() {
+	var projectPath = process.cwd();
+
+	function getPath() {
 	    return projectPath;
 	}
 
-	function setProjectPath(newProjectPath) {
+	function setPath(newProjectPath) {
 	    projectPath = newProjectPath;
 	}
 
 	function isBowerAvailable() {
 	    return Rx.Observable.create(function(observer) {
-	        fs.access(getProjectPath() + '/bower.json', function(err) {
+	        fs.access(getPath() + '/bower.json', function(err) {
 	            if (!err) {
 	                observer.onNext();
-	                observer.onCompleted();
 	            } else {
 	                observer.onError();
-	                observer.onCompleted();
 	            }
+	            observer.onCompleted();
 	        });
 	    });
 	}
 
 	function isNPMAvailable() {
 	    return Rx.Observable.create(function(observer) {
-	        fs.access(getProjectPath() + '/package.json', function(err) {
+	        fs.access(getPath() + '/package.json', function(err) {
 	            if (!err) {
 	                observer.onNext();
-	                observer.onCompleted();
 	            } else {
 	                observer.onError();
-	                observer.onCompleted();
 	            }
+	            observer.onCompleted();
 	        });
 	    });
+	}
+
+	function getBowerJson() {
+	    return new PackageJson(getPath(), 'bower.json');
+	}
+
+	function getPackageJson() {
+	    return new PackageJson(getPath());
 	}
 
 
@@ -56382,7 +56358,7 @@ module.exports =
 	var ProjectService = __webpack_require__(167);
 	//this should be removed
 
-	var fs = __webpack_require__(12);
+	var fs = __webpack_require__(13);
 
 	/////////////////////
 
@@ -56404,11 +56380,10 @@ module.exports =
 
 	    this.getBin = getBin;
 	    this.getParsed = getParsed;
-	    this.getPath = getPath;
 
 	    this.save = save;
 
-	    var parsedPackage = JSON.parse(fs.readFileSync(getPath() + '/' + (name ? name : 'package.json'), 'utf-8'));
+	    var parsedPackage = JSON.parse(fs.readFileSync(path + '/' + (name ? name : 'package.json'), 'utf-8'));
 
 	    //////////////////////////////////
 	    function remove(from, what) {
@@ -56506,10 +56481,6 @@ module.exports =
 	    function getParsed() {
 	        return parsedPackage;
 	    }
-
-	    function getPath() {
-	        return path || ProjectService.getProjectPath();
-	    }
 	}
 
 
@@ -56520,7 +56491,10 @@ module.exports =
 	'use strict';
 
 	module.exports.getModules = getModules;
+	module.exports.updateAllModules = updateAllModules;
 	module.exports.updateModulesInfo = updateModulesInfo;
+	module.exports.prune = prune;
+	module.exports.dedupe = dedupe;
 
 	/////////////////////
 
@@ -56528,6 +56502,7 @@ module.exports =
 	var PackageJson = __webpack_require__(168).PackageJson;
 	var CommandsService = __webpack_require__(150);
 	var UtilsService = __webpack_require__(136);
+	var ProjectService = __webpack_require__(167);
 
 	/////////////////////
 	var isRepoAvailable = {
@@ -56572,18 +56547,17 @@ module.exports =
 
 	        var source = sourceBower.merge(sourceNPM);
 
-	        source
-	            .subscribe(function() {}, function() {}, function() {
-	                observer.onCompleted();
-	            });
+	        source.subscribeOnCompleted(function() {
+	            observer.onNext();
+	            observer.onCompleted();
+	        });
 	    });
 	}
 
 	function checkVersionBower(dependencies) {
 	    return Rx.Observable.create(function(observer) {
-	        commands
-	            .run(commands.bower.ls)
-	            .then(function(data) {
+	        CommandsService.run(CommandsService.cmd.bower.ls)
+	            .subscribe(function(data) {
 	                var dependenciesListed = UtilsService.JSONparse(data.stdout).dependencies;
 	                for (var key in dependenciesListed) {
 	                    if (dependenciesListed.hasOwnProperty(key) && dependenciesListed[key].pkgMeta) {
@@ -56599,19 +56573,19 @@ module.exports =
 	                }
 	                observer.onNext(dependencies);
 	                observer.onCompleted();
-	            })
-	            .catch(function(err) {
-	                console.error('Bower support problem', err);
-	                observer.onCompleted();
 	            });
 	    });
 	}
 
 	function checkVersionNPM(dependencies) {
 	    return Rx.Observable.create(function(observer) {
-	        commands
-	            .run(commands.npm.ls)
-	            .then(function(data) {
+	        var lsSource = CommandsService.run(CommandsService.cmd.npm.ls).share();
+	        var outdatedSource = CommandsService.run(CommandsService.cmd.npm.outdated).share();
+
+	        var bothSource = Rx.Observable.concat(lsSource, outdatedSource);
+
+	        lsSource
+	            .subscribe(function(data) {
 	                //ls command result
 	                var dependenciesListed = UtilsService.JSONparse(data.stdout).dependencies;
 	                for (var key in dependenciesListed) {
@@ -56619,11 +56593,16 @@ module.exports =
 	                        UtilsService.setInArrayByRepoAndKey('npm', 'key', key, 'version', dependenciesListed[key].version, dependencies);
 	                    }
 	                }
+	            });
 
-	                return commands
-	                    .run(commands.npm.outdated);
-	            })
-	            .then(function(data) {
+	        bothSource
+	            .subscribeOnCompleted(function() {
+	                observer.onNext(dependencies);
+	                observer.onCompleted();
+	            });
+
+	        outdatedSource
+	            .subscribe(function(data) {
 	                //outdated command result
 	                var dependenciesOutdated = UtilsService.JSONparse(data.stdout);
 	                for (var key in dependenciesOutdated) {
@@ -56636,19 +56615,13 @@ module.exports =
 	                        }
 	                    }
 	                }
-	                observer.onNext(dependencies);
-	                observer.onCompleted();
-	            })
-	            .catch(function(err) {
-	                console.error('NPM support problem', err);
-	                observer.onCompleted();
 	            });
 	    });
 	}
 
 	function updateDependenciesInfo(repo, isDev) {
 	    return Rx.Observable.create(function(observer) {
-	        var packageJson = repo === 'bower' ? new PackageJson(null, '/bower.json') : new PackageJson();
+	        var packageJson = (repo === 'bower') ? ProjectService.getBowerJson() : ProjectService.getPackageJson();
 	        var dependencies = isDev ? packageJson.getDevDependenciesArrayAs(repo) : packageJson.getDependenciesArrayAs(repo);
 
 	        //check versions
@@ -56670,7 +56643,11 @@ module.exports =
 
 	function updateRepo(repo) {
 	    return Rx.Observable.create(function(observer) {
-	        if (!isRepoAvailable[repo]) return observer.onCompleted();
+	        if (!isRepoAvailable[repo]) {
+	            observer.onNext()
+	            observer.onCompleted();
+	            return;
+	        }
 
 	        var sourceRegular = updateDependenciesInfo(repo, false).share();
 	        var sourceDev = updateDependenciesInfo(repo, true).share();
@@ -56689,35 +56666,178 @@ module.exports =
 	            });
 
 	        source
-	            .subscribe(function() {}, function() {}, function() {
+	            .subscribeOnCompleted(function() {
+	                observer.onNext();
 	                observer.onCompleted();
 	            });
 	    });
 	}
 
-	function updateModulesInfo() {
-	    checkReposAvailability()
-	        .subscribe(function() {}, function() {}, function() {
-	            //repos avaibility completed
-	            //clear arrays
-	            modules.all = [];
-	            devModules.all = [];
+	function updateAllModulesForRepo(isDev, type, repo) {
+	    return Rx.Observable.create(function(observer) {
+	        //if repo unavailable complete subscription
+	        if (!isRepoAvailable[repo]) {
+	            observer.onNext()
+	            observer.onCompleted();
+	            return;
+	        }
 
-	            //update all repos
-	            var sourceNPM = updateRepo('npm');
-	            var sourceBower = updateRepo('bower');
+	        //replace version name for wanted
+	        if (repo === 'bower' && type === 'wanted') {
+	            type = 'target'
+	        }
 
-	            sourceNPM
-	                .merge(sourceBower)
-	                .subscribe(function() {}, function() {}, function() {
-	                    console.log('DEPS CHECKED');
-	                });
-	        });
+	        //get packageJson or bowerJson
+	        var packageJson = (repo === 'npm') ? ProjectService.getPackageJson() : ProjectService.getBowerJson();
+
+	        //get .json versions
+	        var depsInPackageJson = isDev ? packageJson.getDevDependencies() : packageJson.getDependencies();
+	        //get current updated versions
+	        var versions = isDev ? devModules.all : modules.all;
+
+	        //iterate over repos dependencies
+	        for (var key in depsInPackageJson) {
+	            if (depsInPackageJson.hasOwnProperty(key)) {
+	                //find module in our array
+	                var moduleVersions = UtilsService.findInArrayByRepoAndKey(repo, 'key', key, versions);
+
+	                //update base version (required always if is another)
+	                if (moduleVersions && depsInPackageJson[key].slice(1) !== moduleVersions.version) {
+	                    depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, moduleVersions.version);
+	                }
+	                //update to requested type version
+	                if (moduleVersions && moduleVersions[type]) {
+	                    depsInPackageJson[key] = depsInPackageJson[key].replace(/[.\d]+/g, moduleVersions[type]);
+	                }
+	            }
+	        }
+
+	        //save file
+	        packageJson.save();
+	        console.log(repo + ' saved');
+
+	        //run install command
+	        CommandsService
+	            .run(CommandsService.cmd[repo].update)
+	            .subscribe(function() {
+	                observer.onNext()
+	                observer.onCompleted();
+	            });
+	    });
 	}
 
-	//just return ready to read list
+
+	function updateModulesInfo() {
+	    return Rx.Observable.create(function(observer) {
+	        checkReposAvailability()
+	            .subscribe(function() {
+	                //repos avaibility completed
+	                //clear arrays
+	                modules.all = [];
+	                devModules.all = [];
+	                //update all repos
+	                var sourceNPM = updateRepo('npm');
+	                var sourceBower = updateRepo('bower');
+
+	                var sourceBoth = sourceNPM.merge(sourceBower)
+
+	                sourceBoth
+	                    .subscribeOnCompleted(function() {
+	                        modules.lastId = true;
+	                        devModules.lastId = true;
+	                        observer.onNext();
+	                        observer.onCompleted();
+	                    });
+	            });
+	    });
+	}
+
+	function pruneModules(repo) {
+	    return Rx.Observable.create(function(observer) {
+	        if (!isRepoAvailable[repo]) {
+	            observer.onNext()
+	            observer.onCompleted();
+	            return;
+	        }
+
+	        CommandsService
+	            .run(CommandsService.cmd[repo].prune, true)
+	            .subscribe(function() {
+	                observer.onNext()
+	                observer.onCompleted();
+	            });
+	    });
+	}
+	/////////////////////////////////////////////////////////////////////////////////
+
 	function getModules(isDev) {
-	    return isDev ? devModules.all : modules.all;
+	    return Rx.Observable.create(function(observer) {
+	        if (modules.lastId && devModules.lastId) {
+	            observer.onNext(isDev ? devModules.all : modules.all);
+	            observer.onCompleted();
+	        } else {
+	            updateModulesInfo()
+	                .subscribe(function() {
+	                    observer.onNext(isDev ? devModules.all : modules.all);
+	                    observer.onCompleted();
+	                });
+	        }
+	    });
+	}
+
+
+	function updateAllModules(isDev, type) {
+	    return Rx.Observable.create(function(observer) {
+	        //force check versions
+	        modules.lastId = null;
+	        devModules.lastId = null;
+
+	        updateModulesInfo()
+	            .subscribe(function() {
+	                var npmUpdateSource = updateAllModulesForRepo(isDev, type, 'npm');
+	                var bowerUpdateSource = updateAllModulesForRepo(isDev, type, 'bower');
+
+	                var bothSource = Rx.Observable.concat(npmUpdateSource, bowerUpdateSource);
+
+	                bothSource
+	                    .subscribeOnCompleted(function() {
+	                        observer.onNext(isDev ? devModules.all : modules.all);
+	                        observer.onCompleted();
+	                    });
+	            });
+	    });
+	}
+
+	function prune() {
+	    return Rx.Observable.create(function(observer) {
+	        var npmPruneSource = pruneModules('npm');
+	        var bowerPruneSource = pruneModules('bower');
+
+	        var bothSource = Rx.Observable.concat(npmPruneSource, bowerPruneSource);
+
+	        bothSource
+	            .subscribeOnCompleted(function() {
+	                observer.onNext();
+	                observer.onCompleted();
+	            });
+	    });
+	}
+
+	function dedupe(repo) {
+	    return Rx.Observable.create(function(observer) {
+	        if (!isRepoAvailable['npm']) {
+	            observer.onNext()
+	            observer.onCompleted();
+	            return;
+	        }
+
+	        CommandsService
+	            .run(CommandsService.cmd.npm.dedupe, true)
+	            .subscribe(function() {
+	                observer.onNext()
+	                observer.onCompleted();
+	            });
+	    });
 	}
 
 
@@ -56725,7 +56845,7 @@ module.exports =
 /* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var modulesRouter = express.Router();
 
 	var modulesController = __webpack_require__(171);
@@ -56767,7 +56887,7 @@ module.exports =
 /* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var globalModulesRouter = express.Router();
 
 	var globalModulesController = __webpack_require__(173);
@@ -56884,7 +57004,7 @@ module.exports =
 /* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var tasksRouter = express.Router();
 
 	var tasksController = __webpack_require__(175);
@@ -56969,12 +57089,13 @@ module.exports =
 /* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var router = express.Router();
-	var path = __webpack_require__(34);
+	var path = __webpack_require__(1);
 
-	router.use(express.static(path.normalize(__dirname + '/lib/public'), {'index': ['index.html', 'index.htm']}));
+	router.use(express.static(path.normalize(appRoot + '/lib/public'), {'index': ['index.html', 'index.htm']}));
 	router.use('/node_modules', express.static('node_modules'));
+
 	module.exports = router;
 
 
@@ -56982,7 +57103,7 @@ module.exports =
 /* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var crawlerRouter = express.Router();
 
 	var crawlerController = __webpack_require__(178);
@@ -57001,9 +57122,9 @@ module.exports =
 	module.exports.whenGet = whenGet;
 
 
-	var path = __webpack_require__(34);
+	var path = __webpack_require__(1);
 	var Promise = __webpack_require__(179);
-	var fs = Promise.promisifyAll(__webpack_require__(12));
+	var fs = Promise.promisifyAll(__webpack_require__(13));
 
 
 	function whenGet(req, res) {
@@ -62626,7 +62747,7 @@ module.exports =
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var express = __webpack_require__(1);
+	var express = __webpack_require__(2);
 	var projectRouter = express.Router();
 
 	var projectController = __webpack_require__(216);
@@ -62647,14 +62768,12 @@ module.exports =
 	module.exports.whenPut = whenPut;
 
 
-	var path = __webpack_require__(34);
+	var path = __webpack_require__(1);
 	var ProjectService = __webpack_require__(167);
-	var PackageJson = __webpack_require__(168).PackageJson;
 
 	function whenGet(req, res) {
-	    var packageJson = new PackageJson();
-	    var packageJsonParsed = packageJson.getParsed();
-	    packageJsonParsed.projectPath = packageJson.getPath();
+	    var packageJsonParsed = ProjectService.getPackageJson().getParsed();
+	    packageJsonParsed.projectPath = ProjectService.getPath();
 
 	    res.setHeader('Content-Type', 'application/json');
 	    res.status(200).send(packageJsonParsed);

@@ -10,15 +10,17 @@
 <div class="pull-right">
     <button class="btn btn-info btn-xs"
             ng-click="modules.dedupe()"
-            disabled="disabled"
             title="Searches the local package tree and attempts to simplify the overall structure by moving dependencies further up the tree, where they can be more effectively shared by multiple dependent packages."
-            ><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> Dedupe
+            >
+            <div class="loader-inner ball-clip-rotate" ng-if="modules.list.dedupeLoading"><div></div></div>
+            <span class="glyphicon glyphicon-retweet" ng-if="!modules.list.dedupeLoading" aria-hidden="true"></span> Dedupe
     </button>
     <button class="btn btn-info btn-xs"
             ng-click="modules.prune()"
-            disabled="disabled"
             title="This command removes 'extraneous' packages."
-            ><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> Prune
+            >
+            <div class="loader-inner ball-clip-rotate" ng-if="modules.list.pruneLoading"><div></div></div>
+            <span class="glyphicon glyphicon-inbox" ng-if="!modules.list.pruneLoading" aria-hidden="true"></span> Prune
     </button>
     <button class="btn btn-primary btn-xs"
             ng-click="modules.reinstallAll()"
@@ -117,13 +119,20 @@
                 <div class="loader-inner ball-clip-rotate" ng-if="modules.list.versionsLoading"><div></div></div>
                 <span ng-if="!modules.list.versionsLoading && module.version === module.value.slice(1)">{{module.version}}</span>
                 <button
-                        ng-if="!modules.list.versionsLoading && module.version !== module.value.slice(1)"
+                        ng-if="!modules.list.versionsLoading && module.version && module.version !== module.value.slice(1)"
                         class="btn btn-success btn-sm"
                         ng-click="modules.updateModule(module, module.version)"
                     >{{module.version || module.value.slice(1)}} <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
             </td>
             <td>
-                <button class="btn btn-success btn-sm" ng-click="modules.updateModule(module, module.wanted)" ng-if="module.wanted">Update to: {{module.wanted}}</button>
+                <button class="btn btn-success btn-sm"
+                        ng-click="modules.updateModule(module, module.wanted)"
+                        ng-if="module.wanted && module.version">Update to: {{module.wanted}}</button>
+                <button
+                        ng-if="!modules.list.versionsLoading && !module.version && module.value"
+                        class="btn btn-primary btn-sm"
+                        ng-click="modules.updateModule(module, module.version)"
+                    >Install: {{module.value.slice(1)}} <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
             </td>
             <td>
                 <button class="btn btn-default btn-sm" ng-click="modules.updateModule(module, module.latest)" ng-if="module.latest">Update to: {{module.latest}}</button>
