@@ -1,4 +1,4 @@
-new project initialization
+new project initialization - later
 standalone - electron app (probably without webserver)
 
 commands:
@@ -8,8 +8,8 @@ npm prune - OK
 npm shrinkwrap
 
 additional:
-npm star
-npm unstar
+npm star - later
+npm unstar - later
 
 Tests to confirm that CLI works as expected, example:
 
