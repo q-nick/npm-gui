@@ -1,7 +1,7 @@
-var helpers = require('./lib/helpers/helpers.js');
+var helpers = require('./web-server/helpers/helpers.js');
 helpers.setProjectPath(__dirname);
 
-var ModulesService = require('./lib/modules/modules/modules.service.js')
+var ModulesService = require('./web-server/modules/modules/modules.service.js')
 
 var Rx = require('rx');
 

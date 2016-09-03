@@ -27,7 +27,6 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "^undefined"
   },
   "devDependencies": {
     "moment": "^2.2.1",

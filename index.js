@@ -17,18 +17,18 @@ var HOST = '0.0.0.0';
 //middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }));
 
-var ConsoleService = require('./lib/service/console/console.service.js');
+var ConsoleService = require('./web-server/service/console/console.service.js');
 //modules
-var modulesRoutes = require('./lib/modules/modules/modules.routes.js');
-var binModulesRoutes = require('./lib/modules/binModules/binModules.routes.js');
-var globalModulesRoutes = require('./lib/modules/globalModules/globalModules.routes.js');
-var tasksRoutes = require('./lib/modules/tasks/tasks.routes.js');
-var staticRoutes = require('./lib/modules/static/static.routes.js');
-var crawlerRoutes = require('./lib/modules/crawler/crawler.routes.js');
-var projectRoutes = require('./lib/modules/project/project.routes.js');
+var modulesRoutes = require('./web-server/modules/modules/modules.routes.js');
+var binModulesRoutes = require('./web-server/modules/binModules/binModules.routes.js');
+var globalModulesRoutes = require('./web-server/modules/globalModules/globalModules.routes.js');
+var tasksRoutes = require('./web-server/modules/tasks/tasks.routes.js');
+var staticRoutes = require('./web-server/modules/static/static.routes.js');
+var crawlerRoutes = require('./web-server/modules/crawler/crawler.routes.js');
+var projectRoutes = require('./web-server/modules/project/project.routes.js');
 
 
 //use routes
@@ -43,15 +43,15 @@ app.use('/project', projectRoutes);
 
 
 function start(host, port) {
-    //start server
-    var server = app.listen(port || PORT, host || HOST, function() {
-        console.log('npm-gui panel running at http://' + (host || HOST) + ':' + (port || PORT) + '/');
-        console.log('\n\nI will be waiting here to help you with your work with pleasure.');
-    });
+  //start server
+  var server = app.listen(port || PORT, host || HOST, function () {
+    console.log('npm-gui panel running at http://' + (host || HOST) + ':' + (port || PORT) + '/');
+    console.log('\n\nI will be waiting here to help you with your work with pleasure.');
+  });
 
-    ConsoleService.bind(server);
+  ConsoleService.bind(server);
 
-    return server;
+  return server;
 }
 
 module.exports = start;
