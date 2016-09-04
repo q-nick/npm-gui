@@ -8,19 +8,19 @@ const ProjectService = require('../../service/project/project.service.js');
 // for now it could be project service
 const modules = {
   lastId: null,
-  all: {}
+  all: {},
 };
 
 const devModules = {
   lastId: null,
-  all: []
+  all: [],
 };
 
 function checkVersionBower(dependencies) {
   return Rx.Observable.create((observer) => {
     CommandsService.run(CommandsService.cmd.bower.ls)
       .subscribe((data) => {
-        const dependenciesListed = UtilsService.JSONparse(data.stdout).dependencies;
+        const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
         for (const [key, dependency] of dependenciesListed) {
           if (dependency.pkgMeta) {
             UtilsService.setInArrayByRepoAndKey('bower',
@@ -58,7 +58,7 @@ function checkVersionNPM(dependencies) {
     lsSource
       .subscribe((data) => {
         // ls command result
-        const dependenciesListed = UtilsService.JSONparse(data.stdout).dependencies;
+        const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
         for (const [key, dependency] of dependenciesListed) {
           UtilsService.setInArrayByRepoAndKey('npm',
             'key', key,
@@ -76,7 +76,7 @@ function checkVersionNPM(dependencies) {
     outdatedSource
       .subscribe((data) => {
         // outdated command result
-        const dependenciesOutdated = UtilsService.JSONparse(data.stdout);
+        const dependenciesOutdated = UtilsService.parseJSON(data.stdout);
         for (const [key, dependency] of dependenciesOutdated) {
           if (dependency.wanted !== dependency.current) {
             UtilsService.setInArrayByRepoAndKey('npm',
@@ -183,17 +183,19 @@ function updateModulesInfo() {
 
 // ///////////////////////////////////////////////////////////////////////////////
 
-module.exports.getModules = function getModules(isDev) {
-  return Rx.Observable.create((observer) => {
-    if (modules.lastId && devModules.lastId) {
-      observer.onNext(isDev ? devModules.all : modules.all);
-      observer.onCompleted();
-    } else {
-      updateModulesInfo()
-        .subscribe(() => {
-          observer.onNext(isDev ? devModules.all : modules.all);
-          observer.onCompleted();
-        });
-    }
-  });
-}
+module.exports = {
+  getModules(isDev) {
+    return Rx.Observable.create((observer) => {
+      if (modules.lastId && devModules.lastId) {
+        observer.onNext(isDev ? devModules.all : modules.all);
+        observer.onCompleted();
+      } else {
+        updateModulesInfo()
+          .subscribe(() => {
+            observer.onNext(isDev ? devModules.all : modules.all);
+            observer.onCompleted();
+          });
+      }
+    });
+  }
+};

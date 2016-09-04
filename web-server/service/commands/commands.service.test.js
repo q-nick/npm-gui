@@ -1,69 +1,99 @@
-'use strict';
+require('should');
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+require('should-sinon');
 
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon');
-var rewire = require('rewire');
+const ProjectServiceMock = {
+  getPath: sinon.stub().returns('somePath'),
+};
 
-var commands = rewire('./commands');
+const ConsoleServiceMock = {
+  send: sinon.spy(),
+};
 
-//dont mock spawn,  we  will test real results here (based on package.json)
-describe('Commands:', function() {
-    this.timeout(15000);
+const stdoutMock = {
+  on: sinon.stub().callsArgWith(1, 'stdout data'),
+};
 
-    describe('npm ls:', function() {
-        it('should return list of npm-gui dependencies', function(done) {
-            commands
-                .run(commands.npm.ls)
-                .then(function(data) {
-                    expect(data.stdout).to.be.a('string');
-                    var parsedStdOut = JSON.parse(data.stdout);
+const stderrMock = {
+  on: sinon.stub().callsArgWith(1, 'stderr data'),
+};
 
-                    expect(parsedStdOut).to.be.a('object');
-                    expect(parsedStdOut.dependencies).to.be.a('object');
-                    //angular
-                    expect(parsedStdOut.dependencies.angular).to.be.a('object');
-                    expect(parsedStdOut.dependencies.angular.version).to.exist;
-                    expect(parsedStdOut.dependencies.angular.from).to.exist;
-                    //express
-                    expect(parsedStdOut.dependencies.express).to.be.a('object');
-                    expect(parsedStdOut.dependencies.express.version).to.exist;
-                    expect(parsedStdOut.dependencies.express.from).to.exist;
-                    done();
-                });
+const CrossSpawnMock = sinon.stub().returns({
+  stdout: stdoutMock,
+  stderr: stderrMock,
+  on: sinon.stub().callsArg(1),
+});
+
+const CommandsService = proxyquire('./commands.service', {
+  '../project/project.service.js': ProjectServiceMock,
+  '../console/console.service.js': ConsoleServiceMock,
+  'cross-spawn': CrossSpawnMock,
+});
+
+describe('Commands Service:', () => {
+  beforeEach(() => {
+    ConsoleServiceMock.send.reset();
+    stdoutMock.on.reset();
+    stderrMock.on.reset();
+    CrossSpawnMock.reset();
+  });
+
+  describe('cmd constants:', () => {
+    it('should contain constants', () => {
+      CommandsService.should.have.property('cmd');
+      CommandsService.cmd.should.have.property('bower');
+      CommandsService.cmd.should.have.property('npm');
+      CommandsService.cmd.should.have.property('nsp');
+
+      // few base commands
+      CommandsService.cmd.bower.should.have.property('install');
+      CommandsService.cmd.npm.should.have.property('install');
+      CommandsService.cmd.nsp.should.have.property('check');
+    });
+  });
+
+  describe('run:', () => {
+    it('should call system spawn method', (done) => {
+      CommandsService
+        .run(CommandsService.cmd.npm.ls)
+        .subscribe((data) => {
+          CrossSpawnMock.should.be.calledWith('npm', ['ls', '--depth=0', '--json'], {
+            cwd: 'somePath',
+          });
+          data.stdout.should.be.String().and.startWith('stdout data');
+          data.stderr.should.be.String().and.startWith('stderr data');
+          done();
         });
     });
 
-    describe('npm outdated:', function() {
-        it('should return list of npm-gui dependencies', function(done) {
-            commands
-                .run(commands.npm.outdated)
-                .then(function(data) {
-                    expect(data.stdout).to.be.a('string');
-                    var parsedStdOut = JSON.parse(data.stdout);
+    it('should call system spawn method and bind stdout to console', (done) => {
+      CommandsService
+        .run(CommandsService.cmd.npm.ls, true)
+        .subscribe(() => {
+          CrossSpawnMock.should.be.calledOnce();// don't need to test arguments
 
-                    expect(parsedStdOut).to.be.a('object');
-                    //angular ui bootstrap
-                    expect(parsedStdOut['angular-ui-bootstrap']).to.be.a('object');
-                    expect(parsedStdOut['angular-ui-bootstrap'].current).to.exist;
-                    expect(parsedStdOut['angular-ui-bootstrap'].latest).to.exist;
-                    expect(parsedStdOut['angular-ui-bootstrap'].wanted).to.exist;
-                    done();
-                });
+          ConsoleServiceMock.send.getCall(1)
+            .should.be.calledWith('start: npm ls,--depth=0,--json\n');
+
+          ConsoleServiceMock.send.getCall(1)
+            .should.be.calledWith('stdout data');
+
+          ConsoleServiceMock.send.getCall(2)
+            .should.be.calledWith('stderr data');
+
+          done();
         });
     });
 
-    describe('npm bin:', function() {
-        it('should return path to dependencies binary folder', function(done) {
-            commands
-                .run(commands.npm.bin)
-                .then(function(data) {
-                    expect(data.stdout).to.contain('npm-gui');
-                    expect(data.stdout).to.contain('.bin');
-                    done();
-                });
+    it('should call system spawn method and add given args to command', (done) => {
+      CommandsService
+        .run(CommandsService.cmd.npm.ls, false, ['some', 'other', 'args'])
+        .subscribe(() => {
+          CrossSpawnMock.should.be
+            .calledWith('npm', ['ls', '--depth=0', '--json', 'some', 'other', 'args']);
+          done();
         });
     });
-
-    //TODO run, install, uninstall
+  });
 });

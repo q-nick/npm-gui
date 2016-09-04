@@ -22,7 +22,7 @@ module.exports = {
     return req.originalUrl.toUpperCase().indexOf('GLOBAL') !== -1;
   },
 
-  JSONparse(stringToParse) {
+  parseJSON(stringToParse) {
     let result = null;
     try {
       result = JSON.parse(stringToParse);
