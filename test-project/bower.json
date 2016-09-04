@@ -1,0 +1,13 @@
+{
+  "name": "npm-gui-test-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "authors": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "jquery-ui": "^1.11.0"
+  },
+  "devDependencies": {
+    "moment": "^2.2.1"
+  }
+}
