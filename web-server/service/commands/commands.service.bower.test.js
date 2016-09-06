@@ -1,38 +1,31 @@
 require('should');
 const CommandsService = require('./commands.service');
 const ProjectService = require('../project/project.service');
+const rimraf = require('rimraf');
+const fs = require('fs');
 
 describe('Commands:', function runTests() {
   this.timeout(50000);
 
-  beforeEach(() => {
-    ProjectService.setPath(`${process.cwd()}/test-project`);
-  });
+  ProjectService.setPath(`${process.cwd()}/test-project`);
+  const componentsFolderPath = `${ProjectService.getPath()}/bower_components`;
 
-  describe('bower install:', () => {
-    it('should install dependencies listed in package.json', (done) => {
-      CommandsService
-        .run(CommandsService.cmd.bower.install)
-        .subscribe((data) => {
-          console.log(data);
-          /*data.stdout.should.be.String();
-           const parsedStdOut = JSON.parse(data.stdout);
+  describe('bower install all:', () => {
+    it('should install dependencies listed in bower.json', (done) => {
+      rimraf(componentsFolderPath, () => {
+        fs.mkdirSync(componentsFolderPath);
+        fs.readdirSync(componentsFolderPath).length.should.be.eql(0);
 
-           parsedStdOut.should.be.an.Object();
-           parsedStdOut.should.have.property('dependencies').and.be.Object();
+        CommandsService
+          .run(CommandsService.cmd.bower.install)
+          .subscribe(() => {
+            fs.readdirSync(componentsFolderPath).should.containEql('jquery');
+            fs.readdirSync(componentsFolderPath).should.containEql('moment');
+            fs.readdirSync(componentsFolderPath).should.containEql('jquery-ui');
 
-           const dependencies = parsedStdOut.dependencies;
-
-           dependencies.angular.should.be.an.Object();
-           dependencies.angular.should.have.property('version');
-           dependencies.angular.should.have.property('from');
-
-           dependencies.express.should.be.an.Object();
-           dependencies.express.should.have.property('version');
-           dependencies.express.should.have.property('from');*/
-
-          done();
-        });
+            done();
+          });
+      });
     });
   });
 
@@ -57,6 +50,35 @@ describe('Commands:', function runTests() {
           // outdated versions
           dependencies.moment.update.should.have.property('target');
           dependencies.moment.update.should.have.property('latest');
+
+          done();
+        });
+    });
+  });
+
+  describe('bower remove:', () => {
+    it('should remove an dependency from folder and bower.json', (done) => {
+      fs.readdirSync(componentsFolderPath).should.containEql('jquery-ui');
+
+      CommandsService
+        .run(CommandsService.cmd.bower.remove, false, ['jquery-ui', '-S'])
+        .subscribe(() => {
+          fs.readdirSync(componentsFolderPath).should.not.containEql('jquery-ui');
+          fs.readdirSync(componentsFolderPath).should.not.containEql('jquery');
+
+          done();
+        });
+    });
+  });
+
+  describe('bower install dependency:', () => {
+    it('should install new dependency and add it to bower.json', (done) => {
+      fs.readdirSync(componentsFolderPath).should.not.containEql('jquery-ui');
+
+      CommandsService
+        .run(CommandsService.cmd.bower.install, false, ['jquery-ui#^1.11.0', '-S'])
+        .subscribe(() => {
+          fs.readdirSync(componentsFolderPath).should.containEql('jquery-ui');
 
           done();
         });

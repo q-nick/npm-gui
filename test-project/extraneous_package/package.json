@@ -1,5 +1,5 @@
 {
-  "name": "npm-gui-test-project",
+  "name": "npm-gui-test-project-extraneous",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "angular": "^1.3.1",
-    "angular-ui-bootstrap": "^0.14.3",
-    "moment": "^2.14.1"
+    "moment": "^2.14.1",
+    "angular-ui-bootstrap": "^0.14.3"
   },
   "author": "",
   "license": "UNLICENSED"

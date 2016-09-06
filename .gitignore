@@ -3,4 +3,3 @@ node_modules
 bower_components
 dist
 npm-debug*
-test-project/node_modules

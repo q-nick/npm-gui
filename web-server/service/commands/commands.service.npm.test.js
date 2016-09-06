@@ -1,38 +1,31 @@
 require('should');
 const CommandsService = require('./commands.service');
 const ProjectService = require('../project/project.service');
+const rimraf = require('rimraf');
+const fs = require('fs');
 
-describe.only('Commands:', function runTests() {
+describe('Commands:', function runTests() {
   this.timeout(50000);
 
-  beforeEach(() => {
-    ProjectService.setPath(`${process.cwd()}/test-project`);
-  });
+  ProjectService.setPath(`${process.cwd()}/test-project`);
+  const componentsFolderPath = `${ProjectService.getPath()}/node_modules`;
 
-  describe('npm install:', () => {
+  describe('npm install all:', () => {
     it('should install dependencies listed in package.json', (done) => {
-      CommandsService
-        .run(CommandsService.cmd.npm.install)
-        .subscribe((data) => {
-          console.log(data);
-          /*data.stdout.should.be.String();
-          const parsedStdOut = JSON.parse(data.stdout);
+      rimraf(componentsFolderPath, () => {
+        fs.mkdirSync(componentsFolderPath);
+        fs.readdirSync(componentsFolderPath).length.should.be.eql(0);
 
-          parsedStdOut.should.be.an.Object();
-          parsedStdOut.should.have.property('dependencies').and.be.Object();
+        CommandsService
+          .run(CommandsService.cmd.npm.install)
+          .subscribe(() => {
+            fs.readdirSync(componentsFolderPath).should.containEql('angular');
+            fs.readdirSync(componentsFolderPath).should.containEql('moment');
+            fs.readdirSync(componentsFolderPath).should.containEql('angular-ui-bootstrap');
 
-          const dependencies = parsedStdOut.dependencies;
-
-          dependencies.angular.should.be.an.Object();
-          dependencies.angular.should.have.property('version');
-          dependencies.angular.should.have.property('from');
-
-          dependencies.express.should.be.an.Object();
-          dependencies.express.should.have.property('version');
-          dependencies.express.should.have.property('from');*/
-
-          done();
-        });
+            done();
+          });
+      });
     });
   });
 
@@ -91,6 +84,34 @@ describe.only('Commands:', function runTests() {
 
           data.stdout.should.match(/npm-gui/);
           data.stdout.should.match(/\.bin/);
+          done();
+        });
+    });
+  });
+
+  describe('npm remove:', () => {
+    it('should remove an dependency from folder and package.json', (done) => {
+      fs.readdirSync(componentsFolderPath).should.containEql('angular');
+
+      CommandsService
+        .run(CommandsService.cmd.npm.remove, false, ['angular', '-S'])
+        .subscribe(() => {
+          fs.readdirSync(componentsFolderPath).should.not.containEql('angular');
+
+          done();
+        });
+    });
+  });
+
+  describe('npm install dependency:', () => {
+    it('should install new dependency and add it to bower.json', (done) => {
+      fs.readdirSync(componentsFolderPath).should.not.containEql('angular');
+
+      CommandsService
+        .run(CommandsService.cmd.npm.install, false, ['angular@1.3.1', '-S'])
+        .subscribe(() => {
+          fs.readdirSync(componentsFolderPath).should.containEql('angular');
+
           done();
         });
     });
