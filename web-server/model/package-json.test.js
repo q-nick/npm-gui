@@ -1,24 +1,15 @@
-'use strict';
+require('should');
+// const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+require('should-sinon');
 
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon');
-var rewire = require('rewire');
+const rewirePackageJson = rewire('./packageJson');
+const PackageJson = rewirePackageJson.PackageJson;
+const packageJson = null;
 
-var rewirePackageJson = rewire('./packageJson');
-var helpers = rewire('./helpers');
-var PackageJson = rewirePackageJson.PackageJson;
-var packageJson = null;
-
-var packageMock = require('../test/packageJson.mock').mock;
-var resultsMock = require('../test/packageJson.mock').resultsMock;
-
-var fsMock = {
-  readFileSync: function () {
-    return JSON.stringify(packageMock);
-  },
-  writeFileSync: sinon.spy()
-};
+// this would be real files in test-project
+const packageMock = require('../test/packageJson.mock').mock;
+const resultsMock = require('../test/packageJson.mock').resultsMock;
 
 describe('PackageJson test', function () {
 

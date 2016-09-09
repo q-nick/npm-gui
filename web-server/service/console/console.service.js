@@ -19,8 +19,8 @@ module.exports = {
       consoleSocket.send('console connected \n');
     });
 
-    wss.on('message', (a, b, c) => {
-      console.log(a, b, c);
+    wss.on('message', () => {
+      // console.log(a, b, c);
     });
-  }
-}
+  },
+};

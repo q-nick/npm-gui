@@ -22,26 +22,14 @@ module.exports = {
     projectPath = newProjectPath;
   },
 
-  isBowerAvailable() {
+  isRepoAvailableTest(repo) {
+    const fileToTest = repo === 'bower' ? 'bower.json' : 'package.json';
     return Rx.Observable.create((observer) => {
-      fs.access(`${this.getPath()}/bower.json`, (err) => {
+      fs.access(`${this.getPath()}/${fileToTest}`, (err) => {
         if (!err) {
-          observer.onNext();
+          observer.onNext(true);
         } else {
-          observer.onError();
-        }
-        observer.onCompleted();
-      });
-    });
-  },
-
-  isNPMAvailable() {
-    return Rx.Observable.create((observer) => {
-      fs.access(`${this.getPath()}/package.json`, (err) => {
-        if (!err) {
-          observer.onNext();
-        } else {
-          observer.onError();
+          observer.onError(false);
         }
         observer.onCompleted();
       });
@@ -58,7 +46,7 @@ module.exports = {
 
   checkReposAvailability() {
     return Rx.Observable.create((observer) => {
-      const sourceBower = this.isBowerAvailable();
+      const sourceBower = this.isRepoAvailableTest('bower');
       sourceBower
         .subscribe(() => {
           isRepoAvailable.bower = true;
@@ -66,7 +54,7 @@ module.exports = {
           isRepoAvailable.bower = false;
         });
 
-      const sourceNPM = this.isNPMAvailable();
+      const sourceNPM = this.isRepoAvailableTest('npm');
       sourceNPM
         .subscribe(() => {
           isRepoAvailable.npm = true;

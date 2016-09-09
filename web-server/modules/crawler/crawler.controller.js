@@ -4,6 +4,7 @@ const fs = Promise.promisifyAll(require('fs'));
 
 module.exports = {
   whenGet(req, res) {
+    // this should be moved to service
     const normalizedPath = path.normalize(`/${req.params.path}`);
     fs.readdirAsync(normalizedPath)
       .then((data) => {

@@ -27,7 +27,7 @@ module.exports = {
     try {
       result = JSON.parse(stringToParse);
     } catch (e) {
-      return console.error(e);
+      return console.error('JSON error');
     }
     return result;
   },
@@ -48,8 +48,8 @@ module.exports = {
   },
 
   extend(source, destination) {
-    for (const [key, value] of source) {
-      destination[key] = value;
+    for (const key in source) {
+      destination[key] = source[key];
     }
   },
 };

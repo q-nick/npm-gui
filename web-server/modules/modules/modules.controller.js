@@ -22,10 +22,11 @@ module.exports = {
     removeCommand.args.push(req.params.name);
     removeCommand.args.push(UtilsService.isDevModules(req) ? '-D' : '-S');
 
+    // this should call method in modulesservice
     CommandsService
       .run(removeCommand, true)
       .then(() => {
-        /// bugfix
+        // bugfix
         // TODO tests
         const packageJson = new PackageJson();
         if (UtilsService.isDevModules(req)) {
@@ -60,6 +61,7 @@ module.exports = {
   },
 
   whenGetNSP(req, res) {
+    // this also should call ModulesService for help
     CommandsService
       .run(CommandsService.cmd.nsp.check)
       .subscribe((data) => {

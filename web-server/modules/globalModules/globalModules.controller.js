@@ -1,6 +1,7 @@
 const UtilsService = require('../../service/utils/utils.service.js');
 const CommandsService = require('../../service/commands/commands.service.js');
 
+// this also need service or be in modules service
 module.exports = {
   whenPut(req, res) {
     const putCommand = JSON.parse(JSON.stringify(CommandsService.cmd.npm.install));
