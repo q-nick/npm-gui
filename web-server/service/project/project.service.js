@@ -36,12 +36,8 @@ module.exports = {
     });
   },
 
-  getBowerJson() {
-    return new PackageJson(this.getPath(), 'bower.json');
-  },
-
-  getPackageJson() {
-    return new PackageJson(this.getPath());
+  getPackageJson(repo) {
+    return new PackageJson(this.getPath(), (repo === 'npm' ? 'package' : repo));
   },
 
   checkReposAvailability() {
@@ -69,5 +65,16 @@ module.exports = {
         observer.onCompleted();
       });
     });
+  },
+
+  // or private? TODO test
+  dependencies: {
+    lastId: null,
+    all: {},
+  },
+
+  devDependencies: {
+    lastId: null,
+    all: [],
   },
 };

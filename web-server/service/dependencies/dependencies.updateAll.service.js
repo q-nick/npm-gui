@@ -32,7 +32,7 @@ function updateAllModulesForRepo(isDev, type, repo) {
     const versions = isDev ? devModules.all : modules.all;
 
     // iterate over repos dependencies
-    for (const [key,dependency] of depsInPackageJson) {
+    for (const [key, dependency] of depsInPackageJson) {
       // find module in our array
       const moduleVersions = UtilsService.findInArrayByRepoAndKey(repo, 'key', key, versions);
 

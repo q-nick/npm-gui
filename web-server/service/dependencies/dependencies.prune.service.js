@@ -4,7 +4,7 @@ const ProjectService = require('../../service/project/project.service.js');
 
 function pruneModules(repo) {
   return Rx.Observable.create((observer) => {
-    if (!ProjectService.isRepoAvailable[repo]) {
+    if (!ProjectService.isRepoAvailable(repo)) {
       observer.onNext();
       observer.onCompleted();
       return;
@@ -31,5 +31,12 @@ module.exports.prune = function prune() {
         observer.onNext();
         observer.onCompleted();
       });
+  });
+};
+
+
+module.exports.pruneCount = function prune() {
+  return Rx.Observable.create((observer) => {
+    // TODO
   });
 };

@@ -3,11 +3,11 @@ const UtilsService = require('../service/utils/utils.service.js');
 const fs = require('fs');
 
 module.exports = class PackageJson {
-  constructor(path, name = 'package.json') {
+  constructor(path, name = 'package') {
     this.path = path;
-    this.name = name;
+    this.name = `${name}.json`;
 
-    this.parsedPackage = JSON.parse(fs.readFileSync(`${path}/${name}`, 'utf-8'));
+    this.parsedPackage = JSON.parse(fs.readFileSync(`${this.path}/${this.name}`, 'utf-8'));
   }
 
   // ////////////////////////////////
@@ -94,7 +94,7 @@ module.exports = class PackageJson {
 
   /** others **/
   save() {
-    fs.writeFileSync(`./${this.name}`, JSON.stringify(this.parsedPackage, null, 2));
+    fs.writeFileSync(`${this.path}/${this.name}`, JSON.stringify(this.parsedPackage, null, 2));
   }
 
   getBin() {

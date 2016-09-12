@@ -13,8 +13,8 @@
     "pack": "build --target dir",
     "dist": "build",
     "test-web-client": "node node_modules/karma/bin/karma start",
-    "test-web-server": "node node_modules/mocha/bin/mocha ./web-server/service/commands/*.test.js",
-    "test-web-server2": "node node_modules/mocha/bin/mocha ./web-server/service/project/*.test.js ./web-server/service/utils/*.test.js ./web-server/service/console/*.test.js"
+    "test-web-server": "node node_modules/mocha/bin/mocha ./web-server/**/*.test.js",
+    "test-web-server2": "node node_modules/mocha/bin/mocha ./web-server/service/project/*.test.js ./web-server/service/utils/*.test.js ./web-server/service/console/*.test.js ./web-server/service/dependencies/*.test.js"
   },
   "repository": {
     "type": "git",

@@ -19,7 +19,7 @@ function shrinkwrapModules(repo) {
   });
 }
 
-module.exports = function shrinkwrap() {
+module.exports.shrinkwrap = function shrinkwrap() {
   return Rx.Observable.create((observer) => {
     const npmShrinkwrapSource = shrinkwrapModules('npm');
     const bowerShrinkwrapSource = shrinkwrapModules('bower');

@@ -1,7 +1,4 @@
 require('should');
-// const proxyquire = require('proxyquire');
-const sinon = require('sinon');
-require('should-sinon');
 
 const ProjectService = require('./project.service');
 
@@ -72,17 +69,17 @@ describe('ProjectService', () => {
       it('when false', () => {
         ProjectService.setPath(`${process.cwd()}/test-project/empty`);
         ProjectService.isRepoAvailableTest('npm')
-          .subscribeOnCompleted(()=> {
+          .subscribeOnCompleted(() => {
             ProjectService.isRepoAvailable('npm').should.be.eql(false);
           });
       });
     });
   });
 
-  describe('getBowerJson', () => {
+  describe('getPackageJson - bower', () => {
     it('should return new object', () => {
-      ProjectService.getBowerJson().should.be.an.Object();
-    })
+      ProjectService.getPackageJson('bower').should.be.an.Object();
+    });
   });
 
   describe('getPackageJson', () => {

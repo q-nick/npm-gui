@@ -3,19 +3,6 @@ const CommandsService = require('../../service/commands/commands.service.js');
 const UtilsService = require('../../service/utils/utils.service.js');
 const ProjectService = require('../../service/project/project.service.js');
 
-// ///////////////////
-// TODO this should be stored somewhere else
-// for now it could be project service
-const modules = {
-  lastId: null,
-  all: {},
-};
-
-const devModules = {
-  lastId: null,
-  all: [],
-};
-
 function checkVersionBower(dependencies) {
   return Rx.Observable.create((observer) => {
     CommandsService.run(CommandsService.cmd.bower.ls)
@@ -140,12 +127,12 @@ function updateRepo(repo) {
 
     sourceRegular
       .subscribe((data) => {
-        modules.all = modules.all.concat(data);
+        ProjectService.dependencies.all = ProjectService.dependencies.all.concat(data);
       });
 
     sourceDev
       .subscribe((data) => {
-        devModules.all = devModules.all.concat(data);
+        ProjectService.devDependencies.all = ProjectService.devDependencies.all.concat(data);
       });
 
     source
@@ -162,8 +149,8 @@ function updateModulesInfo() {
       .subscribe(() => {
         // repos availability completed
         // clear arrays
-        modules.all = [];
-        devModules.all = [];
+        ProjectService.dependencies.all = [];
+        ProjectService.devDependencies.all = [];
         // update all repos
         const sourceNPM = updateRepo('npm');
         const sourceBower = updateRepo('bower');
@@ -172,8 +159,8 @@ function updateModulesInfo() {
 
         sourceBoth
           .subscribeOnCompleted(() => {
-            modules.lastId = true;
-            devModules.lastId = true;
+            ProjectService.dependencies.lastId = true;
+            ProjectService.devDependencies.lastId = true;
             observer.onNext();
             observer.onCompleted();
           });
@@ -186,16 +173,18 @@ function updateModulesInfo() {
 module.exports = {
   getModules(isDev) {
     return Rx.Observable.create((observer) => {
-      if (modules.lastId && devModules.lastId) {
-        observer.onNext(isDev ? devModules.all : modules.all);
+      if (ProjectService.dependencies.lastId && ProjectService.devDependencies.lastId) {
+        observer.onNext(isDev ?
+          ProjectService.devDependencies.all : ProjectService.dependencies.all);
         observer.onCompleted();
       } else {
         updateModulesInfo()
           .subscribe(() => {
-            observer.onNext(isDev ? devModules.all : modules.all);
+            observer.onNext(isDev ?
+              ProjectService.devDependencies.all : ProjectService.dependencies.all);
             observer.onCompleted();
           });
       }
     });
-  }
+  },
 };

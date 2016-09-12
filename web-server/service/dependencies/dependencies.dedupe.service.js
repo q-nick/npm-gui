@@ -4,12 +4,13 @@ const ProjectService = require('../../service/project/project.service.js');
 
 module.exports.dedupe = function dedupe() {
   return Rx.Observable.create((observer) => {
-    if (!ProjectService.isRepoAvailable.npm) {
+    if (!ProjectService.isRepoAvailable('npm')) {
       observer.onNext();
       observer.onCompleted();
       return;
     }
 
+    // it return nothing - just bind console
     CommandsService
       .run(CommandsService.cmd.npm.dedupe, true)
       .subscribe(() => {
