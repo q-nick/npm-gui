@@ -2,15 +2,21 @@ require('should');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 require('should-sinon');
-const ProjectService = require('../project/project.service');
 const CommandsService = require('../commands/commands.service');
+const Rx = require('rx');
+
+const CommandsServiceRunMock = sinon.stub();
 
 
-const sinonSubscribeStub = sinon.stub();
-sinonSubscribeStub.withArgs(undefined).callsArg(0);
-
-sinonSubscribeStub.withArgs(CommandsService.cmd.npm.ls).returns({
-  stdout: `{
+const npmLsSubject = new Rx.Subject();
+npmLsSubject
+  .startWith({
+    stdout: `{
+    "dependencies": {
+      "jquery": {
+        "version": "1.3.1"
+      },
+    },
     "dependencies": {
       "angular": {
         "version": "1.0.0"
@@ -23,10 +29,20 @@ sinonSubscribeStub.withArgs(CommandsService.cmd.npm.ls).returns({
       }
     }
   }`,
-});
+  });
+npmLsSubject.onCompleted();
 
-sinonSubscribeStub.withArgs(CommandsService.cmd.npm.outdated).returns({
-  stdout: `{
+CommandsServiceRunMock.withArgs(CommandsService.cmd.npm.ls).returns(npmLsSubject);
+
+const npmOutdatedSubject = new Rx.Subject();
+npmOutdatedSubject
+  .startWith({
+    stdout: `{
+    "jquery": {
+      "current": "1.3.1",
+      "wanted": "1.5.8",
+      "latest": "1.5.8"
+    },
     "angular": {
       "current": "1.3.1",
       "wanted": "1.5.8",
@@ -41,14 +57,18 @@ sinonSubscribeStub.withArgs(CommandsService.cmd.npm.outdated).returns({
       "version": "2.14.1"
     }
   }`,
-});
+  });
+npmOutdatedSubject.onCompleted();
 
-sinonSubscribeStub.withArgs(CommandsService.cmd.bower.ls).returns({
-  stdout: `{
+CommandsServiceRunMock.withArgs(CommandsService.cmd.npm.outdated).returns(npmOutdatedSubject);
+
+CommandsServiceRunMock.withArgs(CommandsService.cmd.bower.ls).returns(
+  (new Rx.Subject()).startWith({
+    stdout: `{
     "dependencies": {
       "jquery-ui": {
         "pkgMeta": {
-          "version": "^1.11.0",
+          "version": "^1.11.0"
         },
         "update": {
           "target": "1.12.0",
@@ -57,43 +77,34 @@ sinonSubscribeStub.withArgs(CommandsService.cmd.bower.ls).returns({
       },
       "moment": {
         "pkgMeta": {
-          "target": "^1.11.0",
+          "version": "^2.2.1"
         },
         "update": {
-          "version": "1.12.0",
-          "latest": "1.12.0"
+          "target": "2.3.0",
+          "latest": "3.0.0"
         }
       }
     }
   }`,
-});
-
-const RxMock = {
-  subscribe: sinonSubscribeStub,
-  onNext: sinon.stub(),
-  onCompleted: sinon.stub(),
-};
-
-RxMock.share = sinon.stub().returns(RxMock);
+  })
+);
 
 const CommandsServiceMock = {
-  run: sinon.stub().returns(RxMock),
-  cmd: {
-    npm: {
-      prune: 'npm prune command',
-    },
-    bower: {
-      prune: 'bower prune command',
-    },
-  },
+  run: CommandsServiceRunMock,
 };
 
-ProjectService.checkReposAvailability = sinon.stub().returns(RxMock);
-ProjectService.isRepoAvailable = sinon.stub().returns(true);
+const RxMockSimple = {
+  subscribe: sinon.stub().callsArg(0),
+};
+
+const ProjectServiceMock = {
+  checkReposAvailability: sinon.stub().returns(RxMockSimple),
+  isRepoAvailable: sinon.stub().returns(true),
+};
 
 const DependenciesService = proxyquire('./dependencies.service', {
   '../../service/commands/commands.service.js': CommandsServiceMock,
-  '../../service/project/project.service.js': ProjectService,
+  '../../service/project/project.service.js': ProjectServiceMock,
 });
 
 describe('Dependencies Service - Base module', () => {
@@ -103,20 +114,59 @@ describe('Dependencies Service - Base module', () => {
     DependenciesService
       .getModules(false)
       .subscribe((dependencies) => {
-        ProjectService.modules.lastId.should.not.be.eql(null);
-        ProjectService.devModules.lastId.should.not.be.eql(null);
+        ProjectServiceMock.checkReposAvailability.should.be.called();
 
-        ProjectService.checkReposAvailability.should.be.called();
+        ProjectServiceMock.isRepoAvailable.should.be.calledWith('npm');
+        ProjectServiceMock.isRepoAvailable.should.be.calledWith('bower');
 
-        ProjectService.isRepoAvailable.should.be.calledWith('npm');
-        ProjectService.isRepoAvailable.should.be.calledWith('bower');
+        // npm
+        dependencies.should.containEql({
+          key: 'angular',
+          value: '^1.3.1',
+          repo: 'npm',
+        });
+        dependencies.should.containEql({
+          key: 'angular-ui-bootstrap',
+          value: '^0.14.3',
+          repo: 'npm',
+        });
+        dependencies.should.containEql({
+          key: 'moment',
+          value: '^2.14.1',
+          repo: 'npm',
+        });
 
-        CommandsServiceMock.run.should
-          .be.calledWith(CommandsServiceMock.cmd.npm.ls, true);
-        CommandsServiceMock.run.should
-          .be.calledWith(CommandsServiceMock.cmd.npm.outdated, true);
-        CommandsServiceMock.run.should
-          .be.calledWith(CommandsServiceMock.cmd.bower.ls, true);
+        // bower
+        dependencies.should.containEql({
+          key: 'jquery-ui',
+          value: '^1.11.0',
+          repo: 'bower',
+        });
+        done();
+      });
+  });
+
+  it('should check devDependencies versions and return array', (done) => {
+    DependenciesService
+      .getModules(true)
+      .subscribe((devDependencies) => {
+        ProjectServiceMock.checkReposAvailability.should.be.called();
+
+        ProjectServiceMock.isRepoAvailable.should.be.calledWith('npm');
+        ProjectServiceMock.isRepoAvailable.should.be.calledWith('bower');
+
+        devDependencies.should.containEql({
+          key: 'jquery',
+          value: '^1.3.1',
+          repo: 'npm',
+        });
+
+        // bower
+        devDependencies.should.containEql({
+          key: 'moment',
+          value: '^2.2.1',
+          repo: 'bower',
+        });
         done();
       });
   });

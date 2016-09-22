@@ -16,11 +16,25 @@ describe('PackageJson test', () => {
 
   describe.only('dependencies', () => {
     it('should list all', () => {
-      packageJson.getDependencies().should.be.eql({});
+      packageJson.getDependencies().should.be.eql({
+        angular: '^1.3.1',
+        'angular-ui-bootstrap': '^0.14.3',
+        moment: '^2.14.1',
+      });
     });
 
     it('should list all as Array', () => {
-      packageJson.getDependenciesArray().should.be.eql({});
+      packageJson.getDependenciesArray().should.be.eql([
+        {
+          key: 'angular', value: '^1.3.1',
+        },
+        {
+          key: 'angular-ui-bootstrap', value: '^0.14.3',
+        },
+        {
+          key: 'moment', value: '^2.14.1',
+        },
+      ]);
     });
 
     it('should remove one', () => {

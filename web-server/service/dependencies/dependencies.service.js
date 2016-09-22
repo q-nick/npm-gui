@@ -8,7 +8,7 @@ function checkVersionBower(dependencies) {
     CommandsService.run(CommandsService.cmd.bower.ls)
       .subscribe((data) => {
         const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
-        for (const [key, dependency] of dependenciesListed) {
+        Object.keys(dependenciesListed).forEach((key, dependency) => {
           if (dependency.pkgMeta) {
             UtilsService.setInArrayByRepoAndKey('bower',
               'key', key,
@@ -28,7 +28,7 @@ function checkVersionBower(dependencies) {
                 dependencies);
             }
           }
-        }
+        });
         observer.onNext(dependencies);
         observer.onCompleted();
       });
@@ -46,25 +46,19 @@ function checkVersionNPM(dependencies) {
       .subscribe((data) => {
         // ls command result
         const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
-        for (const [key, dependency] of dependenciesListed) {
+        Object.keys(dependenciesListed).forEach((key, dependency) => {
           UtilsService.setInArrayByRepoAndKey('npm',
             'key', key,
             'version', dependency.version,
             dependencies);
-        }
-      });
-
-    bothSource
-      .subscribeOnCompleted(() => {
-        observer.onNext(dependencies);
-        observer.onCompleted();
+        });
       });
 
     outdatedSource
       .subscribe((data) => {
         // outdated command result
         const dependenciesOutdated = UtilsService.parseJSON(data.stdout);
-        for (const [key, dependency] of dependenciesOutdated) {
+        Object.keys(dependenciesOutdated).forEach((key, dependency) => {
           if (dependency.wanted !== dependency.current) {
             UtilsService.setInArrayByRepoAndKey('npm',
               'key', key,
@@ -77,17 +71,20 @@ function checkVersionNPM(dependencies) {
               'latest', dependency.latest,
               dependencies);
           }
-        }
+        });
+      });
+
+    bothSource
+      .subscribeOnCompleted(() => {
+        observer.onNext(dependencies);
+        observer.onCompleted();
       });
   });
 }
 
 function updateDependenciesInfo(repo, isDev) {
   return Rx.Observable.create((observer) => {
-    const packageJson = (repo === 'bower') ?
-      ProjectService.getBowerJson()
-      :
-      ProjectService.getPackageJson();
+    const packageJson = ProjectService.getPackageJson(repo);
 
     const dependencies = isDev ?
       packageJson.getDevDependenciesArrayAs(repo)
