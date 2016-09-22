@@ -7,87 +7,13 @@ const Rx = require('rx');
 
 const CommandsServiceRunMock = sinon.stub();
 
-
 const npmLsSubject = new Rx.Subject();
-npmLsSubject
-  .startWith({
-    stdout: `{
-    "dependencies": {
-      "jquery": {
-        "version": "1.3.1"
-      },
-    },
-    "dependencies": {
-      "angular": {
-        "version": "1.0.0"
-      },
-      "angular-ui-bootstrap": {
-        "version": "0.14.3"
-      },
-      "moment": {
-        "version": "2.14.1"
-      }
-    }
-  }`,
-  });
-npmLsSubject.onCompleted();
+const npmOutdatedSubject = new Rx.Subject();
+const npmBowerLsSubject = new Rx.Subject();
 
 CommandsServiceRunMock.withArgs(CommandsService.cmd.npm.ls).returns(npmLsSubject);
-
-const npmOutdatedSubject = new Rx.Subject();
-npmOutdatedSubject
-  .startWith({
-    stdout: `{
-    "jquery": {
-      "current": "1.3.1",
-      "wanted": "1.5.8",
-      "latest": "1.5.8"
-    },
-    "angular": {
-      "current": "1.3.1",
-      "wanted": "1.5.8",
-      "latest": "1.5.8"
-    },
-    "angular-ui-bootstrap": {
-      "current": "0.14.3",
-      "wanted": "0.14.3",
-      "latest": "2.1.3"
-    },
-    "moment": {
-      "version": "2.14.1"
-    }
-  }`,
-  });
-npmOutdatedSubject.onCompleted();
-
 CommandsServiceRunMock.withArgs(CommandsService.cmd.npm.outdated).returns(npmOutdatedSubject);
-
-CommandsServiceRunMock.withArgs(CommandsService.cmd.bower.ls).returns(
-  (new Rx.Subject()).startWith({
-    stdout: `{
-    "dependencies": {
-      "jquery-ui": {
-        "pkgMeta": {
-          "version": "^1.11.0"
-        },
-        "update": {
-          "target": "1.12.0",
-          "latest": "1.12.0"
-        }
-      },
-      "moment": {
-        "pkgMeta": {
-          "version": "^2.2.1"
-        },
-        "update": {
-          "target": "2.3.0",
-          "latest": "3.0.0"
-        }
-      }
-    }
-  }`,
-  })
-);
+CommandsServiceRunMock.withArgs(CommandsService.cmd.bower.ls).returns(npmBowerLsSubject);
 
 const CommandsServiceMock = {
   run: CommandsServiceRunMock,
@@ -124,16 +50,22 @@ describe('Dependencies Service - Base module', () => {
           key: 'angular',
           value: '^1.3.1',
           repo: 'npm',
+          version: '1.0.0',
+          wanted: '1.5.8',
+          latest: '1.5.8',
         });
         dependencies.should.containEql({
           key: 'angular-ui-bootstrap',
           value: '^0.14.3',
           repo: 'npm',
+          version: '0.14.3',
+          latest: '2.1.3',
         });
         dependencies.should.containEql({
           key: 'moment',
           value: '^2.14.1',
           repo: 'npm',
+          version: '2.14.1',
         });
 
         // bower
@@ -141,9 +73,85 @@ describe('Dependencies Service - Base module', () => {
           key: 'jquery-ui',
           value: '^1.11.0',
           repo: 'bower',
+          version: '^1.11.0',
+          wanted: '1.12.0',
+          latest: '1.12.0',
         });
         done();
       });
+
+    setTimeout(() => {
+      npmLsSubject.onNext({
+        stdout: `{
+          "dependencies": {
+            "jquery": {
+              "version": "1.3.1"
+            },
+            "angular": {
+              "version": "1.0.0"
+            },
+            "angular-ui-bootstrap": {
+              "version": "0.14.3"
+            },
+            "moment": {
+              "version": "2.14.1"
+            }
+          }
+        }`,
+      });
+
+      npmOutdatedSubject.onNext({
+        stdout: `{
+          "jquery": {
+            "current": "1.3.1",
+            "wanted": "1.5.8",
+            "latest": "1.5.8"
+          },
+          "angular": {
+            "current": "1.3.1",
+            "wanted": "1.5.8",
+            "latest": "1.5.8"
+          },
+          "angular-ui-bootstrap": {
+            "current": "0.14.3",
+            "wanted": "0.14.3",
+            "latest": "2.1.3"
+          },
+          "moment": {
+            "version": "2.14.1"
+          }
+        }`,
+      });
+
+      npmBowerLsSubject.onNext({
+        stdout: `{
+          "dependencies": {
+            "jquery-ui": {
+              "pkgMeta": {
+                "version": "^1.11.0"
+              },
+              "update": {
+                "target": "1.12.0",
+                "latest": "1.12.0"
+              }
+            },
+            "moment": {
+              "pkgMeta": {
+                "version": "^2.2.1"
+              },
+              "update": {
+                "target": "2.3.0",
+                "latest": "3.0.0"
+              }
+            }
+          }
+        }`,
+      });
+
+      npmLsSubject.onCompleted();
+      npmOutdatedSubject.onCompleted();
+      npmBowerLsSubject.onCompleted();
+    });
   });
 
   it('should check devDependencies versions and return array', (done) => {
@@ -159,6 +167,9 @@ describe('Dependencies Service - Base module', () => {
           key: 'jquery',
           value: '^1.3.1',
           repo: 'npm',
+          version: '1.3.1',
+          wanted: '1.5.8',
+          latest: '1.5.8',
         });
 
         // bower
@@ -166,7 +177,11 @@ describe('Dependencies Service - Base module', () => {
           key: 'moment',
           value: '^2.2.1',
           repo: 'bower',
+          version: '^2.2.1',
+          wanted: '2.3.0',
+          latest: '3.0.0',
         });
+        
         done();
       });
   });

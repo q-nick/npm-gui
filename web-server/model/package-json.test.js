@@ -70,9 +70,9 @@ describe('PackageJson test', () => {
     });
 
     it('should remove one', () => {
-      packageJson.getTasks()['start'].to.not.equal(undefined);
+      packageJson.getTasks().start.to.not.equal(undefined);
       packageJson.removeTask('start');
-      packageJson.getTasks()['start'].to.equal(undefined);
+      packageJson.getTasks().start.to.equal(undefined);
     });
 
     it('should add one', () => {

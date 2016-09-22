@@ -8,7 +8,8 @@ function checkVersionBower(dependencies) {
     CommandsService.run(CommandsService.cmd.bower.ls)
       .subscribe((data) => {
         const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
-        Object.keys(dependenciesListed).forEach((key, dependency) => {
+        Object.keys(dependenciesListed).forEach((key) => {
+          const dependency = dependenciesListed[key];
           if (dependency.pkgMeta) {
             UtilsService.setInArrayByRepoAndKey('bower',
               'key', key,
@@ -46,7 +47,9 @@ function checkVersionNPM(dependencies) {
       .subscribe((data) => {
         // ls command result
         const dependenciesListed = UtilsService.parseJSON(data.stdout).dependencies;
-        Object.keys(dependenciesListed).forEach((key, dependency) => {
+
+        Object.keys(dependenciesListed).forEach((key) => {
+          const dependency = dependenciesListed[key];
           UtilsService.setInArrayByRepoAndKey('npm',
             'key', key,
             'version', dependency.version,
@@ -58,7 +61,9 @@ function checkVersionNPM(dependencies) {
       .subscribe((data) => {
         // outdated command result
         const dependenciesOutdated = UtilsService.parseJSON(data.stdout);
-        Object.keys(dependenciesOutdated).forEach((key, dependency) => {
+
+        Object.keys(dependenciesOutdated).forEach((key) => {
+          const dependency = dependenciesOutdated[key];
           if (dependency.wanted !== dependency.current) {
             UtilsService.setInArrayByRepoAndKey('npm',
               'key', key,
