@@ -1,7 +1,7 @@
 var express = require('express');
 var globalModulesRouter = express.Router();
 
-var globalModulesController = require('./globalModules.controller');
+var globalModulesController = require('./globalPackages.controller.js');
 
 globalModulesRouter.get('/', globalModulesController.whenGet);
 globalModulesRouter.put('/', globalModulesController.whenPut);

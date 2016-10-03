@@ -30,7 +30,7 @@
     "jquery-ui": "^1.12.0"
   },
   "devDependencies": {
-    "moment": "^2.2.1",
-    "jquery-ui": "^1.11.0"
+    "moment": "^2.14.1",
+    "jquery-ui": "^1.12.0"
   }
 }

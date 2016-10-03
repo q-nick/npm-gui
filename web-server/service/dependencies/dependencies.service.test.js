@@ -181,7 +181,6 @@ describe('Dependencies Service - Base module', () => {
           wanted: '2.3.0',
           latest: '3.0.0',
         });
-        
         done();
       });
   });

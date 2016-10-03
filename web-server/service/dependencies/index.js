@@ -1,9 +1,13 @@
-const updateModules = require('./dependencies.updateAll.service.js');
-const reinstallModules = require('./dependencies.reinstall.service.js');
-const dedupeModules = require('./dependencies.dedupe.service.js');
-const pruneModules = require('./dependencies.prune.service.js');
-const shrinkwrapModules = require('./dependencies.shrinkwrap.service.js');
-const getModules = require('./dependencies.service.js');
+const updateAllDependencies
+  = require('./dependencies.updateAll.service.js').updateAllDependencies;
+
+const reinstallAllDependencies
+  = require('./dependencies.reinstall.service.js').reinstallAllDependencies;
+
+const dedupe = require('./dependencies.dedupe.service.js').dedupe;
+const prune = require('./dependencies.prune.service.js').prune;
+const shrinkwrap = require('./dependencies.shrinkwrap.service.js').shrinkwrap;
+const get = require('./dependencies.service.js').get;
 
 // ///////////////////
 module.exports = function ModuleService() {
@@ -18,9 +22,9 @@ module.exports = function ModuleService() {
   };
 };
 
-module.exports.getModules = getModules;
-module.exports.reinstallModules = reinstallModules;
-module.exports.dedupeModules = dedupeModules;
-module.exports.shrinkwrapModules = shrinkwrapModules;
-module.exports.pruneModules = pruneModules;
-module.exports.updateModules = updateModules;
+module.exports.get = get;
+module.exports.reinstallAllDependencies = reinstallAllDependencies;
+module.exports.dedupe = dedupe;
+module.exports.shrinkwrap = shrinkwrap;
+module.exports.prune = prune;
+module.exports.updateAllDependencies = updateAllDependencies;

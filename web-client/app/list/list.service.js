@@ -6,17 +6,17 @@
         .factory('ListService', ListService);
 
     function ListService(ListFactory, ModulesListFactory) {
-        var modules = new ModulesListFactory('modules');
-        var devModules = new ModulesListFactory('devModules');
-        var globalModules = new ModulesListFactory('globalModules');
-        var binModules = new ListFactory('binModules');
+        var dependencies = new ModulesListFactory('dependencies');
+        var dependenciesDev = new ModulesListFactory('dependenciesDev');
+        var globalPackages = new ModulesListFactory('globalPackages');
+        var dependenciesBin = new ListFactory('dependenciesBin');
         var tasks = new ListFactory('tasks');
 
         return {
-            modules: modules,
-            devModules: devModules,
-            globalModules: globalModules,
-            binModules: binModules,
+            dependencies: dependencies,
+            dependenciesDev: dependenciesDev,
+            globalPackages: globalPackages,
+            dependenciesBin: dependenciesBin,
             tasks: tasks
         };
     }

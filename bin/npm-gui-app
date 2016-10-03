@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
-'use strict';
+const electron = require('electron-prebuilt');
+const proc = require('child_process');
 
-var electron = require('electron-prebuilt');
-var proc = require('child_process');
-
-var child = proc.spawn(electron, ['app'], {
-  stdio: 'inherit'
+const child = proc.spawn(electron, ['app'], {
+  stdio: 'inherit',
 });
 
-child.on('close', function (code) {
-  process.exit(code)
+child.on('close', (code) => {
+  process.exit(code);
 });

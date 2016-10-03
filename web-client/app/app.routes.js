@@ -12,7 +12,7 @@
                         controllerAs: 'modules',
                         resolve: {
                             modules: ['ListService', function(ListService) {
-                                return ListService.modules;
+                                return ListService.dependencies;
                             }]
                         }
                     })
@@ -22,7 +22,7 @@
                         controllerAs: 'modules',
                         resolve: {
                             modules: ['ListService', function(ListService) {
-                                return ListService.devModules;
+                                return ListService.dependenciesDev;
                             }]
                         }
                     })

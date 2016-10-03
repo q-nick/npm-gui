@@ -3,7 +3,7 @@ const ProjectService = require('../../service/project/project.service.js');
 const CommandsService = require('../../service/commands/commands.service.js');
 const rimraf = require('rimraf');
 
-function reinstallAllModulesForRepo(repo) {
+function reinstallAllDependenciesForRepo(repo) {
   return Rx.Observable.create(function (observer) {
     // if repo unavailable complete subscription
     if (!ProjectService.isRepoAvailable[repo]) {
@@ -29,14 +29,14 @@ function reinstallAllModulesForRepo(repo) {
   });
 }
 
-module.exports.reinstallAllModules = function reinstallAllModules() {
+module.exports.reinstallAllDependencies = function reinstallAllDependencies() {
   // force check versions
   this.modules.lastId = null;
   this.devModules.lastId = null;
 
   return Rx.Observable.create((observer) => {
-    const npmReinstallSource = reinstallAllModulesForRepo('npm');
-    const bowerReinstallSource = reinstallAllModulesForRepo('bower');
+    const npmReinstallSource = reinstallAllDependenciesForRepo('npm');
+    const bowerReinstallSource = reinstallAllDependenciesForRepo('bower');
 
     const bothSource = Rx.Observable.concat(npmReinstallSource, bowerReinstallSource);
 

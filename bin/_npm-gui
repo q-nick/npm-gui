@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-'use strict';
-//running npm-gui development version
-var npmGuiServer = require('../index.js');
+// running npm-gui development version
+const npmGuiServer = require('../index.js');
 
-var args = process.argv.slice(2);
-var host = null;
-var port = null;
+const args = process.argv.slice(2);
+let host = null;
+let port = null;
 if (args[0]) {
   host = args[0].split(':')[0];
   port = args[0].split(':')[1];

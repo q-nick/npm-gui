@@ -1,52 +1,52 @@
-'use strict';
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+const opn = require('opn');
 
-var path = require('path');
 global.appRoot = path.resolve(__dirname);
-
-//require few modules
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+const app = express();
 
 
-//Define a port/host we want to listen to
-var PORT = 1337;
-var HOST = '0.0.0.0';
+// Define a port/host we want to listen to
+const PORT = 1337;
+const HOST = '0.0.0.0';
 
 
-//middleware
+// middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: true
+  extended: true,
 }));
 
-var ConsoleService = require('./web-server/service/console/console.service.js');
-//modules
-var modulesRoutes = require('./web-server/modules/modules/modules.routes.js');
-var binModulesRoutes = require('./web-server/modules/binModules/binModules.routes.js');
-var globalModulesRoutes = require('./web-server/modules/globalModules/globalModules.routes.js');
-var tasksRoutes = require('./web-server/modules/tasks/tasks.routes.js');
-var staticRoutes = require('./web-server/modules/static/static.routes.js');
-var crawlerRoutes = require('./web-server/modules/crawler/crawler.routes.js');
-var projectRoutes = require('./web-server/modules/project/project.routes.js');
+const ConsoleService = require('./web-server/service/console/console.service.js');
+// modules
+const dependenciesRoutes = require('./web-server/modules/dependencies/dependencies.routes.js');
+const dependenciesBinRoutes
+  = require('./web-server/modules/dependenciesBin/dependenciesBin.routes.js');
+const globalPackagesRoutes
+  = require('./web-server/modules/globalPackages/globalPackages.routes.js');
+const tasksRoutes = require('./web-server/modules/tasks/tasks.routes.js');
+const staticRoutes = require('./web-server/modules/static/static.routes.js');
+const crawlerRoutes = require('./web-server/modules/crawler/crawler.routes.js');
+const projectRoutes = require('./web-server/modules/project/project.routes.js');
 
 
-//use routes
+// use routes
 app.use('/', staticRoutes);
-app.use('/modules', modulesRoutes);
-app.use('/devModules', modulesRoutes);
-app.use('/binModules', binModulesRoutes);
-app.use('/globalModules', globalModulesRoutes);
+app.use('/dependencies', dependenciesRoutes);
+app.use('/dependenciesDev', dependenciesRoutes);
+app.use('/dependenciesBin', dependenciesBinRoutes);
+app.use('/globalPackages', globalPackagesRoutes);
 app.use('/tasks', tasksRoutes);
 app.use('/crawler', crawlerRoutes);
 app.use('/project', projectRoutes);
 
 
 function start(host, port) {
-  //start server
-  var server = app.listen(port || PORT, host || HOST, function () {
-    console.log('npm-gui panel running at http://' + (host || HOST) + ':' + (port || PORT) + '/');
-    console.log('\n\nI will be waiting here to help you with your work with pleasure.');
+  // start server
+  const server = app.listen(port || PORT, host || HOST, () => {
+    console.log(`npm-gui panel running at http://${(host || HOST)}:${(port || PORT)}/`);
+    opn(`http://${(host || HOST)}:${(port || PORT)}`);
   });
 
   ConsoleService.bind(server);

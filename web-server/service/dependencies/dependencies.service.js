@@ -173,7 +173,7 @@ function updateModulesInfo() {
 // ///////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
-  getModules(isDev) {
+  get(isDev) {
     return Rx.Observable.create((observer) => {
       if (ProjectService.dependencies.lastId && ProjectService.devDependencies.lastId) {
         observer.onNext(isDev ?

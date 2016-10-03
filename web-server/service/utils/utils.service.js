@@ -14,11 +14,11 @@ module.exports = {
     }
   },
 
-  isDevModules(req) {
+  isDevDependencies(req) {
     return req.originalUrl.toUpperCase().indexOf('DEV') !== -1;
   },
 
-  isGlobalModules(req) {
+  isGlobalPackages(req) {
     return req.originalUrl.toUpperCase().indexOf('GLOBAL') !== -1;
   },
 

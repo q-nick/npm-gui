@@ -3,10 +3,10 @@ const ProjectService = require('../../service/project/project.service');
 const CommandsService = require('../../service/commands/commands.service');
 const UtilsService = require('../../service/utils/utils.service');
 
-function updateAllModulesForRepo(isDev, type, repo) {
+function updateAllDependenciesForRepo(isDev, type, repo) {
   return Rx.Observable.create((observer) => {
     // if repo unavailable complete subscription
-    if (!ProjectService.isRepoAvailable[repo]) {
+    if (!ProjectService.isRepoAvailable(repo)) {
       observer.onNext();
       observer.onCompleted();
       return;
@@ -18,10 +18,7 @@ function updateAllModulesForRepo(isDev, type, repo) {
     }
 
     // get packageJson or bowerJson
-    const packageJson = (repo === 'npm') ?
-      ProjectService.getPackageJson()
-      :
-      ProjectService.getBowerJson();
+    const packageJson = ProjectService.getPackageJson(repo);
 
     // get .json versions
     const depsInPackageJson = isDev ?
@@ -29,10 +26,12 @@ function updateAllModulesForRepo(isDev, type, repo) {
       :
       packageJson.getDependencies();
     // get current updated versions
-    const versions = isDev ? devModules.all : modules.all;
+    const versions = isDev ?
+      ProjectService.devDependencies.all : ProjectService.dependencies.all;
 
     // iterate over repos dependencies
-    for (const [key, dependency] of depsInPackageJson) {
+    Object.keys(depsInPackageJson).forEach((key) => {
+      const dependency = depsInPackageJson[key];
       // find module in our array
       const moduleVersions = UtilsService.findInArrayByRepoAndKey(repo, 'key', key, versions);
 
@@ -44,7 +43,7 @@ function updateAllModulesForRepo(isDev, type, repo) {
       if (moduleVersions && moduleVersions[type]) {
         depsInPackageJson[key] = dependency.replace(/[.\d]+/g, moduleVersions[type]);
       }
-    }
+    });
 
     // save file
     packageJson.save();
@@ -52,7 +51,7 @@ function updateAllModulesForRepo(isDev, type, repo) {
 
     // run install command
     CommandsService
-      .run(CommandsService.cmd[repo].update)
+      .run(CommandsService.cmd[repo].update, true)
       .subscribe(() => {
         observer.onNext();
         observer.onCompleted();
@@ -61,22 +60,20 @@ function updateAllModulesForRepo(isDev, type, repo) {
 }
 
 
-module.exports = function updateAllModules(isDev, type) {
+module.exports.updateAllDependencies = function updateAllDependencies(isDev, type) {
   return Rx.Observable.create((observer) => {
     //  updateModulesInfo() we will not update modules again
     //    .subscribe(function () {
-    const npmUpdateSource = updateAllModulesForRepo(isDev, type, 'npm');
-    const bowerUpdateSource = updateAllModulesForRepo(isDev, type, 'bower');
+    const npmUpdateSource = updateAllDependenciesForRepo(isDev, type, 'npm');
+    const bowerUpdateSource = updateAllDependenciesForRepo(isDev, type, 'bower');
 
     const bothSource = Rx.Observable.concat(npmUpdateSource, bowerUpdateSource);
 
     bothSource
-      .subscribeOnCompleted(()=> {
-        observer.onNext(isDev ? devModules.all : modules.all);
+      .subscribeOnCompleted(() => {
+        observer.onNext(isDev ?
+          ProjectService.devDependencies.all : ProjectService.dependencies.all);
         observer.onCompleted();
       });
-    //   });
   });
-}
-
-module.exports = updateAllModules;
+};
