@@ -1,5 +1,5 @@
-function uniqueOrNull(verA, verB) {
-  return verA !== verB ? verA : null;
+function uniqueOrNull(value, comparision) {
+  return comparision.includes(value) ? null : value;
 }
 
 export function mapNpmDependency(name, dependency, version, requiredVersion) {
@@ -8,8 +8,8 @@ export function mapNpmDependency(name, dependency, version, requiredVersion) {
     repo: 'npm',
     required: requiredVersion,
     installed: dependency.version,
-    wanted: version && uniqueOrNull(version.wanted, dependency.version),
-    latest: version && uniqueOrNull(version.latest, dependency.version),
+    wanted: version && uniqueOrNull(version.wanted, [dependency.version]),
+    latest: version && uniqueOrNull(version.latest, [dependency.version, version.wanted]),
   };
 }
 
@@ -21,11 +21,11 @@ export function mapBowerDependency(name, dependency) {
     installed: dependency.pkgMeta ? dependency.pkgMeta.version : null,
     wanted: uniqueOrNull(
       dependency.update.target,
-      dependency.pkgMeta && dependency.pkgMeta.version,
+      [dependency.pkgMeta && dependency.pkgMeta.version],
     ),
     latest: uniqueOrNull(
       dependency.update.latest,
-      dependency.pkgMeta && dependency.pkgMeta.version,
+      [dependency.pkgMeta && dependency.pkgMeta.version],
     ),
   };
 }

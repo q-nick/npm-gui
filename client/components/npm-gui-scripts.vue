@@ -131,6 +131,7 @@
         </tr>
       </table>
       <div v-show="loading" class="loading">loading...</div>
+      <div v-show="!loading && scripts.length === 0" class="loading">just empty...</div>
     </div>
     <iframe src="http://https://q-nick.github.io/npm-gui/"></iframe>
   </div>

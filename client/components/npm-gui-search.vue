@@ -5,7 +5,7 @@
     border-radius: 2px;
     margin-left: -7.5px;
     margin-top: -7.5px;
-    max-height: 32px;
+    max-height: 34px;
     max-width: 120px;
     overflow: hidden;
     padding: 7.5px;
@@ -28,6 +28,7 @@
   select {
     display: inline-block;
     width: 7em;
+    vertical-align: middle;
   }
 
   .table-container {
@@ -67,9 +68,9 @@
         @keyup="onSearch"
       >
       <npm-gui-btn
-        class="info small"
-        @click="onInstall(searchQuery)"
-      >install
+        class="success"
+        @click="onSearch(searchQuery)"
+      >search
       </npm-gui-btn>
     </form>
     <div class="table-container">

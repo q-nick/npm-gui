@@ -10,6 +10,7 @@
     padding: 8px;
     text-transform: uppercase;
     transition: background-color 200ms;
+    vertical-align: middle;
   }
 
   .button:first-child { margin-left: 0; }
@@ -31,7 +32,7 @@
   .info { background-color: #1b8dbb; }
 
   .small {
-    font-size: 9.5px;
+    font-size: 10px;
     padding: 6px;
   }
 

@@ -7,10 +7,11 @@ import { parseJSON } from '../parseJSON';
 export async function getScripts(req, res) {
   const projectPath = decodePath(req.params.projectPath);
   const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+  const scripts = packageJson.scripts || [];
 
-  res.json(Object.keys(packageJson.scripts).map(name => ({
+  res.json(Object.keys(scripts).map(name => ({
     name,
-    command: packageJson.scripts[name],
+    command: scripts[name],
   })));
 }
 

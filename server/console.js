@@ -12,6 +12,7 @@ export default {
         msg,
         id,
       }));
+      console.log(msg);
     }
   },
 
