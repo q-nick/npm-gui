@@ -12,7 +12,8 @@ module.exports = {
   rules: {
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "import/prefer-default-export": "warning",
-    "linebreak-style": 0
+    "linebreak-style": 0,
+    "no-console": 0
   },
   env: {
     node: true,
