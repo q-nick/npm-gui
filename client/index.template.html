@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NPM Graphic User Interface</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+</head>
+
+<body>
+  <div id="npm-gui-vue">
+    <npm-gui-nav></npm-gui-nav>
+    <div class="row">
+      <div class="left-column">
+        <npm-gui-console></npm-gui-console>
+      </div>
+      <div class="right-column">
+        <transition name="fade" mode="out-in">
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
+        </transition>
+      </div>
+    </div>
+  </div>
+</body>

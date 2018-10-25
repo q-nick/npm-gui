@@ -1,22 +1,84 @@
-var webpack = require('webpack');
-var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // eslint-disable-line
+const VueLoaderPlugin = require('vue-loader/lib/plugin'); // eslint-disable-line
+
+const EXCLUDE = /(node_modules|bower_components)/;
 
 module.exports = {
-  entry: {
-    vendor: './web-client/app/vendor.js',
-    app: './web-client/app/npm-gui.js'
-  },
+  entry: './client/index.js',
   output: {
-    filename: './web-client/npm-gui.js'
+    path: `${__dirname}/dist/client`,
+    filename: './[name].js',
   },
-  watchOptions: {
-    poll: 1000
+  devtool: 'cheap-source-map',
+  target: 'web',
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        exclude: EXCLUDE,
+        options: {
+          loaders: {
+            scss: 'vue-style-loader!css-loader',
+          },
+        },
+      },
+      {
+        test: /\.(js)$/,
+        loader: 'babel-loader',
+        exclude: EXCLUDE,
+        options: {
+          presets: [
+            [
+              '@babel/env',
+              {
+                targets: {
+                  browsers: 'defaults',
+                },
+              },
+            ],
+          ],
+        },
+      },
+      {
+        test: /\.(png|woff|woff2|eot|otf|ttf|svg|gif|jpg)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 1000,
+        },
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+  resolve: {
+    modules: ['node_modules'],
+    alias: {
+      vue$: 'vue/dist/vue.esm.js',
+      'open-iconic$': 'open-iconic/font/css/open-iconic.css',
+    },
   },
   plugins: [
-    new ngAnnotatePlugin({
-      add: true
-      // other ng-annotate options here
+    new HtmlWebpackPlugin({
+      title: 'NPM-GUI',
+      template: 'client/index.template.html',
+      hash: true,
+      mobile: true,
     }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', './web-client/vendor.js')
-  ]
+    new VueLoaderPlugin(),
+  ],
+  devServer: {
+    compress: true,
+    port: 9000,
+    proxy: [
+      {
+        context: ['/api/**'],
+        target: 'http://localhost:9002/',
+        secure: false,
+        ws: true,
+      },
+    ],
+  },
 };
