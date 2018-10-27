@@ -10,7 +10,7 @@ const scriptsRouter = express.Router({ mergeParams: true });// eslint-disable-li
 
 scriptsRouter.get('/', getScripts);
 scriptsRouter.post('/', addScript);
-scriptsRouter.post('/:scriptName', removeScript);
+scriptsRouter.delete('/:scriptName', removeScript);
 scriptsRouter.post('/:scriptName/run', runScript);
 
 export { scriptsRouter };

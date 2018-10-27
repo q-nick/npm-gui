@@ -29,6 +29,11 @@ body {
   flex-basis: 30%;
   display: flex;
   padding: 15px;
+  transition: flex-basis 1500ms ease-in-out;
+}
+
+.left-column:hover {
+  /* flex-basis: 45%; TODO FIXME */
 }
 
 .right-column {

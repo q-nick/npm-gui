@@ -5,12 +5,13 @@ const WebSocketServer = Ws.Server;
 let consoleSocket = null;
 
 export default {
-  send(msg, id) {
+  send(msg, id, status = 'LIVE') {
     if (consoleSocket) {
       // TODO we will send command ID to group commands in separated console windows
       consoleSocket.send(JSON.stringify({
         msg,
         id,
+        status,
       }));
       console.log(msg);
     }

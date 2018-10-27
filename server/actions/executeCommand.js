@@ -30,6 +30,7 @@ export default function executeCommand(cwd, wholeCommand, pushToConsole) {
 
     // wait for finish and resolve
     spawned.on('close', () => {
+      if (pushToConsole) { Console.send('', commandId, 'CLOSE'); }
       resolve({
         stdout,
         stderr,
@@ -38,6 +39,7 @@ export default function executeCommand(cwd, wholeCommand, pushToConsole) {
 
     // if error
     spawned.on('error', () => {
+      if (pushToConsole) { Console.send('', commandId, 'ERROR'); }
       reject(new Error({
         stdout,
         stderr,

@@ -20,6 +20,10 @@ export async function addScript(req, res) {
 }
 
 export async function removeScript(req, res) {
+  const projectPath = decodePath(req.params.projectPath);
+  const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+  delete packageJson.scripts[req.params.scriptName];
+  fs.writeFileSync(path.normalize(`${projectPath}/package.json`), JSON.stringify(packageJson));
   res.json({});
 }
 
