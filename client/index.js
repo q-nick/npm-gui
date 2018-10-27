@@ -10,20 +10,12 @@ import NpmGuiConsole from './components/npm-gui-console.vue';
 
 import { routes } from './routes';
 
+import { npmGuiStore } from './store';
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
-const store = new Vuex.Store({
-  state: {
-    count: 0,
-    sessions: 'wtf',
-  },
-  mutations: {
-    increment(state) {
-      state.count += 1;
-    },
-  },
-});
+const store = new Vuex.Store(npmGuiStore);
 
 function initialize() {
   const router = new VueRouter({

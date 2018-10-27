@@ -97,6 +97,10 @@
       background-position: 0% 50%;
     }
   }
+
+  input {
+    display: inline-block;
+  }
 </style>
 
 <template>
@@ -109,10 +113,22 @@
           <th>Command</th>
           <th>Action</th>
         </tr>
-        <tr v-for="script in scripts" v-bind:key="script.name" v-bind:class="{ loading: scriptsLoading[script.name] }">
+        <tr>
+          <td class="column-run">add new:</td>
+          <td class="column-name"><input type="text"></td>
+          <td class="column-command"><input type="text"></td>
+          <td class="column-action">
+            <npm-gui-btn
+              icon="plus"
+              class="success small"
+              @click="onAdd()"
+            ></npm-gui-btn>
+          </td>
+        </tr>
+        <tr v-for="script in scripts" v-bind:key="script.name" v-bind:class="{ loading: executing[script.name] }">
           <td class="column-run">
             <npm-gui-btn
-              :disabled="scriptsLoading[script.name]"
+              :disabled="executing[script.name]"
               icon="media-play"
               class="primary small"
               @click="onRun(script)"
@@ -122,7 +138,7 @@
           <td class="column-command"><pre>{{ script.command }}</pre></td>
           <td class="column-action">
             <npm-gui-btn
-              :disabled="scriptsLoading[script.name]"
+              :disabled="executing[script.name]"
               icon="trash"
               class="danger small"
               @click="onRemove(script)"
@@ -130,7 +146,7 @@
           </td>
         </tr>
       </table>
-      <div v-show="loading" class="loading">loading...</div>
+      <div v-show="loading" class="loading">loading...{{loading}}</div>
       <div v-show="!loading && scripts.length === 0" class="loading">just empty...</div>
     </div>
     <iframe src="http://https://q-nick.github.io/npm-gui/"></iframe>
@@ -138,7 +154,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
+  import { mapState } from 'vuex';
 
   import NpmGuiBtn from './npm-gui-btn.vue';
   import NpmGuiSearch from './npm-gui-search.vue';
@@ -148,14 +164,11 @@
       NpmGuiBtn,
       NpmGuiSearch,
     },
-    data() {
-      return {
-        loading: false,
-        error: null,
-        scripts: {},
-        scriptsLoading: {},
-      };
-    },
+    computed: mapState({
+      scripts: state => state.scripts.list,
+      loading: state => state.scripts.status === 'loading',
+      executing: state => state.scripts.executing,
+    }),
     created() {
       this.loadScripts();
     },
@@ -166,60 +179,25 @@
     },
     methods: {
       loadScripts() {
-        this.loading = true;
-        axios
-          .get(`/api/project/${this.$route.params.projectPathEncoded}/scripts`)
-          .then((response) => {
-            this.loading = false;
-            this.error = null;
-            this.scripts = response.data;
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.error = error;
-          });
+        this.$store.dispatch('scripts/load', {
+          project: this.$route.params.projectPathEncoded,
+        });
       },
 
       onRemove(script) {
-        this.scriptsLoading = {
-          ...this.scriptsLoading,
-          [script.name]: true,
-        };
-
-        axios
-          .delete(`/api/project/${this.$route.params.projectPathEncoded}/scripts/${script.name}`)
-          .then(() => {
-            this.loadScripts();
-          });
+        this.$store.dispatch('scripts/delete', {
+          project: this.$route.params.projectPathEncoded,
+          scriptName: script.name,
+        });
       },
 
-      onAdd(script) {
-        this.scriptsLoading = {
-          ...this.scriptsLoading,
-          [script.name]: true,
-        };
-
-        axios
-          .post(`/api/project/${this.$route.params.projectPathEncoded}/scripts`, script)
-          .then(() => {
-            this.loadScripts();
-          });
-      },
+      onAdd() {},
 
       onRun(script) {
-        this.scriptsLoading = {
-          ...this.scriptsLoading,
-          [script.name]: true,
-        };
-
-        axios
-          .post(`/api/project/${this.$route.params.projectPathEncoded}/scripts/${script.name}/run`)
-          .then(() => {
-            this.scriptsLoading = {
-              ...this.scriptsLoading,
-              [script.name]: false,
-            };
-          });
+        this.$store.dispatch('scripts/run', {
+          project: this.$route.params.projectPathEncoded,
+          scriptName: script.name,
+        });
       },
     },
   };
