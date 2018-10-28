@@ -75,6 +75,18 @@
     animation: Gradient 2s ease infinite;
   }
 
+  .spin {
+    animation: spin 2s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   @keyframes Gradient {
     0% {
       background-position: 0% 50%;
@@ -95,30 +107,6 @@
     <header>
       <npm-gui-search></npm-gui-search>
       <div class="right">
-        <!-- <npm-gui-btn
-          class="info small"
-          icon="fork"
-          title="Searches the local package tree and attempts to simplify the overall structure by moving dependencies further up the tree, where they can be more effectively shared by multiple dependent packages."
-        >Dedupe
-        </npm-gui-btn>
-        <npm-gui-btn
-          class="info small"
-          icon="list"
-          title="This command removes 'extraneous' packages."
-        >Prune
-        </npm-gui-btn>
-        <npm-gui-btn
-          class="info small"
-          icon="lock-locked"
-          disabled
-        >Lock All
-        </npm-gui-btn>
-        <npm-gui-btn
-          class="info small"
-          icon="lock-unlocked"
-          disabled
-        >Unlock All
-        </npm-gui-btn> -->
         <npm-gui-btn
           class="success small"
           icon="cloud-download"
@@ -158,9 +146,13 @@
             <span class="label label--warning" v-if="dependency.repo === 'bower'">Bower</span>
             <span class="label label--danger" v-if="dependency.repo === 'npm'">npm</span>
           </td>
-          <td class="column-version">{{ dependency.required || '-' }}</td>
-          <td class="column-nsp">-</td>
-          <td class="column-version">{{ dependency.installed || '-'}}</td>
+          <td class="column-version">{{ dependency.required || '' }}</td>
+          <td class="column-nsp"> ? </td>
+          <td class="column-version">
+            {{ dependency.installed || '' }}
+            <span v-if="dependency.installed === undefined" class="oi spin" data-glyph="reload"></span>
+            <span v-if="dependency.installed === null">-</span>
+          </td>
           <td class="column-version">
             <npm-gui-btn
               :disabled="dependenciesLoading[dependency.name]"
@@ -169,7 +161,7 @@
               class="success small"
               @click="onInstall(dependency, dependency.wanted)"
             >{{dependency.wanted}}</npm-gui-btn>
-            <span v-if="!dependency.wanted">-</span>
+            <span v-if="dependency.wanted === null">-</span>
           </td>
           <td class="column-version">
             <npm-gui-btn
@@ -179,7 +171,7 @@
               class="success small"
               @click="onInstall(dependency, dependency.latest)"
             >{{dependency.latest}}</npm-gui-btn>
-            <span v-if="!dependency.latest">-</span>
+            <span v-if="dependency.latest === null">-</span>
           </td>
           <td class="column-action">
             <npm-gui-btn
@@ -201,6 +193,7 @@
 
 <script>
   import axios from 'axios';
+  import { mapState } from 'vuex';
 
   import NpmGuiBtn from './npm-gui-btn.vue';
   import NpmGuiSearch from './npm-gui-search.vue';
@@ -210,11 +203,19 @@
       NpmGuiBtn,
       NpmGuiSearch,
     },
+    computed: mapState({
+      dependencies(state) {
+        return state.dependencies[this.$route.meta.api.replace('dependencies/', '')].list;
+      },
+      loading(state) {
+        return state.dependencies[this.$route.meta.api.replace('dependencies/', '')].status === 'loading';
+      },
+    }),
     data() {
       return {
-        loading: false,
-        error: null,
-        dependencies: {},
+        // loading: false,
+        // error: null,
+        // dependencies: {},
         dependenciesLoading: {},
       };
     },
@@ -228,18 +229,22 @@
     },
     methods: {
       loadDependencies() {
-        this.loading = true;
-        axios
-          .get(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}`) // eslint-disable-line
-          .then((response) => {
-            this.loading = false;
-            this.error = null;
-            this.dependencies = response.data;
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.error = error;
-          });
+        this.$store.dispatch('dependencies/load', {
+          project: this.$route.params.projectPathEncoded,
+          type: this.$route.meta.api.replace('dependencies/', ''),
+        });
+        // this.loading = true;
+        // axios
+        //   .get(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}`) // eslint-disable-line
+        //   .then((response) => {
+        //     this.loading = false;
+        //     this.error = null;
+        //     this.dependencies = response.data;
+        //   })
+        //   .catch((error) => {
+        //     this.loading = false;
+        //     this.error = error;
+        //   });
       },
 
       onRemove(dependency) {

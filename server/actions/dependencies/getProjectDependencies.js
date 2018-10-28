@@ -1,10 +1,12 @@
 import fs from 'fs';
+import path from 'path';
 
 import executeCommand from '../executeCommand';
 import UtilsService from '../../service/utils/utils.service';
 import { getFromCache, putToCache } from '../../cache';
 import { mapNpmDependency, mapBowerDependency } from '../mapDependencies';
 import { decodePath } from '../decodePath';
+import { parseJSON } from '../parseJSON';
 
 
 async function getRegularNpmDependencies(req) {
@@ -101,6 +103,61 @@ export async function getDevDependencies(req, res) {
 
   putToCache(npmCacheName, npmDevDependencies);
   putToCache(bowerCacheName, bowerDevDependencies);
+
+  console.log(npmDevDependencies);
+
+  res.json([...npmDevDependencies, ...bowerDevDependencies]);
+}
+
+
+export async function getRegularDependenciesSimple(req, res) {
+  const projectPath = decodePath(req.params.projectPath);
+
+  let npmDependencies = [];
+  let bowerDependencies = [];
+
+  try {
+    const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+    const dependencies = packageJson.dependencies || [];
+    npmDependencies = Object.keys(dependencies).map(name => ({
+      name,
+      repo: 'npm',
+      required: dependencies[name],
+      installed: undefined,
+      wanted: undefined,
+      latest: undefined,
+    }));
+  } catch (e) { console.error(e); }
+
+  try {
+    bowerDependencies = [];
+  } catch (e) { console.error(e); }
+
+  res.json([...npmDependencies, ...bowerDependencies]);
+}
+
+export async function getDevDependenciesSimple(req, res) {
+  const projectPath = decodePath(req.params.projectPath);
+
+  let npmDevDependencies = [];
+  let bowerDevDependencies = [];
+
+  try {
+    const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+    const devDependencies = packageJson.devDependencies || [];
+    npmDevDependencies = Object.keys(devDependencies).map(name => ({
+      name,
+      repo: 'npm',
+      required: devDependencies[name],
+      installed: undefined,
+      wanted: undefined,
+      latest: undefined,
+    }));
+  } catch (e) { console.error(e); }
+
+  try {
+    bowerDevDependencies = [];
+  } catch (e) { console.error(e); }
 
   res.json([...npmDevDependencies, ...bowerDevDependencies]);
 }

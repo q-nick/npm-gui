@@ -2,7 +2,9 @@ import express from 'express';
 
 import {
   getRegularDependencies,
+  getRegularDependenciesSimple,
   getDevDependencies,
+  getDevDependenciesSimple,
 } from '../actions/dependencies/getProjectDependencies';
 
 import {
@@ -18,13 +20,14 @@ import {
 const regularDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
 
 regularDependenciesRouter.get('/', getRegularDependencies);
+regularDependenciesRouter.get('/simple', getRegularDependenciesSimple);
 regularDependenciesRouter.post('/:repoName/', addRegularDependencies);
 regularDependenciesRouter.delete('/:repoName/:packageName', deleteRegularDependencies);
-
 
 const devDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
 
 devDependenciesRouter.get('/', getDevDependencies);
+devDependenciesRouter.get('/simple', getDevDependenciesSimple);
 devDependenciesRouter.post('/:repoName/', addDevDependencies);
 devDependenciesRouter.delete('/:repoName/:packageName', deleteDevDependencies);
 
