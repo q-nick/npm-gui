@@ -128,10 +128,16 @@
       onInstall(toInstall) {
         const name = toInstall.includes('@') ? toInstall.split('@')[0] : toInstall;
         const version = toInstall.includes('@') ? toInstall.split('@')[1] : null;
-        axios.post(
-          `/api/project/${this.$route.params.projectPathEncoded}/${this.$root._route.meta.api}/${this.searchRepo}`, // eslint-disable-line
-          { packageName: name, version },
-        );
+
+        this.$store.dispatch('dependencies/install', {
+          project: this.$route.params.projectPathEncoded,
+          type: this.$route.meta.api.replace('dependencies/', ''),
+          dependency: {
+            name,
+            repo: this.searchRepo,
+          },
+          version,
+        });
 
         this.searchQuery = '';
         this.isOpen = false;

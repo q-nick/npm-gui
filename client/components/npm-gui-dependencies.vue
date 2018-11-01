@@ -192,7 +192,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
   import { mapState } from 'vuex';
 
   import NpmGuiBtn from './npm-gui-btn.vue';
@@ -210,15 +209,10 @@
       loading(state) {
         return state.dependencies[this.$route.meta.api.replace('dependencies/', '')].status === 'loading';
       },
+      dependenciesLoading(state) {
+        return state.dependencies[this.$route.meta.api.replace('dependencies/', '')].executing;
+      },
     }),
-    data() {
-      return {
-        // loading: false,
-        // error: null,
-        // dependencies: {},
-        dependenciesLoading: {},
-      };
-    },
     created() {
       this.loadDependencies();
     },
@@ -233,50 +227,23 @@
           project: this.$route.params.projectPathEncoded,
           type: this.$route.meta.api.replace('dependencies/', ''),
         });
-        // this.loading = true;
-        // axios
-        //   .get(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}`)
-        //   .then((response) => {
-        //     this.loading = false;
-        //     this.error = null;
-        //     this.dependencies = response.data;
-        //   })
-        //   .catch((error) => {
-        //     this.loading = false;
-        //     this.error = error;
-        //   });
       },
 
       onRemove(dependency) {
-        this.dependenciesLoading = {
-          ...this.dependenciesLoading,
-          [dependency.name]: true,
-        };
-
-        axios
-          .delete(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}/${dependency.repo}/${dependency.name}`) // eslint-disable-line
-          .then(() => {
-            this.loadDependencies();
-          });
+        this.$store.dispatch('dependencies/delete', {
+          project: this.$route.params.projectPathEncoded,
+          type: this.$route.meta.api.replace('dependencies/', ''),
+          dependency,
+        });
       },
 
       onInstall(dependency, version) {
-        const { name } = dependency;
-
-        this.dependenciesLoading = {
-          ...this.dependenciesLoading,
-          [name]: true,
-        };
-
-        axios
-          .post(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}/${dependency.repo}`, { packageName: name, version },) // eslint-disable-line
-          .then(() => {
-            this.dependenciesLoading = {
-              ...this.dependenciesLoading,
-              [name]: false,
-            };
-            this.loadDependencies();
-          });
+        this.$store.dispatch('dependencies/install', {
+          project: this.$route.params.projectPathEncoded,
+          type: this.$route.meta.api.replace('dependencies/', ''),
+          dependency,
+          version,
+        });
       },
 
       onInstallAllWanted() {

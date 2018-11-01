@@ -35,9 +35,11 @@ module.exports = {
                 targets: {
                   browsers: 'defaults',
                 },
+                useBuiltIns: 'usage',
               },
             ],
           ],
+          plugins: ['@babel/plugin-transform-async-to-generator'],
         },
       },
       {

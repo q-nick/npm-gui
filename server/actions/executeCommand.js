@@ -29,8 +29,8 @@ export default function executeCommand(cwd, wholeCommand, pushToConsole) {
     });
 
     // wait for finish and resolve
-    spawned.on('close', () => {
-      if (pushToConsole) { Console.send('', commandId, 'CLOSE'); }
+    spawned.on('close', (exitStatus) => {
+      if (pushToConsole) { Console.send('', commandId, exitStatus === 0 ? 'CLOSE' : 'ERROR'); }
       resolve({
         stdout,
         stderr,

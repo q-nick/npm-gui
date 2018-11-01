@@ -65,6 +65,16 @@
     white-space: pre-wrap;
   }
 
+  .session--error pre {
+    background-color: #fff8f8;
+    border-color: #d9534f;
+  }
+
+  .session--close pre {
+    background-color: #fafff2;
+    border-color: #79a736;
+  }
+
   p {
     left: 7px;
     position: absolute;
@@ -91,7 +101,13 @@
       v-for="(session, id) in sessions"
       v-bind:key="id"
       class="session"
-      v-bind:class="{'session--fullscreen': id === fullScreenSessionId}"
+      v-bind:class="{
+        'session--fullscreen': id === fullScreenSessionId,
+        'session--new': session.status === 'NEW',
+        'session--open': session.status === 'OPEN',
+        'session--close': session.status === 'CLOSE',
+        'session--error': session.status === 'ERROR',
+      }"
     >
       <div class="session__menu">
         <npm-gui-btn
@@ -115,16 +131,17 @@
         <npm-gui-btn
           class="danger small"
           icon="fullscreen-exit"
-          v-if="session.status === 'CLOSE'"
-          v-on:click="onClearFullScreenSession()"
-        >clear</npm-gui-btn>
+          v-if="['CLOSE','ERROR'].includes(session.status)"
+          v-on:click="onRemoveSession(id)"
+        >remove</npm-gui-btn>
       </div>
-      <pre><p>{{ session.msg }}{{ session.status }}</p></pre>
+      <pre><p>{{ session.msg }}</p></pre>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   import NpmGuiBtn from './npm-gui-btn.vue';
 
   export default {
@@ -132,17 +149,11 @@
       NpmGuiBtn,
     },
     created() {
-      this.connectConsole();
+      this.$store.dispatch('console/connect');
     },
-    computed: {
-      sessions2() {
-        console.log(this.$store);
-        return this.$store.state.sessions;
-      },
-    },
+    computed: mapState({ sessions: state => state.console.sessions }),
     data() {
       return {
-        sessions: {},
         fullScreenSessionId: null,
       };
     },
@@ -158,31 +169,8 @@
       onClearFullScreenSession() {
         this.fullScreenSessionId = null;
       },
-      connectConsole() {
-        const consoleSocket = new WebSocket(`ws://${location.host}/api/console`);// eslint-disable-line
-        consoleSocket.onmessage = this.onNewMessage.bind(this);
-        consoleSocket.onclose = this.onClose.bind(this);
-      },
-      onClose() {
-        setTimeout(() => this.connectConsole(), 1000);
-      },
-      onNewMessage(msg) {
-        const message = JSON.parse(msg.data);
-        if (!this.sessions[message.id]) {
-          this.sessions[message.id] = {
-            status: 'NEW',
-            msg: '',
-          };
-        }
-
-        this.sessions = {
-          ...this.sessions,
-          [message.id]: {
-            ...this.sessions[message.id],
-            msg: this.sessions[message.id].msg + message.msg,
-            status: message.status,
-          },
-        };
+      onRemoveSession(sessionId) {
+        this.$store.dispatch('console/removeSession', sessionId);
       },
     },
   };

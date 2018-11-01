@@ -17,41 +17,42 @@ const getters = {
 };
 
 const actions = {
-  load({ commit }, { project, type }) {
+  async load({ commit }, { project, type }) {
     commit('setListStatus', { type, status: 'loading' });
+    console.log('wtf2');
 
-    axios
-      .get(`/api/project/${project}/dependencies/${type}/simple`)
-      .then((response) => {
-        commit('setListStatus', { type, status: 'loaded' });
-        commit('setDependencies', { type, dependencies: response.data });
+    const responseSimple = await axios
+      .get(`/api/project/${project}/dependencies/${type}/simple`);
 
-        axios
-          .get(`/api/project/${project}/dependencies/${type}`)
-          .then((response2) => {
-            commit('setDependencies', { type, dependencies: response2.data });
-          });
-      });
+    commit('setListStatus', { type, status: 'loaded' });
+    commit('setDependencies', { type, dependencies: responseSimple.data });
+
+    const responseFull = await axios
+      .get(`/api/project/${project}/dependencies/${type}`);
+
+    commit('setDependencies', { type, dependencies: responseFull.data });
   },
 
-  run({ commit }, { project, scriptName }) {
-    commit('setDependencyExecuting', { scriptName, status: true });
+  async install({ commit, dispatch }, {
+    project, type, dependency, version,
+  }) {
+    commit('setDependencyExecuting', { type, dependencyName: dependency.name, status: true });
 
-    axios
-      .get(`/api/project/${project}/scripts/${scriptName}/run`)
-      .then(() => {
-        commit('setDependencyExecuting', { scriptName, status: false });
-      });
+    await axios.post(`/api/project/${project}/dependencies/${type}/${dependency.repo}`,
+      { packageName: dependency.name, version });
+    console.log('wtf');
+    commit('setDependencyExecuting', { type, dependencyName: dependency.name, status: false });
+    dispatch('load', { project, type });
   },
 
-  delete({ commit, dispatch }, { project, scriptName }) {
-    commit('setDependencyExecuting', { scriptName, status: true });
-    axios
-      .delete(`/api/project/${project}/scripts/${scriptName}`)
-      .then(() => {
-        commit('setDependencyExecuting', { scriptName, status: false });
-        dispatch('load', { project });
-      });
+  async delete({ commit, dispatch }, { project, type, dependency }) {
+    commit('setDependencyExecuting', { type, dependencyName: dependency.name, status: true });
+
+    await axios
+      .delete(`/api/project/${project}/dependencies/${type}/${dependency.repo}/${dependency.name}`);
+
+    commit('setDependencyExecuting', { type, dependencyName: dependency.name, status: false });
+    dispatch('load', { project, type });
   },
 };
 
@@ -64,7 +65,7 @@ const mutations = {
   },
   setDependencyExecuting(state, { type, dependencyName, status }) {
     state[type].executing = {
-      ...state.executing,
+      ...state[type].executing,
       [dependencyName]: status,
     };
   },

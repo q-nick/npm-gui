@@ -10,35 +10,30 @@ const getters = {
 };
 
 const actions = {
-  load({ commit }, { project }) {
+  async load({ commit }, { project }) {
     commit('setListStatus', 'loading');
 
-    axios
-      .get(`/api/project/${project}/scripts`)
-      .then((response) => {
-        commit('setListStatus', 'loaded');
-        commit('setScripts', response.data);
-      });
+    const { data } = await axios.get(`/api/project/${project}/scripts`);
+
+    commit('setListStatus', 'loaded');
+    commit('setScripts', data);
   },
 
-  run({ commit }, { project, scriptName }) {
+  async run({ commit }, { project, scriptName }) {
     commit('setScriptExecuting', { scriptName, status: true });
 
-    axios
-      .get(`/api/project/${project}/scripts/${scriptName}/run`)
-      .then(() => {
-        commit('setScriptExecuting', { scriptName, status: false });
-      });
+    await axios.get(`/api/project/${project}/scripts/${scriptName}/run`);
+
+    commit('setScriptExecuting', { scriptName, status: false });
   },
 
-  delete({ commit, dispatch }, { project, scriptName }) {
+  async delete({ commit, dispatch }, { project, scriptName }) {
     commit('setScriptExecuting', { scriptName, status: true });
-    axios
-      .delete(`/api/project/${project}/scripts/${scriptName}`)
-      .then(() => {
-        commit('setScriptExecuting', { scriptName, status: false });
-        dispatch('load', { project });
-      });
+
+    await axios.delete(`/api/project/${project}/scripts/${scriptName}`);
+
+    commit('setScriptExecuting', { scriptName, status: false });
+    dispatch('load', { project });
   },
 };
 
