@@ -20,7 +20,7 @@
   .button:active { filter: brightness(80%); }
 
   .button:disabled {
-    cursor: disabled;
+    cursor: not-allowed;
     filter: grayscale(100%);
   }
 

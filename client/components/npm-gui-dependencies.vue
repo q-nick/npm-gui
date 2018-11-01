@@ -76,7 +76,7 @@
   }
 
   .spin {
-    animation: spin 2s linear infinite;
+    animation: spin 1s linear infinite;
     display: inline-block;
     vertical-align: middle;
   }
@@ -130,7 +130,7 @@
     <div class="table-container">
       <table v-show="!loading">
         <tr>
-          <th><input type="checkbox" style="display:inline;"/> <span>All</span></th>
+          <!-- <th><input type="checkbox" style="display:inline;"/> <span>All</span></th> -->
           <th>Name</th>
           <th>Required</th>
           <th>NSP</th>
@@ -140,7 +140,7 @@
           <th>Action</th>
         </tr>
         <tr v-for="dependency in dependencies" v-bind:key="dependency.name" v-bind:class="{ loading: dependenciesLoading[dependency.name] }">
-          <td><input type="checkbox" /></td>
+          <!-- <td><input type="checkbox" /></td> -->
           <td>
             {{ dependency.name }}
             <span class="label label--warning" v-if="dependency.repo === 'bower'">Bower</span>
@@ -179,7 +179,7 @@
               icon="trash"
               class="danger small"
               @click="onRemove(dependency)"
-            ></npm-gui-btn>
+            >remove</npm-gui-btn>
             <!-- <npm-gui-btn icon="lock-locked" class="primary"></npm-gui-btn>
             <npm-gui-btn icon="external-link" class="warning"></npm-gui-btn> -->
           </td>
@@ -235,7 +235,7 @@
         });
         // this.loading = true;
         // axios
-        //   .get(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}`) // eslint-disable-line
+        //   .get(`/api/project/${this.$route.params.projectPathEncoded}/${this.$route.meta.api}`)
         //   .then((response) => {
         //     this.loading = false;
         //     this.error = null;

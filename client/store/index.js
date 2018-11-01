@@ -1,6 +1,6 @@
 // import globalDependencies from './modules/globalDependencies';
-import dependencies from './modules/dependencies.js';
-import scripts from './modules/scripts.js';
+import dependencies from './modules/dependencies';
+import scripts from './modules/scripts';
 
 export const npmGuiStore = {
   modules: {

@@ -13,7 +13,16 @@ module.exports = {
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "import/prefer-default-export": "warning",
     "linebreak-style": 0,
-    "no-console": 0
+    "no-console": 0,
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": [
+          "state",
+        ]
+      }
+    ],
   },
   env: {
     node: true,

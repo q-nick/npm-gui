@@ -125,6 +125,12 @@
             ></npm-gui-btn>
           </td>
         </tr>
+        <tr>
+          <th>Run</th>
+          <th>Name</th>
+          <th>Command</th>
+          <th>Action</th>
+        </tr>
         <tr v-for="script in scripts" v-bind:key="script.name" v-bind:class="{ loading: executing[script.name] }">
           <td class="column-run">
             <npm-gui-btn
@@ -142,11 +148,11 @@
               icon="trash"
               class="danger small"
               @click="onRemove(script)"
-            ></npm-gui-btn>
+            >remove</npm-gui-btn>
           </td>
         </tr>
       </table>
-      <div v-show="loading" class="loading">loading...{{loading}}</div>
+      <div v-show="loading" class="loading">loading...</div>
       <div v-show="!loading && scripts.length === 0" class="loading">just empty...</div>
     </div>
     <iframe src="http://https://q-nick.github.io/npm-gui/"></iframe>

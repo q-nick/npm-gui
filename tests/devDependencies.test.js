@@ -1,7 +1,7 @@
 const api = require('supertest');
 const { expect } = require('chai');
 const { app } = require('../server');
-const { npmGuiPackage } = require('./npmGuiPackage');
+const { npmGuiTestsPackage } = require('./npmGuiTestsPackage');
 
 const testProjectPathEncoded = 'dGVzdC1wcm9qZWN0';
 
@@ -10,7 +10,7 @@ describe('Dev Packages', () => {
     it('should install new package', (done) => {
       api(app)
         .post(`/api/project/${testProjectPathEncoded}/dependencies/dev/npm`)
-        .send({ packageName: 'npm-gui', version: '0.2.1' })
+        .send({ packageName: 'npm-gui-tests', version: '1.0.0' })
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.deep.equal({});
@@ -23,7 +23,7 @@ describe('Dev Packages', () => {
         .get(`/api/project/${testProjectPathEncoded}/dependencies/dev`)
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.deep.include(npmGuiPackage);
+          expect(res.body).to.deep.include(npmGuiTestsPackage);
           done();
         });
     }).timeout(40000);
@@ -32,7 +32,7 @@ describe('Dev Packages', () => {
   describe('uninstalling', () => {
     it('should remove previously installed package', (done) => {
       api(app)
-        .delete(`/api/project/${testProjectPathEncoded}/dependencies/dev/npm/npm-gui`)
+        .delete(`/api/project/${testProjectPathEncoded}/dependencies/dev/npm/npm-gui-tests`)
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.deep.equal({});
@@ -45,7 +45,7 @@ describe('Dev Packages', () => {
         .get(`/api/project/${testProjectPathEncoded}/dependencies/dev`)
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.not.include(npmGuiPackage);
+          expect(res.body).to.not.include(npmGuiTestsPackage);
           done();
         });
     }).timeout(40000);
