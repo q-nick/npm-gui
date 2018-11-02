@@ -13,7 +13,6 @@ export default {
         id,
         status,
       }));
-      console.log(msg);
     }
   },
 

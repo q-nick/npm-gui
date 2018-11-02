@@ -9,7 +9,6 @@ function requestWithPromise(url) {
 }
 
 export async function info(_, res) {
-  const results = await requestWithPromise('https://raw.githubusercontent.com/q-nick/npm-gui/master/INFO');
-  console.log(results);
+  const results = await requestWithPromise(`https://raw.githubusercontent.com/q-nick/npm-gui/master/INFO?${new Date().getTime()}`);
   res.send(results);
 }

@@ -182,7 +182,6 @@
       </table>
       <div v-show="loading" class="loading">loading...</div>
     </div>
-    <npm-gui-info></npm-gui-info>
   </div>
 </template>
 

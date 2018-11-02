@@ -7,6 +7,7 @@ import 'open-iconic'; // eslint-disable-line
 import './base.css';
 import NpmGuiNav from './components/npm-gui-nav.vue';
 import NpmGuiConsole from './components/npm-gui-console.vue';
+import NpmGuiInfo from './components/npm-gui-info.vue';
 
 import { routes } from './routes';
 
@@ -26,6 +27,7 @@ function initialize() {
     components: {
       NpmGuiNav,
       NpmGuiConsole,
+      NpmGuiInfo,
     },
     store,
     router,

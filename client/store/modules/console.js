@@ -51,7 +51,6 @@ const mutations = {
   },
   deleteSession(state, sessionIdToDelete) {
     const sessionsFiltered = {};
-    console.log(sessionIdToDelete);
 
     Object.keys(state.sessions)
       .filter(sessionId => sessionIdToDelete !== sessionId)

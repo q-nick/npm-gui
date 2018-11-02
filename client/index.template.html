@@ -20,7 +20,16 @@
             <router-view></router-view>
           </keep-alive>
         </transition>
+        <npm-gui-info></npm-gui-info>
       </div>
     </div>
   </div>
+  <script>
+    // tricky one
+    function define(_, GithubApi) {
+      window.GithubApi = GithubApi;
+    }
+    define.amd = true;
+  </script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>

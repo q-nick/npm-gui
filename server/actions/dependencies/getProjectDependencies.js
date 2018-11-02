@@ -104,8 +104,6 @@ export async function getDevDependencies(req, res) {
   putToCache(npmCacheName, npmDevDependencies);
   putToCache(bowerCacheName, bowerDevDependencies);
 
-  console.log(npmDevDependencies);
-
   res.json([...npmDevDependencies, ...bowerDevDependencies]);
 }
 

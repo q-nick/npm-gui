@@ -1,7 +1,7 @@
 <style scoped rel="stylesheet/css">
   .npm-gui-info {
     border: 0;
-    height: 50px;
+    height: 30px;
   }
 </style>
 
@@ -27,6 +27,8 @@
           .get('/api/info')
           .then((response) => {
             this.content = response.data;
+            // tricky one
+            setTimeout(() => GithubApi.render()); // eslint-disable-line
           });
       },
     },
