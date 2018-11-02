@@ -10,5 +10,6 @@ function requestWithPromise(url) {
 
 export async function info(_, res) {
   const results = await requestWithPromise('https://raw.githubusercontent.com/q-nick/npm-gui/master/INFO');
+  console.log(results);
   res.send(results);
 }

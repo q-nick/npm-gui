@@ -6,7 +6,7 @@
 </style>
 
 <template>
-    <div class="npm-gui-info">{{ content }}</div>
+    <div class="npm-gui-info" v-html="content"></div>
 </template>
 
 <script>
@@ -16,12 +16,17 @@
     created() {
       this.loadInfo();
     },
+    data() {
+      return {
+        content: null,
+      };
+    },
     methods: {
       loadInfo() {
         axios
           .get('/api/info')
           .then((response) => {
-            this.content = response;
+            this.content = response.data;
           });
       },
     },
