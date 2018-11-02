@@ -8,6 +8,7 @@ import Console from './console';
 import { projectRouter } from './routers/project.router';
 import { searchRouter } from './routers/search.router';
 import { explorerRouter } from './routers/explorer.router';
+import { infoRouter } from './routers/info.router';
 
 // Define a port/host we want to listen to
 const PORT = 1337;
@@ -32,13 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/explorer', explorerRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/project', projectRouter);
-
-// app.use('/api/dependencies', NpmGuiControllers.Routes.Dependencies);
-// app.use('/api/dependencies-dev', NpmGuiControllers.Routes.Dependencies);
-// app.use('/api/dependencies-bin', NpmGuiControllers.Routes.DependenciesBin);
-
-// app.use('/api/:project/tasks', NpmGuiControllers.Routes.Tasks);
-// app.use('/api/project', NpmGuiControllers.Routes.Project);
+app.use('/api/info', infoRouter);
 
 function start(host, port) {
   // start server

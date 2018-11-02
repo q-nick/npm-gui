@@ -8,6 +8,8 @@
   },
   "author": "",
   "license": "UNLICENSED",
-  "devDependencies": {},
+  "devDependencies": {
+    "react": "^16.6.0"
+  },
   "dependencies": {}
 }
