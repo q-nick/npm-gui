@@ -2,55 +2,77 @@ import fs from 'fs';
 import path from 'path';
 
 import executeCommand from '../executeCommand';
-import UtilsService from '../../service/utils/utils.service';
 import { getFromCache, putToCache } from '../../cache';
 import { mapNpmDependency, mapBowerDependency } from '../mapDependencies';
 import { decodePath } from '../decodePath';
 import { parseJSON } from '../parseJSON';
 
+function getDependenciesFromPackageJson(projectPath) {
+  const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+  return packageJson.dependencies || [];
+}
+
+function getDevDependenciesFromPackageJson(projectPath) {
+  const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+  return packageJson.devDependencies || [];
+}
 
 async function getRegularNpmDependencies(req) {
   const projectPath = decodePath(req.params.projectPath);
-  const commandLsResult = await executeCommand(projectPath, 'npm ls --depth=0 --json -prod');
-  const { dependencies } = UtilsService.parseJSON(commandLsResult.stdout);
+  const dependenciesInPackageJson = getDependenciesFromPackageJson(projectPath);
 
-  const commandOutdtedResult = await executeCommand(projectPath, 'npm outdated --json -prod');
-  const versions = UtilsService.parseJSON(commandOutdtedResult.stdout);
+  const commandLsResult = await executeCommand(projectPath, 'npm ls --depth=0 --json');
+  const commandLsJSON = parseJSON(commandLsResult.stdout);
+  const dependenciesInstalled = commandLsJSON.dependencies;
 
-  const packageJson = JSON.parse(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
+  const commandOutdatedResult = await executeCommand(projectPath, 'npm outdated --json');
+  const outdated = parseJSON(commandOutdatedResult.stdout);
 
-  return Object.keys(dependencies)
+  const extraneous = Object.keys(dependenciesInstalled)
+    .filter(name => dependenciesInstalled[name].extraneous);
+
+  return [...Object.keys(dependenciesInPackageJson), ...extraneous]
     .map(name => mapNpmDependency(
       name,
-      dependencies[name],
-      versions && versions[name],
-      packageJson.dependencies[name],
+      dependenciesInstalled[name],
+      outdated && outdated[name],
+      dependenciesInPackageJson[name],
     ));
 }
 
 async function getDevNpmDependencies(req) {
   const projectPath = decodePath(req.params.projectPath);
-  const commandLsResult = await executeCommand(projectPath, 'npm ls --depth=0 --json -dev');
-  const { dependencies } = UtilsService.parseJSON(commandLsResult.stdout);
+  const dependenciesInPackageJson = getDevDependenciesFromPackageJson(projectPath);
 
-  const commandOutdtedResult = await executeCommand(projectPath, 'npm outdated --json -dev');
-  const versions = UtilsService.parseJSON(commandOutdtedResult.stdout);
+  const commandLsResult = await executeCommand(projectPath, 'npm ls --depth=0 --json');
+  const commandLsJSON = parseJSON(commandLsResult.stdout);
+  const dependenciesInstalled = commandLsJSON.dependencies;
 
-  const packageJson = JSON.parse(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
+  console.log(1, dependenciesInstalled);
 
-  return Object.keys(dependencies)
+  const commandOutdatedResult = await executeCommand(projectPath, 'npm outdated --json');
+  const outdated = parseJSON(commandOutdatedResult.stdout);
+  console.log(2);
+
+  const extraneous = Object.keys(dependenciesInstalled)
+    .filter(name => dependenciesInstalled[name].extraneous);
+  console.log(3);
+
+  console.log([...Object.keys(dependenciesInPackageJson), ...extraneous]);
+
+  return [...Object.keys(dependenciesInPackageJson), ...extraneous]
     .map(name => mapNpmDependency(
       name,
-      dependencies[name],
-      versions && versions[name],
-      packageJson.devDependencies[name],
+      dependenciesInstalled[name],
+      outdated && outdated[name],
+      dependenciesInPackageJson[name],
     ));
 }
 
 async function getRegularBowerDependencies(req) {
   const projectPath = decodePath(req.params.projectPath);
   const commandLsResult = await executeCommand(projectPath, 'bower list --json');
-  const { dependencies, pkgMeta } = UtilsService.parseJSON(commandLsResult.stdout);
+  const { dependencies, pkgMeta } = parseJSON(commandLsResult.stdout);
 
   return Object.keys(dependencies)
     .filter(name => Object.keys(pkgMeta.dependencies).includes(name))
@@ -60,7 +82,7 @@ async function getRegularBowerDependencies(req) {
 async function getDevBowerDependencies(req) {
   const projectPath = decodePath(req.params.projectPath);
   const commandLsResult = await executeCommand(projectPath, 'bower list --json');
-  const { dependencies, pkgMeta } = UtilsService.parseJSON(commandLsResult.stdout);
+  const { dependencies, pkgMeta } = parseJSON(commandLsResult.stdout);
 
   return Object.keys(dependencies)
     .filter(name => Object.keys(pkgMeta.devDependencies).includes(name))

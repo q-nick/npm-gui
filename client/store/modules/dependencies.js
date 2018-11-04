@@ -19,17 +19,7 @@ const actions = {
     commit('setDependencies', responseFull.data);
   },
 
-  async install({ commit, dispatch, state }, { project, dependency, version }) {
-    commit('setDependencyExecutingStart', dependency.name);
-
-    await axios.post(`/api/project/${project}/dependencies/${state.type}/${dependency.repo}`,
-      [{ packageName: dependency.name, version }]);
-
-    commit('setDependencyExecutingStop', dependency.name);
-    dispatch('load', { project });
-  },
-
-  async installMany({ commit, dispatch, state }, { project, dependenciesToInstall }) {
+  async install({ commit, dispatch, state }, { project, dependenciesToInstall }) {
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStart', dependencyToInstall.name));
 
     await axios.post(`/api/project/${project}/dependencies/${state.type}/npm`,

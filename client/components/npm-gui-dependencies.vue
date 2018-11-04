@@ -70,6 +70,10 @@
     animation: Gradient 2s ease infinite;
   }
 
+  .missing {
+    color: #d9534f;
+  }
+
   .spin {
     animation: spin 1s linear infinite;
     display: inline-block;
@@ -141,12 +145,15 @@
             <span class="label label--warning" v-if="dependency.repo === 'bower'">Bower</span>
             <span class="label label--danger" v-if="dependency.repo === 'npm'">npm</span>
           </td>
-          <td class="column-version">{{ dependency.required || '' }}</td>
+          <td class="column-version">
+            {{ dependency.required || '' }}
+            <span v-if="!dependency.required" class="missing">extrenous</span>
+          </td>
           <td class="column-nsp"> ? </td>
           <td class="column-version">
             {{ dependency.installed || '' }}
             <span v-if="dependency.installed === undefined" class="oi spin" data-glyph="reload"></span>
-            <span v-if="dependency.installed === null">-</span>
+            <span v-if="dependency.installed === null" class="missing">missing</span>
           </td>
           <td class="column-version">
             <npm-gui-btn
@@ -241,26 +248,31 @@
       onInstall(dependency, version) {
         this.$store.dispatch(`dependencies/${this.type}/install`, {
           project: this.$route.params.projectPathEncoded,
-          dependency,
-          version,
+          dependenciesToInstall: [{
+            version,
+            name: dependency.name,
+            repo: dependency.repo,
+          }],
         });
       },
 
       onInstallAllWanted() {
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.wanted);
 
-        this.$store.dispatch(`dependencies/${this.type}/installMany`, {
+        this.$store.dispatch(`dependencies/${this.type}/install`, {
           project: this.$route.params.projectPathEncoded,
-          dependenciesToInstall: dependenciesToUpdate.map(d => ({ name: d.name, version: d.wanted, repo: d.repo })),
+          dependenciesToInstall: dependenciesToUpdate
+            .map(d => ({ name: d.name, version: d.wanted, repo: d.repo })),
         });
       },
 
       onInstallAllLatest() {
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.latest);
 
-        this.$store.dispatch(`dependencies/${this.type}/installMany`, {
+        this.$store.dispatch(`dependencies/${this.type}/install`, {
           project: this.$route.params.projectPathEncoded,
-          dependenciesToInstall: dependenciesToUpdate.map(d => ({ name: d.name, version: d.latest, repo: d.repo })),
+          dependenciesToInstall: dependenciesToUpdate
+            .map(d => ({ name: d.name, version: d.latest, repo: d.repo })),
         });
       },
     },

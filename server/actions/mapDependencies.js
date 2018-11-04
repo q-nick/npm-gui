@@ -2,14 +2,20 @@ function uniqueOrNull(value, comparision) {
   return comparision.includes(value) ? null : value;
 }
 
-export function mapNpmDependency(name, dependency, version, requiredVersion) {
+export function mapNpmDependency(name, dependency, version, required) {
+  const installed = (dependency && dependency.version) || null;
+  let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
+  const latest = version ? uniqueOrNull(version.latest, [installed, wanted]) : null;
+  if (!installed && !wanted) {
+    [wanted] = required.match(/\d.+/);
+  }
   return {
     name,
     repo: 'npm',
-    required: requiredVersion,
-    installed: dependency.version,
-    wanted: version && uniqueOrNull(version.wanted, [dependency.version]),
-    latest: version && uniqueOrNull(version.latest, [dependency.version, version.wanted]),
+    required,
+    installed,
+    wanted,
+    latest,
   };
 }
 
