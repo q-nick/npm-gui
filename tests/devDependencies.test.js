@@ -10,7 +10,7 @@ describe('Dev Packages', () => {
     it('should install new package', (done) => {
       api(app)
         .post(`/api/project/${testProjectPathEncoded}/dependencies/dev/npm`)
-        .send({ packageName: 'npm-gui-tests', version: '1.0.0' })
+        .send([{ packageName: 'npm-gui-tests', version: '1.0.0' }])
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.deep.equal({});

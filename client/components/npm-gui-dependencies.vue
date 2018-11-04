@@ -248,12 +248,20 @@
 
       onInstallAllWanted() {
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.wanted);
-        dependenciesToUpdate.forEach(dependency => this.onInstall(dependency, dependency.wanted));
+
+        this.$store.dispatch(`dependencies/${this.type}/installMany`, {
+          project: this.$route.params.projectPathEncoded,
+          dependenciesToInstall: dependenciesToUpdate.map(d => ({ name: d.name, version: d.wanted, repo: d.repo })),
+        });
       },
 
       onInstallAllLatest() {
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.latest);
-        dependenciesToUpdate.forEach(dependency => this.onInstall(dependency, dependency.latest));
+
+        this.$store.dispatch(`dependencies/${this.type}/installMany`, {
+          project: this.$route.params.projectPathEncoded,
+          dependenciesToInstall: dependenciesToUpdate.map(d => ({ name: d.name, version: d.latest, repo: d.repo })),
+        });
       },
     },
   };

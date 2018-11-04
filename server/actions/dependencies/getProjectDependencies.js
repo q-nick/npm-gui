@@ -107,7 +107,6 @@ export async function getDevDependencies(req, res) {
   res.json([...npmDevDependencies, ...bowerDevDependencies]);
 }
 
-
 export async function getRegularDependenciesSimple(req, res) {
   const projectPath = decodePath(req.params.projectPath);
 
