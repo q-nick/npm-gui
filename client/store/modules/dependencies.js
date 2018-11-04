@@ -23,7 +23,7 @@ const actions = {
     commit('setDependencyExecutingStart', dependency.name);
 
     await axios.post(`/api/project/${project}/dependencies/${state.type}/${dependency.repo}`,
-      { packageName: dependency.name, version });
+      [{ packageName: dependency.name, version }]);
 
     commit('setDependencyExecutingStop', dependency.name);
     dispatch('load', { project });
