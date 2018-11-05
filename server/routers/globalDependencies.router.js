@@ -7,7 +7,7 @@ import { deleteGlobalDependencies } from '../actions/dependencies/deleteGlobalDe
 const globalDependenciesRouter = express.Router(); // eslint-disable-line
 
 globalDependenciesRouter.get('/', getGlobalDependencies);
-globalDependenciesRouter.get('/simple', getGlobalDependenciesSimple);
+globalDependenciesRouter.get('/simple', getGlobalDependencies);
 globalDependenciesRouter.post('/:repoName', addGlobalDependencies);
 globalDependenciesRouter.delete('/:repoName/:packageName', deleteGlobalDependencies);
 

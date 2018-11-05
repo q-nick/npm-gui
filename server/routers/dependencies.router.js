@@ -17,11 +17,17 @@ import {
   deleteDevDependencies,
 } from '../actions/dependencies/deleteProjectDependencies';
 
+import {
+  installAsIsRegularDependencies,
+  installAsIsDevDependencies,
+} from '../actions/dependencies/installProjectDependencies';
+
 const regularDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
 
 regularDependenciesRouter.get('/', getRegularDependencies);
 regularDependenciesRouter.get('/simple', getRegularDependenciesSimple);
 regularDependenciesRouter.post('/:repoName/', addRegularDependencies);
+regularDependenciesRouter.post('/:repoName/install', installAsIsRegularDependencies);
 regularDependenciesRouter.delete('/:repoName/:packageName', deleteRegularDependencies);
 
 const devDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
@@ -29,6 +35,7 @@ const devDependenciesRouter = express.Router({ mergeParams: true }); // eslint-d
 devDependenciesRouter.get('/', getDevDependencies);
 devDependenciesRouter.get('/simple', getDevDependenciesSimple);
 devDependenciesRouter.post('/:repoName/', addDevDependencies);
+devDependenciesRouter.post('/:repoName/install', installAsIsDevDependencies);
 devDependenciesRouter.delete('/:repoName/:packageName', deleteDevDependencies);
 
 export { devDependenciesRouter, regularDependenciesRouter };

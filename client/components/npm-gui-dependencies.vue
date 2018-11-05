@@ -107,6 +107,12 @@
       <npm-gui-search></npm-gui-search>
       <div class="right">
         <npm-gui-btn
+          class="primary small"
+          icon="data-transfer-download"
+          @click="onInstallAll()"
+        >Install
+        </npm-gui-btn>
+        <npm-gui-btn
           class="success small"
           icon="cloud-download"
           @click="onInstallAllWanted()"
@@ -122,7 +128,7 @@
           class="danger small"
           icon="loop-circular"
           @click="onReInstallAll()"
-        >Re/Install all
+        >Force Re-Install
         </npm-gui-btn>
       </div>
     </header>
@@ -188,6 +194,7 @@
         </tr>
       </table>
       <div v-show="loading" class="loading">loading...</div>
+      <div v-show="!loading && dependencies.length === 0" class="loading">just empty...</div>
     </div>
   </div>
 </template>
@@ -253,6 +260,13 @@
             name: dependency.name,
             repo: dependency.repo,
           }],
+        });
+      },
+
+      onInstallAll() {
+        this.$store.dispatch(`dependencies/${this.type}/installAll`, {
+          project: this.$route.params.projectPathEncoded,
+          dependencies: this.dependencies,
         });
       },
 

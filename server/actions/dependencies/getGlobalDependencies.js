@@ -19,6 +19,19 @@ export async function getGlobalNpmDependencies() {
     ));
 }
 
+export async function getGlobalNpmDependenciesSimple() {
+  const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
+  const { dependencies } = UtilsService.parseJSON(commandResult.stdout);
+
+  return Object.keys(dependencies)
+    .map(name => mapNpmDependency(
+      name,
+      dependencies[name],
+      undefined,
+      dependencies[name].version,
+    ));
+}
+
 export async function getGlobalDependencies(_, res) {
   const npmCacheName = 'global-npmGlobal';
   let npmDependencies = [];
@@ -37,16 +50,7 @@ export async function getGlobalDependenciesSimple(_, res) {
   let npmDependencies = [];
 
   try {
-    const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
-    const { dependencies } = UtilsService.parseJSON(commandResult.stdout);
-
-    npmDependencies = getFromCache(npmCacheName) || Object.keys(dependencies)
-      .map(name => mapNpmDependency(
-        name,
-        dependencies[name],
-        undefined,
-        dependencies[name].version,
-      ));
+    npmDependencies = getFromCache(npmCacheName) || getGlobalNpmDependenciesSimple();
   } catch (e) { console.error(e); }
 
   putToCache(npmCacheName, npmDependencies);
