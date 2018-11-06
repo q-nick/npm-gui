@@ -32,8 +32,8 @@
     left: 0;
     top: 0;
     right: 0;
-    text-align: right;
     padding-top: 20px;
+    padding-left: 5px;
     padding-right: 5px;
     z-index: 1;
     opacity: 0;

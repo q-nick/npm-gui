@@ -4,7 +4,7 @@ import { mapNpmDependency } from '../mapDependencies';
 import { updateInCache } from '../../cache';
 
 async function addGlobalNpmDependency(req) {
-  const { packageName, version } = req.body;
+  const { packageName, version } = req.body[0];
 
   // add
   await executeCommand(null, `npm install ${packageName}@${version || ''} -g`, true);
@@ -32,13 +32,18 @@ async function addGlobalBowerDependency(req) { // eslint-disable-line
 export async function addGlobalDependencies(req, res) {
   const npmCacheName = 'global-npmGlobal';
   const bowerCacheName = 'global-bowerGlobal';
+  const npmCacheNameSimple = 'global-simple-npmGlobal';
+  const bowerCacheNameSimple = 'global-simple-bowerGlobal';
 
   if (req.params.repoName === 'npm') {
     const dependencyInfo = await addGlobalNpmDependency(req);
+    console.log(dependencyInfo);
     updateInCache(npmCacheName, dependencyInfo, 'name');
+    updateInCache(npmCacheNameSimple, dependencyInfo, 'name');
   } else if (req.params.repoName === 'bower') {
     const dependencyInfo = await addGlobalBowerDependency(req);
     updateInCache(bowerCacheName, dependencyInfo, 'name');
+    updateInCache(bowerCacheNameSimple, dependencyInfo, 'name');
   }
 
   res.json({});

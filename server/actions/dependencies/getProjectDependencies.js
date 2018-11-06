@@ -48,17 +48,11 @@ async function getDevNpmDependencies(req) {
   const commandLsJSON = parseJSON(commandLsResult.stdout);
   const dependenciesInstalled = commandLsJSON.dependencies;
 
-  console.log(1, dependenciesInstalled);
-
   const commandOutdatedResult = await executeCommand(projectPath, 'npm outdated --json');
   const outdated = parseJSON(commandOutdatedResult.stdout);
-  console.log(2);
 
   const extraneous = Object.keys(dependenciesInstalled)
     .filter(name => dependenciesInstalled[name].extraneous);
-  console.log(3);
-
-  console.log([...Object.keys(dependenciesInPackageJson), ...extraneous]);
 
   return [...Object.keys(dependenciesInPackageJson), ...extraneous]
     .map(name => mapNpmDependency(

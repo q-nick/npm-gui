@@ -1,5 +1,8 @@
+import rimraf from 'rimraf';
+import path from 'path';
+
 import executeCommand from '../executeCommand';
-import { putToCache } from '../../cache';
+import { clearCache } from '../../cache';
 import { decodePath } from '../decodePath';
 
 async function installAsIsRegularNpmDependency(req) {
@@ -16,10 +19,22 @@ async function installAsIsDevNpmDependency(req) {
   await executeCommand(projectPath, 'npm install --only=dev', true);
 }
 
+async function forceReinstallNpmDependency(req) {
+  const projectPath = decodePath(req.params.projectPath);
+  console.log(`${path.normalize(projectPath)}/node_modules`, `${path.normalize(projectPath)}/package-lock.json`);
+  rimraf.sync(`${path.normalize(projectPath)}/node_modules`);
+  rimraf.sync(`${path.normalize(projectPath)}/package-lock.json`);
+  // add
+  await executeCommand(projectPath, 'npm install --force', true);
+}
+
 async function installAsIsRegularBowerDependency(req) { // eslint-disable-line
 }
 
 async function installAsIsDevBowerDependency(req) { // eslint-disable-line
+}
+
+async function forceReinstallBowerDependency(req) { // eslint-disable-line
 }
 
 export async function installAsIsRegularDependencies(req, res) {
@@ -28,12 +43,12 @@ export async function installAsIsRegularDependencies(req, res) {
 
   if (req.params.repoName === 'npm') {
     await installAsIsRegularNpmDependency(req);
-    putToCache(npmCacheNameRegular, null);
-    putToCache(bowerCacheNameRegular, null);
+    clearCache(npmCacheNameRegular);
+    clearCache(bowerCacheNameRegular);
   } else if (req.params.repoName === 'bower') {
     await installAsIsRegularBowerDependency(req);
-    putToCache(npmCacheNameRegular, null);
-    putToCache(bowerCacheNameRegular, null);
+    clearCache(npmCacheNameRegular);
+    clearCache(bowerCacheNameRegular);
   }
 
   res.json({});
@@ -45,13 +60,29 @@ export async function installAsIsDevDependencies(req, res) {
 
   if (req.params.repoName === 'npm') {
     await installAsIsDevNpmDependency(req);
-    putToCache(npmCacheNameDev, null);
-    putToCache(bowerCacheNameDev, null);
+    clearCache(npmCacheNameDev);
+    clearCache(bowerCacheNameDev);
   } else if (req.params.repoName === 'bower') {
     await installAsIsDevBowerDependency(req);
-    putToCache(npmCacheNameDev, null);
-    putToCache(bowerCacheNameDev, null);
+    clearCache(npmCacheNameDev);
+    clearCache(bowerCacheNameDev);
   }
+
+  res.json({});
+}
+
+export async function forceReinstallDependencies(req, res) {
+  try {
+    await forceReinstallNpmDependency(req);
+  } catch (e) { console.error(e); }
+  try {
+    await forceReinstallBowerDependency(req);
+  } catch (e) { console.error(e); }
+
+  clearCache(`${req.params.projectPath}-npmRegular`);
+  clearCache(`${req.params.projectPath}-bowerRegular`);
+  clearCache(`${req.params.projectPath}-npmDev`);
+  clearCache(`${req.params.projectPath}-bowerDev`);
 
   res.json({});
 }

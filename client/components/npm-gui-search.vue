@@ -132,11 +132,11 @@
 
         this.$store.dispatch(`dependencies/${type}/install`, {
           project: this.$route.params.projectPathEncoded,
-          dependency: {
+          dependenciesToInstall: [{
+            version,
             name,
             repo: this.searchRepo,
-          },
-          version,
+          }],
         });
 
         this.searchQuery = '';

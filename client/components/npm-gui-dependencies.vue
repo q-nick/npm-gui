@@ -116,6 +116,12 @@
           class="success small"
           icon="cloud-download"
           @click="onInstallAllWanted()"
+        >Use all installed as required
+        </npm-gui-btn>
+        <npm-gui-btn
+          class="success small"
+          icon="cloud-download"
+          @click="onInstallAllWanted()"
         >Update all To Wanted
         </npm-gui-btn>
         <npm-gui-btn
@@ -127,7 +133,7 @@
         <npm-gui-btn
           class="danger small"
           icon="loop-circular"
-          @click="onReInstallAll()"
+          @click="onReinstallAll()"
         >Force Re-Install
         </npm-gui-btn>
       </div>
@@ -265,6 +271,13 @@
 
       onInstallAll() {
         this.$store.dispatch(`dependencies/${this.type}/installAll`, {
+          project: this.$route.params.projectPathEncoded,
+          dependencies: this.dependencies,
+        });
+      },
+
+      onReinstallAll() {
+        this.$store.dispatch(`dependencies/${this.type}/reinstallAll`, {
           project: this.$route.params.projectPathEncoded,
           dependencies: this.dependencies,
         });

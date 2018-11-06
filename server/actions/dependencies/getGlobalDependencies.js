@@ -3,7 +3,7 @@ import UtilsService from '../../service/utils/utils.service';
 import { mapNpmDependency } from '../mapDependencies';
 import { getFromCache, putToCache } from '../../cache';
 
-export async function getGlobalNpmDependencies() {
+async function getGlobalNpmDependencies() {
   const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
   const { dependencies } = UtilsService.parseJSON(commandResult.stdout);
 
@@ -19,7 +19,7 @@ export async function getGlobalNpmDependencies() {
     ));
 }
 
-export async function getGlobalNpmDependenciesSimple() {
+async function getGlobalNpmDependenciesSimple() {
   const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
   const { dependencies } = UtilsService.parseJSON(commandResult.stdout);
 
@@ -42,7 +42,7 @@ export async function getGlobalDependencies(_, res) {
 
   putToCache(npmCacheName, npmDependencies);
 
-  res.json([...npmDependencies]);
+  res.json(npmDependencies);
 }
 
 export async function getGlobalDependenciesSimple(_, res) {
@@ -50,10 +50,10 @@ export async function getGlobalDependenciesSimple(_, res) {
   let npmDependencies = [];
 
   try {
-    npmDependencies = getFromCache(npmCacheName) || getGlobalNpmDependenciesSimple();
+    npmDependencies = getFromCache(npmCacheName) || await getGlobalNpmDependenciesSimple();
   } catch (e) { console.error(e); }
 
   putToCache(npmCacheName, npmDependencies);
 
-  res.json([...npmDependencies]);
+  res.json(npmDependencies);
 }

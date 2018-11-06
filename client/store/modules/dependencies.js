@@ -29,6 +29,15 @@ const actions = {
     dispatch('load', { project });
   },
 
+  async reinstallAll({ commit, dispatch }, { project, dependencies }) {
+    dependencies.forEach(dependency => commit('setDependencyExecutingStart', dependency.name));
+
+    await axios.post(`/api/project/${project}/dependencies/reinstall`, {});
+
+    dependencies.forEach(dependency => commit('setDependencyExecutingStop', dependency.name));
+    dispatch('load', { project });
+  },
+
   async install({ commit, dispatch, state }, { project, dependenciesToInstall }) {
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStart', dependencyToInstall.name));
 

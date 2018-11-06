@@ -20,6 +20,7 @@ import {
 import {
   installAsIsRegularDependencies,
   installAsIsDevDependencies,
+  forceReinstallDependencies,
 } from '../actions/dependencies/installProjectDependencies';
 
 const regularDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
@@ -38,4 +39,8 @@ devDependenciesRouter.post('/:repoName/', addDevDependencies);
 devDependenciesRouter.post('/:repoName/install', installAsIsDevDependencies);
 devDependenciesRouter.delete('/:repoName/:packageName', deleteDevDependencies);
 
-export { devDependenciesRouter, regularDependenciesRouter };
+const reinstallRouter = express.Router({ mergeParams: true }); // eslint-disable-line
+
+reinstallRouter.post('/', forceReinstallDependencies);
+
+export { devDependenciesRouter, regularDependenciesRouter, reinstallRouter };

@@ -32,3 +32,6 @@ export function spliceFromCache(name, data, keyToCompare) {
   }
 }
 
+export function clearCache(name) {
+  putToCache(name, null);
+}
