@@ -3,4 +3,4 @@
 <a class="github-button" href="https://github.com/q-nick" data-size="large" data-show-count="true" aria-label="Follow @q-nick on GitHub">Follow @q-nick</a>
 &nbsp;&nbsp;
 <a class="github-button" href="https://github.com/q-nick/npm-gui/issues" data-size="large" data-show-count="true" aria-label="Issue q-nick/npm-gui on GitHub">Issue</a>
-this is newest version of npm-gui. If you have any problems report an issue on github and/or install oldest version: `npm install npm-gui@0.3.1`
+<small>this is newest version of npm-gui. If you have any problems report an issue on github and/or install oldest version: `npm install npm-gui@0.3.1`</small>

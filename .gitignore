@@ -3,3 +3,4 @@ node_modules
 bower_components
 npm-debug*
 dist
+npm-gui*

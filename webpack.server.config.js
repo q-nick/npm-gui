@@ -12,7 +12,11 @@ module.exports = {
   },
   devtool: 'cheap-source-map',
   target: 'node',
-  externals: [nodeExternals()],
+  // externals: [nodeExternals()],
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
   module: {
     rules: [
       {

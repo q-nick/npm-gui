@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "npm-gui",
   "main": "index.js",
+  "files": ["dist", "bin"],
   "scripts": {
+    "prepack": "npm run build:server && npm run build:client",
     "dev:server:webpack": "webpack --config webpack.server.config.js --watch --mode=development",
-    "dev:server:nodemon": "nodemon --watch dist bin/npm-gui 0.0.0.0:9002",
+    "dev:server:nodemon": "nodemon --watch dist bin/npm-gui localhost:9002",
     "dev:server": "concurrently \"npm run dev:server:webpack\" \"npm run dev:server:nodemon\" ",
     "dev:client": "webpack-dev-server --config webpack.client.config.js --hot --mode=development",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" ",
@@ -72,6 +74,7 @@
     "webpack-dev-server": "^3.1.10",
     "webpack-node-externals": "^1.7.2",
     "ws": "^6.1.0",
+    "rimraf": "^2.6.2",
     "vuex": "^3.0.1"
   },
   "engines": {
@@ -79,6 +82,5 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "rimraf": "^2.6.2"
   }
 }
