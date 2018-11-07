@@ -11,5 +11,7 @@
   "devDependencies": {
     "react": "^16.6.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "npm-gui-tests": "^1.0.0"
+  }
 }

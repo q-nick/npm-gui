@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "npm-gui",
   "main": "index.js",
   "files": [
@@ -31,6 +31,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/npm-gui-base/client/issues"
+  },
+  "bin": {
+    "npm-gui": "./bin/npm-gui"
   },
   "homepage": "https://github.com/npm-gui-base/client#readme",
   "devDependencies": {
