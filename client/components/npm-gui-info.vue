@@ -1,7 +1,7 @@
 <style scoped rel="stylesheet/css">
   .npm-gui-info {
     border: 0;
-    height: 30px;
+    height: 50px;
   }
 </style>
 

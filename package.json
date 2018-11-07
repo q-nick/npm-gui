@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "npm-gui",
   "main": "index.js",
-  "files": ["dist", "bin"],
+  "files": [
+    "dist",
+    "bin"
+  ],
   "scripts": {
     "prepack": "npm run build:server && npm run build:client",
     "dev:server:webpack": "webpack --config webpack.server.config.js --watch --mode=development",
@@ -31,10 +34,10 @@
   },
   "homepage": "https://github.com/npm-gui-base/client#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.5",
     "@babel/plugin-transform-async-to-generator": "^7.1.0",
     "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
     "@babel/register": "^7.0.0",
     "analytics-node": "^3.3.0",
     "axios": "^0.18.0",
@@ -59,6 +62,7 @@
     "open-iconic": "^1.1.1",
     "opn": "^5.4.0",
     "request": "^2.88.0",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "stylelint": "^9.7.1",
     "stylelint-config-standard": "^18.2.0",
@@ -69,18 +73,16 @@
     "vue-loader": "^15.4.2",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.17",
+    "vuex": "^3.0.1",
     "webpack": "^4.24.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
     "webpack-node-externals": "^1.7.2",
-    "ws": "^6.1.0",
-    "rimraf": "^2.6.2",
-    "vuex": "^3.0.1"
+    "ws": "^6.1.0"
   },
   "engines": {
     "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

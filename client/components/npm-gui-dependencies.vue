@@ -159,13 +159,20 @@
           </td>
           <td class="column-version">
             {{ dependency.required || '' }}
-            <span v-if="!dependency.required" class="missing">extrenous</span>
+            <span v-if="!dependency.required" class="missing">extraneous</span>
           </td>
           <td class="column-nsp"> ? </td>
           <td class="column-version">
             {{ dependency.installed || '' }}
             <span v-if="dependency.installed === undefined" class="oi spin" data-glyph="reload"></span>
             <span v-if="dependency.installed === null" class="missing">missing</span>
+            <npm-gui-btn
+              :disabled="dependenciesLoading[dependency.name]"
+              icon="cloud-download"
+              v-if="getNormalizedVersion(dependency.required) !== dependency.installed"
+              class="success small"
+              @click="onInstall(dependency, dependency.installed)"
+            >{{dependency.installed}}</npm-gui-btn>
           </td>
           <td class="column-version">
             <npm-gui-btn
@@ -243,6 +250,10 @@
       },
     },
     methods: {
+      getNormalizedVersion(version) {
+        const [normalized] = version.match(/\d.+/);
+        return normalized;
+      },
       loadDependencies() {
         this.type = this.$route.meta.api.replace('dependencies/', '');
 
