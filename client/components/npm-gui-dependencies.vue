@@ -115,7 +115,7 @@
         <npm-gui-btn
           class="success small"
           icon="cloud-download"
-          @click="onInstallAllWanted()"
+          @click="onInstallAllToRequired()"
         >Use all installed as required
         </npm-gui-btn>
         <npm-gui-btn
@@ -163,13 +163,13 @@
           </td>
           <td class="column-nsp"> ? </td>
           <td class="column-version">
-            {{ dependency.installed || '' }}
+            <span v-if="dependency.installed && getNormalizedVersion(dependency.required) === dependency.installed">{{ dependency.installed }}</span>
             <span v-if="dependency.installed === undefined" class="oi spin" data-glyph="reload"></span>
             <span v-if="dependency.installed === null" class="missing">missing</span>
             <npm-gui-btn
               :disabled="dependenciesLoading[dependency.name]"
               icon="cloud-download"
-              v-if="getNormalizedVersion(dependency.required) !== dependency.installed"
+              v-if="dependency.installed && getNormalizedVersion(dependency.required) !== dependency.installed"
               class="success small"
               @click="onInstall(dependency, dependency.installed)"
             >{{dependency.installed}}</npm-gui-btn>
@@ -311,6 +311,18 @@
           project: this.$route.params.projectPathEncoded,
           dependenciesToInstall: dependenciesToUpdate
             .map(d => ({ name: d.name, version: d.latest, repo: d.repo })),
+        });
+      },
+
+      onInstallAllToRequired() {
+        const dependenciesToUpdate = this.dependencies
+          .filter(dependency => this
+            .getNormalizedVersion(dependency.required) !== dependency.installed);
+
+        this.$store.dispatch(`dependencies/${this.type}/install`, {
+          project: this.$route.params.projectPathEncoded,
+          dependenciesToInstall: dependenciesToUpdate
+            .map(d => ({ name: d.name, version: d.installed, repo: d.repo })),
         });
       },
     },
