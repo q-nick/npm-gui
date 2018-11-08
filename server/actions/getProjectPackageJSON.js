@@ -3,8 +3,9 @@ import path from 'path';
 import { parseJSON } from './parseJSON';
 
 export function getProjectPackageJSON(projectPath) {
-  if (fs.existsSync(projectPath)) {
-    return parseJSON(fs.readFileSync(path.join(projectPath, 'package.json')));
+  const packageJSONpath = path.join(projectPath, 'package.json');
+  if (fs.existsSync(packageJSONpath)) {
+    return parseJSON(fs.readFileSync(packageJSONpath));
   }
 
   return null;
