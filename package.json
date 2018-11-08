@@ -1,7 +1,19 @@
 {
   "name": "npm-gui",
   "version": "1.0.4",
-  "description": "npm-gui",
+  "description": "Graphical User Interface for NPM package.json and dependencies management.",
+  "keywords": [
+    "gui",
+    "npm",
+    "yarn",
+    "bower",
+    "view",
+    "client",
+    "dependencies",
+    "packages",
+    "installer",
+    "console"
+  ],
   "main": "index.js",
   "files": [
     "dist",
@@ -25,17 +37,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/npm-gui-base/client.git"
+    "url": "git+https://github.com/q-nick/npm-gui.git"
   },
-  "author": "",
+  "author": "Paweł Stefański",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/npm-gui-base/client/issues"
+    "url": "https://github.com/q-nick/npm-gui/issues"
   },
   "bin": {
-    "npm-gui": "./bin/npm-gui"
+    "npm-gui": "./index.js"
   },
-  "homepage": "https://github.com/npm-gui-base/client#readme",
+  "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
     "@babel/core": "^7.1.5",
     "@babel/plugin-transform-async-to-generator": "^7.1.0",

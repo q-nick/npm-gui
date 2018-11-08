@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // running npm-gui development version
-const npmGuiServer = require('../dist/server/main.js').default;
+const npmGuiServer = require('./dist/server/main.js').default;
 
 const args = process.argv.slice(2);
 let host = null;
