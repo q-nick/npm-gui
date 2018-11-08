@@ -113,7 +113,7 @@
       };
     },
     created() {
-      this.loadPath();
+      this.loadPath(this.$route.params.projectPathEncoded);
     },
     methods: {
       projectPathDecoded() {
@@ -142,7 +142,7 @@
             this.loading = false;
             this.error = null;
             this.explorer = response.data;
-            if (!this.$route.params.projectPathEncoded) {
+            if (response.data.changed) {
               this.onSelectProjectPath(response.data.path);
             }
           })

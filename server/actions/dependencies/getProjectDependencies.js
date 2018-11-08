@@ -1,20 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-
 import executeCommand from '../executeCommand';
 import { getFromCache, putToCache } from '../../cache';
 import { mapNpmDependency, mapBowerDependency } from '../mapDependencies';
 import { decodePath } from '../decodePath';
 import { parseJSON } from '../parseJSON';
+import { getProjectPackageJSON } from '../getProjectPackageJSON';
 
 function getDependenciesFromPackageJson(projectPath) {
-  const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
-  return packageJson.dependencies || [];
+  const packageJson = getProjectPackageJSON(projectPath);
+  return (packageJson && packageJson.dependencies) || [];
 }
 
 function getDevDependenciesFromPackageJson(projectPath) {
-  const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
-  return packageJson.devDependencies || [];
+  const packageJson = getProjectPackageJSON(projectPath);
+  return (packageJson && packageJson.devDependencies) || [];
 }
 
 async function getRegularNpmDependencies(req) {
@@ -88,6 +86,7 @@ export async function getRegularDependencies(req, res) {
   const bowerCacheName = `${req.params.projectPath}-bowerRegular`;
   let npmDependencies = [];
   let bowerDependencies = [];
+  console.error(req.params.projectPath);
 
   try {
     npmDependencies = getFromCache(npmCacheName) || await getRegularNpmDependencies(req);
@@ -108,6 +107,7 @@ export async function getDevDependencies(req, res) {
   const bowerCacheName = `${req.params.projectPath}-bowerDev`;
   let npmDevDependencies = [];
   let bowerDevDependencies = [];
+  console.error(req.params.projectPath);
 
   try {
     npmDevDependencies = getFromCache(npmCacheName) || await getDevNpmDependencies(req);
@@ -125,12 +125,13 @@ export async function getDevDependencies(req, res) {
 
 export async function getRegularDependenciesSimple(req, res) {
   const projectPath = decodePath(req.params.projectPath);
+  console.error(projectPath);
 
   let npmDependencies = [];
   let bowerDependencies = [];
 
   try {
-    const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+    const packageJson = getProjectPackageJSON(projectPath);
     const dependencies = packageJson.dependencies || [];
     npmDependencies = Object.keys(dependencies).map(name => ({
       name,
@@ -151,12 +152,13 @@ export async function getRegularDependenciesSimple(req, res) {
 
 export async function getDevDependenciesSimple(req, res) {
   const projectPath = decodePath(req.params.projectPath);
+  console.error(projectPath);
 
   let npmDevDependencies = [];
   let bowerDevDependencies = [];
 
   try {
-    const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`)));
+    const packageJson = getProjectPackageJSON(projectPath);
     const devDependencies = packageJson.devDependencies || [];
     npmDevDependencies = Object.keys(devDependencies).map(name => ({
       name,

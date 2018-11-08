@@ -37,7 +37,6 @@ export async function addGlobalDependencies(req, res) {
 
   if (req.params.repoName === 'npm') {
     const dependencyInfo = await addGlobalNpmDependency(req);
-    console.log(dependencyInfo);
     updateInCache(npmCacheName, dependencyInfo, 'name');
     updateInCache(npmCacheNameSimple, dependencyInfo, 'name');
   } else if (req.params.repoName === 'bower') {

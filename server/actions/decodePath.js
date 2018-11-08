@@ -1,3 +1,8 @@
+import path from 'path';
+
 export function decodePath(pathEncoded) {
-  return Buffer.from(pathEncoded, 'base64').toString();
+  if (!pathEncoded) {
+    return null;
+  }
+  return path.normalize(Buffer.from(pathEncoded, 'base64').toString());
 }

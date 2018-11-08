@@ -3,7 +3,12 @@ import fs from 'fs';
 import { decodePath } from '../decodePath';
 
 export async function explorer(req, res) {
-  const normalizedPath = path.normalize(req.params.path ? `${decodePath(req.params.path)}` : process.cwd());
+  let normalizedPath = req.params.path ? path.normalize(decodePath(req.params.path)) : null;
+  let changed = false;
+  if (!normalizedPath || !fs.existsSync(normalizedPath)) {
+    normalizedPath = process.cwd();
+    changed = true;
+  }
 
   const ls = fs.readdirSync(normalizedPath)
     .map(name => ({
@@ -15,5 +20,6 @@ export async function explorer(req, res) {
   res.json({
     path: normalizedPath,
     ls,
+    changed,
   });
 }
