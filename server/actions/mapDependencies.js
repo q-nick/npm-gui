@@ -6,7 +6,7 @@ export function mapNpmDependency(name, dependency, version, required) {
   const installed = (dependency && dependency.version) || null;
   let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
   const latest = version ? uniqueOrNull(version.latest, [installed, wanted]) : null;
-  if (!installed && !wanted) {
+  if (!installed && !wanted && required) {
     [wanted] = required.match(/\d.+/);
   }
   return {
