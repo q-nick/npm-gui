@@ -1,9 +1,9 @@
-import executeCommand from '../executeCommand';
-import { getFromCache, putToCache } from '../../cache';
-import { mapNpmDependency, mapBowerDependency } from '../mapDependencies';
-import { decodePath } from '../decodePath';
-import { parseJSON } from '../parseJSON';
-import { getProjectPackageJSON } from '../getProjectPackageJSON';
+import executeCommand from '../../executeCommand';
+import { getFromCache, putToCache } from '../../../cache';
+import { mapNpmDependency, mapBowerDependency } from '../../mapDependencies';
+import { decodePath } from '../../decodePath';
+import { parseJSON } from '../../parseJSON';
+import { getProjectPackageJSON } from '../../getProjectPackageJSON';
 
 function getDependenciesFromPackageJson(projectPath) {
   const packageJson = getProjectPackageJSON(projectPath);

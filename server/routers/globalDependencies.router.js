@@ -1,8 +1,8 @@
 import express from 'express';
 
-import { getGlobalDependencies, getGlobalDependenciesSimple } from '../actions/dependencies/getGlobalDependencies';
-import { addGlobalDependencies } from '../actions/dependencies/addGlobalDependencies';
-import { deleteGlobalDependencies } from '../actions/dependencies/deleteGlobalDependencies';
+import { getGlobalDependencies, getGlobalDependenciesSimple } from '../actions/dependencies/get/getGlobalDependencies';
+import { addGlobalDependencies } from '../actions/dependencies/add/addGlobalDependencies';
+import { deleteGlobalDependencies } from '../actions/dependencies/delete/deleteGlobalDependencies';
 
 const globalDependenciesRouter = express.Router(); // eslint-disable-line
 

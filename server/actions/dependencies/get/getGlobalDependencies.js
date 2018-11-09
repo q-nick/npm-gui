@@ -1,7 +1,7 @@
-import executeCommand from '../executeCommand';
-import UtilsService from '../../service/utils/utils.service';
-import { mapNpmDependency } from '../mapDependencies';
-import { getFromCache, putToCache } from '../../cache';
+import executeCommand from '../../executeCommand';
+import UtilsService from '../../../service/utils/utils.service';
+import { mapNpmDependency } from '../../mapDependencies';
+import { getFromCache, putToCache } from '../../../cache';
 
 async function getGlobalNpmDependencies() {
   const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');

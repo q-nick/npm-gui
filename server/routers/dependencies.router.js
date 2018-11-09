@@ -5,23 +5,23 @@ import {
   getRegularDependenciesSimple,
   getDevDependencies,
   getDevDependenciesSimple,
-} from '../actions/dependencies/getProjectDependencies';
+} from '../actions/dependencies/get/getProjectDependencies';
 
 import {
   addRegularDependencies,
   addDevDependencies,
-} from '../actions/dependencies/addProjectDependencies';
+} from '../actions/dependencies/add/addProjectDependencies';
 
 import {
   deleteRegularDependencies,
   deleteDevDependencies,
-} from '../actions/dependencies/deleteProjectDependencies';
+} from '../actions/dependencies/delete/deleteProjectDependencies';
 
 import {
   installAsIsRegularDependencies,
   installAsIsDevDependencies,
   forceReinstallDependencies,
-} from '../actions/dependencies/installProjectDependencies';
+} from '../actions/dependencies/install/installProjectDependencies';
 
 const regularDependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
 

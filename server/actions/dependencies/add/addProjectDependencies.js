@@ -1,10 +1,10 @@
 import fs from 'fs';
 
-import executeCommand from '../executeCommand';
-import UtilsService from '../../service/utils/utils.service';
-import { updateInCache, putToCache } from '../../cache';
-import { mapNpmDependency } from '../mapDependencies';
-import { decodePath } from '../decodePath';
+import executeCommand from '../../executeCommand';
+import UtilsService from '../../../service/utils/utils.service';
+import { updateInCache, putToCache } from '../../../cache';
+import { mapNpmDependency } from '../../mapDependencies';
+import { decodePath } from '../../decodePath';
 
 async function getNpmPackageWithInfo(projectPath, packageName, packageJsonKey) {
   const commandLsResult = await executeCommand(projectPath, `npm ls ${packageName} --depth=0 --json`);

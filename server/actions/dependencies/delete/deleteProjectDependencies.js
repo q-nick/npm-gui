@@ -1,6 +1,6 @@
-import executeCommand from '../executeCommand';
-import { spliceFromCache } from '../../cache';
-import { decodePath } from '../decodePath';
+import executeCommand from '../../executeCommand';
+import { spliceFromCache } from '../../../cache';
+import { decodePath } from '../../decodePath';
 
 async function deleteRegularNpmDependency(req) {
   const projectPath = decodePath(req.params.projectPath);

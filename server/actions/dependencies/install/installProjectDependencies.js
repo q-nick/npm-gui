@@ -1,9 +1,9 @@
 import rimraf from 'rimraf';
 import path from 'path';
 
-import executeCommand from '../executeCommand';
-import { clearCache } from '../../cache';
-import { decodePath } from '../decodePath';
+import executeCommand from '../../executeCommand';
+import { clearCache } from '../../../cache';
+import { decodePath } from '../../decodePath';
 
 async function installAsIsRegularNpmDependency(req) {
   const projectPath = decodePath(req.params.projectPath);

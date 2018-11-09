@@ -22,7 +22,7 @@
   "scripts": {
     "prepack": "npm run build:server && npm run build:client",
     "dev:server:webpack": "webpack --config webpack.server.config.js --watch --mode=development",
-    "dev:server:nodemon": "nodemon --watch dist bin/npm-gui localhost:9002",
+    "dev:server:nodemon": "nodemon --watch dist index.js localhost:9002",
     "dev:server": "concurrently \"npm run dev:server:webpack\" \"npm run dev:server:nodemon\" ",
     "dev:client": "webpack-dev-server --config webpack.client.config.js --hot --mode=development",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" ",

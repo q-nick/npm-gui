@@ -2,6 +2,7 @@ import 'normalize.css';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import axios from 'axios';
 import 'open-iconic'; // eslint-disable-line
 
 import './base.css';
@@ -32,6 +33,11 @@ function initialize() {
     store,
     router,
   }).$mount('#npm-gui-vue');
+
+  if (!window.localStorage.getItem('npm-gui-id')) {
+    window.localStorage.setItem('npm-gui-id', new Date());
+  }
+  axios.post('/api/log', { id: window.localStorage.getItem('npm-gui-id') });
 
   return app;
 }

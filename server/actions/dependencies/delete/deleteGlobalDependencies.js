@@ -1,5 +1,5 @@
-import executeCommand from '../executeCommand';
-import { spliceFromCache } from '../../cache';
+import executeCommand from '../../executeCommand';
+import { spliceFromCache } from '../../../cache';
 
 async function deleteGlobalNpmDependency(req) {
   const { packageName } = req.params;

@@ -1,7 +1,7 @@
-import executeCommand from '../executeCommand';
-import UtilsService from '../../service/utils/utils.service';
-import { mapNpmDependency } from '../mapDependencies';
-import { updateInCache } from '../../cache';
+import executeCommand from '../../executeCommand';
+import UtilsService from '../../../service/utils/utils.service';
+import { mapNpmDependency } from '../../mapDependencies';
+import { updateInCache } from '../../../cache';
 
 async function addGlobalNpmDependency(req) {
   const { packageName, version } = req.body[0];
@@ -23,7 +23,6 @@ async function addGlobalNpmDependency(req) {
     dependencies[packageName].version,
   );
 }
-
 
 async function addGlobalBowerDependency(req) { // eslint-disable-line
 
