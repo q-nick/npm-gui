@@ -251,6 +251,9 @@
     },
     methods: {
       getNormalizedVersion(version) {
+        if (!version) {
+          return null;
+        }
         const [normalized] = version.match(/\d.+/);
         return normalized;
       },
