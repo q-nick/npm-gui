@@ -4,5 +4,6 @@ bower_components
 npm-debug*
 dist
 npm-gui*
-test-project/package-lock.json
-test-project-yarn/package-lock.json
+tests/projects/npm/package-lock.json
+tests/projects/yarn/package-lock.json
+tests/projects/bower/package-lock.json

@@ -1,0 +1,16 @@
+{
+  "name": "test-project-yarn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "1.7.0",
+    "react": "^16.6.3"
+  },
+  "devDependencies": {}
+}
