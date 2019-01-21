@@ -2,7 +2,7 @@ import * as api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../server';
 
-const testProjectPathEncoded = 'dGVzdC1wcm9qZWN0';
+const testProjectPathEncoded = 'dGVzdHMvcHJvamVjdHMvbnBt';
 
 describe('Explorer', () => {
   it('should return result of pwd when given path is undefined', (done) => {
@@ -14,7 +14,7 @@ describe('Explorer', () => {
         expect(res.body.ls).to.deep.include({
           isDirectory: true,
           isProject: false,
-          name: 'test-project',
+          name: 'tests',
         });
         done();
       });

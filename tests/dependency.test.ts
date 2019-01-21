@@ -37,7 +37,7 @@ testsYarn;
 
 const tests = [...testsNPM, ...testsYarn]; // [...testsNPM, ...testsBower, ...testsYarn];
 
-describe.skip('multiple dependencies operations', () => {
+describe('single dependency operations', () => {
   tests.forEach((test) => {
     test.dependencies.forEach((dependency) => {
       const dependencyToTest = {
@@ -47,7 +47,7 @@ describe.skip('multiple dependencies operations', () => {
 
       const pathNameDecoded = Buffer.from(test.projectPathEncoded, 'base64');
       describe(`installing ${dependency.name}@${dependency.version} as ${dependency.type} with ${dependency.repo} to ${pathNameDecoded}`, () => { // tslint:disable:max-line-length
-        it('should install new dependencies', (done) => {
+        it('should install new dependency', (done) => {
           api(app)
             .post(`/api/project/${test.projectPathEncoded}/dependencies/${dependency.type}/${dependency.repo}`)
             .send([dependency])
@@ -58,7 +58,7 @@ describe.skip('multiple dependencies operations', () => {
             });
         }).timeout(10000);
 
-        it('should return all dependencies (and new ones)', (done) => {
+        it('should return all dependencies (and new one)', (done) => {
           api(app)
             .get(`/api/project/${test.projectPathEncoded}/dependencies`)
             .end((_: any, res: api.Response) => {
@@ -70,8 +70,7 @@ describe.skip('multiple dependencies operations', () => {
       });
 
       describe(`uninstalling ${dependency.name} as ${dependency.type} with ${dependency.repo} from ${pathNameDecoded}`, () => { // tslint:disable:max-line-length
-        it('should remove previously installed dependencies', (done) => {
-          // use single delete here per each (for now UI doesnt support multiple deletion)
+        it('should remove previously installed dependency', (done) => {
           api(app)
             .delete(`/api/project/${test.projectPathEncoded}/dependencies/${dependency.type}/${dependency.repo}/${dependency.name}`) // tslint:disable:max-line-length
             .end((_: any, res: api.Response) => {
@@ -81,7 +80,7 @@ describe.skip('multiple dependencies operations', () => {
             });
         }).timeout(10000);
 
-        it('should return all dependencies (without new ones)', (done) => {
+        it('should return all dependencies (without new one)', (done) => {
           api(app)
             .get(`/api/project/${test.projectPathEncoded}/dependencies`)
             .end((_: any, res: api.Response) => {
