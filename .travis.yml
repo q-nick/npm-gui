@@ -19,6 +19,11 @@ node_js:
   # - "0.10"
   # - "iojs"
 
+before_install:
+  - npm i -g yarn
+  - npm i -g bower
+
 cache:
+  yarn: true
   directories:
     - "node_modules"
