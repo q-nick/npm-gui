@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals'); // eslint-disable-line
 const EXCLUDE = /(node_modules|bower_components)/;
 
 module.exports = {
-  entry: ['@babel/polyfill', './server/index.js'],
+  entry: ['./server/index.ts'],
   output: {
     library: 'npmGuiServer',
     libraryTarget: 'umd',
@@ -20,26 +20,27 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.ts$/,
+        loader: 'ts-loader',
         exclude: EXCLUDE,
-        options: {
-          presets: [
-            [
-              '@babel/env',
-              {
-                targets: {
-                  node: '6',
-                },
-              },
-            ],
-          ],
-          plugins: ['@babel/plugin-transform-async-to-generator'],
-        },
+        // options: {
+        //   presets: [
+        //     [
+        //       '@babel/env',
+        //       {
+        //         targets: {
+        //           node: '6',
+        //         },
+        //       },
+        //     ],
+        //   ],
+        //   plugins: ['@babel/plugin-transform-async-to-generator'],
+        // },
       },
     ],
   },
   resolve: {
     modules: ['node_modules'],
+    extensions: ['.tsx', '.ts', '.js' ],
   },
 };

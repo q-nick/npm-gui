@@ -3,27 +3,35 @@ import axios from 'axios';
 const getters = {
 };
 
+function getBasePathFor(project) {
+  if (project) {
+    return `/api/project/${project}/dependencies`;
+  }
+
+  return 'api/global';
+}
+
 const actions = {
-  async load({ commit, state }, { project }) {
+  async load({ commit }, { project }) {
     commit('setListStatus', 'loading');
 
     const responseSimple = await axios
-      .get(`/api/project/${project}/dependencies/${state.type}/simple`);
+      .get(`${getBasePathFor(project)}/simple`);
 
     commit('setListStatus', 'loaded');
     commit('setDependencies', responseSimple.data);
 
     const responseFull = await axios
-      .get(`/api/project/${project}/dependencies/${state.type}`);
+      .get(`${getBasePathFor(project)}`);
 
     commit('setDependencies', responseFull.data);
   },
 
-  async installAll({ commit, dispatch, state }, { project, dependencies }) {
+  async installAll({ commit, dispatch }, { project, dependencies }) {
     dependencies.forEach(dependency => commit('setDependencyExecutingStart', dependency.name));
 
-    await axios.post(`/api/project/${project}/dependencies/${state.type}/npm/install`, {});
-    await axios.post(`/api/project/${project}/dependencies/${state.type}/bower/install`, {});
+    await axios.post(`${getBasePathFor(project)}/npm/install`, {});
+    await axios.post(`${getBasePathFor(project)}/bower/install`, {});
 
     dependencies.forEach(dependency => commit('setDependencyExecutingStop', dependency.name));
     dispatch('load', { project });
@@ -32,34 +40,46 @@ const actions = {
   async reinstallAll({ commit, dispatch }, { project, dependencies }) {
     dependencies.forEach(dependency => commit('setDependencyExecutingStart', dependency.name));
 
-    await axios.post(`/api/project/${project}/dependencies/reinstall`, {});
+    await axios.post(`${getBasePathFor(project)}/reinstall`, {});
 
     dependencies.forEach(dependency => commit('setDependencyExecutingStop', dependency.name));
     dispatch('load', { project });
   },
 
-  async install({ commit, dispatch, state }, { project, dependenciesToInstall }) {
+  async install({ commit, dispatch }, { project, dependenciesToInstall }) {
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStart', dependencyToInstall.name));
 
-    await axios.post(`/api/project/${project}/dependencies/${state.type}/npm`,
-      dependenciesToInstall
-        .filter(dependencyToInstall => dependencyToInstall.repo === 'npm')
+    const npmDependencies = dependenciesToInstall.filter(d => d.repo === 'npm');
+    const npmDependenciesDev = npmDependencies.filter(d => d.type === 'dev');
+    const npmDependenciesRegular = npmDependencies.filter(d => d.type === 'regular');
+
+    const bowerDependencies = dependenciesToInstall.filter(d => d.repo === 'bower');
+    const bowerDependenciesDev = bowerDependencies.filter(d => d.type === 'dev');
+    const bowerDependenciesRegular = bowerDependencies.filter(d => d.type === 'regular');
+
+    await axios.post(`${getBasePathFor(project)}/dev/npm`,
+      npmDependenciesDev
+        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    await axios.post(`${getBasePathFor(project)}/regular/npm`,
+      npmDependenciesRegular
         .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
 
-    await axios.post(`/api/project/${project}/dependencies/${state.type}/bower`,
-      dependenciesToInstall
-        .filter(dependencyToInstall => dependencyToInstall.repo === 'bower')
+    await axios.post(`${getBasePathFor(project)}/dev/bower`,
+      bowerDependenciesDev
+        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    await axios.post(`${getBasePathFor(project)}/regular/bower`,
+      bowerDependenciesRegular
         .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
 
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStop', dependencyToInstall.name));
     dispatch('load', { project });
   },
 
-  async delete({ commit, dispatch, state }, { project, dependency }) {
+  async delete({ commit, dispatch }, { project, dependency }) {
     commit('setDependencyExecutingStart', dependency.name);
 
     await axios
-      .delete(`/api/project/${project}/dependencies/${state.type}/${dependency.repo}/${dependency.name}`);
+      .delete(`${getBasePathFor(project)}/${dependency.repo}/${dependency.name}`);
 
     commit('setDependencyExecutingStop', dependency.name);
     dispatch('load', { project });
@@ -87,11 +107,10 @@ const mutations = {
   },
 };
 
-export function dependenciesFactory(type) {
+export function dependenciesFactory() {
   return {
     namespaced: true,
     state: {
-      type,
       list: null,
       status: null,
       executing: {},

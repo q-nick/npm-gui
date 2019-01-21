@@ -7,9 +7,8 @@ export const npmGuiStore = {
     dependencies: {
       namespaced: true,
       modules: {
-        dev: dependenciesFactory('dev'),
-        regular: dependenciesFactory('regular'),
-        global: dependenciesFactory('global'),
+        project: dependenciesFactory(),
+        global: dependenciesFactory(),
       },
     },
     scripts,
