@@ -5,25 +5,18 @@ export const routes = [{
   path: '/project/:projectPathEncoded',
   component: { template: '<router-view></router-view>' },
   children: [{
-    path: 'dependencies/regular',
-    name: 'dependencies-regular',
+    path: 'dependencies',
+    name: 'dependencies',
     component: NpmGuiDependencies,
     meta: {
-      api: 'dependencies/regular',
+      api: 'project',
     },
   }, {
-    path: 'dependencies/dev',
-    name: 'dependencies-dev',
+    path: 'global',
+    name: 'global',
     component: NpmGuiDependencies,
     meta: {
-      api: 'dependencies/dev',
-    },
-  }, {
-    path: 'dependencies/global',
-    name: 'dependencies-global',
-    component: NpmGuiDependencies,
-    meta: {
-      api: 'dependencies/global',
+      api: 'global',
     },
   }, {
     path: 'scripts',
@@ -32,5 +25,5 @@ export const routes = [{
   }],
 }, {
   path: '*',
-  redirect: { name: 'dependencies-regular' },
+  redirect: { name: 'dependencies' },
 }];

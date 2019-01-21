@@ -1,0 +1,6 @@
+{
+  "extends": "tslint-config-airbnb",
+  "rules": {
+    "typedef": [true, "call-signature"]
+  }
+}

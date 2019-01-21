@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "sourceRoot": ".",
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": [
+      "mocha",
+      "node"
+    ]
+  },
+  "typeRoots": [
+    "node_module/@types",
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

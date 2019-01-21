@@ -47,6 +47,10 @@
     background: #ef5c0e;
   }
 
+  .label--primary {
+    background: #325d88;
+  }
+
   .loading {
     margin-top: 10vh;
     text-align: center;
@@ -142,6 +146,7 @@
       <table v-show="!loading">
         <tr>
           <!-- <th><input type="checkbox" style="display:inline;"/> <span>All</span></th> -->
+          <th>Type</th>
           <th>Name</th>
           <th>Required</th>
           <th>NSP</th>
@@ -153,9 +158,13 @@
         <tr v-for="dependency in dependencies" v-bind:key="dependency.name" v-bind:class="{ loading: dependenciesLoading[dependency.name] }">
           <!-- <td><input type="checkbox" /></td> -->
           <td>
+            {{ dependency.type }}
+          </td>
+          <td>
             {{ dependency.name }}
             <span class="label label--warning" v-if="dependency.repo === 'bower'">Bower</span>
             <span class="label label--danger" v-if="dependency.repo === 'npm'">npm</span>
+            <span class="label label--primary" v-if="dependency.repo === 'yarn'">yarn</span>
           </td>
           <td class="column-version">
             {{ dependency.required || '' }}
@@ -238,7 +247,7 @@
     }),
     data() {
       return {
-        type: this.$route.meta.api.replace('dependencies/', ''),
+        type: this.$route.meta.api,
       };
     },
     created() {
@@ -257,42 +266,44 @@
         const [normalized] = version.match(/\d.+/);
         return normalized;
       },
+
       loadDependencies() {
-        this.type = this.$route.meta.api.replace('dependencies/', '');
+        this.type = this.$route.meta.api;
 
         this.$store.dispatch(`dependencies/${this.type}/load`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
         });
       },
 
       onRemove(dependency) {
         this.$store.dispatch(`dependencies/${this.type}/delete`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependency,
         });
       },
 
       onInstall(dependency, version) {
         this.$store.dispatch(`dependencies/${this.type}/install`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependenciesToInstall: [{
             version,
             name: dependency.name,
             repo: dependency.repo,
+            type: dependency.type,
           }],
         });
       },
 
       onInstallAll() {
         this.$store.dispatch(`dependencies/${this.type}/installAll`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependencies: this.dependencies,
         });
       },
 
       onReinstallAll() {
         this.$store.dispatch(`dependencies/${this.type}/reinstallAll`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependencies: this.dependencies,
         });
       },
@@ -301,9 +312,11 @@
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.wanted);
 
         this.$store.dispatch(`dependencies/${this.type}/install`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependenciesToInstall: dependenciesToUpdate
-            .map(d => ({ name: d.name, version: d.wanted, repo: d.repo })),
+            .map(d => ({
+              name: d.name, version: d.wanted, repo: d.repo, type: d.type,
+            })),
         });
       },
 
@@ -311,9 +324,11 @@
         const dependenciesToUpdate = this.dependencies.filter(dependency => dependency.latest);
 
         this.$store.dispatch(`dependencies/${this.type}/install`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependenciesToInstall: dependenciesToUpdate
-            .map(d => ({ name: d.name, version: d.latest, repo: d.repo })),
+            .map(d => ({
+              name: d.name, version: d.latest, repo: d.repo, type: d.type,
+            })),
         });
       },
 
@@ -323,9 +338,11 @@
             .getNormalizedVersion(dependency.required) !== dependency.installed);
 
         this.$store.dispatch(`dependencies/${this.type}/install`, {
-          project: this.$route.params.projectPathEncoded,
+          project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependenciesToInstall: dependenciesToUpdate
-            .map(d => ({ name: d.name, version: d.installed, repo: d.repo })),
+            .map(d => ({
+              name: d.name, version: d.installed, repo: d.repo, type: d.type,
+            })),
         });
       },
     },

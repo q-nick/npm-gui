@@ -59,17 +59,12 @@
         buttons: [
           {
             text: 'Global Dependencies',
-            routeName: 'dependencies-global',
+            routeName: 'global',
             title: '',
           },
           {
-            text: 'Dependencies',
-            routeName: 'dependencies-regular',
-            title: '',
-          },
-          {
-            text: 'Dev Dependencies',
-            routeName: 'dependencies-dev',
+            text: 'Project Dependencies',
+            routeName: 'dependencies',
             title: '',
           },
           {
