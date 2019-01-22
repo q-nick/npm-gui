@@ -59,17 +59,17 @@ const actions = {
 
     await axios.post(`${getBasePathFor(project)}/dev/npm`,
       npmDependenciesDev
-        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
     await axios.post(`${getBasePathFor(project)}/regular/npm`,
       npmDependenciesRegular
-        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
 
     await axios.post(`${getBasePathFor(project)}/dev/bower`,
       bowerDependenciesDev
-        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
     await axios.post(`${getBasePathFor(project)}/regular/bower`,
       bowerDependenciesRegular
-        .map(dependencyToInstall => ({ packageName: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
 
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStop', dependencyToInstall.name));
     dispatch('load', { project });
