@@ -7,7 +7,7 @@ import { hasYarn } from '../../hasYarn';
 async function deleteNpmDependency(
   projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
   // delete
-  await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'regular' ? 'S' : 'D'}`, true); // tslint:disable:max-line-length
+  await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'regular' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
   return dependencyName;
 }
@@ -15,13 +15,16 @@ async function deleteNpmDependency(
 async function deleteYarnDependency(
   projectPath: string, dependencyName:string, _: Dependency.Type):Promise<string> {
   // delete
-  await executeCommand(projectPath, `yarn remove ${dependencyName}`, true); // tslint:disable:max-line-length
+  await executeCommand(projectPath, `yarn remove ${dependencyName}`, true);
 
   return dependencyName;
 }
 
-async function deleteBowerDependency(_: express.Request):Promise<void> {
+async function deleteBowerDependency(
+  projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
+  await executeCommand(projectPath, `bower uninstall ${dependencyName} -${type === 'regular' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
+  return dependencyName;
 }
 
 export async function deleteDependency(req: express.Request, res: express.Response):Promise<void> {
@@ -36,7 +39,9 @@ export async function deleteDependency(req: express.Request, res: express.Respon
       projectPathDecoded, packageName, type,
     );
   } else if (repoName === 'bower') {
-    await withCacheSplice(deleteBowerDependency, 'bower', 'name', req);
+    await withCacheSplice(
+      deleteBowerDependency, `${projectPath}-bower`, 'name',
+      projectPathDecoded, packageName, type);
   }
 
   res.json({});

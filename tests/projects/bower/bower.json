@@ -2,7 +2,9 @@
   "name": "npm-gui-test-project",
   "version": "1.0.0",
   "main": "index.js",
-  "authors": "",
+  "authors": [
+    "Paweł"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "jquery-ui": "^1.11.0"

@@ -11,3 +11,12 @@ export function getProjectPackageJSON(projectPath: string):any {
 
   return null;
 }
+
+export function getProjectBowerJSON(projectPath: string):any {
+  const bowerJSONpath = path.join(projectPath, 'bower.json');
+  if (fs.existsSync(bowerJSONpath)) {
+    return parseJSON(fs.readFileSync(bowerJSONpath, { encoding: 'utf8' }));
+  }
+
+  return null;
+}

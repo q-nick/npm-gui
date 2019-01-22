@@ -17,6 +17,7 @@ declare namespace Dependency {
     version: string,
     endpoint: {
       target: string,
+      name: string,
     },
     pkgMeta: {
       version: string;
@@ -24,7 +25,8 @@ declare namespace Dependency {
     update: {
       target: string;
       latest: string;
-    }
+    },
+    type?: Type;
   }
 
   interface Version {
