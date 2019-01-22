@@ -1,4 +1,4 @@
-import 'normalize.css';
+import 'normalize.css'; // eslint-disable-line
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';

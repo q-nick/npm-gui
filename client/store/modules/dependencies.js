@@ -12,6 +12,10 @@ function getBasePathFor(project) {
 }
 
 const actions = {
+  sortBy({ commit }, sortKey) {
+    commit('setSortKey', sortKey);
+  },
+
   async load({ commit }, { project }) {
     commit('setListStatus', 'loading');
 
@@ -87,6 +91,14 @@ const actions = {
 };
 
 const mutations = {
+  setSortKey(state, sortKey) {
+    if (state.sortKey === sortKey) {
+      state.sortReversed = !state.sortReversed;
+    } else {
+      state.sortReversed = false;
+    }
+    state.sortKey = sortKey;
+  },
   setListStatus(state, status) {
     state.status = status;
   },
@@ -113,6 +125,8 @@ export function dependenciesFactory() {
     state: {
       list: null,
       status: null,
+      sortKey: null,
+      sortReversed: false,
       executing: {},
     },
     getters,

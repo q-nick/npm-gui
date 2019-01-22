@@ -146,19 +146,19 @@
       <table v-show="!loading">
         <tr>
           <!-- <th><input type="checkbox" style="display:inline;"/> <span>All</span></th> -->
-          <th>Type</th>
-          <th>Name</th>
-          <th>Required</th>
+          <npm-gui-th-sortable @click="onSortBy('type')" sort-match="type" :sort-key="sortKey" :sort-reversed="sortReversed">Env</npm-gui-th-sortable>
+          <npm-gui-th-sortable @click="onSortBy('name')" sort-match="name" :sort-key="sortKey" :sort-reversed="sortReversed">Name</npm-gui-th-sortable>
+          <npm-gui-th-sortable @click="onSortBy('required')" sort-match="required" :sort-key="sortKey" :sort-reversed="sortReversed">Required</npm-gui-th-sortable>
           <th>NSP</th>
-          <th>Installed</th>
-          <th>Wanted</th>
-          <th>Latest</th>
+          <npm-gui-th-sortable @click="onSortBy('installed')" sort-match="installed" :sort-key="sortKey" :sort-reversed="sortReversed">Installed</npm-gui-th-sortable>
+          <npm-gui-th-sortable @click="onSortBy('wanted')" sort-match="wanted" :sort-key="sortKey" :sort-reversed="sortReversed">Wanted</npm-gui-th-sortable>
+          <npm-gui-th-sortable @click="onSortBy('latest')" sort-match="latest" :sort-key="sortKey" :sort-reversed="sortReversed">Latest</npm-gui-th-sortable>
           <th>Action</th>
         </tr>
         <tr v-for="dependency in dependencies" v-bind:key="dependency.name" v-bind:class="{ loading: dependenciesLoading[dependency.name] }">
           <!-- <td><input type="checkbox" /></td> -->
           <td>
-            {{ dependency.type }}
+            <span v-if="dependency.type !== 'regular'">{{ dependency.type }}</span>
           </td>
           <td>
             {{ dependency.name }}
@@ -227,19 +227,41 @@
   import NpmGuiBtn from './npm-gui-btn.vue';
   import NpmGuiSearch from './npm-gui-search.vue';
   import NpmGuiInfo from './npm-gui-info.vue';
+  import NpmGuiThSortable from './npm-gui-th-sortable.vue';
 
   export default {
     components: {
       NpmGuiBtn,
       NpmGuiSearch,
       NpmGuiInfo,
+      NpmGuiThSortable,
     },
     computed: mapState({
       dependencies(state) {
-        return state.dependencies[this.type].list;
+        const { sortKey } = state.dependencies[this.type];
+        const { sortReversed } = state.dependencies[this.type];
+        let dependencies = state.dependencies[this.type].list;
+        if (sortKey) {
+          dependencies = dependencies.sort((a, b) => {
+            if (!a[sortKey] && !b[sortKey]) { return 0; }
+            if (!a[sortKey] || a[sortKey] < b[sortKey]) { return -1; }
+            if (!b[sortKey] || a[sortKey] > b[sortKey]) { return 1; }
+            return 0;
+          });
+        }
+        if (sortReversed) {
+          dependencies = dependencies.reverse();
+        }
+        return dependencies;
       },
       loading(state) {
         return state.dependencies[this.type].status === 'loading';
+      },
+      sortKey(state) {
+        return state.dependencies[this.type].sortKey;
+      },
+      sortReversed(state) {
+        return state.dependencies[this.type].sortReversed;
       },
       dependenciesLoading(state) {
         return state.dependencies[this.type].executing;
@@ -299,6 +321,10 @@
           project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependencies: this.dependencies,
         });
+      },
+
+      onSortBy(sortKey) {
+        this.$store.dispatch(`dependencies/${this.type}/sortBy`, sortKey);
       },
 
       onReinstallAll() {
