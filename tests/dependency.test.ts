@@ -18,8 +18,8 @@ const testsNPM = [{
 const testsBower = [{
   projectPathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
   dependencies: [
-    { ...npmGuiTestsPackageBower, repo: 'bower' },
-    { ...npmGuiTestsPackageBower, repo: 'bower', type: 'regular' },
+    // { ...npmGuiTestsPackageBower },
+    { ...npmGuiTestsPackageBower, type: 'regular' },
   ],
 }];
 
@@ -35,7 +35,7 @@ testsNPM;
 testsBower;
 testsYarn;
 
-const tests = [...testsNPM, ...testsYarn]; // [...testsNPM, ...testsBower, ...testsYarn];
+const tests = [...testsNPM, ...testsBower, ...testsYarn];
 
 describe('single dependency operations', () => {
   tests.forEach((test) => {
@@ -53,10 +53,9 @@ describe('single dependency operations', () => {
             .send([dependency])
             .end((_: any, res: api.Response) => {
               expect(res.status).to.equal(200);
-              expect(res.body).to.deep.equal({ ...dependencyToTest });
               done();
             });
-        }).timeout(10000);
+        }).timeout(20000);
 
         it('should return all dependencies (and new one)', (done) => {
           api(app)
@@ -66,7 +65,7 @@ describe('single dependency operations', () => {
               expect(res.body).to.deep.include({ ...dependencyToTest });
               done();
             });
-        }).timeout(10000);
+        }).timeout(20000);
       });
 
       describe(`uninstalling ${dependency.name} as ${dependency.type} with ${dependency.repo} from ${pathNameDecoded}`, () => { // tslint:disable:max-line-length
@@ -78,17 +77,17 @@ describe('single dependency operations', () => {
               expect(res.body).to.deep.equal({});
               done();
             });
-        }).timeout(10000);
+        }).timeout(20000);
 
         it('should return all dependencies (without new one)', (done) => {
           api(app)
             .get(`/api/project/${test.projectPathEncoded}/dependencies`)
             .end((_: any, res: api.Response) => {
               expect(res.status).to.equal(200);
-              expect(res.body).to.not.include({ ...dependencyToTest, repo: 'yarn' });
+              expect(res.body).to.not.include({ ...dependencyToTest });
               done();
             });
-        }).timeout(10000);
+        }).timeout(20000);
       });
 
       // TODO install as newest

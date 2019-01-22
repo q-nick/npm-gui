@@ -36,12 +36,9 @@ describe('Explorer', () => {
           isProject: true,
           name: 'package.json',
         });
-        expect(res.body.ls).to.deep.include({
-          isDirectory: true,
-          isProject: false,
-          name: 'empty',
-        });
         done();
       });
   }).timeout(40000);
+
+  // TODO tetss for empty projects
 });

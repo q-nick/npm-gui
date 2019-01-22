@@ -44,7 +44,7 @@ export async function withCachePut<T extends (...args: any[]) => any>(
   let result = getFromCache(cacheName);
 
   if (!result) {
-    result = await method.apply(null, args);
+    result = await method(...args);
     putToCache(cacheName, result);
   }
 
@@ -63,7 +63,7 @@ export async function withCacheUpdate<T extends (...args: any[]) => any>(
 export async function withCacheInvalidate<T extends (...args: any[]) => any>(
   method: T, cacheName: string, ...args: Parameters<T>)
   : Promise<ReturnType<T>> {
-  const result = await method.apply(null, args);
+  const result = await method(...args);
   putToCache(cacheName, null);
 
   return result;
@@ -72,7 +72,7 @@ export async function withCacheInvalidate<T extends (...args: any[]) => any>(
 export async function withCacheSplice<T extends (...args: any[]) => any>(
   method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>)
   : Promise<ReturnType<T>> {
-  const result = await method.apply(null, args);
+  const result = await method(...args);
   spliceFromCache(cacheName, { [keyToCompare]: result }, keyToCompare);
 
   return result;

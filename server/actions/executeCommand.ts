@@ -48,8 +48,11 @@ export default function executeCommand(cwd:string, wholeCommand:string, pushToCo
   });
 }
 
-export async function executeCommandJSON(cwd:string, wholeCommand:string, pushToConsole = false, startJSONAt:string = null):Promise<any> { // tslint:disable:max-line-length
-  const commandResult = await executeCommand(cwd, wholeCommand, pushToConsole);
-  // console.log(startJSONAt ? commandResult.stdout.split(startJSONAt)[1] : commandResult.stdout);
-  return parseJSON(startJSONAt ? commandResult.stdout.split(startJSONAt)[1] : commandResult.stdout);
+export async function executeCommandJSON(cwd:string, wholeCommand:string, pushToConsole = false):Promise<any> { // tslint:disable:max-line-length
+  try {
+    const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
+    return parseJSON(stdout);
+  } catch (e) {
+    return null;
+  }
 }
