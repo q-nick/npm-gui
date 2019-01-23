@@ -3,74 +3,67 @@ import * as path from 'path';
 import * as express from 'express';
 
 import executeCommand from '../../executeCommand';
-import { clearCache } from '../../../cache';
+import { withCacheInvalidate } from '../../../cache';
 import { decodePath } from '../../decodePath';
+import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
-async function installAsIsRegularNpmDependency(req:express.Request):Promise<void> {
-  const projectPath = decodePath(req.params.projectPath);
-
-  // add
-  await executeCommand(projectPath, 'npm install --only=prod', true);
+// installation
+async function installNpmDependencies(projectPath: string):Promise<void> {
+  await executeCommand(projectPath, 'npm install', true);
 }
 
-async function installAsIsDevNpmDependency(req:express.Request):Promise<void> {
-  const projectPath = decodePath(req.params.projectPath);
-
-  // add
-  await executeCommand(projectPath, 'npm install --only=dev', true);
+async function installYarnDependencies(projectPath: string):Promise<void> {
+  await executeCommand(projectPath, 'yarn install', true);
 }
 
-async function forceReinstallNpmDependency(req:express.Request):Promise<void> {
-  const projectPath = decodePath(req.params.projectPath);
+async function installBowerDependencies(projectPath: string):Promise<void> {
+  await executeCommand(projectPath, 'bower install', true);
+}
+
+// force
+async function forceReinstallYarnDependencies(projectPath: string):Promise<void> {
+  rimraf.sync(`${path.normalize(projectPath)}/node_modules`);
+  rimraf.sync(`${path.normalize(projectPath)}/yarn-lock.json`);
+  await executeCommand(projectPath, 'yarn install', true);
+}
+
+async function forceReinstallNpmDependencies(projectPath: string):Promise<void> {
   rimraf.sync(`${path.normalize(projectPath)}/node_modules`);
   rimraf.sync(`${path.normalize(projectPath)}/package-lock.json`);
-  // add
-  await executeCommand(projectPath, 'npm install --force', true);
+  await executeCommand(projectPath, 'npm install', true);
 }
 
-async function installAsIsRegularBowerDependency(
-  _:express.Request):Promise<void> {
+async function forceReinstallBowerDependencies(projectPath: string):Promise<void> {
+  rimraf.sync(`${path.normalize(projectPath)}/bower_components`);
+  await executeCommand(projectPath, 'bower install', true);
 }
 
-async function installAsIsDevBowerDependency(
-  _:express.Request):Promise<void> {
-}
-
-async function forceReinstallBowerDependency(
-  _:express.Request):Promise<void> {
-}
-
-export async function installAsIsRegularDependencies(
+export async function installDependencies(
   req:express.Request, res:express.Response):Promise<void> {
-  const npmCacheNameRegular = `${req.params.projectPath}-npmRegular`;
-  const bowerCacheNameRegular = `${req.params.projectPath}-bowerRegular`;
+  const { projectPath }: { projectPath: string } = req.params;
+  const projectPathDecoded = decodePath(projectPath);
+  const yarn = hasYarn(projectPathDecoded);
+  const npm = hasNpm(projectPathDecoded);
+  const bower = hasBower(projectPathDecoded);
 
-  if (req.params.repoName === 'npm') {
-    await installAsIsRegularNpmDependency(req);
-    clearCache(npmCacheNameRegular);
-    clearCache(bowerCacheNameRegular);
-  } else if (req.params.repoName === 'bower') {
-    await installAsIsRegularBowerDependency(req);
-    clearCache(npmCacheNameRegular);
-    clearCache(bowerCacheNameRegular);
+  if (yarn || npm) {
+    try {
+      await withCacheInvalidate(
+        yarn ? installYarnDependencies : installNpmDependencies, `${projectPath}-npm`,
+        projectPathDecoded);
+    } catch (e) {
+      console.error('npm/yarn', e);
+    }
   }
 
-  res.json({});
-}
-
-export async function installAsIsDevDependencies(
-  req:express.Request, res:express.Response):Promise<void> {
-  const npmCacheNameDev = `${req.params.projectPath}-npmDev`;
-  const bowerCacheNameDev = `${req.params.projectPath}-bowerDev`;
-
-  if (req.params.repoName === 'npm') {
-    await installAsIsDevNpmDependency(req);
-    clearCache(npmCacheNameDev);
-    clearCache(bowerCacheNameDev);
-  } else if (req.params.repoName === 'bower') {
-    await installAsIsDevBowerDependency(req);
-    clearCache(npmCacheNameDev);
-    clearCache(bowerCacheNameDev);
+  if (bower) {
+    try {
+      await withCacheInvalidate(
+        installBowerDependencies, `${projectPath}-bower`,
+        projectPathDecoded);
+    } catch (e) {
+      console.error('bower', e);
+    }
   }
 
   res.json({});
@@ -78,17 +71,31 @@ export async function installAsIsDevDependencies(
 
 export async function forceReinstallDependencies(
   req:express.Request, res:express.Response):Promise<void> {
-  try {
-    await forceReinstallNpmDependency(req);
-  } catch (e) { console.error(e); }
-  try {
-    await forceReinstallBowerDependency(req);
-  } catch (e) { console.error(e); }
+  const { projectPath }: { projectPath: string } = req.params;
+  const projectPathDecoded = decodePath(projectPath);
+  const yarn = hasYarn(projectPathDecoded);
+  const npm = hasNpm(projectPathDecoded);
+  const bower = hasBower(projectPathDecoded);
 
-  clearCache(`${req.params.projectPath}-npmRegular`);
-  clearCache(`${req.params.projectPath}-bowerRegular`);
-  clearCache(`${req.params.projectPath}-npmDev`);
-  clearCache(`${req.params.projectPath}-bowerDev`);
+  if (yarn || npm) {
+    try {
+      await withCacheInvalidate(
+        yarn ? forceReinstallYarnDependencies : forceReinstallNpmDependencies, `${projectPath}-npm`,
+        projectPathDecoded);
+    } catch (e) {
+      console.error('npm/yarn', e);
+    }
+  }
+
+  if (bower) {
+    try {
+      await withCacheInvalidate(
+        forceReinstallBowerDependencies, `${projectPath}-bower`,
+        projectPathDecoded);
+    } catch (e) {
+      console.error('bower', e);
+    }
+  }
 
   res.json({});
 }

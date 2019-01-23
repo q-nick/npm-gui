@@ -2,7 +2,7 @@ import executeCommand from '../../executeCommand';
 import { withCacheSplice } from '../../../cache';
 import { decodePath } from '../../decodePath';
 import * as express from 'express';
-import { hasYarn } from '../../hasYarn';
+import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
 async function deleteNpmDependency(
   projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
@@ -32,17 +32,29 @@ export async function deleteDependency(req: express.Request, res: express.Respon
   { repoName: string, projectPath: string, type: Dependency.Type, packageName:string } = req.params;
   const projectPathDecoded = decodePath(projectPath);
   const yarn = hasYarn(projectPathDecoded);
+  const bower = hasBower(projectPathDecoded);
+  const npm = hasNpm(projectPathDecoded);
 
   if (repoName === 'npm') {
-    await withCacheSplice(
-      yarn ? deleteYarnDependency : deleteNpmDependency, `${projectPath}-npm`, 'name',
-      projectPathDecoded, packageName, type,
-    );
-  } else if (repoName === 'bower') {
-    await withCacheSplice(
-      deleteBowerDependency, `${projectPath}-bower`, 'name',
-      projectPathDecoded, packageName, type);
+    if (yarn || npm) {
+      await withCacheSplice(
+        yarn ? deleteYarnDependency : deleteNpmDependency, `${projectPath}-npm`, 'name',
+        projectPathDecoded, packageName, type,
+      );
+      res.json({});
+    } else {
+      res.status(400).json(null);
+    }
   }
 
-  res.json({});
+  if (repoName === 'bower') {
+    if (bower) {
+      await withCacheSplice(
+        deleteBowerDependency, `${projectPath}-bower`, 'name',
+        projectPathDecoded, packageName, type);
+      res.json({});
+    } else {
+      res.status(400).json(null);
+    }
+  }
 }

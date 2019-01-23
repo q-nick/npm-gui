@@ -11,7 +11,7 @@ import {
 } from '../../mapDependencies';
 import { decodePath } from '../../decodePath';
 import { parseJSON } from '../../parseJSON';
-import { hasYarn } from '../../hasYarn';
+import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
 function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'regular' | 'dev' {
   if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
@@ -139,28 +139,45 @@ export async function addDependencies(req: express.Request, res: express.Respons
   const { repoName, projectPath, type }: { repoName: string, projectPath: string, type: Dependency.Type } = req.params;
   const projectPathDecoded = decodePath(projectPath);
   const yarn = hasYarn(projectPathDecoded);
+  const npm = hasNpm(projectPathDecoded);
+  const bower = hasBower(projectPathDecoded);
+
   const dependenciesToInstall: Dependency.Basic[] = req.body;
   let result: any = null;
 
-  if (repoName === 'npm' && req.body.length === 1) {
-    result = await withCacheUpdate(
-      yarn ? addYarnDependency : addNpmDependency, `${projectPath}-npm`, 'name',
-      projectPathDecoded, dependenciesToInstall[0], type,
-    );
-  } else if (repoName === 'npm' && req.body.length > 1) {
-    result = await withCacheInvalidate(
-      yarn ? addYarnDependencies : addNpmDependencies, `${projectPath}-npm`,
-      projectPathDecoded, dependenciesToInstall, type,
-    );
-  } else if (repoName === 'bower' && req.body.length === 1) {
-    result = await withCacheUpdate(
-      addBowerDependency, `${projectPath}-bower`, 'name',
-      projectPathDecoded, dependenciesToInstall[0], type);
-  } else if (repoName === 'bower' && req.body.length > 1) {
-    result = await withCacheInvalidate(
-      addBowerDependencies, `${projectPath}-bower`,
-      projectPathDecoded, dependenciesToInstall, type);
+  if (repoName === 'npm') {
+    if (npm || yarn) {
+      if (req.body.length === 1) {
+        result = await withCacheUpdate(
+          yarn ? addYarnDependency : addNpmDependency, `${projectPath}-npm`, 'name',
+          projectPathDecoded, dependenciesToInstall[0], type,
+        );
+      } else if (req.body.length > 1) {
+        result = await withCacheInvalidate(
+          yarn ? addYarnDependencies : addNpmDependencies, `${projectPath}-npm`,
+          projectPathDecoded, dependenciesToInstall, type,
+        );
+      }
+      res.json(result);
+    } else {
+      res.status(400).json(null);
+    }
   }
 
-  res.json(result);
+  if (repoName === 'bower') {
+    if (bower) {
+      if (req.body.length === 1) {
+        result = await withCacheUpdate(
+          addBowerDependency, `${projectPath}-bower`, 'name',
+          projectPathDecoded, dependenciesToInstall[0], type);
+      } else if (req.body.length > 1) {
+        result = await withCacheInvalidate(
+          addBowerDependencies, `${projectPath}-bower`,
+          projectPathDecoded, dependenciesToInstall, type);
+      }
+      res.json(result);
+    } else {
+      res.status(400).json(null);
+    }
+  }
 }

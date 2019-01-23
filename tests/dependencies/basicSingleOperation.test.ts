@@ -25,7 +25,7 @@ describe('single dependency operations', () => {
               expect(res.status).to.equal(200);
               done();
             });
-        }).timeout(20000);
+        });
 
         it('should return all dependencies (and new one)', (done) => {
           api(app)
@@ -35,7 +35,7 @@ describe('single dependency operations', () => {
               expect(res.body).to.deep.include({ ...dependencyToTest });
               done();
             });
-        }).timeout(20000);
+        });
       });
 
       describe(`uninstalling ${dependency.name} as ${test.type} with ${test.repo} from ${pathNameDecoded}`, () => { // tslint:disable:max-line-length
@@ -47,7 +47,7 @@ describe('single dependency operations', () => {
               expect(res.body).to.deep.equal({});
               done();
             });
-        }).timeout(20000);
+        });
 
         it('should return all dependencies (without new one)', (done) => {
           api(app)
@@ -57,10 +57,8 @@ describe('single dependency operations', () => {
               expect(res.body).to.not.include({ ...dependencyToTest });
               done();
             });
-        }).timeout(20000);
+        });
       });
-
-      // TODO install as newest
     });
   });
 });
