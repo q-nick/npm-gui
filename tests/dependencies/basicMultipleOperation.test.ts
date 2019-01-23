@@ -1,44 +1,7 @@
 import * as api from 'supertest';
 import { expect } from 'chai';
-import { app } from '../server';
-import {
-  npmDependencies, Test, bowerDependencies, yarnDependencies,
-} from './npmGuiTestsPackages';
-
-interface Project {
-  pathEncoded: string;
-  tests: Test[];
-}
-
-const projectsNPM:Project[] = [{
-  pathEncoded: 'dGVzdHMvcHJvamVjdHMvbnBt', // 'tests/projects/npm',
-  tests: [
-    { ...npmDependencies },
-    { ...npmDependencies, type: 'dev' },
-  ],
-}];
-
-const projectsBower:Project[]  = [{
-  pathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
-  tests: [
-    { ...bowerDependencies },
-    { ...bowerDependencies, type: 'dev' },
-  ],
-}];
-
-const projectsYarn:Project[]  = [{
-  pathEncoded: 'dGVzdHMvcHJvamVjdHMveWFybg==', // 'tests/projects/yarn',
-  tests: [
-    { ...yarnDependencies },
-    { ...yarnDependencies, type: 'dev' },
-  ],
-}];
-
-projectsNPM;
-projectsBower;
-projectsYarn;
-
-const projects = [...projectsNPM, ...projectsYarn, ...projectsBower];
+import { app } from '../../server';
+import { projects } from './_testableDependency';
 
 describe('multiple dependencies operations', () => {
   projects.forEach((project) => {

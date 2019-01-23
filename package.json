@@ -32,9 +32,10 @@
     "test:lint:css": "stylelint client/**/*.vue client/**/*.css",
     "test:lint:js:client": "eslint \"client/**/**.vue\" \"client/**/**.js\"",
     "test:lint:js:server": "tslint --project . ",
-    "test:lint": "npm run test:lint:css && npm run test:lint:js:client && npm run test:lint:js:server",
-    "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests/**.ts",
-    "test": "npm run test:unit && npm run test:lint"
+    "test:lint": "npm run test:lint:css && npm run test:lint:js:server",
+    "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
+    "test": "npm run test:unit && npm run test:lint",
+    "electron": "electron ./electron"
   },
   "repository": {
     "type": "git",
@@ -77,6 +78,7 @@
     "cross-spawn": "^6.0.5",
     "css-loader": "^1.0.1",
     "debounce": "^1.2.0",
+    "electron": "^4.0.1",
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-html": "^4.0.6",

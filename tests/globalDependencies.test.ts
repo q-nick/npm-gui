@@ -1,7 +1,6 @@
 import * as api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../server';
-import { npmGuiTestsPackageNPM } from './npmGuiTestsPackage';
 
 describe('Global Packages', () => {
   describe('installing', () => {
@@ -50,7 +49,13 @@ describe('Global Packages', () => {
         .get('/api/global')
         .end((_:any, res:api.Response) => {
           expect(res.status).to.equal(200);
-          expect(res.body).to.not.include({ ...npmGuiTestsPackageNPM, required: '0.2.1' });
+          expect(res.body).to.not.include({
+            name: 'npm-gui-tests',
+            repo: 'npm',
+            required: '1.0.0',
+            installed: '1.0.0',
+            latest: '2.1.1',
+          });
           done();
         });
     }).timeout(40000);
