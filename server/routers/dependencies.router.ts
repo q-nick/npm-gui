@@ -14,17 +14,17 @@ import {
 } from '../actions/dependencies/delete/deleteProjectDependencies';
 
 import {
-  installAsIsRegularDependencies,
+  installDependencies,
   forceReinstallDependencies,
 } from '../actions/dependencies/install/installProjectDependencies';
 
 const dependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
 dependenciesRouter.post('/:repoName/', addDependencies);
-dependenciesRouter.post('/:repoName/install', installAsIsRegularDependencies);
 dependenciesRouter.delete('/:repoName/:packageName', deleteDependency);
 
-const reinstallRouter = express.Router({ mergeParams: true });
-reinstallRouter.post('/', forceReinstallDependencies);
+const installRouter = express.Router({ mergeParams: true });
+installRouter.post('/', installDependencies);
+installRouter.post('/force', forceReinstallDependencies);
 
 const getAllDependenciesRouter = express.Router({ mergeParams: true });
 getAllDependenciesRouter.get('/', getAllDependencies);
@@ -32,6 +32,6 @@ getAllDependenciesRouter.get('/simple', getAllDependenciesSimple);
 
 export {
   dependenciesRouter,
-  reinstallRouter,
+  installRouter,
   getAllDependenciesRouter,
 };

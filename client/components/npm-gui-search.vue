@@ -90,8 +90,13 @@
           <td>
             <npm-gui-btn
               class="info small"
-              @click="onInstall(result.name)"
-            >install
+              @click="onInstall(result.name, 'regular')"
+            >install prod
+            </npm-gui-btn>
+            <npm-gui-btn
+              class="info small"
+              @click="onInstall(result.name, 'dev')"
+            >install dev
             </npm-gui-btn>
           </td>
         </tr>
@@ -125,17 +130,17 @@
         this.isOpen = !this.isOpen;
       },
 
-      onInstall(toInstall) {
+      onInstall(toInstall, type) {
         const name = toInstall.includes('@') ? toInstall.split('@')[0] : toInstall;
         const version = toInstall.includes('@') ? toInstall.split('@')[1] : null;
-        const type = this.$route.meta.api.replace('dependencies/', '');
 
-        this.$store.dispatch(`dependencies/${type}/install`, {
-          project: this.$route.params.projectPathEncoded,
+        this.$store.dispatch(`dependencies/project/install`, {
+          project: this.$route.params.projectPathEncoded, // TODO global
           dependenciesToInstall: [{
             version,
             name,
             repo: this.searchRepo,
+            type,
           }],
         });
 

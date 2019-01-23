@@ -110,34 +110,51 @@
     <header>
       <npm-gui-search></npm-gui-search>
       <div class="right">
+        <small>Install:</small>
         <npm-gui-btn
           class="primary small"
           icon="data-transfer-download"
           @click="onInstallAll()"
-        >Install
+        >All
         </npm-gui-btn>
+        <npm-gui-btn
+          class="primary small"
+          icon="data-transfer-download"
+          @click="onInstallAll()"
+          disabled="disabled"
+        >Dev
+        </npm-gui-btn>
+        <npm-gui-btn
+          class="primary small"
+          icon="data-transfer-download"
+          @click="onInstallAll()"
+          disabled="disabled"
+        >Prod
+        </npm-gui-btn>
+        <small>Update all to:</small>
         <npm-gui-btn
           class="success small"
           icon="cloud-download"
           @click="onInstallAllToRequired()"
-        >Use all installed as required
+        >Installed
         </npm-gui-btn>
         <npm-gui-btn
           class="success small"
           icon="cloud-download"
           @click="onInstallAllWanted()"
-        >Update all To Wanted
+        >Wanted
         </npm-gui-btn>
         <npm-gui-btn
           class="success small"
           icon="cloud-download"
           @click="onInstallAllLatest()"
-        >Update all To Latest
+        >Latest
         </npm-gui-btn>
+        &nbsp;
         <npm-gui-btn
           class="danger small"
           icon="loop-circular"
-          @click="onReinstallAll()"
+          @click="onForceReinstallAll()"
         >Force Re-Install
         </npm-gui-btn>
       </div>
@@ -327,8 +344,8 @@
         this.$store.dispatch(`dependencies/${this.type}/sortBy`, sortKey);
       },
 
-      onReinstallAll() {
-        this.$store.dispatch(`dependencies/${this.type}/reinstallAll`, {
+      onForceReinstallAll() {
+        this.$store.dispatch(`dependencies/${this.type}/forceReinstallAll`, {
           project: this.type === 'project' ? this.$route.params.projectPathEncoded : null,
           dependencies: this.dependencies,
         });

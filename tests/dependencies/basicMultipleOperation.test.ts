@@ -20,7 +20,7 @@ describe('multiple dependencies operations', () => {
               expect(res.status).to.equal(200);
               done();
             });
-        }).timeout(20000);
+        });
 
         it('should return all dependencies (and new ones)', (done) => {
           api(app)
@@ -31,7 +31,7 @@ describe('multiple dependencies operations', () => {
               expect(res.body).to.deep.include(dependenciesToTest[1].entire);
               done();
             });
-        }).timeout(20000);
+        });
       });
 
       describe(`uninstalling ${dependenciesToTest.map(d => `${d.name}@${d.version}`)} as ${test.type} with ${test.repo} to ${pathDecoded}`, () => { // tslint:disable:max-line-length
@@ -50,7 +50,7 @@ describe('multiple dependencies operations', () => {
                   done();
                 });
             });
-        }).timeout(20000);
+        });
 
         it('should return all dependencies (without new ones)', (done) => {
           api(app)
@@ -61,7 +61,7 @@ describe('multiple dependencies operations', () => {
               expect(res.body).to.not.include(dependenciesToTest[1].entire);
               done();
             });
-        }).timeout(20000);
+        });
       });
 
       // TODO install as newest

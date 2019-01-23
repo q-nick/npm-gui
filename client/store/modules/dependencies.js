@@ -34,17 +34,16 @@ const actions = {
   async installAll({ commit, dispatch }, { project, dependencies }) {
     dependencies.forEach(dependency => commit('setDependencyExecutingStart', dependency.name));
 
-    await axios.post(`${getBasePathFor(project)}/npm/install`, {});
-    await axios.post(`${getBasePathFor(project)}/bower/install`, {});
+    await axios.post(`${getBasePathFor(project)}/install`, {});
 
     dependencies.forEach(dependency => commit('setDependencyExecutingStop', dependency.name));
     dispatch('load', { project });
   },
 
-  async reinstallAll({ commit, dispatch }, { project, dependencies }) {
+  async forceReinstallAll({ commit, dispatch }, { project, dependencies }) {
     dependencies.forEach(dependency => commit('setDependencyExecutingStart', dependency.name));
 
-    await axios.post(`${getBasePathFor(project)}/reinstall`, {});
+    await axios.post(`${getBasePathFor(project)}/install/force`, {});
 
     dependencies.forEach(dependency => commit('setDependencyExecutingStop', dependency.name));
     dispatch('load', { project });
@@ -61,19 +60,29 @@ const actions = {
     const bowerDependenciesDev = bowerDependencies.filter(d => d.type === 'dev');
     const bowerDependenciesRegular = bowerDependencies.filter(d => d.type === 'regular');
 
-    await axios.post(`${getBasePathFor(project)}/dev/npm`,
-      npmDependenciesDev
-        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
-    await axios.post(`${getBasePathFor(project)}/regular/npm`,
-      npmDependenciesRegular
-        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    if (npmDependenciesRegular.length) {
+      await axios.post(`${getBasePathFor(project)}/regular/npm`,
+        npmDependenciesRegular
+          .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    }
 
-    await axios.post(`${getBasePathFor(project)}/dev/bower`,
-      bowerDependenciesDev
-        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
-    await axios.post(`${getBasePathFor(project)}/regular/bower`,
-      bowerDependenciesRegular
-        .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    if (npmDependenciesDev.length) {
+      await axios.post(`${getBasePathFor(project)}/dev/npm`,
+        npmDependenciesDev
+          .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    }
+
+    if (bowerDependenciesRegular.length) {
+      await axios.post(`${getBasePathFor(project)}/regular/bower`,
+        bowerDependenciesRegular
+          .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    }
+
+    if (bowerDependenciesDev.length) {
+      await axios.post(`${getBasePathFor(project)}/dev/bower`,
+        bowerDependenciesDev
+          .map(dependencyToInstall => ({ name: dependencyToInstall.name, version: dependencyToInstall.version }))); // eslint-disable-line
+    }
 
     dependenciesToInstall.forEach(dependencyToInstall => commit('setDependencyExecutingStop', dependencyToInstall.name));
     dispatch('load', { project });
@@ -83,7 +92,7 @@ const actions = {
     commit('setDependencyExecutingStart', dependency.name);
 
     await axios
-      .delete(`${getBasePathFor(project)}/${dependency.repo}/${dependency.name}`);
+      .delete(`${getBasePathFor(project)}/${dependency.repo}/${dependency.type}/${dependency.name}`);
 
     commit('setDependencyExecutingStop', dependency.name);
     dispatch('load', { project });

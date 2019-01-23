@@ -18,7 +18,7 @@ describe('Explorer', () => {
         });
         done();
       });
-  }).timeout(40000);
+  });
 
   it('should return result when path is defined', (done) => {
     api(app)
@@ -38,7 +38,7 @@ describe('Explorer', () => {
         });
         done();
       });
-  }).timeout(40000);
+  });
 
   // TODO tetss for empty projects
 });

@@ -13,7 +13,7 @@ describe('Global Packages', () => {
           expect(res.body).to.deep.equal({});
           done();
         });
-    }).timeout(40000);
+    });
 
     it('should return all global packages (and new one)', (done) => {
       api(app)
@@ -30,7 +30,7 @@ describe('Global Packages', () => {
           });
           done();
         });
-    }).timeout(40000);
+    });
   });
 
   describe('uninstalling', () => {
@@ -42,7 +42,7 @@ describe('Global Packages', () => {
           expect(res.body).to.deep.equal({});
           done();
         });
-    }).timeout(40000);
+    });
 
     it('should return all global packages (without new one)', (done) => {
       api(app)
@@ -58,6 +58,6 @@ describe('Global Packages', () => {
           });
           done();
         });
-    }).timeout(40000);
+    });
   });
 });
