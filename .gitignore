@@ -9,3 +9,4 @@ tests/projects/npm/node_modules
 tests/projects/yarn/package-lock.json
 tests/projects/yarn/node_modules
 tests/projects/bower/package-lock.json
+electron

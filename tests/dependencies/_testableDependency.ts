@@ -20,7 +20,7 @@ export interface Test {
   dependencies: Dependency[];
 }
 
-export const npmDependencies: Test = {
+export const npmTest: Test = {
   repo: 'npm',
   type: 'regular',
   dependencies: [{
@@ -35,20 +35,20 @@ export const npmDependencies: Test = {
       latest: '2.1.1',
     },
   }, {
-    name: 'has-yarn', // TODO second package to test
-    version: '1.0.0',
+    name: 'that-value',
+    version: '0.1.1',
     entire: {
       repo: 'npm',
-      name: 'has-yarn',
-      required: '^1.0.0',
-      installed: '1.0.0',
-      wanted: null,
+      name: 'that-value',
+      required: '^0.1.1',
+      installed: '0.1.1',
+      wanted: '0.1.3',
       latest: null,
     },
   }],
 };
 
-export const yarnDependencies: Test = {
+export const yarnTest: Test = {
   repo: 'npm',
   type: 'regular',
   dependencies: [{
@@ -63,20 +63,20 @@ export const yarnDependencies: Test = {
       latest: '2.1.1',
     },
   }, {
-    name: 'has-yarn', // TODO second package to test
-    version: '1.0.0',
+    name: 'that-value',
+    version: '0.1.1',
     entire: {
       repo: 'yarn',
-      name: 'has-yarn',
-      required: '1.0.0',
-      installed: '1.0.0',
+      name: 'that-value',
+      required: '0.1.1',
+      installed: '0.1.1',
       wanted: null,
-      latest: null,
+      latest: '0.1.3',
     },
   }],
 };
 
-export const bowerDependencies: Test = {
+export const bowerTest: Test = {
   repo: 'bower',
   type: 'regular',
   dependencies: [{
@@ -103,3 +103,34 @@ export const bowerDependencies: Test = {
     },
   }],
 };
+
+interface Project {
+  pathEncoded: string;
+  tests: Test[];
+}
+
+export const projectsNPM:Project[] = [{
+  pathEncoded: 'dGVzdHMvcHJvamVjdHMvbnBt', // 'tests/projects/npm',
+  tests: [
+    { ...npmTest },
+    { ...npmTest, type: 'regular' },
+  ],
+}];
+
+export const projectsBower:Project[] = [{
+  pathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
+  tests: [
+    { ...bowerTest },
+    { ...bowerTest, type: 'regular' },
+  ],
+}];
+
+export const projectsYarn:Project[] = [{
+  pathEncoded: 'dGVzdHMvcHJvamVjdHMveWFybg==', // 'tests/projects/yarn',
+  tests: [
+    { ...yarnTest },
+    { ...yarnTest, type: 'regular' },
+  ],
+}];
+
+export const projects = [...projectsNPM, ...projectsBower, ...projectsYarn];
