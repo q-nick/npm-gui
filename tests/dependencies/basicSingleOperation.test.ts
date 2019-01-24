@@ -1,7 +1,7 @@
 import * as api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../server';
-import { projectsBower as projects } from './_testableDependency';
+import { projects } from './_testableDependency';
 
 describe('single dependency operations', () => {
   projects.forEach((project) => {
