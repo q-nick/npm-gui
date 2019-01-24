@@ -24,6 +24,8 @@ before_install:
   - npm i -g bower
 
 cache:
-  yarn: true
   directories:
     - "node_modules"
+
+env:
+  - YARN_GPG=no
