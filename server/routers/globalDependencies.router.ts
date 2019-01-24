@@ -6,11 +6,13 @@ import {
 import { addGlobalDependencies } from '../actions/dependencies/add/addGlobalDependencies';
 import { deleteGlobalDependency } from '../actions/dependencies/delete/deleteGlobalDependencies';
 
+import { catchErrors } from '../catchErrors';
+
 const globalDependenciesRouter = express.Router();
 
-globalDependenciesRouter.get('/', getGlobalDependencies);
-globalDependenciesRouter.get('/simple', getGlobalDependenciesSimple);
-globalDependenciesRouter.post('/:repoName', addGlobalDependencies);
-globalDependenciesRouter.delete('/:repoName/:packageName', deleteGlobalDependency);
+globalDependenciesRouter.get('/', catchErrors(getGlobalDependencies));
+globalDependenciesRouter.get('/simple', catchErrors(getGlobalDependenciesSimple));
+globalDependenciesRouter.post('/:repoName', catchErrors(addGlobalDependencies));
+globalDependenciesRouter.delete('/:repoName/:packageName', catchErrors(deleteGlobalDependency));
 
 export { globalDependenciesRouter };

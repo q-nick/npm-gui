@@ -38,6 +38,15 @@ app.use('/', express.static(path.normalize(`${__dirname}/../client`), { index: [
 
 app.use('/api/log', logRouter);
 
+// error handler
+app.use((err:any, _:express.Request, res:express.Response, next:Function) => {
+  // No routes handled the request and no system error, that means 404 issue.
+  // Forward to next middleware to handle it.
+  if (!err) return next();
+
+  res.status(400).send({ error: err });
+});
+
 function start(host: string, port: number): http.Server {
   // start server
   const server = app.listen(port || PORT, host || HOST, () => {

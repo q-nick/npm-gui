@@ -93,8 +93,12 @@ async function getBowerPackageWithInfo(projectPath: string, dependencyName: stri
 
 async function addNpmDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  await executeCommand(projectPath, `npm install ${dependency.name}@${dependency.version || ''} -${type === 'regular' ? 'P' : 'D'}`, true);
+  const { error } = await executeCommandJSON(projectPath, `npm install ${dependency.name}@${dependency.version || ''} -${type === 'regular' ? 'P' : 'D'} --json`, true);
   // here is a change, we change param -S to -P in case to move dependency from dev to regular(prod?)?
+
+  if (error) {
+    throw error.summary;
+  }
 
   return getNpmPackageWithInfo(projectPath, dependency.name);
 }
@@ -102,13 +106,24 @@ async function addNpmDependency(projectPath: string, dependency: Dependency.Basi
 async function addNpmDependencies(projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type): Promise<void> {
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}@${d.version || ''}`);
-  const command = `npm install ${dependenciesToInstall.join(' ')} -${type === 'regular' ? 'P' : 'D'}`;
-  await executeCommand(projectPath, command, true);
+  const command = `npm install ${dependenciesToInstall.join(' ')} -${type === 'regular' ? 'P' : 'D'} --json`;
+  const { error } = await executeCommandJSON(projectPath, command, true);
+
+  if (error) {
+    throw error.summary;
+  }
 }
 
 async function addBowerDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  await executeCommand(projectPath, `bower install ${dependency.name}#${dependency.version || ''}${type === 'regular' ? ' -S' : ' -D'}`, true);
+  const { stderr } = await executeCommand(projectPath, `bower install ${dependency.name}#${dependency.version || ''}${type === 'regular' ? ' -S' : ' -D'} --json`, true);
+
+  if (stderr) {
+    const errors = JSON.parse(stderr).filter((e:any) => e.level === 'error');
+    if (errors.length) {
+      throw errors.map((e:any) => e.message).join(', ');
+    }
+  }
 
   return getBowerPackageWithInfo(projectPath, dependency.name, type);
 }
@@ -116,13 +131,25 @@ async function addBowerDependency(projectPath: string, dependency: Dependency.Ba
 async function addBowerDependencies(projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type): Promise<void> {
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}#${d.version || ''}`);
-  const command = `bower install ${dependenciesToInstall.join(' ')}${type === 'regular' ? ' -S' : ' -D'}`;
-  await executeCommand(projectPath, command, true);
+
+  const command = `bower install ${dependenciesToInstall.join(' ')}${type === 'regular' ? ' -S' : ' -D'} --json`;
+  const { stderr } = await executeCommand(projectPath, command, true);
+
+  if (stderr) {
+    const errors = JSON.parse(stderr).filter((e:any) => e.level === 'error');
+    if (errors.length) {
+      throw errors.map((e:any) => e.message).join(', ');
+    }
+  }
 }
 
 async function addYarnDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  await executeCommand(projectPath, `yarn add ${dependency.name}@${dependency.version || ''}${type === 'regular' ? '' : ' -D'}`, true);
+  const { stderr } = await executeCommand(projectPath, `yarn add ${dependency.name}@${dependency.version || ''}${type === 'regular' ? '' : ' -D'} --json`, true);
+
+  if (stderr) {
+    throw JSON.parse(stderr).data;
+  }
 
   return getYarnNpmPackageWithInfo(projectPath, dependency.name);
 }
@@ -130,8 +157,12 @@ async function addYarnDependency(projectPath: string, dependency: Dependency.Bas
 async function addYarnDependencies(projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type): Promise<void> {
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}@${d.version || ''}`);
-  const command = `yarn add ${dependenciesToInstall.join(' ')}${type === 'regular' ? '' : ' -D'}`;
-  await executeCommand(projectPath, command, true);
+  const command = `yarn add ${dependenciesToInstall.join(' ')}${type === 'regular' ? '' : ' -D'} --json`;
+  const { stderr } = await executeCommand(projectPath, command, true);
+
+  if (stderr) {
+    throw JSON.parse(stderr).data;
+  }
 }
 
 // controllers
@@ -142,21 +173,23 @@ export async function addDependencies(req: express.Request, res: express.Respons
   const npm = hasNpm(projectPathDecoded);
   const bower = hasBower(projectPathDecoded);
 
-  const dependenciesToInstall: Dependency.Basic[] = req.body;
+  const dependenciesToInstall = (req.body as Dependency.Basic[]).filter(d => d.name);
   let result: any = null;
 
   if (repoName === 'npm') {
     if (npm || yarn) {
-      if (req.body.length === 1) {
+      if (dependenciesToInstall.length === 1) {
         result = await withCacheUpdate(
           yarn ? addYarnDependency : addNpmDependency, `${projectPath}-npm`, 'name',
           projectPathDecoded, dependenciesToInstall[0], type,
         );
-      } else if (req.body.length > 1) {
+      } else if (dependenciesToInstall.length > 1) {
         result = await withCacheInvalidate(
           yarn ? addYarnDependencies : addNpmDependencies, `${projectPath}-npm`,
           projectPathDecoded, dependenciesToInstall, type,
         );
+      } else {
+        throw 'Invalid depedencies';
       }
       res.json(result);
     } else {
@@ -166,14 +199,16 @@ export async function addDependencies(req: express.Request, res: express.Respons
 
   if (repoName === 'bower') {
     if (bower) {
-      if (req.body.length === 1) {
+      if (dependenciesToInstall.length === 1) {
         result = await withCacheUpdate(
           addBowerDependency, `${projectPath}-bower`, 'name',
           projectPathDecoded, dependenciesToInstall[0], type);
-      } else if (req.body.length > 1) {
+      } else if (dependenciesToInstall.length > 1) {
         result = await withCacheInvalidate(
           addBowerDependencies, `${projectPath}-bower`,
           projectPathDecoded, dependenciesToInstall, type);
+      } else {
+        throw 'Invalid depedencies';
       }
       res.json(result);
     } else {
