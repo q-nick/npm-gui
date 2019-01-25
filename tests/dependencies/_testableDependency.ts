@@ -17,11 +17,13 @@ interface Dependency {
 export interface Test {
   repo: 'npm' | 'yarn' | 'bower';
   type: 'dev' | 'regular';
+  repoDir: string;
   dependencies: Dependency[];
 }
 
 export const npmTest: Test = {
   repo: 'npm',
+  repoDir: 'node_modules',
   type: 'regular',
   dependencies: [{
     name: 'npm-gui-tests',
@@ -50,6 +52,7 @@ export const npmTest: Test = {
 
 export const yarnTest: Test = {
   repo: 'npm',
+  repoDir: 'node_modules',
   type: 'regular',
   dependencies: [{
     name: 'npm-gui-tests',
@@ -78,6 +81,7 @@ export const yarnTest: Test = {
 
 export const bowerTest: Test = {
   repo: 'bower',
+  repoDir: 'bower_components',
   type: 'regular',
   dependencies: [{
     name: 'react',
@@ -87,7 +91,7 @@ export const bowerTest: Test = {
       name: 'react',
       required: '15.5.0',
       installed: '15.5.0',
-      wanted: null,
+      wanted: '15.5.0',
       latest: '16.1.0',
     },
   }, {
@@ -98,7 +102,7 @@ export const bowerTest: Test = {
       name: 'that-value',
       required: '0.1.1',
       installed: '0.1.1',
-      wanted: null,
+      wanted: '0.1.1',
       latest: '0.1.3',
     },
   }],

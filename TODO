@@ -1,3 +1,8 @@
+WATCH FILE CHANGES IN NODE_MODULES / BOWER_COMPONENTS and update cache
+
+
+
+
 new project initialization - later
 standalone - electron app (probably without webserver)
 
@@ -25,3 +30,4 @@ Modules:
 
 NSP:
 - better support for deep dependency
+

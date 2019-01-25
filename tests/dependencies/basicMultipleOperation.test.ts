@@ -6,9 +6,17 @@ import { projects } from './_testableDependency';
 describe('multiple dependencies operations', () => {
   projects.forEach((project) => {
     project.tests.forEach((test) => {
-      const dependenciesToTest =
-        test.dependencies.map(
-          dependency => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }));
+      let dependenciesToTest:any[] = [];
+      if (test.repo === 'bower') {
+        dependenciesToTest =
+          test.dependencies.map(
+            dependency => ({ ...dependency, entire:
+              { ...dependency.entire, type: test.type, wanted: null } }));
+      } else {
+        dependenciesToTest =
+          test.dependencies.map(
+            dependency => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }));
+      }
 
       const pathDecoded = Buffer.from(project.pathEncoded, 'base64');
       describe(`installing ${dependenciesToTest.map(d => `${d.name}@${d.version}`)} as ${test.type} with ${test.repo} to ${pathDecoded}`, () => { // tslint:disable:max-line-length

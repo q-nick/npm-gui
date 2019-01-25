@@ -6,6 +6,9 @@
     "Paweł"
   ],
   "license": "UNLICENSED",
-  "dependencies": {},
+  "dependencies": {
+    "react": "15.5.0",
+    "that-value": "0.1.1"
+  },
   "devDependencies": {}
 }
