@@ -6,9 +6,17 @@ import { projects } from './_testableDependency';
 describe('single dependency operations', () => {
   projects.forEach((project) => {
     project.tests.forEach((test) => {
-      const dependenciesToTest =
-        test.dependencies.map(
-          dependency => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }));
+      let dependenciesToTest = [];
+      if (test.repo === 'bower') {
+        dependenciesToTest =
+          test.dependencies.map(
+            dependency => ({ ...dependency, entire:
+              { ...dependency.entire, type: test.type, wanted: null } }));
+      } else {
+        dependenciesToTest =
+          test.dependencies.map(
+            dependency => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }));
+      }
       const dependency = {
         name: dependenciesToTest[0].name,
         version: dependenciesToTest[0].version,
