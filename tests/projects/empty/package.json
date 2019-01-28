@@ -1,0 +1,15 @@
+{
+  "name": "npm-gui-test-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {},
+  "dependencies": {
+    "react": "^16.7.0"
+  }
+}

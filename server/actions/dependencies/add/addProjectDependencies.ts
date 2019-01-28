@@ -87,7 +87,7 @@ async function getYarnNpmPackageWithInfo(projectPath: string, dependencyName: st
 }
 
 async function getBowerPackageWithInfo(projectPath: string, dependencyName: string, type: Dependency.Type): Promise<Dependency.Entire> {
-  const { dependencies } = await executeCommandJSON(projectPath, 'bower ls --json', true);
+  const { dependencies } = await executeCommandJSON(projectPath, 'bower ls --json');
   return mapBowerDependency(dependencyName, dependencies[dependencyName], type);
 }
 

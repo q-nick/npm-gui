@@ -92,7 +92,7 @@ const actions = {
     commit('setDependencyExecutingStart', dependency.name);
 
     await axios
-      .delete(`${getBasePathFor(project)}/${dependency.repo}/${dependency.type}/${dependency.name}`);
+      .delete(`${getBasePathFor(project)}/${dependency.type}/${dependency.repo}/${dependency.name}`);
 
     commit('setDependencyExecutingStop', dependency.name);
     dispatch('load', { project });

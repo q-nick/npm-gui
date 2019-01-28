@@ -112,7 +112,7 @@ async function getAllBowerDependencies(projectPath: string): Promise<Dependency.
   // type
   const dependencies = getDependenciesFromBowerJson(projectPath);
 
-  const commandLsJSON = await executeCommandJSON(projectPath, 'bower ls --json', true);
+  const commandLsJSON = await executeCommandJSON(projectPath, 'bower ls --json');
 
   return Object.keys(commandLsJSON.dependencies)
     .map((name: string) => // TODO better code
