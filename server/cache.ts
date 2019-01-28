@@ -72,7 +72,6 @@ export async function withCacheInvalidate<T extends (...args: any[]) => any>(
 export async function withCacheSplice<T extends (...args: any[]) => any>(
   method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>)
   : Promise<ReturnType<T>> {
-  console.log('123');
   const result = await method(...args);
   spliceFromCache(cacheName, { [keyToCompare]: result }, keyToCompare);
 
