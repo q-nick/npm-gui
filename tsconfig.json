@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "moduleResolution": "node",
     "sourceMap": true,
     "sourceRoot": ".",
     "outDir": "./dist/",
@@ -11,16 +8,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": [
-      "mocha",
-      "node"
-    ]
+    "lib": ["es2015", "es2016", "dom"],
+    "jsx": "react"
   },
-  "typeRoots": [
-    "node_module/@types",
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
 }

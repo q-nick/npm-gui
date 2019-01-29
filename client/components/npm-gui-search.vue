@@ -68,7 +68,7 @@ span {
 <template>
   <div class="npm-gui-search" v-bind:class="{'npm-gui-search--open': isOpen}">
     <npm-gui-btn class="primary small" icon="plus" @click="toggle">Search / Add</npm-gui-btn>
-    <form action @submit="onSearch">
+    <form action @submit.prevent="onSearch">
       <select name id v-model="searchRepo" @change="onSearch" :disabled="loading">
         <option value="npm">npm</option>
         <option value="bower">bower</option>
@@ -98,7 +98,7 @@ span {
             <a :href="result.url" target="_blank">show repo</a>
           </td>
           <td>
-            <npm-gui-btn class="info small" @click="onInstall(result.name, 'regular')">install prod</npm-gui-btn>
+            <npm-gui-btn class="info small" @click="onInstall(result.name, 'prod')">install prod</npm-gui-btn>
             <npm-gui-btn class="info small" @click="onInstall(result.name, 'dev')">install dev</npm-gui-btn>
           </td>
         </tr>
@@ -107,7 +107,7 @@ span {
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from "axios";
 import debounce from "debounce";
 import NpmGuiBtn from "./npm-gui-btn.vue";
@@ -154,7 +154,6 @@ export default {
     },
 
     onSearch(event) {
-      event.preventDefault();
       if (this.searchQuery) {
         this.loading = true;
         this.searchResults = [];

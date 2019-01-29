@@ -1,6 +1,15 @@
 {
-  "extends": "tslint-config-airbnb",
+  "extends": ["tslint-config-airbnb", "tslint-react"],
   "rules": {
-    "typedef": [true, "call-signature"]
+    "typedef": [true, "call-signature"],
+    "jsx-no-multiline-js": false,
+    "import-name": [
+      true,
+      {
+        "vue": "Vue",
+        "vueRouter": "VueRouter",
+        "vuex": "Vuex"
+      }
+    ]
   }
 }

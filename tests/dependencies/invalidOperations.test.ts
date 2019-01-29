@@ -25,7 +25,7 @@ describe('installation errors', () => {
     describe(repo.describe || repo.name, () => {
       it('invalid tag version', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([{ name: 'that-value', version: '1.0.0' }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);
@@ -36,7 +36,7 @@ describe('installation errors', () => {
 
       it('invalid tag version (multiple)', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([
             { name: 'that-value', version: '5.0.0' },
             { name: 'npm-gui-tests', version: '5.0.0' }])
@@ -49,7 +49,7 @@ describe('installation errors', () => {
 
       it('invalid name', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([{ name: 'efasefaseasegasegasefasesasegasegasegsagsxzsa', version: '1.0.0' }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);
@@ -60,7 +60,7 @@ describe('installation errors', () => {
 
       it('invalid name (multiple)', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([
             { name: 'efasefaseasegasegasefasesasegasegasegsagsxzsa', version: '1.0.0' },
             { name: 'efasefaseasegasegasefasesasegasegsadfasdfasegsagsxzsa', version: '1.0.0' },
@@ -74,7 +74,7 @@ describe('installation errors', () => {
 
       it('malformed / undefined', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([{  }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);
@@ -85,7 +85,7 @@ describe('installation errors', () => {
 
       it('malformed / undefined (multiple)', (done) => {
         api(app)
-          .post(`/api/project/${repo.projectPath}/dependencies/regular/${repo.name}`)
+          .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
           .send([{  }, { }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);

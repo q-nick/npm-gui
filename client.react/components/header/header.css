@@ -1,0 +1,20 @@
+.h1 {
+  color: #fff;
+  display: inline-block;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 45px;
+  margin: 0 15px 0 0;
+}
+
+.nav {
+  background: #3e3f3a;
+  height: 45px;
+  padding-left: 15px;
+  padding-right: 15px;
+  flex-basis: 45px;
+}
+
+.rightSection {
+  float: right;
+}

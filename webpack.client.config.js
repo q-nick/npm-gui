@@ -1,10 +1,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // eslint-disable-line
 const VueLoaderPlugin = require('vue-loader/lib/plugin'); // eslint-disable-line
 
-const EXCLUDE = /(node_modules|bower_components)/;
+const EXCLUDE = /(node_modules|bower_components|server)/;
 
 module.exports = {
-  entry: './client/index.js',
+  entry: './client.react/index.tsx',
   output: {
     path: `${__dirname}/dist/client`,
     filename: './[name].js',
@@ -14,32 +14,27 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        exclude: EXCLUDE,
-        options: {
-          loaders: {
-            scss: 'vue-style-loader!css-loader',
+        enforce: 'pre',
+        test: /\.css$/,
+        exclude: [/node_modules/, /override\.css/],
+        use: [
+          'style-loader?sourceMap',
+          {
+            loader: 'typings-for-css-modules-loader',
+            options: {
+              modules: true,
+              namedExport: true,
+              localIdentName: '[name]-[local]--[hash:base64:5]',
+            },
           },
-        },
+        ],
       },
       {
-        test: /\.(js)$/,
-        loader: 'babel-loader',
+        test: /\.tsx$/,
+        loader: 'ts-loader',
         exclude: EXCLUDE,
         options: {
-          presets: [
-            [
-              '@babel/env',
-              {
-                targets: {
-                  browsers: 'defaults',
-                },
-                useBuiltIns: 'usage',
-              },
-            ],
-          ],
-          plugins: ['@babel/plugin-transform-async-to-generator'],
+          configFile: 'tsconfig.client.json',
         },
       },
       {
@@ -49,28 +44,24 @@ module.exports = {
           limit: 1000,
         },
       },
-      {
-        test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
-      },
     ],
   },
   resolve: {
     modules: ['node_modules'],
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
+      // vue$: 'vue/dist/vue.esm.js',
       'github-buttons$': './github-buttons.common.js',
       'open-iconic$': 'open-iconic/font/css/open-iconic.css',
     },
+    extensions: ['.ts', '.tsx', '.js', '.css'],
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'NPM-GUI',
-      template: 'client/index.template.html',
+      template: 'client.react/index.template.html',
       hash: true,
       mobile: true,
     }),
-    new VueLoaderPlugin(),
   ],
   devServer: {
     compress: true,

@@ -36,7 +36,7 @@
   </nav>
 </template>
 
-<script>
+<script lang="ts">
   import NpmGuiBtn from './npm-gui-btn.vue';
   import NpmGuiProject from './npm-gui-project.vue';
 

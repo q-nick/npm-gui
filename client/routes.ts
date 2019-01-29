@@ -1,5 +1,6 @@
-import NpmGuiDependencies from './components/npm-gui-dependencies.vue';
-import NpmGuiScripts from './components/npm-gui-scripts.vue';
+import * as NpmGuiProject from './containers/npm-gui-project.vue';
+import * as NpmGuiScripts from './components/npm-gui-scripts.vue';
+import * as NpmGuiDependencies from './components/npm-gui-dependencies.vue';
 
 export const routes = [{
   path: '/project/:projectPathEncoded',
@@ -7,7 +8,7 @@ export const routes = [{
   children: [{
     path: 'dependencies',
     name: 'dependencies',
-    component: NpmGuiDependencies,
+    component: NpmGuiProject,
     meta: {
       api: 'project',
     },

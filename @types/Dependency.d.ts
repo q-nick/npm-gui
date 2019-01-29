@@ -1,5 +1,5 @@
 declare namespace Dependency {
-  type Type = 'dev' | 'regular' | 'global' | 'extraneous';
+  type Type = 'dev' | 'prod' | 'global' | 'extraneous';
 
   interface Basic {
     name: string;

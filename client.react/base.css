@@ -1,0 +1,79 @@
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#npm-gui-vue {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+
+.row {
+  flex: 1;
+  display: flex;
+}
+
+.left-column {
+  flex-basis: 30%;
+  display: flex;
+  padding: 15px;
+  transition: flex-basis 1500ms ease-in-out;
+}
+
+.left-column:hover {
+  /* flex-basis: 45%; TODO FIXME */
+}
+
+.right-column {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  flex-direction: column;
+}
+
+input,
+select {
+  background: #fff;
+  border: 1px solid #dfd7ca;
+  border-radius: 2px;
+  display: block;
+  font-size: 11px;
+  height: 30px;
+  outline: none;
+  padding: 7.5px;
+}
+
+table {
+  border-collapse: collapse;
+  color: #393a35;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.8em;
+  width: 100%;
+}
+
+tr:hover {
+  background: #f8f5f0;
+}
+
+td,
+th {
+  border-bottom: 1px solid #dfd7ca;
+  padding: 0.5em;
+  text-align: left;
+}
+
+th:last-child {
+  border-right: 0;
+}

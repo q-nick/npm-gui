@@ -50,7 +50,7 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
     .filter(name => dependenciesInstalled[name].extraneous);
 
   const dependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'regular' })),
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod' })),
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev' })),
     ...Object.keys(extraneousInstalled).map((name): Dependency.Npm => ({ name, type: 'extraneous' })), // tslint:disable-line:max-line-length
   ];
@@ -92,7 +92,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   // console.log('here', outdated);
 
   const dependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'regular' })),
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod' })),
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev' })),
     // ...Object.keys(extraneousInstalled).map(name => ({ name, type: 'extraneous' })),
   ];
@@ -116,7 +116,7 @@ async function getAllBowerDependencies(projectPath: string): Promise<Dependency.
 
   return Object.keys(commandLsJSON.dependencies)
     .map((name: string) => // TODO better code
-      mapBowerDependency(name, commandLsJSON.dependencies[name], dependencies[name] ? 'regular' : 'dev')); // tslint:disable-line:max-line-length
+      mapBowerDependency(name, commandLsJSON.dependencies[name], dependencies[name] ? 'prod' : 'dev')); // tslint:disable-line:max-line-length
 }
 
 function getAllDependenciesSimpleNpm(projectPath: string): Dependency.Entire[] {
@@ -124,7 +124,7 @@ function getAllDependenciesSimpleNpm(projectPath: string): Dependency.Entire[] {
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
   const npmDependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'regular', required: dependencies[name] })), // tslint:disable-line:max-line-length
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })), // tslint:disable-line:max-line-length
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
   ];
 
@@ -143,7 +143,7 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
 
   // we will use npm type
   const bowerDependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'regular', required: dependencies[name] })), // tslint:disable-line:max-line-length
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })), // tslint:disable-line:max-line-length
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
   ];
 
