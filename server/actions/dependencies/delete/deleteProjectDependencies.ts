@@ -7,7 +7,7 @@ import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 async function deleteNpmDependency(
   projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
   // delete
-  await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'regular' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
+  await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'prod' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
   return dependencyName;
 }
@@ -22,7 +22,7 @@ async function deleteYarnDependency(
 
 async function deleteBowerDependency(
   projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
-  await executeCommand(projectPath, `bower uninstall ${dependencyName} -${type === 'regular' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
+  await executeCommand(projectPath, `bower uninstall ${dependencyName} -${type === 'prod' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
   return dependencyName;
 }

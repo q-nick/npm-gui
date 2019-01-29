@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "target": "es5"
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+    "client"
+  ]
+}

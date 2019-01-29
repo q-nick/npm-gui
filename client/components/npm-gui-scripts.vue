@@ -153,7 +153,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { mapState } from 'vuex';
 
   import NpmGuiBtn from './npm-gui-btn.vue';

@@ -13,9 +13,9 @@ import { decodePath } from '../../decodePath';
 import { parseJSON } from '../../parseJSON';
 import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
-function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'regular' | 'dev' {
+function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'prod' | 'dev' {
   if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
-    return 'regular';
+    return 'prod';
   }
 
   if (packageJson.devDependencies && packageJson.devDependencies[dependencyName]) {
@@ -25,7 +25,7 @@ function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'regu
   return null;
 }
 
-function getRequiredFromPackageJson(packageJson: any, dependencyName: string): 'regular' | 'dev' {
+function getRequiredFromPackageJson(packageJson: any, dependencyName: string): 'prod' | 'dev' {
   if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
     return packageJson.dependencies[dependencyName];
   }
@@ -93,7 +93,7 @@ async function getBowerPackageWithInfo(projectPath: string, dependencyName: stri
 
 async function addNpmDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  const { error } = await executeCommandJSON(projectPath, `npm install ${dependency.name}@${dependency.version || ''} -${type === 'regular' ? 'P' : 'D'} --json`, true);
+  const { error } = await executeCommandJSON(projectPath, `npm install ${dependency.name}@${dependency.version || ''} -${type === 'prod' ? 'P' : 'D'} --json`, true);
   // here is a change, we change param -S to -P in case to move dependency from dev to regular(prod?)?
 
   if (error) {
@@ -106,7 +106,7 @@ async function addNpmDependency(projectPath: string, dependency: Dependency.Basi
 async function addNpmDependencies(projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type): Promise<void> {
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}@${d.version || ''}`);
-  const command = `npm install ${dependenciesToInstall.join(' ')} -${type === 'regular' ? 'P' : 'D'} --json`;
+  const command = `npm install ${dependenciesToInstall.join(' ')} -${type === 'prod' ? 'P' : 'D'} --json`;
   const { error } = await executeCommandJSON(projectPath, command, true);
 
   if (error) {
@@ -116,7 +116,7 @@ async function addNpmDependencies(projectPath: string, dependencies: Dependency.
 
 async function addBowerDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  const { stderr } = await executeCommand(projectPath, `bower install ${dependency.name}#${dependency.version || ''}${type === 'regular' ? ' -S' : ' -D'} --json`, true);
+  const { stderr } = await executeCommand(projectPath, `bower install ${dependency.name}#${dependency.version || ''}${type === 'prod' ? ' -S' : ' -D'} --json`, true);
 
   if (stderr) {
     const errors = JSON.parse(stderr).filter((e:any) => e.level === 'error');
@@ -132,7 +132,7 @@ async function addBowerDependencies(projectPath: string, dependencies: Dependenc
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}#${d.version || ''}`);
 
-  const command = `bower install ${dependenciesToInstall.join(' ')}${type === 'regular' ? ' -S' : ' -D'} --json`;
+  const command = `bower install ${dependenciesToInstall.join(' ')}${type === 'prod' ? ' -S' : ' -D'} --json`;
   const { stderr } = await executeCommand(projectPath, command, true);
 
   if (stderr) {
@@ -145,7 +145,7 @@ async function addBowerDependencies(projectPath: string, dependencies: Dependenc
 
 async function addYarnDependency(projectPath: string, dependency: Dependency.Basic, type: Dependency.Type): Promise<Dependency.Entire> {
   // add
-  const { stderr } = await executeCommand(projectPath, `yarn add ${dependency.name}@${dependency.version || ''}${type === 'regular' ? '' : ' -D'} --json`, true);
+  const { stderr } = await executeCommand(projectPath, `yarn add ${dependency.name}@${dependency.version || ''}${type === 'prod' ? '' : ' -D'} --json`, true);
 
   if (stderr) {
     throw JSON.parse(stderr).data;
@@ -157,7 +157,7 @@ async function addYarnDependency(projectPath: string, dependency: Dependency.Bas
 async function addYarnDependencies(projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type): Promise<void> {
   // add list
   const dependenciesToInstall = dependencies.map(d => `${d.name}@${d.version || ''}`);
-  const command = `yarn add ${dependenciesToInstall.join(' ')}${type === 'regular' ? '' : ' -D'} --json`;
+  const command = `yarn add ${dependenciesToInstall.join(' ')}${type === 'prod' ? '' : ' -D'} --json`;
   const { stderr } = await executeCommand(projectPath, command, true);
 
   if (stderr) {

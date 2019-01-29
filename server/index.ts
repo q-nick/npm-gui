@@ -3,8 +3,8 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as morgan from 'morgan';
 // import opn from 'opn';
-import * as Console from './console';
 import * as http from 'http';
+import * as Console from './console';
 
 import { projectRouter } from './routers/project.router';
 import { searchRouter } from './routers/search.router';

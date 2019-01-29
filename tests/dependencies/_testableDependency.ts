@@ -3,7 +3,7 @@ interface Entire {
   name: string;
   required: string;
   installed: string;
-  type?: 'dev' | 'regular';
+  type?: 'dev' | 'prod';
   wanted: string;
   latest: string;
 }
@@ -16,7 +16,7 @@ interface Dependency {
 
 export interface Test {
   repo: 'npm' | 'yarn' | 'bower';
-  type: 'dev' | 'regular';
+  type: 'dev' | 'prod';
   repoDir: string;
   dependencies: Dependency[];
 }
@@ -24,7 +24,7 @@ export interface Test {
 export const npmTest: Test = {
   repo: 'npm',
   repoDir: 'node_modules',
-  type: 'regular',
+  type: 'prod',
   dependencies: [{
     name: 'npm-gui-tests',
     version: '1.0.0',
@@ -53,7 +53,7 @@ export const npmTest: Test = {
 export const yarnTest: Test = {
   repo: 'npm',
   repoDir: 'node_modules',
-  type: 'regular',
+  type: 'prod',
   dependencies: [{
     name: 'npm-gui-tests',
     version: '1.0.0',
@@ -82,7 +82,7 @@ export const yarnTest: Test = {
 export const bowerTest: Test = {
   repo: 'bower',
   repoDir: 'bower_components',
-  type: 'regular',
+  type: 'prod',
   dependencies: [{
     name: 'react',
     version: '15.5.0',
@@ -117,7 +117,7 @@ export const projectsNPM:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMvbnBt', // 'tests/projects/npm',
   tests: [
     { ...npmTest },
-    { ...npmTest, type: 'regular' },
+    { ...npmTest, type: 'prod' },
   ],
 }];
 
@@ -125,7 +125,7 @@ export const projectsBower:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
   tests: [
     { ...bowerTest },
-    { ...bowerTest, type: 'regular' },
+    { ...bowerTest, type: 'prod' },
   ],
 }];
 
@@ -133,7 +133,7 @@ export const projectsYarn:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMveWFybg==', // 'tests/projects/yarn',
   tests: [
     { ...yarnTest },
-    { ...yarnTest, type: 'regular' },
+    { ...yarnTest, type: 'prod' },
   ],
 }];
 

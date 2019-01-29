@@ -98,7 +98,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import axios from 'axios';
   import NpmGuiBtn from './npm-gui-btn.vue';
 

@@ -175,7 +175,7 @@
         <tr v-for="dependency in dependencies" v-bind:key="dependency.name" v-bind:class="{ loading: dependenciesLoading[dependency.name] }">
           <!-- <td><input type="checkbox" /></td> -->
           <td>
-            <span v-if="dependency.type !== 'regular'">{{ dependency.type }}</span>
+            <span v-if="dependency.type !== 'prod'">{{ dependency.type }}</span>
           </td>
           <td>
             {{ dependency.name }}
@@ -238,7 +238,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { mapState } from 'vuex';
 
   import NpmGuiBtn from './npm-gui-btn.vue';
