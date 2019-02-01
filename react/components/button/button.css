@@ -1,0 +1,72 @@
+.button {
+  border: 0;
+  border-radius: 2px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  outline: none;
+  padding: 8px;
+  text-transform: uppercase;
+  transition: background-color 200ms;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.button:first-child {
+  margin-left: 0;
+}
+
+.button:last-child {
+  margin-right: 0;
+}
+
+.button:hover {
+  filter: brightness(90%);
+}
+
+.button:active {
+  filter: brightness(80%);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+ /* COLOR */
+.primary {
+  background-color: #325d88;
+}
+
+.dark {
+  background-color: #3e3f3a;
+}
+
+.warning {
+  background-color: #ef5c0e;
+}
+
+.danger {
+  background-color: #d9534f;
+}
+
+.success {
+  background-color: #79a736;
+}
+
+.info {
+  background-color: #1b8dbb;
+}
+
+ /* SIZE */
+.small {
+  font-size: 10px;
+  padding: 6px;
+}
+
+ /* ICONS */
+.oi {
+  font-size: inherit;
+  margin-right: 3px;
+}

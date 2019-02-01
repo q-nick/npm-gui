@@ -1,0 +1,18 @@
+.row {
+  flex: 1;
+  display: flex;
+}
+
+.leftColumn {
+  flex-basis: 30%;
+  display: flex;
+  padding: 15px;
+  transition: flex-basis 1500ms ease-in-out;
+}
+
+.rightColumn {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  flex-direction: column;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NPM Graphic User Interface</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+  <style>
+    .npm-gui {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="npm-gui"></div>
+  <script>
+    // tricky one
+    function define(_, GithubApi) {
+      window.GithubApi = GithubApi;
+    }
+    define.amd = true;
+
+  </script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>

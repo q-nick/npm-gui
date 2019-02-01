@@ -6,6 +6,7 @@
   "exclude": [
     "dist",
     "node_modules",
-    "client"
+    "client",
+    "react"
   ]
 }

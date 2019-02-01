@@ -1,5 +1,6 @@
 declare namespace Dependency {
   type Type = 'dev' | 'prod' | 'global' | 'extraneous';
+  type Repo = 'bower' | 'npm' | 'yarn';
 
   interface Basic {
     name: string;
@@ -41,6 +42,6 @@ declare namespace Dependency {
     installed?: string,
     wanted?: string,
     latest?: string,
-    repo: 'bower' | 'npm' | 'yarn';
+    repo: Repo;
   }
 }

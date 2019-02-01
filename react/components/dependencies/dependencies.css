@@ -1,0 +1,105 @@
+.dependencies {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+}
+
+.tableContainer {
+  border: 1px solid #dfd7ca;
+  border-radius: 2px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  overflow: auto;
+  flex: 1;
+}
+
+.right {
+  float: right;
+}
+
+.label {
+  border-radius: 2px;
+  color: #fff;
+  float: right;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0.2em 0.4em;
+}
+
+.labelDanger {
+  background: #d9534f;
+}
+
+.labelWarning {
+  background: #ef5c0e;
+}
+
+.labelPrimary {
+  background: #325d88;
+}
+
+.loading {
+  margin-top: 10vh;
+  text-align: center;
+}
+
+.columnAction {
+  width: 11em;
+}
+
+.columnNsp {
+  width: 8em;
+}
+
+.columnVersion {
+  width: 10%;
+}
+
+.missing {
+  color: #d9534f;
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.table {
+  border-collapse: collapse;
+  color: #393a35;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.8em;
+  width: 100%;
+}
+
+.table > tbody > tr:hover {
+  background: #f8f5f0;
+}
+
+.table > tbody > tr.loading {
+  background: linear-gradient(-45deg, #dfd7ca, #fff);
+  background-size: 200% 200%;
+  animation: Gradient 2s ease infinite;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > td {
+  border-bottom: 1px solid #dfd7ca;
+  padding: 3px 10px;
+  text-align: center;
+}
+
+.table > tbody > tr > th:last-child {
+  border-right: 0;
+}
