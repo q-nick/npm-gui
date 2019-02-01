@@ -1,6 +1,6 @@
 const nodeExternals = require('webpack-node-externals'); // eslint-disable-line
 
-const EXCLUDE = /(node_modules|bower_components)/;
+const EXCLUDE = /(node_modules|bower_components|dist|client|client\.react)/;
 
 module.exports = {
   entry: ['./server/index.ts'],

@@ -1,0 +1,66 @@
+.container {
+  display: inline-block;
+  position: relative;
+}
+
+.explorer {
+  position: absolute;
+  background: #3e3f3a;
+  right: 0;
+  top: 100%;
+  z-index: 1;
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+}
+
+.explorerOpen {
+  border-color: #dfd7ca;
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+.folder,
+.project {
+  color: #fff;
+  background: none;
+  font-size: 12px;
+  font-weight: 500;
+  border: 0;
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  padding: 0 8px;
+}
+
+.project {
+  color: #d9534f;
+}
+
+.project:hover {
+  color: #000;
+}
+
+.folder:hover,
+.project:hover {
+  text-decoration: underline;
+  background: #8e8c84;
+}
+
+.file {
+  color: #8e8c84;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 8px;
+}
+
+.description {
+  color: #dfd7ca;
+  display: inline-block;
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 45px;
+  margin: 0;
+}
