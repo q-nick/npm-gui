@@ -24,15 +24,15 @@
   margin-top: 6px;
 }
 
-.input,
-.select {
+.form > input,
+.form > select {
   display: inline-block;
   width: 7em;
   vertical-align: middle;
 }
 
-.input:disabled,
-.select:disabled {
+.form > input:disabled,
+.form > select:disabled {
   background: lightgray;
   cursor: not-allowed;
 }

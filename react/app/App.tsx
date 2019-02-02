@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
 
 import * as style from './app.css';
 import { Header, HeaderButton } from '../components/header/Header';
 import { ConsoleContainer } from '../containers/ConsoleContainer';
 import 'open-iconic';
 import { ProjectDependenciesContainer } from '../containers/ProjectDependenciesContainer';
+import { GlobalDependenciesContainer } from '../containers/GlobalDependenciesContainer';
 import { Info } from '../components/info/Info';
 
-const buttons: HeaderButton[] = [
+const buttonsBase: HeaderButton[] = [
   {
     text: 'Global Dependencies',
     routeName: 'global',
@@ -26,8 +27,34 @@ const buttons: HeaderButton[] = [
   },
 ];
 
-export class App extends React.Component {
+function renderChildRoutes({ match }: RouteComponentProps): React.ReactNode {
+  if (!match) return '';
+
+  return (
+    <Switch>
+      <Route
+        exact={true}
+        path={`${match.path}/dependencies`}
+        component={ProjectDependenciesContainer}
+      />
+      <Route
+        exact={true}
+        path={`${match.path}/global`}
+        component={GlobalDependenciesContainer}
+      />
+      <Redirect to={`${match.path}/dependencies`} />
+    </Switch>
+  );
+}
+
+export class AppBase extends React.Component<RouteComponentProps> {
   render(): React.ReactNode {
+    console.log(this.props.match)
+    const buttons = buttonsBase.map(button => ({
+      ...button,
+      routeName: `${this.props.match.path}/${button.routeName}`,
+    }));
+
     return (
       <>
         <Header buttons={buttons} />
@@ -36,14 +63,10 @@ export class App extends React.Component {
             <ConsoleContainer />
           </div>
           <div className={style.rightColumn}>
-            <Router>
-              <Switch>
-                <Route exact={true} path={'/'} component={ProjectDependenciesContainer} />
-                {/* <Route path={'/credit/:id'} component={Credit}/> */}
-                {/* <Route exact={true} path={'/profile'} component={User}/> */}
-                {/* <Route path={'/dispositions'} component={Disposition}/> */}
-              </Switch>
-            </Router>
+            <Route
+              path={'/project/:projectPathEncoded'}
+              children={renderChildRoutes}
+            />
             <Info />
           </div>
         </div>
@@ -51,3 +74,5 @@ export class App extends React.Component {
     );
   }
 }
+
+export const App = withRouter(AppBase); // tslint:disable-line

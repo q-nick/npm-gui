@@ -9,6 +9,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "lib": ["es2015", "es2016", "dom"]
+    "lib": ["es2015", "es2016", "dom"],
+    "jsx": "react"
   },
 }

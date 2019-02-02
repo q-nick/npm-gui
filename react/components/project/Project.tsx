@@ -4,13 +4,18 @@ import { Button } from '../button/Button';
 import axios from 'axios';
 
 interface Props {
+  onSelectPath: Function;
+  projectPath: string;
 }
 
 interface State {
   isOpen: boolean;
   loading: boolean;
   error: any;
-  explorer: any;
+  explorer: {
+    ls: Explorer.FileOrFolder[],
+    path: string,
+  };
 }
 
 export class Project extends React.Component<Props, State> {
@@ -24,27 +29,27 @@ export class Project extends React.Component<Props, State> {
       explorer: null,
     };
 
-    this.onSelectPath = this.onSelectPath.bind(this);
+    this.onChangePath = this.onChangePath.bind(this);
+    // this.onSelectPath = this.onSelectPath.bind(this);
+    this.onToggleOpen = this.onToggleOpen.bind(this);
   }
 
-  projectPathDecoded(): string {
-    return 'path';
-    // return this.$route.params.projectPathEncoded
-    //   ? window.atob(this.$route.params.projectPathEncoded) : null;
+  componentDidMount(): void {
+    this.loadPath('');
   }
 
-  onToggle(): void {
+  onToggleOpen(): void {
     this.setState(prevState => ({ ...prevState, isOpen: !prevState.isOpen }));
   }
 
-  onSelectPath(selectedPath: string): void {
+  onChangePath(selectedPath: string): void {
     this.loadPath(window.btoa(selectedPath));
   }
 
-  onSelectProjectPath(_: string): void {
-    // this.$router.push({ params: { projectPathEncoded: window.btoa(selectedProjectPath) } });
-    this.setState(prevState => ({ ...prevState, isOpen: false }));
-  }
+  // onSelectPath(_: string): void {
+  //   // this.$router.push({ params: { projectPathEncoded: window.btoa(selectedProjectPath) } });
+  //   this.setState(prevState => ({ ...prevState, isOpen: false }));
+  // }
 
   loadPath(encodedPath: string): void {
     this.setState(prevState => ({ ...prevState, loading: true }));
@@ -60,7 +65,7 @@ export class Project extends React.Component<Props, State> {
         }));
 
         if (response.data.changed) {
-          this.onSelectProjectPath(response.data.path);
+          this.props.onSelectPath(response.data.path);
         }
       })
       .catch((error) => {
@@ -75,35 +80,40 @@ export class Project extends React.Component<Props, State> {
   render(): React.ReactNode {
     return (
       <div className={style.container}>
-        <p className={style.description}>Current Project path: </p>
-        <Button variant="dark" icon="folder" />
-        <ul
-          className="explorer"
-        >
+        <p className={style.description}>Current Project path: {this.props.projectPath}</p>
+        <Button variant="dark" icon="folder" onClick={this.onToggleOpen} />
+        <ul className={`${style.explorer} ${this.state.isOpen && style.explorerOpen}`}>
           <li>
-            <button className="folder" onClick={() => this.onSelectPath('../')}>../</button>
+            <button
+              className={style.folder}
+              onClick={this.onChangePath.bind(this, '../')}
+            >../
+            </button>
           </li>
           {
             this.state.explorer &&
-            this.state.explorer.ls.map((folderOrFile:any) => (
-              <li>
+            this.state.explorer.ls.map((folderOrFile: Explorer.FileOrFolder) => (
+              <li key={folderOrFile.name}>
                 {
                   folderOrFile.isDirectory && !folderOrFile.isProject &&
-                  <button className="folder">
-                    <span className="oi" data-glyph="folder" /> {folderOrFile.name}/
+                  <button
+                    className={style.folder}
+                    onClick={this.onChangePath.bind(this, `${this.state.explorer.path}/${folderOrFile.name}`)} // tslint:disable-line
+                  >
+                    <span className="oi" data-glyph={style.folder} /> {folderOrFile.name}/
                   </button>
                 }
                 {
                   folderOrFile.isProject &&
                   <button
-                    className="project"
-                    onClick={() => this.onSelectPath(this.state.explorer.path)}
+                    className={style.project}
+                    onClick={this.props.onSelectPath.bind(this, this.state.explorer.path)}
                   > <span className="oi" data-glyph="arrow-thick-right" /> {folderOrFile.name}
                   </button >
                 }
                 {
                   !folderOrFile.isDirectory && !folderOrFile.isProject &&
-                  <span className="file">
+                  <span className={style.file}>
                     <span className="oi" data-glyph="file" /> {folderOrFile.name}
                   </span>
                 }
