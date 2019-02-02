@@ -19,11 +19,24 @@ export class Search extends React.Component<Props, State> {
     this.state = {
       isOpen: false,
     };
+
+    this.onToggleOpen = this.onToggleOpen.bind(this);
   }
+
+  onToggleOpen():void {
+    this.setState(prevState => ({ ...prevState, isOpen: !prevState.isOpen }));
+  }
+
   render(): React.ReactNode {
     return (
       <div className={`${style.search} ${this.state.isOpen && style.searchOpen}`}>
-        <Button variant="primary" scale="small" icon="plus">Search / Add</Button>
+        <Button
+          variant="primary"
+          scale="small"
+          icon="plus"
+          onClick={this.onToggleOpen}
+        >Search / Add
+        </Button>
         <form className={style.form}>
           <select disabled={this.props.searchResults === undefined}>
             <option value="npm">npm</option>

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as style from './header.css';
 import { Button } from '../button/Button';
-import { Project } from '../project/Project';
+import { ProjectContainer } from '../../containers/ProjectContainer';
+import { Link } from 'react-router-dom';
 
 export interface HeaderButton {
   text: string;
@@ -22,16 +23,19 @@ export class Header extends React.Component<Props> {
           this.props.buttons &&
           this.props.buttons
             .map(button =>
-              <Button
-                key={button.routeName}
-                variant="dark"
-              >{button.text}
-              </Button>)
+              <>
+                <Button
+                  key={button.routeName}
+                  variant="dark"
+                >{button.text}
+                </Button>
+                <Link to={button.routeName}>button.text</Link>
+              </>)
         }
         <div className={style.rightSection}>
-          <Project />
+          <ProjectContainer />
         </div>
-    </nav>
+      </nav>
     );
   }
 }
