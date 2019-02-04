@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
-import { GlobalDependenciesStore } from '../stores/globalDependencies.store';
+import { DependenciesStore } from '../stores/dependencies.store';
 import { Dependencies } from '../components/dependencies/Dependencies';
 import { toJS } from 'mobx';
 
 interface Props {
-  globalDependenciesStore?: GlobalDependenciesStore;
+  globalDependenciesStore?: DependenciesStore;
 }
 
 @inject('globalDependenciesStore') @observer
 export class GlobalDependenciesContainer extends React.Component<Props> {
+  componentDidMount():void {
+    console.log('project dependencies did monut', this.props);
+    this.props.globalDependenciesStore.fetchDependencies();
+  }
+
   render(): React.ReactNode {
     const dependencies = toJS(this.props.globalDependenciesStore.dependencies);
     const dependenciesLoading = toJS(this.props.globalDependenciesStore.dependenciesLoading);

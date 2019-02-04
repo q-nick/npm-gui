@@ -35,6 +35,7 @@ export class Project extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
+    console.log('project did mount');
     this.loadPath('');
   }
 
