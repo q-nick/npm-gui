@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as style from './header.css';
 import { Button } from '../button/Button';
 import { ProjectContainer } from '../../containers/ProjectContainer';
-import { Link } from 'react-router-dom';
 
 export interface HeaderButton {
   text: string;
@@ -10,8 +9,9 @@ export interface HeaderButton {
   title: string;
 }
 
-interface Props {
+export interface Props {
   buttons: HeaderButton[];
+  onClickRoute: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, routeName: string) => void;
 }
 
 export class Header extends React.Component<Props> {
@@ -23,14 +23,14 @@ export class Header extends React.Component<Props> {
           this.props.buttons &&
           this.props.buttons
             .map(button =>
-              <>
-                <Button
-                  key={button.routeName}
-                  variant="dark"
-                >{button.text}
-                </Button>
-                <Link to={button.routeName}>button.text</Link>
-              </>)
+              <Button
+                key={button.routeName}
+                variant="dark"
+                className="dupa"
+                payload={button.routeName}
+                onClickPayload={this.props.onClickRoute}
+              >{button.text}
+              </Button>)
         }
         <div className={style.rightSection}>
           <ProjectContainer />

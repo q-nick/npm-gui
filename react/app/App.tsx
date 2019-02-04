@@ -1,72 +1,48 @@
 import * as React from 'react';
-import { Route, Switch, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
 
 import * as style from './app.css';
-import { Header, HeaderButton } from '../components/header/Header';
 import { ConsoleContainer } from '../containers/ConsoleContainer';
 import 'open-iconic';
 import { ProjectDependenciesContainer } from '../containers/ProjectDependenciesContainer';
 import { GlobalDependenciesContainer } from '../containers/GlobalDependenciesContainer';
 import { Info } from '../components/info/Info';
+import { HeaderContainer } from '../containers/HeaderContainer';
 
-const buttonsBase: HeaderButton[] = [
-  {
-    text: 'Global Dependencies',
-    routeName: 'global',
-    title: '',
-  },
-  {
-    text: 'Project Dependencies',
-    routeName: 'dependencies',
-    title: '',
-  },
-  {
-    text: 'Scripts',
-    routeName: 'scripts',
-    title: '',
-  },
-];
+export class App extends React.Component<RouteComponentProps> {
+  constructor(props: RouteComponentProps) {
+    super(props);
 
-function renderChildRoutes({ match }: RouteComponentProps): React.ReactNode {
-  if (!match) return '';
+    this.renderRouteProjectDependencies = this.renderRouteProjectDependencies.bind(this);
+  }
 
-  return (
-    <Switch>
-      <Route
-        exact={true}
-        path={`${match.path}/dependencies`}
-        component={ProjectDependenciesContainer}
-      />
-      <Route
-        exact={true}
-        path={`${match.path}/global`}
-        component={GlobalDependenciesContainer}
-      />
-      <Redirect to={`${match.path}/dependencies`} />
-    </Switch>
-  );
-}
+  renderRouteProjectDependencies(): React.ReactNode {
+    const projectPath = (this.props.match.params as any).projectPathEncoded;
+    return <ProjectDependenciesContainer projectPath={projectPath} />;
+  }
 
-export class AppBase extends React.Component<RouteComponentProps> {
   render(): React.ReactNode {
-    console.log(this.props.match)
-    const buttons = buttonsBase.map(button => ({
-      ...button,
-      routeName: `${this.props.match.path}/${button.routeName}`,
-    }));
-
     return (
       <>
-        <Header buttons={buttons} />
+        <HeaderContainer />
         <div className={style.row}>
           <div className={style.leftColumn}>
             <ConsoleContainer />
           </div>
           <div className={style.rightColumn}>
-            <Route
-              path={'/project/:projectPathEncoded'}
-              children={renderChildRoutes}
-            />
+            <Switch>
+              <Route
+                path={`${this.props.match.path}/dependencies`}
+                key={`${this.props.match.url}/dependencies`}
+                render={this.renderRouteProjectDependencies}
+              />
+              <Route
+                path={`${this.props.match.path}/global`}
+                key={`${this.props.match.url}/dependencies`}
+                component={GlobalDependenciesContainer}
+              />
+              <Redirect to={`${this.props.match.url}/dependencies`} />
+            </Switch>
             <Info />
           </div>
         </div>
@@ -74,5 +50,3 @@ export class AppBase extends React.Component<RouteComponentProps> {
     );
   }
 }
-
-export const App = withRouter(AppBase); // tslint:disable-line

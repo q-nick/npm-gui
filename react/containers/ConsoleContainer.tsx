@@ -10,6 +10,9 @@ interface Props {
 
 @inject('consoleStore') @observer
 export class ConsoleContainer extends React.Component<Props> {
+  componentDidMount():void {
+    console.log('console did mount');
+  }
   render(): React.ReactNode {
     const sessions = toJS(this.props.consoleStore.sessions);
     return (
