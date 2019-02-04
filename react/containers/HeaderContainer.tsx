@@ -12,16 +12,19 @@ const buttons: HeaderButton[] = [
     text: 'Global Dependencies',
     routeName: 'global',
     title: '',
+    icon: 'globe',
   },
   {
     text: 'Project Dependencies',
     routeName: 'dependencies',
     title: '',
+    icon: 'code',
   },
   {
     text: 'Scripts',
     routeName: 'scripts',
     title: '',
+    icon: 'media-play',
   },
 ];
 
@@ -32,12 +35,7 @@ class HeaderContainerBase extends React.Component<Props & RouteComponentProps> {
     this.onClickRoute = this.onClickRoute.bind(this);
   }
 
-  componentDidMount(): void {
-    console.log('header did mount');
-  }
-
   onClickRoute(_: React.MouseEvent<HTMLButtonElement, MouseEvent>, routeName: string): void {
-    console.log(routeName, `${this.props.match.url}/${routeName}`);
     this.props.history.push(`${this.props.match.url}/${routeName}`);
   }
 

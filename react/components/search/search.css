@@ -28,7 +28,7 @@
 .form > select {
   display: inline-block;
   width: 7em;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .form > input:disabled,

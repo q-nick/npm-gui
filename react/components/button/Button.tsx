@@ -6,7 +6,7 @@ type Props = {
   icon?: string;
   scale?: 'small';
   payload?: any;
-  onClickPayload?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, payload:any) => void;
+  onClickPayload?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, payload: any) => void;
 };
 
 export class Button extends React.Component<Props & React.HTMLProps<HTMLButtonElement>> {
@@ -17,10 +17,11 @@ export class Button extends React.Component<Props & React.HTMLProps<HTMLButtonEl
   }
 
   onClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    this.props.payload ?
+    if (this.props.payload) {
       this.props.onClickPayload(event, this.props.payload)
-      :
+    } else if (this.props.onClick) {
       this.props.onClick(event);
+    }
   }
 
   render(): React.ReactNode {

@@ -7,6 +7,7 @@ export interface HeaderButton {
   text: string;
   routeName: string;
   title: string;
+  icon: string;
 }
 
 export interface Props {
@@ -26,7 +27,7 @@ export class Header extends React.Component<Props> {
               <Button
                 key={button.routeName}
                 variant="dark"
-                className="dupa"
+                icon={button.icon}
                 payload={button.routeName}
                 onClickPayload={this.props.onClickRoute}
               >{button.text}

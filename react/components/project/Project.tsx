@@ -30,12 +30,10 @@ export class Project extends React.Component<Props, State> {
     };
 
     this.onChangePath = this.onChangePath.bind(this);
-    // this.onSelectPath = this.onSelectPath.bind(this);
     this.onToggleOpen = this.onToggleOpen.bind(this);
   }
 
   componentDidMount(): void {
-    console.log('project did mount');
     this.loadPath('');
   }
 
@@ -46,11 +44,6 @@ export class Project extends React.Component<Props, State> {
   onChangePath(selectedPath: string): void {
     this.loadPath(window.btoa(selectedPath));
   }
-
-  // onSelectPath(_: string): void {
-  //   // this.$router.push({ params: { projectPathEncoded: window.btoa(selectedProjectPath) } });
-  //   this.setState(prevState => ({ ...prevState, isOpen: false }));
-  // }
 
   loadPath(encodedPath: string): void {
     this.setState(prevState => ({ ...prevState, loading: true }));

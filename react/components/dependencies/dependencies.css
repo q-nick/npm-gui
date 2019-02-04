@@ -74,32 +74,8 @@
   }
 }
 
-
-.table {
-  border-collapse: collapse;
-  color: #393a35;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-size: 0.8em;
-  width: 100%;
-}
-
-.table > tbody > tr:hover {
-  background: #f8f5f0;
-}
-
-.table > tbody > tr.loading {
+.row-loading {
   background: linear-gradient(-45deg, #dfd7ca, #fff);
   background-size: 200% 200%;
   animation: Gradient 2s ease infinite;
-}
-
-.table > thead > tr > th,
-.table > tbody > tr > td {
-  border-bottom: 1px solid #dfd7ca;
-  padding: 3px 10px;
-  text-align: center;
-}
-
-.table > tbody > tr > th:last-child {
-  border-right: 0;
 }

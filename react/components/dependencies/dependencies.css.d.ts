@@ -10,5 +10,4 @@ export const columnAction: string;
 export const columnNsp: string;
 export const columnVersion: string;
 export const missing: string;
-export const table: string;
 export const Gradient: string;

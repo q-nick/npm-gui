@@ -25,3 +25,27 @@ select {
   outline: none;
   padding: 7.5px;
 }
+
+
+table {
+  border-collapse: collapse;
+  color: #393a35;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.8em;
+  width: 100%;
+}
+
+tr:hover {
+  background: #f8f5f0;
+}
+
+th,
+td {
+  border-bottom: 1px solid #dfd7ca;
+  padding: 3px 10px;
+  text-align: center;
+}
+
+th:last-child {
+  border-right: 0;
+}
