@@ -12,12 +12,10 @@ interface Props {
 @inject('projectDependenciesStore') @observer
 export class ProjectDependenciesContainer extends React.Component<Props> {
   componentDidMount():void {
-    console.log('project dependencies did monut', this.props);
     this.props.projectDependenciesStore.fetchDependencies(this.props.projectPath);
   }
 
   render(): React.ReactNode {
-    console.log('ProjectDependenciesContainer rerender');
     const dependencies = toJS(this.props.projectDependenciesStore.dependencies);
     const dependenciesLoading = toJS(this.props.projectDependenciesStore.dependenciesLoading);
     const sortMatch = toJS(this.props.projectDependenciesStore.sortMatch);

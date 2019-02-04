@@ -10,13 +10,21 @@ interface Props {
 
 @inject('searchStore') @observer
 export class SearchContainer extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    this.onSearch = this.onSearch.bind(this);
+  }
+
+  onSearch(query: string, repo: Dependency.Repo): void {
+    this.props.searchStore.fetchSearch(query, repo);
+  }
+
   render(): React.ReactNode {
-    const searchQuery = toJS(this.props.searchStore.searchQuery);
-    const searchResults = toJS(this.props.searchStore.searchResults);
+    const searchResults = toJS(this.props.searchStore.results);
     return (
       <Search
-        searchQuery={searchQuery}
         searchResults={searchResults}
+        onSearch={this.onSearch}
       />
     );
   }

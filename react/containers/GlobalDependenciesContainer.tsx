@@ -11,7 +11,6 @@ interface Props {
 @inject('globalDependenciesStore') @observer
 export class GlobalDependenciesContainer extends React.Component<Props> {
   componentDidMount():void {
-    console.log('project dependencies did monut', this.props);
     this.props.globalDependenciesStore.fetchDependencies();
   }
 

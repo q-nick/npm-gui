@@ -181,7 +181,7 @@ export class Dependencies extends React.Component<Props> {
           </div>
         </header>
         <div className={style.tableContainer}>
-          <table v-show="!loading" className={style.table}>
+          <table v-show="!loading">
             <thead>
               <tr>
                 {this.renderThs()}
