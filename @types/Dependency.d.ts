@@ -44,4 +44,12 @@ declare namespace Dependency {
     latest?: string,
     repo: Repo;
   }
+
+  interface SearchResult {
+    description: string,
+    name: string,
+    score: number,
+    url: string,
+    version: string,
+  }
 }

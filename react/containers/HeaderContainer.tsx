@@ -29,13 +29,7 @@ const buttons: HeaderButton[] = [
 ];
 
 class HeaderContainerBase extends React.Component<Props & RouteComponentProps> {
-  constructor(props: Props & RouteComponentProps) {
-    super(props);
-
-    this.onClickRoute = this.onClickRoute.bind(this);
-  }
-
-  onClickRoute(_: React.MouseEvent<HTMLButtonElement, MouseEvent>, routeName: string): void {
+  onClickRoute = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, routeName: string): void => {
     this.props.history.push(`${this.props.match.url}/${routeName}`);
   }
 

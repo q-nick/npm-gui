@@ -10,15 +10,9 @@ type Props = {
 };
 
 export class Button extends React.Component<Props & React.HTMLProps<HTMLButtonElement>> {
-  constructor(props: Props & React.HTMLProps<HTMLButtonElement>) {
-    super(props);
-
-    this.onClick = this.onClick.bind(this);
-  }
-
-  onClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     if (this.props.payload) {
-      this.props.onClickPayload(event, this.props.payload)
+      this.props.onClickPayload(event, this.props.payload);
     } else if (this.props.onClick) {
       this.props.onClick(event);
     }

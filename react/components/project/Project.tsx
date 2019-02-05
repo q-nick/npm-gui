@@ -28,20 +28,17 @@ export class Project extends React.Component<Props, State> {
       error: false,
       explorer: null,
     };
-
-    this.onChangePath = this.onChangePath.bind(this);
-    this.onToggleOpen = this.onToggleOpen.bind(this);
   }
 
   componentDidMount(): void {
     this.loadPath('');
   }
 
-  onToggleOpen(): void {
+  onToggleOpen = (): void => {
     this.setState(prevState => ({ ...prevState, isOpen: !prevState.isOpen }));
   }
 
-  onChangePath(selectedPath: string): void {
+  onChangePath = (selectedPath: string): void => {
     this.loadPath(window.btoa(selectedPath));
   }
 

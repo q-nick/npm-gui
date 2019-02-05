@@ -4,8 +4,7 @@ import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
 import * as style from './app.css';
 import { ConsoleContainer } from '../containers/ConsoleContainer';
 import 'open-iconic';
-import { ProjectDependenciesContainer } from '../containers/ProjectDependenciesContainer';
-import { GlobalDependenciesContainer } from '../containers/GlobalDependenciesContainer';
+import { DependenciesContainer } from '../containers/DependenciesContainer';
 import { Info } from '../components/info/Info';
 import { HeaderContainer } from '../containers/HeaderContainer';
 
@@ -18,7 +17,11 @@ export class App extends React.Component<RouteComponentProps> {
 
   renderRouteProjectDependencies(): React.ReactNode {
     const projectPath = (this.props.match.params as any).projectPathEncoded;
-    return <ProjectDependenciesContainer projectPath={projectPath} />;
+    return <DependenciesContainer projectPath={projectPath} />;
+  }
+
+  renderRouteGlobalDependencies() :React.ReactNode {
+    return <DependenciesContainer />;
   }
 
   render(): React.ReactNode {
@@ -38,8 +41,8 @@ export class App extends React.Component<RouteComponentProps> {
               />
               <Route
                 path={`${this.props.match.path}/global`}
-                key={`${this.props.match.url}/dependencies`}
-                component={GlobalDependenciesContainer}
+                key={'global'}
+                render={this.renderRouteGlobalDependencies}
               />
               <Redirect to={`${this.props.match.url}/dependencies`} />
             </Switch>
