@@ -6,7 +6,7 @@ function getBasePathFor(projectPath: string): string {
     return `/api/project/${projectPath}/dependencies`;
   }
 
-  return 'api/global';
+  return 'api/global/dependencies';
 }
 
 export class DependenciesStore {
