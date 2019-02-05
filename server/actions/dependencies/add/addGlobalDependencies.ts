@@ -6,23 +6,23 @@ import { withCacheUpdate } from '../../../cache';
 import { parseJSON } from '../../parseJSON';
 
 async function addGlobalNpmDependency(req:express.Request):Promise<Dependency.Entire> {
-  const { packageName, version } = req.body[0];
+  const { name, version } = req.body[0];
 
   // add
-  await executeCommand(null, `npm install ${packageName}@${version || ''} -g`, true);
+  await executeCommand(null, `npm install ${name}@${version || ''} -g`, true);
 
   // get package info
-  const commandLsResult = await executeCommand(null, `npm ls ${packageName} --depth=0 -g --json`);
+  const commandLsResult = await executeCommand(null, `npm ls ${name} --depth=0 -g --json`);
   const { dependencies } = parseJSON(commandLsResult.stdout);
 
-  const commandOutdtedResult = await executeCommand(null, `npm outdated ${packageName} -g --json`);
+  const commandOutdtedResult = await executeCommand(null, `npm outdated ${name} -g --json`);
   const versions = parseJSON(commandOutdtedResult.stdout) || { versions: [] };
 
   return mapNpmDependency(
-    packageName,
-    dependencies[packageName],
-    versions[packageName],
-    dependencies[packageName].version,
+    name,
+    dependencies[name],
+    versions[name],
+    dependencies[name].version,
     'global',
   );
 }

@@ -10,9 +10,11 @@ import { catchErrors } from '../catchErrors';
 
 const globalDependenciesRouter = express.Router();
 
-globalDependenciesRouter.get('/', catchErrors(getGlobalDependencies));
-globalDependenciesRouter.get('/simple', catchErrors(getGlobalDependenciesSimple));
-globalDependenciesRouter.post('/:repoName', catchErrors(addGlobalDependencies));
-globalDependenciesRouter.delete('/:repoName/:packageName', catchErrors(deleteGlobalDependency));
+globalDependenciesRouter.get('/dependencies/', catchErrors(getGlobalDependencies));
+globalDependenciesRouter.get('/dependencies/simple', catchErrors(getGlobalDependenciesSimple));
+globalDependenciesRouter.post('/dependencies/global/:repoName', catchErrors(addGlobalDependencies));
+globalDependenciesRouter.delete(
+  '/dependencies/global/:repoName/:packageName',
+  catchErrors(deleteGlobalDependency));
 
 export { globalDependenciesRouter };

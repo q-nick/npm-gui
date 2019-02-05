@@ -12,10 +12,15 @@ export interface HeaderButton {
 
 export interface Props {
   buttons: HeaderButton[];
-  onClickRoute: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, routeName: string) => void;
+  onClickRoute: (routeName: string) => void;
 }
 
 export class Header extends React.Component<Props> {
+  onClickRoute = (event: React.MouseEvent<HTMLButtonElement>):void => {
+    const routeName = (event.target as HTMLButtonElement).getAttribute('data-route');
+    this.props.onClickRoute(routeName);
+  }
+
   render(): React.ReactNode {
     return (
       <nav className={style.nav}>
@@ -28,8 +33,8 @@ export class Header extends React.Component<Props> {
                 key={button.routeName}
                 variant="dark"
                 icon={button.icon}
-                payload={button.routeName}
-                onClickPayload={this.props.onClickRoute}
+                data-route={button.routeName}
+                onClick={this.onClickRoute}
               >{button.text}
               </Button>)
         }

@@ -55,6 +55,17 @@ export class DependenciesContainer extends React.Component<Props> {
     );
   }
 
+  onInstallNewDependency = (
+    repo: Dependency.Repo, dependency: Dependency.Basic, type: Dependency.Type,
+  ): void => {
+    this.props.dependenciesStore.installDependency(
+      this.props.projectPath,
+      repo,
+      dependency,
+      type,
+    );
+  }
+
   render(): React.ReactNode {
     const dependencies = toJS(this.props.dependenciesStore.dependencies[this.props.projectPath]);
     const dependenciesLoading = toJS(this.props.dependenciesStore.dependenciesLoading);
@@ -72,7 +83,10 @@ export class DependenciesContainer extends React.Component<Props> {
           onUpdateAllToLatest={this.onUpdateAllToLatest}
           onForceReInstall={this.onForceReInstall}
         >
-          <SearchContainer type="project" />
+          <SearchContainer
+            type={this.props.projectPath ? 'project' : 'global'}
+            onInstall={this.onInstallNewDependency}
+          />
         </DependenciesHeader>
       ),
       (
@@ -85,7 +99,6 @@ export class DependenciesContainer extends React.Component<Props> {
           sortReversed={sortReversed}
           onDeleteDependency={this.onDeleteDependency}
           onInstallDependencyVersion={this.onInstallDependencyVersion}
-          type="project"
         />
       ),
     ];

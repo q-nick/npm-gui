@@ -11,7 +11,6 @@ interface Props {
   dependenciesLoading: any;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
-  type: 'global' | 'project';
 }
 
 export class DependenciesTable extends React.Component<Props> {

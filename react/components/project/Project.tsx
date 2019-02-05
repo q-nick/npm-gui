@@ -71,7 +71,8 @@ export class Project extends React.Component<Props, State> {
   render(): React.ReactNode {
     return (
       <div className={style.container}>
-        <p className={style.description}>Current Project path: {this.props.projectPath}</p>
+        <p className={style.description}>
+          Current Project path: {window.atob(this.props.projectPath)}</p>
         <Button variant="dark" icon="folder" onClick={this.onToggleOpen} />
         <ul className={`${style.explorer} ${this.state.isOpen && style.explorerOpen}`}>
           <li>
