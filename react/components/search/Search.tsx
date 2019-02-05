@@ -4,8 +4,10 @@ import { Button } from '../button/Button';
 import { Loader } from '../loader/Loader';
 
 interface Props {
-  searchResults: any[];
+  searchResults: Dependency.SearchResult[];
+  types: Dependency.Type[];
   onSearch: (query: string, repo: Dependency.Repo) => void;
+  onInstall: (repo: Dependency.Repo, dependency: Dependency.Basic, type: Dependency.Type) => void;
 }
 
 interface State {
@@ -23,23 +25,28 @@ export class Search extends React.Component<Props, State> {
       query: '',
       repo: 'npm',
     };
-
-    this.onToggleOpen = this.onToggleOpen.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ query: event.target.value });
   }
 
-  onSubmit(event: any): void {
+  onSubmit = (event: any): void => {
     event.preventDefault();
     this.props.onSearch(this.state.query, this.state.repo);
   }
 
-  onToggleOpen(): void {
+  onToggleOpen = (): void => {
     this.setState(prevState => ({ ...prevState, isOpen: !prevState.isOpen }));
+  }
+
+  onInstall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    const name = (event.target as HTMLButtonElement).getAttribute('data-name');
+    const type = (event.target as HTMLButtonElement).getAttribute('data-type') as Dependency.Type;
+
+    const result:Dependency.SearchResult = this.props.searchResults.find(r => r.name === name);
+
+    this.props.onInstall(this.state.repo, { name: result.name, version: result.version }, type);
   }
 
   renderForm(): React.ReactNode {
@@ -78,6 +85,7 @@ export class Search extends React.Component<Props, State> {
             <th>action</th>
           </tr>
           {
+            this.props.searchResults &&
             this.props.searchResults.map(result => (
               <tr key={result.name}>
                 <td className={style.td}>{(result.score * 100).toFixed(2)}%</td>
@@ -89,8 +97,19 @@ export class Search extends React.Component<Props, State> {
                   <a target="_blank">show repo</a>
                 </td>
                 <td className={style.td}>
-                  <Button variant="info" scale="small">install prod</Button>
-                  <Button variant="info" scale="small">install dev</Button>
+                  {
+                    this.props.types.map(type => (
+                      <Button
+                        key={`${result.name}${type}`}
+                        variant="info"
+                        scale="small"
+                        data-name={result.name}
+                        data-type={type}
+                        onClick={this.onInstall}
+                      >install {type}
+                      </Button>
+                    ))
+                  }
                 </td>
               </tr>
             ))}
@@ -111,7 +130,7 @@ export class Search extends React.Component<Props, State> {
         </Button>
         {this.renderForm()}
         <div className={style.tableContainer}>
-          {this.props.searchResults.length ? this.renderResults() : ''}
+          {this.props.searchResults ? this.renderResults() : ''}
         </div>
       </div>
     );

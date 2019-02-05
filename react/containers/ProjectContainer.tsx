@@ -3,13 +3,7 @@ import { Project } from '../components/project/Project';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 class ProjectContainerBase extends React.Component<RouteComponentProps> {
-  constructor(props:RouteComponentProps) {
-    super(props);
-
-    this.onSelectPath = this.onSelectPath.bind(this);
-  }
-
-  onSelectPath(path:string):void {
+  onSelectPath = (path:string):void => {
     this.props.history.push(`/project/${window.btoa(path)}/dependencies`);
   }
 

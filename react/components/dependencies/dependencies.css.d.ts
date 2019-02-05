@@ -1,4 +1,3 @@
-export const dependencies: string;
 export const tableContainer: string;
 export const right: string;
 export const label: string;
