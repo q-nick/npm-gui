@@ -17,7 +17,7 @@ export class ConsoleStore {
   }
 
   @action
-  addMessageToSession(message: ConsoleSession):void {
+  addMessageToSession(message: ConsoleSession): void {
     let currentSession = this.sessions.find(s => s.id === message.id);
     if (!currentSession) {
       this.sessions.push(message);
@@ -30,7 +30,15 @@ export class ConsoleStore {
   }
 
   @action
-  setConnected(connected:boolean):void {
+  removeSession(id: string): void {
+    const index = this.sessions.findIndex(s => s.id === id);
+    if (index >= 0) {
+      this.sessions.splice(index, 1);
+    }
+  }
+
+  @action
+  setConnected(connected: boolean): void {
     this.websocketConnected = connected;
   }
 

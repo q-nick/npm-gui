@@ -5,7 +5,7 @@ import { Loader } from '../loader/Loader';
 
 interface Props {
   dependency: Dependency.Entire;
-  dependenciesLoading: any;
+  isProcessing: boolean;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
 }
@@ -60,7 +60,7 @@ export class DependencyRow extends React.Component<Props> {
 
     return (
       <Button
-        disabled={this.props.dependenciesLoading[dependency.name]}
+        disabled={this.props.isProcessing}
         icon="cloud-download"
         variant="success"
         scale="small"
@@ -78,7 +78,7 @@ export class DependencyRow extends React.Component<Props> {
     if (dependency.wanted) {
       return (
         <Button
-          disabled={this.props.dependenciesLoading[dependency.name]}
+          disabled={this.props.isProcessing}
           icon="cloud-download"
           variant="success"
           scale="small"
@@ -99,7 +99,7 @@ export class DependencyRow extends React.Component<Props> {
     if (dependency.latest) {
       return (
         <Button
-          disabled={this.props.dependenciesLoading[dependency.name]}
+          disabled={this.props.isProcessing}
           icon="cloud-download"
           variant="success"
           scale="small"
@@ -114,18 +114,21 @@ export class DependencyRow extends React.Component<Props> {
 
   render(): React.ReactNode {
     return (
-      <tr key={`${this.props.dependency.name}${this.props.dependency.repo}`}>
+      <tr
+        key={`${this.props.dependency.name}${this.props.dependency.repo}`}
+        className={this.props.isProcessing && style.processing}
+      >
         <td>{this.props.dependency.type !== 'prod' && this.props.dependency.type}</td>
         <td>
           {this.props.dependency.name}
           <span className={getLabelClassNameForRepo(this.props.dependency.repo)}>
             {this.props.dependency.repo}</span>
         </td>
+        <td className={style.columnNsp}> ? </td>
         <td className={style.columnVersion}>
           {this.props.dependency.required}
           {!this.props.dependency.required && <span className={style.missing}>extraneous</span>}
         </td>
-        <td className={style.columnNsp}> ? </td>
         <td className={style.columnVersion}>
           {this.renderInstalledVersion(this.props.dependency)}
         </td>
@@ -133,11 +136,11 @@ export class DependencyRow extends React.Component<Props> {
           {this.renderWantedVersion(this.props.dependency)}
         </td>
         <td className={style.columnVersion}>
-          {this.renderWantedVersion(this.props.dependency)}
+          {this.renderLatestVersion(this.props.dependency)}
         </td>
         <td className={style.columnAction}>
           <Button
-            disabled={this.props.dependenciesLoading[this.props.dependency.name]}
+            disabled={this.props.isProcessing}
             icon="trash"
             variant="danger"
             scale="small"

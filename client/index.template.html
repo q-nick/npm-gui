@@ -5,31 +5,26 @@
   <meta charset="UTF-8">
   <title>NPM Graphic User Interface</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+  <style>
+    .npm-gui {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+    }
+  </style>
+  <base href="/">
 </head>
 
 <body>
-  <div id="npm-gui-vue">
-    <npm-gui-nav></npm-gui-nav>
-    <div class="row">
-      <div class="left-column">
-        <npm-gui-console></npm-gui-console>
-      </div>
-      <div class="right-column">
-        <transition name="fade" mode="out-in">
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
-        </transition>
-        <npm-gui-info></npm-gui-info>
-      </div>
-    </div>
-  </div>
+  <div class="npm-gui"></div>
   <script>
     // tricky one
     function define(_, GithubApi) {
       window.GithubApi = GithubApi;
     }
     define.amd = true;
+
   </script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>

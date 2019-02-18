@@ -1,3 +1,4 @@
 .thSortable {
   cursor: pointer;
+  user-select: none;
 }

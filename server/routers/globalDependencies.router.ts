@@ -12,9 +12,9 @@ const globalDependenciesRouter = express.Router();
 
 globalDependenciesRouter.get('/dependencies/', catchErrors(getGlobalDependencies));
 globalDependenciesRouter.get('/dependencies/simple', catchErrors(getGlobalDependenciesSimple));
-globalDependenciesRouter.post('/dependencies/global/:repoName', catchErrors(addGlobalDependencies));
+globalDependenciesRouter.post('/dependencies/:repoName', catchErrors(addGlobalDependencies));
 globalDependenciesRouter.delete(
-  '/dependencies/global/:repoName/:packageName',
+  '/dependencies/:repoName/:packageName',
   catchErrors(deleteGlobalDependency));
 
 export { globalDependenciesRouter };

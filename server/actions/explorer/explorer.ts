@@ -6,6 +6,7 @@ import { decodePath } from '../decodePath';
 export async function explorer(req:express.Request, res:express.Response):Promise<void> {
   let normalizedPath = req.params.path ? path.normalize(decodePath(req.params.path)) : null;
   let changed = false;
+
   if (!normalizedPath || !fs.existsSync(normalizedPath)) {
     normalizedPath = process.cwd();
     changed = true;
