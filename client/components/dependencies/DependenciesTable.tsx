@@ -2,21 +2,30 @@ import * as React from 'react';
 import * as style from './dependencies.css';
 import { ThSortable } from '../th-sortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
+import { Loader } from '../loader/Loader';
 
 interface Props {
-  sortMatch: string;
   sortKey: string;
   sortReversed: boolean;
   dependencies: Dependency.Entire[];
-  dependenciesLoading: any;
+  dependenciesProcessing: any;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
+  onSortChange: (sortKey: string) => void;
 }
 
 export class DependenciesTable extends React.Component<Props> {
+  isLoading(): boolean {
+    return !this.props.dependencies;
+  }
+
+  isEmpty(): boolean {
+    return this.props.dependencies && this.props.dependencies.length === 0;
+  }
+
   renderThs(): React.ReactNode {
     const ths = [
-      { name: 'Env', sortMatch: 'env' },
+      { name: 'Env', sortMatch: 'type' },
       { name: 'Name', sortMatch: 'name' },
       { name: 'Nsp' },
       { name: 'Required', sortMatch: 'required', className: style.columnVersion },
@@ -35,6 +44,7 @@ export class DependenciesTable extends React.Component<Props> {
               sortMatch={th.sortMatch}
               sortKey={this.props.sortKey}
               sortReversed={this.props.sortReversed}
+              onSortChange={this.props.onSortChange}
             >{th.name}
             </ThSortable>
             :
@@ -47,7 +57,11 @@ export class DependenciesTable extends React.Component<Props> {
   render(): React.ReactNode {
     return (
       <div className={style.tableContainer}>
-        <table v-show="!loading">
+        <div className={style.infoContainer}>
+          {this.isEmpty() && <>empty...</>}
+          {this.isLoading() && <><Loader />&nbsp;loading...</>}
+        </div>
+        <table>
           <thead>
             <tr>
               {this.renderThs()}
@@ -57,13 +71,15 @@ export class DependenciesTable extends React.Component<Props> {
             {
               this.props.dependencies &&
               this.props.dependencies.map(dependency =>
-                <DependencyRow
-                  key={dependency.name}
-                  dependency={dependency}
-                  dependenciesLoading={this.props.dependenciesLoading}
-                  onDeleteDependency={this.props.onDeleteDependency}
-                  onInstallDependencyVersion={this.props.onInstallDependencyVersion}
-                />)
+                (
+                  <DependencyRow
+                    key={dependency.name}
+                    dependency={dependency}
+                    isProcessing={this.props.dependenciesProcessing[dependency.name]}
+                    onDeleteDependency={this.props.onDeleteDependency}
+                    onInstallDependencyVersion={this.props.onInstallDependencyVersion}
+                  />
+                ))
             }
           </tbody>
         </table>

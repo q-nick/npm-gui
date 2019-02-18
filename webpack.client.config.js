@@ -1,10 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // eslint-disable-line
-const VueLoaderPlugin = require('vue-loader/lib/plugin'); // eslint-disable-line
 
 const EXCLUDE = /(node_modules|bower_components|dist|server|client)/;
 
 module.exports = {
-  entry: './react/index.tsx',
+  entry: './client/index.tsx',
   output: {
     path: `${__dirname}/dist/client`,
     filename: './[name].js',
@@ -65,7 +64,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'NPM-GUI',
-      template: 'react/index.template.html',
+      template: 'client/index.template.html',
       hash: true,
       mobile: true,
     }),

@@ -10,13 +10,23 @@ interface Props {
 
 @inject('consoleStore') @observer
 export class ConsoleContainer extends React.Component<Props> {
-  componentDidMount():void {
-    console.log('console did mount');
+  onRemoveSession = (id: string): void => {
+    this.props.consoleStore.removeSession(id);
   }
+
+  onStopSession = (_: string): void => {
+    // TODO
+    // this.props.consoleStore.removeSession(id);
+  }
+
   render(): React.ReactNode {
     const sessions = toJS(this.props.consoleStore.sessions);
     return (
-      <Console sessions={sessions}/>
+      <Console
+        sessions={sessions}
+        onRemoveSession={this.onRemoveSession}
+        onStopSession={this.onStopSession}
+      />
     );
   }
 }

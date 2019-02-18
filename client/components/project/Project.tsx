@@ -42,6 +42,11 @@ export class Project extends React.Component<Props, State> {
     this.loadPath(window.btoa(selectedPath));
   }
 
+  onSelectPath = (selectedPath: string): void => {
+    this.setState(prevState => ({ ...prevState, isOpen: false }));
+    this.props.onSelectPath(selectedPath);
+  }
+
   loadPath(encodedPath: string): void {
     this.setState(prevState => ({ ...prevState, loading: true }));
 
@@ -69,21 +74,24 @@ export class Project extends React.Component<Props, State> {
   }
 
   render(): React.ReactNode {
+    if (!this.state.explorer) {
+      return <></>;
+    }
+
     return (
       <div className={style.container}>
         <p className={style.description}>
-          Current Project path: {window.atob(this.props.projectPath)}</p>
+          Current Project path: {this.props.projectPath && window.atob(this.props.projectPath)}</p>
         <Button variant="dark" icon="folder" onClick={this.onToggleOpen} />
         <ul className={`${style.explorer} ${this.state.isOpen && style.explorerOpen}`}>
           <li>
             <button
               className={style.folder}
-              onClick={this.onChangePath.bind(this, '../')}
+              onClick={this.onChangePath.bind(this, `${this.state.explorer.path}/../`)}
             >../
             </button>
           </li>
           {
-            this.state.explorer &&
             this.state.explorer.ls.map((folderOrFile: Explorer.FileOrFolder) => (
               <li key={folderOrFile.name}>
                 {
@@ -99,7 +107,7 @@ export class Project extends React.Component<Props, State> {
                   folderOrFile.isProject &&
                   <button
                     className={style.project}
-                    onClick={this.props.onSelectPath.bind(this, this.state.explorer.path)}
+                    onClick={this.onSelectPath.bind(this, this.state.explorer.path)}
                   > <span className="oi" data-glyph="arrow-thick-right" /> {folderOrFile.name}
                   </button >
                 }

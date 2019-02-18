@@ -47,6 +47,8 @@ export class Search extends React.Component<Props, State> {
     const result:Dependency.SearchResult = this.props.searchResults.find(r => r.name === name);
 
     this.props.onInstall(this.state.repo, { name: result.name, version: result.version }, type);
+
+    this.setState(prevState => ({ ...prevState, isOpen: false }));
   }
 
   renderForm(): React.ReactNode {
@@ -130,7 +132,7 @@ export class Search extends React.Component<Props, State> {
         </Button>
         {this.renderForm()}
         <div className={style.tableContainer}>
-          {this.props.searchResults ? this.renderResults() : ''}
+          {this.props.searchResults && this.props.searchResults.length ? this.renderResults() : ''}
         </div>
       </div>
     );
