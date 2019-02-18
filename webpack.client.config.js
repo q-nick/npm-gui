@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // eslint-disable-line
 
-const EXCLUDE = /(node_modules|bower_components|dist|server|client)/;
+const EXCLUDE = /(node_modules|bower_components|dist|server)/;
 
 module.exports = {
   entry: './client/index.tsx',
