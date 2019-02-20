@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 
 export class ConsoleStore {
-  @observable sessions: ConsoleSession[] = [];
+  @observable sessions: NpmGui.ConsoleSession[] = [];
 
   @observable websocketConnected = false;
 
@@ -17,7 +17,7 @@ export class ConsoleStore {
   }
 
   @action
-  addMessageToSession(message: ConsoleSession): void {
+  addMessageToSession(message: NpmGui.ConsoleSession): void {
     let currentSession = this.sessions.find(s => s.id === message.id);
     if (!currentSession) {
       this.sessions.push(message);

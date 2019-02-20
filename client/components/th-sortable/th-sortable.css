@@ -2,3 +2,10 @@
   cursor: pointer;
   user-select: none;
 }
+
+.input {
+  display: inline-block;
+  height: 1em;
+  width: 5em;
+  vertical-align: middle;
+}

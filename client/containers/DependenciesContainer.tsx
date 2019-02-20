@@ -11,6 +11,13 @@ interface Props {
   projectPath?: string;
 }
 
+function sortFunction(a: any, b: any, sortKey: string): 0 | 1 | -1 {
+  if (!a[sortKey] && !b[sortKey]) { return 0; }
+  if (!a[sortKey] || a[sortKey] < b[sortKey]) { return -1; }
+  if (!b[sortKey] || a[sortKey] > b[sortKey]) { return 1; }
+  return 0;
+}
+
 @inject('dependenciesStore') @observer
 export class DependenciesContainer extends React.Component<Props> {
   componentDidMount(): void {
@@ -73,15 +80,7 @@ export class DependenciesContainer extends React.Component<Props> {
   getSortedDependencies(sortKey: string, sortReversed: boolean): Dependency.Entire[] {
     let dependencies = toJS(this.props.dependenciesStore.dependencies[this.props.projectPath]);
     if (sortKey && dependencies) {
-      dependencies = dependencies.sort((a, b) => {
-        const aa = a as any;
-        const bb = b as any;
-        // TODO fix
-        if (!aa[sortKey] && !bb[sortKey]) { return 0; }
-        if (!aa[sortKey] || aa[sortKey] < bb[sortKey]) { return -1; }
-        if (!bb[sortKey] || aa[sortKey] > bb[sortKey]) { return 1; }
-        return 0;
-      });
+      dependencies = dependencies.sort((a, b) => sortFunction(a, b, sortKey));
     }
     if (sortReversed && dependencies) {
       dependencies = dependencies.reverse();

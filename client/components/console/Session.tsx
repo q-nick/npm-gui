@@ -3,7 +3,7 @@ import { Button } from '../button/Button';
 import * as style from './console.css';
 
 interface Props {
-  session: ConsoleSession;
+  session: NpmGui.ConsoleSession;
   isFullscreen: boolean;
   onQuitFullScreenSession: () => void;
   onEnterFullScreenSession: (id: string) => void;

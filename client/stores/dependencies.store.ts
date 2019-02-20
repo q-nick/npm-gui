@@ -25,7 +25,6 @@ export class DependenciesStore {
 
   @action
   setSortKey(sortKey: string): void {
-    console.log(sortKey);
     if (this.sortKey === sortKey) {
       if (!this.sortReversed) {
         this.sortReversed = true;
@@ -49,6 +48,7 @@ export class DependenciesStore {
 
   @action
   setDependencyProcessing(projectPath: string, dependencyName: string, status: boolean): void {
+    console.log(this.dependenciesProcessing);
     if (this.dependenciesProcessing[projectPath]) {
       this.dependenciesProcessing[projectPath][dependencyName] = status;
     }
@@ -74,7 +74,8 @@ export class DependenciesStore {
     dependency: Dependency.Basic,
     type: Dependency.Type,
   ): Promise<void> {
-    // TODO loading
+    this.setDependencyProcessing(projectPath, dependency.name, true);
+
     await axios.post(
       `${getBasePathFor(projectPath)}/${type}/${repo}`,
       [{ name: dependency.name, version: dependency.version }],
