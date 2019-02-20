@@ -5,6 +5,7 @@ import * as style from './app.css';
 import { ConsoleContainer } from '../containers/ConsoleContainer';
 import 'open-iconic';
 import { DependenciesContainer } from '../containers/DependenciesContainer';
+import { ScriptsContainer } from '../containers/ScriptsContainer';
 import { Info } from '../components/info/Info';
 import { HeaderContainer } from '../containers/HeaderContainer';
 
@@ -13,6 +14,7 @@ export class App extends React.Component<RouteComponentProps> {
     super(props);
 
     this.renderRouteProjectDependencies = this.renderRouteProjectDependencies.bind(this);
+    this.renderRouteScripts = this.renderRouteScripts.bind(this);
   }
 
   renderRouteProjectDependencies(): React.ReactNode {
@@ -22,6 +24,11 @@ export class App extends React.Component<RouteComponentProps> {
 
   renderRouteGlobalDependencies() :React.ReactNode {
     return <DependenciesContainer />;
+  }
+
+  renderRouteScripts() :React.ReactNode {
+    const projectPath = (this.props.match.params as any).projectPathEncoded;
+    return <ScriptsContainer projectPath={projectPath} />;
   }
 
   render(): React.ReactNode {
@@ -43,6 +50,11 @@ export class App extends React.Component<RouteComponentProps> {
                 path={`${this.props.match.path}/global`}
                 key={'global'}
                 render={this.renderRouteGlobalDependencies}
+              />
+              <Route
+                path={`${this.props.match.path}/scripts`}
+                key={`${this.props.match.url}/scripts`}
+                render={this.renderRouteScripts}
               />
               <Redirect to={`${this.props.match.url}/dependencies`} />
             </Switch>

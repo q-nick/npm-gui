@@ -3,7 +3,7 @@ import * as style from './console.css';
 import { Session } from './Session';
 
 interface Props {
-  sessions: ConsoleSession[];
+  sessions: NpmGui.ConsoleSession[];
   onRemoveSession: (id: string) => void;
   onStopSession: (id: string) => void;
 }

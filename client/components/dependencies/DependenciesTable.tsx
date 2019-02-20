@@ -25,8 +25,8 @@ export class DependenciesTable extends React.Component<Props> {
 
   renderThs(): React.ReactNode {
     const ths = [
-      { name: 'Env', sortMatch: 'type' },
-      { name: 'Name', sortMatch: 'name' },
+      { name: 'Env', sortMatch: 'type', filter: 'select' },
+      { name: 'Name', sortMatch: 'name', filter: 'text' },
       { name: 'Nsp' },
       { name: 'Required', sortMatch: 'required', className: style.columnVersion },
       { name: 'Installed', sortMatch: 'installed', className: style.columnVersion },
@@ -41,6 +41,7 @@ export class DependenciesTable extends React.Component<Props> {
           th.sortMatch ?
             <ThSortable
               className={th.className}
+              filter={th.filter as any}
               sortMatch={th.sortMatch}
               sortKey={this.props.sortKey}
               sortReversed={this.props.sortReversed}
