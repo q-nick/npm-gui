@@ -29,7 +29,7 @@
     "build:server": "webpack --config webpack.server.config.js --mode=production",
     "build:client": "webpack --config webpack.client.config.js --mode=production",
     "build": "npm run build:server && npm run build:client",
-    "test:lint:css": "stylelint client/**/*.vue client/**/*.css",
+    "test:lint:css": "stylelint client",
     "test:lint:js": "tslint --project . ",
     "test:lint": "npm run test:lint:css && npm run test:lint:js",
     "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts --timeout 30000",

@@ -34,7 +34,7 @@
   filter: grayscale(100%);
 }
 
- /* COLOR */
+/* COLOR */
 .primary {
   background-color: #325d88;
 }
@@ -59,13 +59,13 @@
   background-color: #1b8dbb;
 }
 
- /* SIZE */
+/* SIZE */
 .small {
   font-size: 10px;
   padding: 6px;
 }
 
- /* ICONS */
+/* ICONS */
 .oi {
   font-size: inherit;
   margin-right: 3px;
