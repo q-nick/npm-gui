@@ -27,12 +27,12 @@ export class DependenciesTable extends React.Component<Props> {
     const ths = [
       { name: 'Env', sortMatch: 'type', filter: 'select' },
       { name: 'Name', sortMatch: 'name', filter: 'text' },
-      { name: 'Nsp' },
+      // { name: 'Nsp' },
       { name: 'Required', sortMatch: 'required', className: style.columnVersion },
       { name: 'Installed', sortMatch: 'installed', className: style.columnVersion },
       { name: 'Wanted', sortMatch: 'wanted', className: style.columnVersion },
       { name: 'Latest', sortMatch: 'latest', className: style.columnVersion },
-      { name: 'Action' },
+      { name: '' },
     ];
 
     return (ths.map(th => (
