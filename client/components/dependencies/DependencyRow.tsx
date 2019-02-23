@@ -124,7 +124,7 @@ export class DependencyRow extends React.Component<Props> {
           <span className={getLabelClassNameForRepo(this.props.dependency.repo)}>
             {this.props.dependency.repo}</span>
         </td>
-        <td className={style.columnNsp}> ? </td>
+        {/* <td className={style.columnNsp}> ? </td> */}
         <td className={style.columnVersion}>
           {this.props.dependency.required}
           {!this.props.dependency.required && <span className={style.missing}>extraneous</span>}
@@ -145,8 +145,7 @@ export class DependencyRow extends React.Component<Props> {
             variant="danger"
             scale="small"
             onClick={this.onDeleteDependency}
-          >remove
-          </Button>
+          />
         </td>
       </tr>
     );

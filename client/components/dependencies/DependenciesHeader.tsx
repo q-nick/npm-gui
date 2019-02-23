@@ -25,7 +25,7 @@ export class DependenciesHeader extends React.Component<Props> {
             onClick={this.props.onInstallAll}
           >All
           </Button>
-          <Button
+          {/* <Button
             variant="primary"
             scale="small"
             icon="data-transfer-download"
@@ -38,7 +38,7 @@ export class DependenciesHeader extends React.Component<Props> {
             icon="data-transfer-download"
             disabled={true}
           >Dev
-          </Button>
+          </Button> */}
           &nbsp;
           <small>Update all to:</small>
           &nbsp;
