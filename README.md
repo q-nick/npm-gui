@@ -1,56 +1,88 @@
-Linux: [![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui)
-Windows: [![Build status](http://img.shields.io/travis/q-nick/npm-gui/master.svg)](https://ci.appveyor.com/project/q-nick/npm-gui)
-### Badges
-[![Build Status](https://travis-ci.org/npm-gui-base/web-server.svg?branch=master)](https://travis-ci.org/npm-gui-base/web-server) <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/dm/npm-gui.svg" alt="Downloads"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/v/npm-gui.svg" alt="Version"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/l/npm-gui.svg" alt="License"></a>
 # [npm-gui](http://q-nick.github.io/npm-gui/)
-![npm-gui screen](http://q-nick.github.io/npm-gui/screen-1-0-0.png)
+
+[![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui) <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/dm/npm-gui.svg" alt="Downloads"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/v/npm-gui.svg" alt="Version"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/l/npm-gui.svg" alt="License"></a>
+#
+![npm-gui main screen](https://github.com/q-nick/npm-gui/raw/gh-pages/screen-1-0-0.png)
+#
+## About
+`npm-gui` is a tool for managing project dependencies, which are listed in `package.json` or `bower.json` - in a friendly way. Under the hood it will use transparently `npm`, `bower` or `yarn` commands to install, remove or update dependencies
+(*to use **yarn** it requires **yarn.lock** file to be present in project folder.*)
+
+
+### **npm-gui** key features:
+- global dependencies management
+- project dependencies management
+- project scripts runner
+- npm, yarn, bower support
+
+#
+## Getting Started
+Simplest way to run `npm-gui` is by using <a href="https://www.npmjs.com/package/npx">`npx`</a>:
+```
+~/$ npx npm-gui
+```
+It will run the newest version of `npm-gui` without installing it on your system.
+
 ### Installation
-```
-npm install npm-gui
-```
-or
+`npm-gui` could also be installed as global dependency:
 ```
 npm install -g npm-gui
 ```
+or locally:
+```
+npm install npm-gui
+```
 
 ### How to use
+`npm-gui` app will be accessible in browser under address http://localhost:1337/. Remember to first use a command below:
 
-Open terminal and go to folder with ```package.json``` file and type ```npm-gui``` (if installed globally) or ```./node_modules/npm-gui/bin/npm-gui``` (if installed locally).
-Now you should be able to open GUI in your browser - navigate to http://localhost:1337/
-
-If you need to start server on another host, port, you should add host:port argument to command, example:
-
+When installed as global dependency you could run `npm-gui` with command line:
 ```
-npm-gui localhost:9000
+~/$ npm-gui
 ```
 
-### Welcome
-npm-gui is a GUI tool for NodeJS based projects. The main key is to easily work with package.json and node_modules folder. Even developers who aren't familiar with task runner like Gulp and GruntJS won't have any problems.
-For now npm-gui contain a few modules:
-- dependencies manager for:
-    - regular packages
-    - development packages
-- tasks manager
-- command builder (based on npm packages)
-- console based on websocket communication
+Then you could navigate to folder containing your javascript project (including `package.json` or `bower.json`).
+- folder navigation image
 
-### How it works
-npm-gui is starting simple webserver from folder of your project. Webserver is a core, for example it:
-- serve GUI for browser (it is available by default on: http://localhost:1337/)
-- modify package.json
-- run commands from client side application (example: "npm install angular --save" when you want to add angular to your project)
-- pushing console logs through websocket to client side application
+Or you could run `npm-gui` command in you desired folder:
+```
+~/workspace/project1$ npm-gui
+```
+If you need to start app on another `host/port`, you could add `host:port` argument to command for example:
+```
+~/$ npm-gui localhost:9000
+```
 
-### Dependencies features
-- shows all types of versions:
-    - saved in package.json,
-    - installed (if is different - you can save it in package.json)
-    - wanted (newest compatible version - you can install it and save by click)
-    - latest
-- checks nsp errors (nodesecurity.io) - currently works only for regular dependencies
+#### Starting
 
-### Another task runner?
-No it's not another task runner, package manager etc. It's based on native npm mechanism to install/uninstall/search packages.
+#### Navigating between projects
+- TODO
 
-### Authors and Contributors
+#### Installing new dependencies
+- TODO
+
+#### Removing dependencies
+- TODO
+
+#### Updating selected dependencies
+- TODO
+
+#### Updating all dependencies as...
+- TODO
+
+#### Running scripts
+- TODO
+
+#### Removing scripts
+- TODO
+
+#### Enlarging console log
+- TODO
+
+#### Closing console log
+- TODO
+
+
+#
+## Authors and Contributors
 @q-nick
