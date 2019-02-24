@@ -19,9 +19,13 @@ export class Info extends React.Component<{}, State> {
     axios
       .get('/api/info')
       .then((response) => {
-        this.setState(prevState => ({ ...prevState, content: { __html: response.data } }));
         // tricky one
-        setTimeout(() => (window as any).GithubApi.render());
+        setTimeout(() => {
+          if ((window as any).GithubApi) {
+            this.setState(prevState => ({ ...prevState, content: { __html: response.data } }));
+            (window as any).GithubApi.render();
+          }
+        });
       });
   }
 

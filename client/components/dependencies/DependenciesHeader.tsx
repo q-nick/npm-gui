@@ -70,7 +70,7 @@ export class DependenciesHeader extends React.Component<Props> {
             scale="small"
             icon="loop-circular"
             onClick={this.props.onForceReInstall}
-          >Force Re-Install
+          >Re-Install
           </Button>
         </div>
       </header>
