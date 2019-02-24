@@ -9,13 +9,13 @@ interface Props {
 
 const buttons: HeaderButton[] = [
   {
-    text: 'Global Dependencies',
+    text: 'Global',
     routeName: 'global',
     title: '',
     icon: 'globe',
   },
   {
-    text: 'Project Dependencies',
+    text: 'Project',
     routeName: 'dependencies',
     title: '',
     icon: 'code',
