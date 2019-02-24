@@ -33,7 +33,8 @@
     "test:lint:js": "tslint --project . ",
     "test:lint": "npm run test:lint:css && npm run test:lint:js",
     "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts --timeout 30000",
-    "test": "npm run test:unit && npm run test:lint"
+    "test": "npm run test:unit && npm run test:lint",
+    "convert:video": "ffmpeg-gif video99.webm video99.gif -f 8"
   },
   "repository": {
     "type": "git",
