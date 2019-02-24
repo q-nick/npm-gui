@@ -56,7 +56,7 @@ If you need to start app on another `host/port`, you could add `host:port` argum
 #### Starting
 
 #### Navigating between projects
-![](https://media.giphy.com/media/13bQotpw1D7zVYgmgv/giphy.gif)
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/video-navigation.gif)
 
 #### Installing new dependencies
 - TODO
