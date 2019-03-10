@@ -42,7 +42,7 @@ When installed as global dependency you could run `npm-gui` with command line:
 ```
 
 Then you could navigate to folder containing your javascript project (including `package.json` or `bower.json`).
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/video-navigation.gif)
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
 
 Or you could run `npm-gui` command in you desired folder:
 ```
@@ -56,19 +56,19 @@ If you need to start app on another `host/port`, you could add `host:port` argum
 #### Starting
 
 #### Navigating between projects
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/video-navigation.gif)
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
 
 #### Installing new dependencies
-- TODO
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/installing.gif)
 
 #### Removing dependencies
-- TODO
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/removing.gif)
 
 #### Updating selected dependencies
 - TODO
 
 #### Updating all dependencies as...
-- TODO
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/batch-update.gif)
 
 #### Running scripts
 - TODO
@@ -77,10 +77,7 @@ If you need to start app on another `host/port`, you could add `host:port` argum
 - TODO
 
 #### Enlarging console log
-- TODO
-
-#### Closing console log
-- TODO
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/console.gif)
 
 
 #
