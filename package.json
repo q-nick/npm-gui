@@ -1,0 +1,27 @@
+{
+  "name": "npm-gui-readme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "or": "https://ezgif.com/video-to-gif",
+    "video:pallette": "ffmpeg -y -i video99.webm -vf palettegen paletka.png",
+    "video:generate": "ffmpeg -y -i video99.webm -i paletka.png -filter_complex fps=16,paletteuse -f gif tests2.gif",
+    "videos:generate": "for i in src-video/*.webm; do ffmpeg -y -i \"$i\" -vf palettegen \"${i%.*}.png\" && ffmpeg -y -i \"$i\" -i \"${i%.*}.png\" -filter_complex fps=8,paletteuse -f gif \"${i%.*}.gif\";done"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/q-nick/npm-gui.git"
+  },
+  "author": "Paweł Stefański",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/q-nick/npm-gui/issues"
+  },
+  "homepage": "https://github.com/q-nick/npm-gui#readme"
+}
