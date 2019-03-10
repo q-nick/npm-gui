@@ -56,18 +56,26 @@ If you need to start app on another `host/port`, you could add `host:port` argum
 #### Starting
 
 #### Navigating between projects
+To change project press **folder icon** in top-right corner. Navigation panel will allow you to change folder - it must contain **yarn.lock, package.json or bower.json** file to be choosen.
+
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
 
 #### Installing new dependencies
+To install new dependency you can use **search/add button**. After typing name of the dependency in input - press search button - results will appear on list below. You can switch here between **npm/bower** repository. You must also decide will dependency be installed as production or development. After successfull installation of new dependency it will appear on project list.
+
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/installing.gif)
 
 #### Removing dependencies
+To remove depenedency from your project simply press **trash icon** on the right.
+
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/removing.gif)
 
 #### Updating selected dependencies
 - TODO
 
 #### Updating all dependencies as...
+To do a batch dependencies update and save new versions to package.json, for example *wanted*, press one of the green button above list of project dependencies.
+
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/batch-update.gif)
 
 #### Running scripts
@@ -77,6 +85,10 @@ If you need to start app on another `host/port`, you could add `host:port` argum
 - TODO
 
 #### Enlarging console log
+To get more readable log you can use enlarge button which will change width of console.
+
+Consoles are not self-closing they will be visible until you close them with **remove button**
+
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/console.gif)
 
 
