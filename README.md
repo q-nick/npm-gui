@@ -5,7 +5,7 @@
 ![npm-gui main screen](https://github.com/q-nick/npm-gui/raw/gh-pages/screen-1-0-0.png)
 #
 ## About
-`npm-gui` is a tool for managing project dependencies, which are listed in `package.json` or `bower.json` - in a friendly way. Under the hood it will use transparently `npm`, `bower` or `yarn` commands to install, remove or update dependencies
+`npm-gui` is a tool for managing javascript project dependencies, which are listed in `package.json` or `bower.json` - in a friendly way. Under the hood it will use transparently `npm`, `bower` or `yarn` commands to install, remove or update dependencies
 (*to use **yarn** it requires **yarn.lock** file to be present in project folder.*)
 
 
@@ -42,7 +42,7 @@ When installed as global dependency you could run `npm-gui` with command line:
 ```
 
 Then you could navigate to folder containing your javascript project (including `package.json` or `bower.json`).
-- folder navigation image
+![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/video-navigation.gif)
 
 Or you could run `npm-gui` command in you desired folder:
 ```
