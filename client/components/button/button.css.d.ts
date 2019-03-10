@@ -7,3 +7,4 @@ export const success: string;
 export const info: string;
 export const small: string;
 export const oi: string;
+export const oiLonely: string;

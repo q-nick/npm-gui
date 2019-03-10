@@ -21,9 +21,9 @@ select {
   border-radius: 2px;
   display: block;
   font-size: 11px;
-  height: 30px;
   outline: none;
-  padding: 7.5px;
+  padding: 3px;
+  height: 24px;
 }
 
 table {
@@ -43,6 +43,11 @@ td {
   border-bottom: 1px solid #dfd7ca;
   padding: 3px 10px;
   text-align: center;
+  max-width: 13vw;
+}
+
+th {
+  white-space: nowrap;
 }
 
 th:last-child {

@@ -69,6 +69,7 @@ export class Search extends React.Component<Props, State> {
           variant="success"
           disabled={this.props.searchResults === undefined}
           type="submit"
+          scale="small"
         >{this.props.searchResults === undefined ? <Loader /> : 'search'}
         </Button>
       </form>
@@ -84,7 +85,7 @@ export class Search extends React.Component<Props, State> {
             <th>name</th>
             <th>version</th>
             <th>github</th>
-            <th>action</th>
+            <th>install</th>
           </tr>
           {
             this.props.searchResults &&
@@ -108,7 +109,7 @@ export class Search extends React.Component<Props, State> {
                         data-name={result.name}
                         data-type={type}
                         onClick={this.onInstall}
-                      >install {type}
+                      >{type}
                       </Button>
                     ))
                   }

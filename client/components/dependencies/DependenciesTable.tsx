@@ -7,11 +7,13 @@ import { Loader } from '../loader/Loader';
 interface Props {
   sortKey: string;
   sortReversed: boolean;
+  filters: { [key: string]: string };
   dependencies: Dependency.Entire[];
   dependenciesProcessing: any;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
   onSortChange: (sortKey: string) => void;
+  onFilterChange: (filterName: string, filterValue: string) => void;
 }
 
 export class DependenciesTable extends React.Component<Props> {
@@ -25,8 +27,16 @@ export class DependenciesTable extends React.Component<Props> {
 
   renderThs(): React.ReactNode {
     const ths = [
-      { name: 'Env', sortMatch: 'type', filter: 'select' },
-      { name: 'Name', sortMatch: 'name', filter: 'text' },
+      {
+        name: 'Env', sortMatch: 'type', filter: {
+          type: 'select', value: this.props.filters['type'],
+        },
+      },
+      {
+        name: 'Name', sortMatch: 'name', filter: {
+          type: 'text', value: this.props.filters['name'],
+        },
+      },
       // { name: 'Nsp' },
       { name: 'Required', sortMatch: 'required', className: style.columnVersion },
       { name: 'Installed', sortMatch: 'installed', className: style.columnVersion },
@@ -46,6 +56,7 @@ export class DependenciesTable extends React.Component<Props> {
               sortKey={this.props.sortKey}
               sortReversed={this.props.sortReversed}
               onSortChange={this.props.onSortChange}
+              onFilterChange={this.props.onFilterChange}
             >{th.name}
             </ThSortable>
             :

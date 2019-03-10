@@ -11,6 +11,7 @@
   transition: background-color 200ms;
   vertical-align: middle;
   margin-right: 5px;
+  white-space: nowrap;
 }
 
 .button:first-child {
@@ -70,4 +71,8 @@
   font-size: inherit;
   margin-right: 3px;
   vertical-align: middle;
+}
+
+.oiLonely {
+  margin-right: 0;
 }

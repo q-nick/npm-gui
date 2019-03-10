@@ -26,7 +26,7 @@ export class ScriptRow extends React.Component<Props> {
         key={name}
         className={this.props.isProcessing && style.processing}
       >
-        <td className={style.columnAction}>
+        <td>
           <Button
             disabled={this.props.isProcessing}
             icon="media-play"
@@ -37,16 +37,15 @@ export class ScriptRow extends React.Component<Props> {
           </Button>
         </td>
         <td>{name}</td>
-        <td className={style.columnNsp}> <pre className={style.command}>{command}</pre></td>
-        <td className={style.columnAction}>
+        <td><pre className={style.command}>{command}</pre></td>
+        <td>
           <Button
             disabled={this.props.isProcessing}
             icon="trash"
             variant="danger"
             scale="small"
             onClick={this.onDeleteScript}
-          >remove
-          </Button>
+          />
         </td>
       </tr>
     );

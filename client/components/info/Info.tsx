@@ -30,6 +30,11 @@ export class Info extends React.Component<{}, State> {
   }
 
   render(): React.ReactNode {
-    return <div className={style.info} dangerouslySetInnerHTML={this.state.content} />;
+    return (
+      <div
+        className={this.state.content.__html ? style.info : ''}
+        dangerouslySetInnerHTML={this.state.content}
+      />
+    );
   }
 }

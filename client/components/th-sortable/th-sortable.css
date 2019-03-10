@@ -3,9 +3,23 @@
   user-select: none;
 }
 
-.input {
+.thSortable:first-child {
+  padding-left: 1.5em;
+}
+
+.thSortableIcon {
+  position: absolute;
+  margin-left: -1.2em;
+}
+
+.input,
+.select {
   display: inline-block;
-  height: 1em;
-  width: 5em;
+  height: 15px;
   vertical-align: middle;
+  padding: 0;
+}
+
+.input {
+  width: 4em;
 }

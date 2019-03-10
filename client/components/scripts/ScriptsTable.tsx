@@ -24,7 +24,7 @@ export class ScriptsTable extends React.Component<Props> {
       { name: 'Run' },
       { name: 'Name' },
       { name: 'Command' },
-      { name: 'Action' },
+      { name: '' },
     ];
 
     return (ths.map(th => (

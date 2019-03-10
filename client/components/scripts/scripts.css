@@ -51,18 +51,6 @@
   text-align: center;
 }
 
-.columnAction {
-  width: 11em;
-}
-
-.columnNsp {
-  width: 8em;
-}
-
-.columnVersion {
-  width: 10%;
-}
-
 .missing {
   color: #d9534f;
 }
@@ -74,6 +62,9 @@
   padding: 6px;
   border-radius: 4px;
   margin: 0;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
 }
 
 @keyframes Gradient {
