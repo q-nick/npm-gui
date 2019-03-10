@@ -1,7 +1,6 @@
 .tableContainer {
   border: 1px solid #dfd7ca;
   border-radius: 2px;
-  margin-bottom: 15px;
   margin-top: 15px;
   overflow: auto;
   flex: 1;

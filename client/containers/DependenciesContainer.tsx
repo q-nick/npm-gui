@@ -28,6 +28,10 @@ export class DependenciesContainer extends React.Component<Props> {
     this.props.dependenciesStore.setSortKey(sortKey);
   }
 
+  onFilterChange = (filterKey: string, filterValue: string): void => {
+    this.props.dependenciesStore.setFilter(filterKey, filterValue);
+  }
+
   onInstallAll = () => {
     this.props.dependenciesStore.installAll(this.props.projectPath);
   }
@@ -88,11 +92,31 @@ export class DependenciesContainer extends React.Component<Props> {
     return dependencies;
   }
 
+  getFilteredDependencies(dependencies: Dependency.Entire[], filters: { [key: string]: string })
+    : Dependency.Entire[] {
+    if (!dependencies) {
+      return dependencies;
+    }
+    return dependencies.filter((dependency) => {
+      let isAvailable = true;
+      Object.keys(filters)
+        .forEach((name) => {
+          if (!(dependency as any)[name].includes(filters[name])) {
+            isAvailable = false;
+          }
+        });
+
+      return isAvailable;
+    });
+  }
+
   render(): React.ReactNode {
     const sortKey = toJS(this.props.dependenciesStore.sortKey);
     const sortReversed = toJS(this.props.dependenciesStore.sortReversed);
+    const filters = toJS(this.props.dependenciesStore.filters);
 
     const dependencies = this.getSortedDependencies(sortKey, sortReversed);
+    const filteredDependencies = this.getFilteredDependencies(dependencies, filters);
 
     const dependenciesProcessing =
       toJS(this.props.dependenciesStore.dependenciesProcessing[this.props.projectPath]);
@@ -116,11 +140,13 @@ export class DependenciesContainer extends React.Component<Props> {
       (
         <DependenciesTable
           key="2"
-          dependencies={dependencies}
+          dependencies={filteredDependencies}
           dependenciesProcessing={dependenciesProcessing}
           sortKey={sortKey}
           sortReversed={sortReversed}
           onSortChange={this.onSortChange}
+          onFilterChange={this.onFilterChange}
+          filters={filters}
           onDeleteDependency={this.onDeleteDependency}
           onInstallDependencyVersion={this.onInstallDependencyVersion}
         />

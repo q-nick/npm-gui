@@ -58,7 +58,7 @@ export class App extends React.Component<RouteComponentProps> {
               />
               <Redirect to={`${this.props.match.url}/dependencies`} />
             </Switch>
-            {/* <Info /> */}
+            <Info />
           </div>
         </div>
       </>

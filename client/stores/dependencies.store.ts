@@ -20,6 +20,7 @@ function getNormalizedVersion(version: string): string {
 export class DependenciesStore {
   @observable sortKey: string;
   @observable sortReversed: boolean;
+  @observable filters: { [key: string]: string } = {};
   @observable dependencies: { [key: string]: Dependency.Entire[] } = {};
   @observable dependenciesProcessing: { [key: string]: { [key: string]: boolean } } = {};
 
@@ -36,6 +37,11 @@ export class DependenciesStore {
       this.sortKey = sortKey;
       this.sortReversed = false;
     }
+  }
+
+  @action
+  setFilter(filterKey: string, filterValue: string): void {
+    this.filters[filterKey] = filterValue;
   }
 
   @action
@@ -81,7 +87,9 @@ export class DependenciesStore {
       [{ name: dependency.name, version: dependency.version }],
     );
 
-    this.fetchDependencies(projectPath);
+    await this.fetchDependencies(projectPath);
+
+    this.setDependencyProcessing(projectPath, dependency.name, false);
   }
 
   @action
