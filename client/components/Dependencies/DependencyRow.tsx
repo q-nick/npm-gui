@@ -140,13 +140,6 @@ export class DependencyRow extends React.PureComponent<Props> {
           {this.renderLatestVersion(this.props.dependency)}
         </td>
         <td className={style.columnAction}>
-          {/* <Button
-            disabled={this.props.isProcessing}
-            icon="trash"
-            variant="danger"
-            scale="small"
-            onClick={this.onDeleteDependency}
-          /> */}
           <ConfirmButton
             disabled={this.props.isProcessing}
             icon="trash"

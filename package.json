@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Graphical User Interface for NPM package.json and dependencies management.",
   "keywords": [
     "gui",
