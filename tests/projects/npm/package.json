@@ -3,16 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "author": "",
   "license": "UNLICENSED",
-  "devDependencies": {
-    "react": "^16.8.4"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "angular": "^1.7.8",
-    "npm-gui-tests": "^1.1.1",
-    "that-value": "^0.1.3",
-    "webpack": "^4.29.6"
+    "npm-gui-tests": "^1.0.0",
+    "that-value": "^0.1.1"
   }
 }
