@@ -8,7 +8,7 @@ module.exports = {
     path: `${__dirname}/dist/client`,
     filename: './[name].js',
   },
-  devtool: 'cheap-source-map',
+  devtool: 'eval-source-map', // TODO
   target: 'web',
   module: {
     rules: [

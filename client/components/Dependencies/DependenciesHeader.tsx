@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as style from './dependencies.css';
-import { Button } from '../button/Button';
+import * as style from './Dependencies.css';
+import { Button } from '../Button/Button';
 
 interface Props {
   onInstallAll: () => void;
@@ -10,7 +10,7 @@ interface Props {
   onForceReInstall: () => void;
 }
 
-export class DependenciesHeader extends React.Component<Props> {
+export class DependenciesHeader extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <header>

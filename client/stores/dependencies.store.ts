@@ -20,7 +20,7 @@ function getNormalizedVersion(version: string): string {
 export class DependenciesStore {
   @observable sortKey: string;
   @observable sortReversed: boolean;
-  @observable filters: { [key: string]: string } = {};
+  @observable filters: { [key: string]: string } = { name: '', type: '' };
   @observable dependencies: { [key: string]: Dependency.Entire[] } = {};
   @observable dependenciesProcessing: { [key: string]: { [key: string]: boolean } } = {};
 
@@ -133,10 +133,15 @@ export class DependenciesStore {
   }
 
   @action
-  async updateAllToVersion(projectPath: string, version: 'installed' | 'wanted' | 'latest')
+  async updateToVersion(
+    projectPath: string,
+    dependencies: Dependency.Entire[],
+    version: 'installed' | 'wanted' | 'latest',
+  )
     : Promise<void> {
-    const dependenciesToUpdate = this.dependencies[projectPath]
+    const dependenciesToUpdate = dependencies
       .filter(d => (d[version] && d[version] !== getNormalizedVersion(d.required)));
+
     dependenciesToUpdate
       .forEach(dependency => this.setDependencyProcessing(projectPath, dependency.name, true));
 

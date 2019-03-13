@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { DependenciesStore } from '../stores/dependencies.store';
-import { DependenciesTable } from '../components/dependencies/DependenciesTable';
-import { DependenciesHeader } from '../components/dependencies/DependenciesHeader';
+import { DependenciesTable } from '../components/Dependencies/DependenciesTable';
+import { DependenciesHeader } from '../components/Dependencies/DependenciesHeader';
 import { toJS } from 'mobx';
 import { SearchContainer } from './SearchContainer';
 
 interface Props {
   dependenciesStore?: DependenciesStore;
   projectPath?: string;
+  filtersEnabled?: ('name' | 'type')[];
 }
 
 function sortFunction(a: any, b: any, sortKey: string): 0 | 1 | -1 {
@@ -37,15 +38,24 @@ export class DependenciesContainer extends React.Component<Props> {
   }
 
   onUpdateAllToInstalled = () => {
-    this.props.dependenciesStore.updateAllToVersion(this.props.projectPath, 'installed');
+    const filters = toJS(this.props.dependenciesStore.filters);
+    const dependencies = this.getFilteredDependencies(this.getDependencies(), filters);
+    this.props.dependenciesStore
+      .updateToVersion(this.props.projectPath, dependencies, 'installed');
   }
 
   onUpdateAllToWanted = () => {
-    this.props.dependenciesStore.updateAllToVersion(this.props.projectPath, 'wanted');
+    const filters = toJS(this.props.dependenciesStore.filters);
+    const dependencies = this.getFilteredDependencies(this.getDependencies(), filters);
+    this.props.dependenciesStore
+      .updateToVersion(this.props.projectPath, dependencies, 'wanted');
   }
 
   onUpdateAllToLatest = () => {
-    this.props.dependenciesStore.updateAllToVersion(this.props.projectPath, 'latest');
+    const filters = toJS(this.props.dependenciesStore.filters);
+    const dependencies = this.getFilteredDependencies(this.getDependencies(), filters);
+    this.props.dependenciesStore
+      .updateToVersion(this.props.projectPath, dependencies, 'latest');
   }
 
   onForceReInstall = () => {
@@ -81,8 +91,12 @@ export class DependenciesContainer extends React.Component<Props> {
     );
   }
 
+  getDependencies(): Dependency.Entire[] {
+    return toJS(this.props.dependenciesStore.dependencies[this.props.projectPath]);
+  }
+
   getSortedDependencies(sortKey: string, sortReversed: boolean): Dependency.Entire[] {
-    let dependencies = toJS(this.props.dependenciesStore.dependencies[this.props.projectPath]);
+    let dependencies = this.getDependencies();
     if (sortKey && dependencies) {
       dependencies = dependencies.sort((a, b) => sortFunction(a, b, sortKey));
     }
@@ -99,7 +113,7 @@ export class DependenciesContainer extends React.Component<Props> {
     }
     return dependencies.filter((dependency) => {
       let isAvailable = true;
-      Object.keys(filters)
+      this.props.filtersEnabled
         .forEach((name) => {
           if (!(dependency as any)[name].includes(filters[name])) {
             isAvailable = false;
@@ -147,6 +161,7 @@ export class DependenciesContainer extends React.Component<Props> {
           onSortChange={this.onSortChange}
           onFilterChange={this.onFilterChange}
           filters={filters}
+          filtersEnabled={this.props.filtersEnabled}
           onDeleteDependency={this.onDeleteDependency}
           onInstallDependencyVersion={this.onInstallDependencyVersion}
         />

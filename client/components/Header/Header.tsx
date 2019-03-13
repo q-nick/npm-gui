@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as style from './header.css';
-import { Button } from '../button/Button';
+import * as style from './Header.css';
+import { Button } from '../Button/Button';
 import { ProjectContainer } from '../../containers/ProjectContainer';
 
 export interface HeaderButton {
@@ -15,7 +15,7 @@ export interface Props {
   onClickRoute: (routeName: string) => void;
 }
 
-export class Header extends React.Component<Props> {
+export class Header extends React.PureComponent<Props> {
   onClickRoute = (event: React.MouseEvent<HTMLButtonElement>):void => {
     const routeName = (event.target as HTMLButtonElement).getAttribute('data-route');
     this.props.onClickRoute(routeName);

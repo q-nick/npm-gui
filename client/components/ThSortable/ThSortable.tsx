@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as style from './th-sortable.css';
+import * as style from './ThSortable.css';
 
 export interface Filter {
   type: 'text' | 'select' | null;
@@ -22,7 +22,7 @@ function preventEvent(event: React.MouseEvent<HTMLInputElement | HTMLSelectEleme
 }
 
 export class ThSortable extends
-  React.Component<Props & React.HTMLProps<HTMLTableHeaderCellElement>> {
+  React.PureComponent<Props & React.HTMLProps<HTMLTableHeaderCellElement>> {
   onSortChange = (): void => {
     this.props.onSortChange(this.props.sortMatch);
   }

@@ -4,29 +4,17 @@ WATCH FILE CHANGES IN NODE_MODULES / BOWER_COMPONENTS and update cache
 
 
 new project initialization - later
-standalone - electron app (probably without webserver)
+standalone - electron app
 
 commands:
-npm dedupe - OK
-npm init - later
-npm prune - OK
+npm dedupe
+npm init
+npm prune
 npm shrinkwrap
 
 additional:
 npm star - later
 npm unstar - later
-
-Tests to confirm that CLI works as expected, example:
-
-`npm ls --json` should list installed packages in json format and should contain...
-`npm install npm-gui -S` should save package and save it in package.json
-etc...
-
-
-Modules:
-- Show which are installed. - OK
-- Show which are extraneous. - ?WHERE? - little red label on dedupe later - list in modal?
-- Install All / Reinstall All - partial OK
 
 NSP:
 - better support for deep dependency

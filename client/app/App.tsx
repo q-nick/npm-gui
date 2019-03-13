@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
 
-import * as style from './app.css';
+import * as style from './App.css';
 import { ConsoleContainer } from '../containers/ConsoleContainer';
 import 'open-iconic';
 import { DependenciesContainer } from '../containers/DependenciesContainer';
 import { ScriptsContainer } from '../containers/ScriptsContainer';
-import { Info } from '../components/info/Info';
+import { Info } from '../components/Info/Info';
 import { HeaderContainer } from '../containers/HeaderContainer';
 
-export class App extends React.Component<RouteComponentProps> {
+export class App extends React.PureComponent<RouteComponentProps> {
   constructor(props: RouteComponentProps) {
     super(props);
 
@@ -19,14 +19,14 @@ export class App extends React.Component<RouteComponentProps> {
 
   renderRouteProjectDependencies(): React.ReactNode {
     const projectPath = (this.props.match.params as any).projectPathEncoded;
-    return <DependenciesContainer projectPath={projectPath} />;
+    return <DependenciesContainer projectPath={projectPath} filtersEnabled={['name', 'type']} />;
   }
 
-  renderRouteGlobalDependencies() :React.ReactNode {
-    return <DependenciesContainer />;
+  renderRouteGlobalDependencies(): React.ReactNode {
+    return <DependenciesContainer filtersEnabled={['name']} />;
   }
 
-  renderRouteScripts() :React.ReactNode {
+  renderRouteScripts(): React.ReactNode {
     const projectPath = (this.props.match.params as any).projectPathEncoded;
     return <ScriptsContainer projectPath={projectPath} />;
   }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Project } from '../components/project/Project';
+import { Project } from '../components/Project/Project';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 class ProjectContainerBase extends React.Component<RouteComponentProps> {

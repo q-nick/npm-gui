@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ConsoleStore } from '../stores/console.store';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { Header, HeaderButton } from '../components/header/Header';
+import { Header, HeaderButton } from '../components/Header/Header';
 
 interface Props {
   consoleStore?: ConsoleStore;

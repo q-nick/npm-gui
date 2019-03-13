@@ -1,12 +1,12 @@
 import * as React from 'react';
-import * as style from './info.css';
+import * as style from './Info.css';
 import axios from 'axios';
 
 interface State {
   content: { __html: string };
 }
 
-export class Info extends React.Component<{}, State> {
+export class Info extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
 

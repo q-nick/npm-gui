@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as style from './console.css';
+import * as style from './Console.css';
 import { Session } from './Session';
 
 interface Props {
@@ -12,7 +12,7 @@ interface State {
   fullScreenSessionId: string;
 }
 
-export class Console extends React.Component<Props, State> {
+export class Console extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

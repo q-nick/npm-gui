@@ -3,9 +3,9 @@
   border-radius: 2px;
   margin-bottom: 15px;
   margin-top: 15px;
-  overflow: auto;
   flex: 1;
   position: relative;
+  overflow-y: scroll;
 }
 
 .infoContainer {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { ScriptsStore } from '../stores/scripts.store';
-import { ScriptsTable } from '../components/scripts/ScriptsTable';
+import { ScriptsTable } from '../components/Scripts/ScriptsTable';
 import { toJS } from 'mobx';
 
 interface Props {

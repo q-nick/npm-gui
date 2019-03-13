@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as style from './project.css';
-import { Button } from '../button/Button';
+import * as style from './Project.css';
+import { Button } from '../Button/Button';
 import axios from 'axios';
 
 interface Props {
@@ -18,7 +18,7 @@ interface State {
   };
 }
 
-export class Project extends React.Component<Props, State> {
+export class Project extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 

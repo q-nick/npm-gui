@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as style from './search.css';
-import { Button } from '../button/Button';
-import { Loader } from '../loader/Loader';
+import * as style from './Search.css';
+import { Button } from '../Button/Button';
+import { Loader } from '../Loader/Loader';
 
 interface Props {
   searchResults: Dependency.SearchResult[];
@@ -16,7 +16,7 @@ interface State {
   repo: Dependency.Repo;
 }
 
-export class Search extends React.Component<Props, State> {
+export class Search extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 

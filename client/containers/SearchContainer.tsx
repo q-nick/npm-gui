@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { SearchStore } from '../stores/search.store';
-import { Search } from '../components/search/Search';
+import { Search } from '../components/Search/Search';
 import { toJS } from 'mobx';
 
 interface Props {

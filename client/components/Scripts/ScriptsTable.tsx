@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as style from './scripts.css';
+import * as style from './Scripts.css';
 import { ScriptRow } from './ScriptRow';
-import { Loader } from '../loader/Loader';
+import { Loader } from '../Loader/Loader';
 
 interface Props {
   scripts: NpmGui.Script[];
@@ -10,7 +10,7 @@ interface Props {
   onRunScript: (script: NpmGui.Script) => void;
 }
 
-export class ScriptsTable extends React.Component<Props> {
+export class ScriptsTable extends React.PureComponent<Props> {
   isLoading(): boolean {
     return !this.props.scripts;
   }

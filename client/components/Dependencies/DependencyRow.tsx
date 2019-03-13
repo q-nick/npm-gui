@@ -1,7 +1,8 @@
 import * as React from 'react';
-import * as style from './dependencies.css';
-import { Button } from '../button/Button';
-import { Loader } from '../loader/Loader';
+import * as style from './Dependencies.css';
+import { Button } from '../Button/Button';
+import { Loader } from '../Loader/Loader';
+import { ConfirmButton } from '../ConfirmButton/ConfirmButton';
 
 interface Props {
   dependency: Dependency.Entire;
@@ -28,7 +29,7 @@ function getNormalizedVersion(version: string): string {
   return normalized;
 }
 
-export class DependencyRow extends React.Component<Props> {
+export class DependencyRow extends React.PureComponent<Props> {
   onDeleteDependency = (): void => {
     this.props.onDeleteDependency(this.props.dependency);
   }
@@ -139,7 +140,14 @@ export class DependencyRow extends React.Component<Props> {
           {this.renderLatestVersion(this.props.dependency)}
         </td>
         <td className={style.columnAction}>
-          <Button
+          {/* <Button
+            disabled={this.props.isProcessing}
+            icon="trash"
+            variant="danger"
+            scale="small"
+            onClick={this.onDeleteDependency}
+          /> */}
+          <ConfirmButton
             disabled={this.props.isProcessing}
             icon="trash"
             variant="danger"

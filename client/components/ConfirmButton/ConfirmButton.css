@@ -1,0 +1,14 @@
+.container {
+  display: inline-block;
+  position: relative;
+}
+
+.startButton {
+  margin-right: 0;
+}
+
+.confirmButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { ConsoleStore } from '../stores/console.store';
-import { Console } from '../components/console/Console';
+import { Console } from '../components/Console/Console';
 import { toJS } from 'mobx';
 
 interface Props {

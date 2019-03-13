@@ -2,9 +2,9 @@
   border: 1px solid #dfd7ca;
   border-radius: 2px;
   margin-top: 15px;
-  overflow: auto;
   flex: 1;
   position: relative;
+  overflow-y: scroll;
 }
 
 .infoContainer {
@@ -50,16 +50,21 @@
   text-align: center;
 }
 
-.columnAction {
-  width: 3em;
-}
-
 .columnNsp {
   width: 8em;
 }
 
 .columnVersion {
   width: 10%;
+  min-width: 80px;
+}
+
+.columnEnv {
+  width: 100px;
+}
+
+.columnAction {
+  width: 30px;
 }
 
 .missing {

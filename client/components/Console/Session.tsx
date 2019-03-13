@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Button } from '../button/Button';
-import * as style from './console.css';
+import { Button } from '../Button/Button';
+import * as style from './Console.css';
 
 interface Props {
   session: NpmGui.ConsoleSession;
@@ -11,7 +11,7 @@ interface Props {
   onStopSession: (id: string) => void;
 }
 
-export class Session extends React.Component<Props> {
+export class Session extends React.PureComponent<Props> {
   onEnterFullScreenSession = () => {
     this.props.onEnterFullScreenSession(this.props.session.id);
   }

@@ -1,13 +1,14 @@
 import * as React from 'react';
-import * as style from './button.css';
+import * as style from './Button.css';
 
-type Props = {
+// export interface Props extends React.HTMLAttributes<HTMLButtonElement> {
+export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: 'dark' | 'primary' | 'warning' | 'danger' | 'success' | 'info';
   icon?: string;
   scale?: 'small';
-};
+}
 
-export class Button extends React.Component<Props & React.HTMLProps<HTMLButtonElement>> {
+export class Button extends React.PureComponent<Props> {
   getIconClass():string {
     return `oi ${style.oi} ${!this.props.children ? style.oiLonely : ''}`;
   }

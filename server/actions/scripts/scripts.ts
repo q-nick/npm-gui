@@ -25,7 +25,7 @@ export async function removeScript(req: express.Request, res: express.Response):
   const projectPath = decodePath(req.params.projectPath);
   const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`), { encoding: 'utf8' })); // tslint:disable:max-line-length
   delete packageJson.scripts[req.params.scriptName];
-  fs.writeFileSync(path.normalize(`${projectPath}/package.json`), JSON.stringify(packageJson));
+  fs.writeFileSync(path.normalize(`${projectPath}/package.json`), JSON.stringify(packageJson, null, 2));
   res.json({});
 }
 

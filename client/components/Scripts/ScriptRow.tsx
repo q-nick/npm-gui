@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as style from './scripts.css';
-import { Button } from '../button/Button';
-// import { Loader } from '../loader/Loader';
+import * as style from './Scripts.css';
+import { Button } from '../Button/Button';
+import { ConfirmButton } from '../ConfirmButton/ConfirmButton';
 
 interface Props {
   script: NpmGui.Script;
@@ -10,7 +10,7 @@ interface Props {
   onRunScript: (script: NpmGui.Script) => void;
 }
 
-export class ScriptRow extends React.Component<Props> {
+export class ScriptRow extends React.PureComponent<Props> {
   onDeleteScript = (): void => {
     this.props.onDeleteScript(this.props.script);
   }
@@ -39,7 +39,7 @@ export class ScriptRow extends React.Component<Props> {
         <td>{name}</td>
         <td><pre className={style.command}>{command}</pre></td>
         <td>
-          <Button
+          <ConfirmButton
             disabled={this.props.isProcessing}
             icon="trash"
             variant="danger"

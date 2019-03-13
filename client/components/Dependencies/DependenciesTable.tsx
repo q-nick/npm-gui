@@ -1,13 +1,14 @@
 import * as React from 'react';
-import * as style from './dependencies.css';
-import { ThSortable } from '../th-sortable/ThSortable';
+import * as style from './Dependencies.css';
+import { ThSortable } from '../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
-import { Loader } from '../loader/Loader';
+import { Loader } from '../Loader/Loader';
 
 interface Props {
   sortKey: string;
   sortReversed: boolean;
-  filters: { [key: string]: string };
+  filters: { [key:string] : string };
+  filtersEnabled?: ('name' | 'type')[];
   dependencies: Dependency.Entire[];
   dependenciesProcessing: any;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
@@ -16,7 +17,7 @@ interface Props {
   onFilterChange: (filterName: string, filterValue: string) => void;
 }
 
-export class DependenciesTable extends React.Component<Props> {
+export class DependenciesTable extends React.PureComponent<Props> {
   isLoading(): boolean {
     return !this.props.dependencies;
   }
@@ -28,12 +29,16 @@ export class DependenciesTable extends React.Component<Props> {
   renderThs(): React.ReactNode {
     const ths = [
       {
-        name: 'Env', sortMatch: 'type', filter: {
-          type: 'select', value: this.props.filters['type'],
+        name: 'Env', sortMatch: 'type', className: style.columnEnv,
+        filter: this.props.filtersEnabled.includes('type') && {
+          type: 'select',
+          value: this.props.filters['type'],
+          options: ['dev', 'prod'],
         },
       },
       {
-        name: 'Name', sortMatch: 'name', filter: {
+        name: 'Name', sortMatch: 'name', className: style.columnName,
+        filter: {
           type: 'text', value: this.props.filters['name'],
         },
       },
@@ -42,7 +47,7 @@ export class DependenciesTable extends React.Component<Props> {
       { name: 'Installed', sortMatch: 'installed', className: style.columnVersion },
       { name: 'Wanted', sortMatch: 'wanted', className: style.columnVersion },
       { name: 'Latest', sortMatch: 'latest', className: style.columnVersion },
-      { name: '' },
+      { name: '', className: style.columnAction },
     ];
 
     return (ths.map(th => (
