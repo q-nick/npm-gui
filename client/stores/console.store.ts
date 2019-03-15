@@ -26,7 +26,6 @@ export class ConsoleStore {
       currentSession.status = message.status;
       currentSession.msg = currentSession.msg + message.msg;
     }
-    console.log('new message');
   }
 
   @action

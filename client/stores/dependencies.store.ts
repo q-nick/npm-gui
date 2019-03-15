@@ -13,8 +13,11 @@ function getNormalizedVersion(version: string): string {
   if (!version) {
     return null;
   }
-  const [normalized] = version.match(/\d.+/);
-  return normalized;
+  const match = version.match(/\d.+/);
+  if (!match) {
+    return version;
+  }
+  return match[0];
 }
 
 export class DependenciesStore {
@@ -54,7 +57,6 @@ export class DependenciesStore {
 
   @action
   setDependencyProcessing(projectPath: string, dependencyName: string, status: boolean): void {
-    console.log(this.dependenciesProcessing);
     if (this.dependenciesProcessing[projectPath]) {
       this.dependenciesProcessing[projectPath][dependencyName] = status;
     }

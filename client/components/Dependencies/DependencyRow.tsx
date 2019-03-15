@@ -25,8 +25,11 @@ function getNormalizedVersion(version: string): string {
   if (!version) {
     return null;
   }
-  const [normalized] = version.match(/\d.+/);
-  return normalized;
+  const match = version.match(/\d.+/);
+  if (!match) {
+    return version;
+  }
+  return match[0];
 }
 
 export class DependencyRow extends React.PureComponent<Props> {
