@@ -4,7 +4,7 @@ import * as express from 'express';
 
 export const logRouter = express.Router();
 const client = new analyticsNode(
-  Buffer.from('VldpUlQxaDgzSmVwdzhzTnZIWHdGcnJFSXQ4ODVkbzM=', 'base64').toString());
+  Buffer.from('bGd3S2hqQm5Fa2VseUFaYUNYMDZJQW1pc3pkcVVkN0Q=', 'base64').toString());
 
 logRouter.post('/', (req, res) => {
   client.track({
