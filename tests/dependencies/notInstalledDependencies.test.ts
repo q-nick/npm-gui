@@ -16,7 +16,7 @@ function clearProject(projectPath: string): void {
 }
 
 // TODO REFACTOR
-describe('not installed project', () => {
+describe.only('not installed project', () => {
   projects.forEach((project) => {
     project.tests.forEach((test) => {
       const dependenciesToTest =
@@ -52,13 +52,13 @@ describe('not installed project', () => {
                 name: dependenciesToTest[0].name,
                 required: dependenciesToTest[0].entire.required,
                 type: dependenciesToTest[0].entire.type,
-                repo: null,
+                repo: dependenciesToTest[0].entire.repo,
               });
               expect(res.body).to.deep.include({
                 name: dependenciesToTest[1].name,
                 required: dependenciesToTest[1].entire.required,
                 type: dependenciesToTest[1].entire.type,
-                repo: null,
+                repo: dependenciesToTest[1].entire.repo,
               });
               done();
             });
@@ -73,13 +73,13 @@ describe('not installed project', () => {
                   name: dependenciesToTest[0].name,
                   required: dependenciesToTest[0].entire.required,
                   type: dependenciesToTest[0].entire.type,
-                  repo: null,
+                  repo: dependenciesToTest[0].entire.repo,
                 });
                 expect(res.body).to.deep.include({
                   name: dependenciesToTest[1].name,
                   required: dependenciesToTest[1].entire.required,
                   type: dependenciesToTest[1].entire.type,
-                  repo: null,
+                  repo: dependenciesToTest[1].entire.repo,
                 });
               } else {
                 expect(res.status).to.equal(200);
