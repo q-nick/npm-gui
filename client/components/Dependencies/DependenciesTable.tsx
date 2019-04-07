@@ -37,7 +37,7 @@ export class DependenciesTable extends React.PureComponent<Props> {
         },
       },
       {
-        name: 'Name', sortMatch: 'name',
+        name: 'Name', sortMatch: 'name', className: style.columnName,
         filter: {
           type: 'text', value: this.props.filters['name'],
         },

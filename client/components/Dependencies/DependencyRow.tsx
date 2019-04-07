@@ -123,7 +123,7 @@ export class DependencyRow extends React.PureComponent<Props> {
         className={this.props.isProcessing && style.processing}
       >
         <td>{this.props.dependency.type !== 'prod' && this.props.dependency.type}</td>
-        <td>
+        <td className={style.columnName}>
           {this.props.dependency.name}
           <span className={getLabelClassNameForRepo(this.props.dependency.repo)}>
             {this.props.dependency.repo}</span>

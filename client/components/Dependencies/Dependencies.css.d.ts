@@ -9,6 +9,7 @@ export const loading: string;
 export const columnNsp: string;
 export const columnVersion: string;
 export const columnEnv: string;
+export const columnName: string;
 export const columnAction: string;
 export const missing: string;
 export const processing: string;

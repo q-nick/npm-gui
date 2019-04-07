@@ -76,7 +76,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   const commandLsJSON = await executeCommand(projectPath, 'yarn list --depth=0 --json');
   const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter(s => s).map(parseJSON); // tslint:disable-line:max-line-length
   const dependenciesInstalled = mapYarnResultTreeToBasic(commandLsJSONResults);
-
+  console.log(dependenciesInstalled);
   // latest, wanted
   const outdatedResult = await executeCommand(projectPath, 'yarn outdated --depth=0 --json');
   if (outdatedResult.stderr) {
@@ -119,7 +119,7 @@ async function getAllBowerDependencies(projectPath: string): Promise<Dependency.
       mapBowerDependency(name, commandLsJSON.dependencies[name], dependencies[name] ? 'prod' : 'dev')); // tslint:disable-line:max-line-length
 }
 
-function getAllDependenciesSimpleNpm(projectPath: string): Dependency.Entire[] {
+function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Dependency.Entire[] {
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
@@ -128,9 +128,11 @@ function getAllDependenciesSimpleNpm(projectPath: string): Dependency.Entire[] {
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
   ];
 
+  const repo: Dependency.Repo = yarn ? 'yarn' : 'npm';
+
   return npmDependenciesWithType.map(dependency => ({
     ...dependency,
-    repo: null,
+    repo,
     installed: undefined,
     wanted: undefined,
     latest: undefined,
@@ -147,9 +149,11 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
   ];
 
+  const repo: Dependency.Repo = 'bower';
+
   return bowerDependenciesWithType.map(dependency => ({
     ...dependency,
-    repo: null,
+    repo,
     installed: undefined,
     wanted: undefined,
     latest: undefined,
@@ -160,13 +164,15 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
 export async function getAllDependenciesSimple(
   req: express.Request, res: express.Response): Promise<void> {
   // TODO tests
-  const projectPath = decodePath(req.params.projectPath);
+  const projectPathDecoded = decodePath(req.params.projectPath);
 
   let npmDependencies: Dependency.Npm[] = [];
   let bowerDependencies: Dependency.Npm[] = [];
 
-  npmDependencies = getAllDependenciesSimpleNpm(projectPath);
-  bowerDependencies = getAllDependenciesSimpleBower(projectPath);
+  const yarn = hasYarn(projectPathDecoded);
+
+  npmDependencies = getAllDependenciesSimpleNpm(projectPathDecoded, yarn);
+  bowerDependencies = getAllDependenciesSimpleBower(projectPathDecoded);
 
   res.json([...npmDependencies, ...bowerDependencies]);
 }
@@ -189,7 +195,8 @@ export async function getAllDependencies(
         projectPathDecoded);
     } catch (e) {
       // yarn ?exception?
-      npmDependencies = getAllDependenciesSimpleNpm(projectPathDecoded);
+      console.log(e);
+      npmDependencies = getAllDependenciesSimpleNpm(projectPathDecoded, yarn);
     }
   } else if (npm) {
     npmDependencies = await withCachePut(

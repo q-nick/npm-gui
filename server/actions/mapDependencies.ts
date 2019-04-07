@@ -65,9 +65,9 @@ export function mapYarnResultTreeToBasic(yarnResults: Yarn.Result[]): { [key: st
     .filter((r: any): r is Yarn.ResultTree => r.type === 'tree')
     .map((yarnTree) => {
       yarnTree.data.trees.forEach((yarnDependency) => {
-        dependencies[yarnDependency.name.split('@')[0]] = {
-          name: yarnDependency.name.split('@')[0],
-          version: yarnDependency.name.split('@')[1],
+        dependencies[yarnDependency.name.substr(0, yarnDependency.name.lastIndexOf('@'))] = {
+          name: yarnDependency.name.substr(0, yarnDependency.name.lastIndexOf('@')),
+          version: yarnDependency.name.substr(yarnDependency.name.lastIndexOf('@') + 1),
         };
       });
     });
