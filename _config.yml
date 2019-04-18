@@ -1,0 +1,8 @@
+title: npm-gui
+description: Graphic User Interface for NPM tasks for frontend.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
