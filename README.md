@@ -61,12 +61,12 @@ To change project press **folder icon** in top-right corner. Navigation panel wi
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
 
 #### Installing new dependencies
-To install new dependency you can use **search/add button**. After typing name of the dependency in input - press search button - results will appear on list below. You can switch here between **npm/bower** repository. You must also decide will dependency be installed as production or development. After successfull installation of new dependency it will appear on project list.
+To install new dependency you can use **search/add button**. After typing name of the dependency in input - press search button - results will appear on list below. You can switch here between **npm/bower** repository. You must also decide will dependency be installed as production or development. After successful installation of new dependency it will appear on project list.
 
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/installing.gif)
 
 #### Removing dependencies
-To remove depenedency from your project simply press **trash icon** on the right.
+To remove dependency from your project simply press **trash icon** on the right.
 
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/removing.gif)
 
