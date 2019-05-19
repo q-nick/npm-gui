@@ -8,10 +8,6 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@types/boom": "7.2.0",
-    "npm-gui-tests": "1.0.0",
-    "that-value": "0.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
