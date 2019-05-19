@@ -45,6 +45,10 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   // latest, wanted
   const outdated = await executeCommandJSON(projectPath, 'npm outdated --json');
 
+  // unused (only regular dependencies for now)
+  const unusedResponse = await executeCommandJSON(projectPath, 'depcheck --json');
+  const unused = unusedResponse ? unusedResponse.dependencies : [];
+
   // extraenous
   const extraneousInstalled = Object.keys(dependenciesInstalled)
     .filter(name => dependenciesInstalled[name].extraneous);
@@ -62,6 +66,7 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
       outdated && outdated[dependency.name],
       dependenciesInPackageJson[dependency.name],
       dependency.type,
+      unused.includes(dependency.name),
     ));
 }
 
@@ -76,7 +81,6 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   const commandLsJSON = await executeCommand(projectPath, 'yarn list --depth=0 --json');
   const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter(s => s).map(parseJSON); // tslint:disable-line:max-line-length
   const dependenciesInstalled = mapYarnResultTreeToBasic(commandLsJSONResults);
-  console.log(dependenciesInstalled);
   // latest, wanted
   const outdatedResult = await executeCommand(projectPath, 'yarn outdated --depth=0 --json');
   if (outdatedResult.stderr) {
@@ -84,6 +88,10 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   }
   const outdatedResults: Yarn.Result[] = outdatedResult.stdout.split('\n').filter(s => s).map(parseJSON); // tslint:disable-line:max-line-length
   const outdated = mapYarnResultTableToVersion(outdatedResults);
+
+  // unused (only regular dependencies for now)
+  const unusedResponse = await executeCommandJSON(projectPath, 'depcheck --json');
+  const unused = unusedResponse ? unusedResponse.dependencies : [];
 
   // extraenous
   // const extraneousInstalled = Object.keys(dependenciesInstalled)
@@ -104,6 +112,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
       outdated && outdated[dependency.name],
       dependenciesInPackageJson[dependency.name],
       dependency.type,
+      unused.includes(dependency.name),
       'yarn',
     ));
 }
@@ -136,6 +145,7 @@ function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Depend
     installed: undefined,
     wanted: undefined,
     latest: undefined,
+    unused: false,
   }));
 }
 
@@ -157,6 +167,7 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
     installed: undefined,
     wanted: undefined,
     latest: undefined,
+    unused: false,
   }));
 }
 
@@ -191,7 +202,8 @@ export async function getAllDependencies(
   if (yarn) {
     try {
       npmDependencies = await withCachePut(
-        getAllYarnDependencies, `${projectPath}-npm`,
+        getAllYarnDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`,
         projectPathDecoded);
     } catch (e) {
       // yarn ?exception?
@@ -200,13 +212,15 @@ export async function getAllDependencies(
     }
   } else if (npm) {
     npmDependencies = await withCachePut(
-      getAllNpmDependencies, `${projectPath}-npm`,
+      getAllNpmDependencies,
+      `${req.headers['x-cache-id']}-${projectPath}-npm`,
       projectPathDecoded);
   }
 
   if (bower) {
     bowerDependencies = await withCachePut(
-      getAllBowerDependencies, `${projectPath}-bower`,
+      getAllBowerDependencies,
+      `${req.headers['x-cache-id']}-${projectPath}-bower`,
       projectPathDecoded);
   }
 

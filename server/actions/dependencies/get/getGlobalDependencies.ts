@@ -19,6 +19,7 @@ async function getGlobalNpmDependencies():Promise<Dependency.Npm[]> {
       versions && versions[name],
       dependencies[name].version,
       'global',
+      false,
     ));
 }
 
@@ -33,6 +34,7 @@ async function getGlobalNpmDependenciesSimple():Promise<Dependency.Npm[]> {
       undefined,
       dependencies[name].version,
       'global',
+      false,
     ));
 }
 

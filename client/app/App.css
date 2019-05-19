@@ -8,6 +8,7 @@
   display: flex;
   padding: 15px;
   transition: flex-basis 1500ms ease-in-out;
+  height: 100%;
 }
 
 .rightColumn {
@@ -15,4 +16,5 @@
   flex: 1;
   padding: 15px;
   flex-direction: column;
+  height: 100%;
 }

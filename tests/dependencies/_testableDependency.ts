@@ -6,6 +6,7 @@ interface Entire {
   type?: 'dev' | 'prod';
   wanted: string;
   latest: string;
+  unused: boolean;
 }
 
 interface Dependency {
@@ -35,6 +36,7 @@ export const npmTest: Test = {
       installed: '1.0.0',
       wanted: '1.1.1',
       latest: '2.1.1',
+      unused: true,
     },
   }, {
     name: 'that-value',
@@ -46,6 +48,7 @@ export const npmTest: Test = {
       installed: '0.1.1',
       wanted: '0.1.3',
       latest: null,
+      unused: true,
     },
   }],
 };
@@ -64,6 +67,7 @@ export const yarnTest: Test = {
       installed: '1.0.0',
       wanted: null,
       latest: '2.1.1',
+      unused: true,
     },
   }, {
     name: 'that-value',
@@ -75,6 +79,7 @@ export const yarnTest: Test = {
       installed: '0.1.1',
       wanted: null,
       latest: '0.1.3',
+      unused: true,
     },
   }],
 };
@@ -93,6 +98,7 @@ export const bowerTest: Test = {
       installed: '15.5.0',
       wanted: '15.5.0',
       latest: '16.1.0',
+      unused: false,
     },
   }, {
     name: 'that-value',
@@ -104,6 +110,7 @@ export const bowerTest: Test = {
       installed: '0.1.1',
       wanted: '0.1.1',
       latest: '0.1.3',
+      unused: false,
     },
   }],
 };
@@ -117,7 +124,7 @@ export const projectsNPM:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMvbnBt', // 'tests/projects/npm',
   tests: [
     { ...npmTest },
-    { ...npmTest, type: 'prod' },
+    { ...npmTest, type: 'dev' },
   ],
 }];
 
@@ -125,7 +132,7 @@ export const projectsBower:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
   tests: [
     { ...bowerTest },
-    { ...bowerTest, type: 'prod' },
+    { ...bowerTest, type: 'dev' },
   ],
 }];
 
@@ -133,7 +140,7 @@ export const projectsYarn:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMveWFybg==', // 'tests/projects/yarn',
   tests: [
     { ...yarnTest },
-    { ...yarnTest, type: 'prod' },
+    { ...yarnTest, type: 'dev' },
   ],
 }];
 

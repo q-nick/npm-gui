@@ -59,7 +59,18 @@ export class DependencyRow extends React.PureComponent<Props> {
     }
 
     if (getNormalizedVersion(dependency.required) === dependency.installed) {
-      return <span>{dependency.installed}</span>;
+      return (
+        <span>
+          {dependency.installed}
+          {dependency.unused && (
+            <span
+              className="oi"
+              title="Probably this dependency is unused"
+              data-glyph="fork"
+            />
+          )}
+        </span>
+      );
     }
 
     return (
@@ -69,7 +80,15 @@ export class DependencyRow extends React.PureComponent<Props> {
         variant="success"
         scale="small"
         onClick={this.onInstallDependencyInstalledVersion}
-      >{dependency.installed}
+      >
+        {dependency.installed}
+        {dependency.unused && (
+          <span
+            className="oi"
+            title="Probably this dependency is unused"
+            data-glyph="fork"
+          />
+        )}
       </Button>
     );
   }

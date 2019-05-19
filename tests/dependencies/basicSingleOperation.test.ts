@@ -40,6 +40,7 @@ describe('single dependency operations', () => {
             .get(`/api/project/${project.pathEncoded}/dependencies`)
             .end((_: any, res: api.Response) => {
               expect(res.status).to.equal(200);
+              console.log(res.body);
               expect(res.body).to.deep.include({ ...dependencyToTest });
               done();
             });

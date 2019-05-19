@@ -38,7 +38,8 @@ export async function deleteDependency(req: express.Request, res: express.Respon
   if (repoName === 'npm') {
     if (yarn || npm) {
       await withCacheSplice(
-        yarn ? deleteYarnDependency : deleteNpmDependency, `${projectPath}-npm`, 'name',
+        yarn ? deleteYarnDependency : deleteNpmDependency,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
         projectPathDecoded, packageName, type,
       );
       res.json({});
@@ -51,7 +52,8 @@ export async function deleteDependency(req: express.Request, res: express.Respon
     if (bower) {
       try {
         await withCacheSplice(
-          deleteBowerDependency, `${projectPath}-bower`, 'name',
+          deleteBowerDependency,
+          `${req.headers['x-cache-id']}-${projectPath}-bower`, 'name',
           projectPathDecoded, packageName, type);
         res.json({});
       } catch (e) {

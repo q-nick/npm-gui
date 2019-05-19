@@ -38,6 +38,10 @@ app.use('/', express.static(path.normalize(`${__dirname}/../client`), { index: [
 
 app.use('/api/log', logRouter);
 
+app.get('*', (_, res) => {
+  res.sendFile(path.join(__dirname, '/../client', 'index.html'));
+});
+
 // error handler
 app.use((err:any, _:express.Request, res:express.Response, next:Function) => {
   // No routes handled the request and no system error, that means 404 issue.

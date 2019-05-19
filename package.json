@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Graphical tool for managing javascript project dependencies - in a friendly way.",
   "keywords": [
     "gui",
@@ -64,6 +64,7 @@
     "@types/supertest": "^2.0.7",
     "@types/ws": "^6.0.1",
     "analytics-node": "^3.3.0",
+    "@types/depcheck": "^0.6.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "bufferutil": "^4.0.1",
@@ -111,5 +112,7 @@
     "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "depcheck": "^0.7.2"
+  }
 }

@@ -57,6 +57,7 @@ async function getNpmPackageWithInfo(projectPath: string, dependencyName: string
     outdated && outdated[dependencyName],
     required,
     type,
+    true,
   );
 }
 
@@ -82,6 +83,7 @@ async function getYarnNpmPackageWithInfo(projectPath: string, dependencyName: st
     outdated && outdated[dependencyName],
     required,
     type,
+    true,
     'yarn',
   );
 }
@@ -180,12 +182,14 @@ export async function addDependencies(req: express.Request, res: express.Respons
     if (npm || yarn) {
       if (dependenciesToInstall.length === 1) {
         result = await withCacheUpdate(
-          yarn ? addYarnDependency : addNpmDependency, `${projectPath}-npm`, 'name',
+          yarn ? addYarnDependency : addNpmDependency,
+          `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
           projectPathDecoded, dependenciesToInstall[0], type,
         );
       } else if (dependenciesToInstall.length > 1) {
         result = await withCacheInvalidate(
-          yarn ? addYarnDependencies : addNpmDependencies, `${projectPath}-npm`,
+          yarn ? addYarnDependencies : addNpmDependencies,
+          `${req.headers['x-cache-id']}-${projectPath}-npm`,
           projectPathDecoded, dependenciesToInstall, type,
         );
       } else {
@@ -201,11 +205,13 @@ export async function addDependencies(req: express.Request, res: express.Respons
     if (bower) {
       if (dependenciesToInstall.length === 1) {
         result = await withCacheUpdate(
-          addBowerDependency, `${projectPath}-bower`, 'name',
+          addBowerDependency,
+          `${req.headers['x-cache-id']}-${projectPath}-bower`, 'name',
           projectPathDecoded, dependenciesToInstall[0], type);
       } else if (dependenciesToInstall.length > 1) {
         result = await withCacheInvalidate(
-          addBowerDependencies, `${projectPath}-bower`,
+          addBowerDependencies,
+          `${req.headers['x-cache-id']}-${projectPath}-bower`,
           projectPathDecoded, dependenciesToInstall, type);
       } else {
         throw 'Invalid depedencies';

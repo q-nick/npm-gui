@@ -43,6 +43,7 @@ declare namespace Dependency {
     wanted?: string,
     latest?: string,
     repo: Repo;
+    unused: boolean,
   }
 
   interface SearchResult {

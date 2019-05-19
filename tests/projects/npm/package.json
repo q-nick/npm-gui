@@ -9,8 +9,5 @@
   "author": "",
   "license": "UNLICENSED",
   "devDependencies": {},
-  "dependencies": {
-    "npm-gui-tests": "^1.0.0",
-    "that-value": "^0.1.1"
-  }
+  "dependencies": {}
 }

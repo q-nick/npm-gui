@@ -24,6 +24,7 @@ async function addGlobalNpmDependency(req:express.Request):Promise<Dependency.En
     versions[name],
     dependencies[name].version,
     'global',
+    false,
   );
 }
 

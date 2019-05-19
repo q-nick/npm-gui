@@ -9,6 +9,10 @@ import { stores } from './stores';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ProjectContainer } from './containers/ProjectContainer';
 
+const xCacheId = new Date().getTime();
+axios.interceptors.request.use(config =>
+  ({ ...config, headers: { ...config.headers, 'x-cache-id': xCacheId } }));
+
 ReactDOM.render(
   <Provider {...stores}>
     <Router>

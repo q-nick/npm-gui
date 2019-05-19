@@ -8,6 +8,7 @@ export function mapNpmDependency(
   version: Dependency.Version,
   required: string,
   type: Dependency.Type,
+  unused: boolean,
   repo: 'npm' | 'yarn' = 'npm'): Dependency.Entire {
   const installed = (dependency && dependency.version) || null;
   let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
@@ -23,6 +24,7 @@ export function mapNpmDependency(
     latest,
     type,
     repo,
+    unused,
   };
 }
 
@@ -42,12 +44,15 @@ export function mapBowerDependency(
       dependency.update.latest,
       [dependency.pkgMeta && dependency.pkgMeta.version],
     ),
+    unused: false,
   };
 }
 
-export function mapYarnDependencyToDependency(yarnDependency: Yarn.ResultDependency)
+export function mapYarnDependencyToDependency(
+  yarnDependency: Yarn.ResultDependency, unused: boolean)
   : Dependency.Entire {
   return {
+    unused,
     name: yarnDependency[0],
     required: null,
     installed: yarnDependency[1],

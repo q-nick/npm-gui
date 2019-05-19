@@ -49,7 +49,8 @@ export async function installDependencies(
   if (yarn || npm) {
     try {
       await withCacheInvalidate(
-        yarn ? installYarnDependencies : installNpmDependencies, `${projectPath}-npm`,
+        yarn ? installYarnDependencies : installNpmDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`,
         projectPathDecoded);
     } catch (e) {
       console.error('npm/yarn', e);
@@ -59,7 +60,8 @@ export async function installDependencies(
   if (bower) {
     try {
       await withCacheInvalidate(
-        installBowerDependencies, `${projectPath}-bower`,
+        installBowerDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-bower`,
         projectPathDecoded);
     } catch (e) {
       console.error('bower', e);
@@ -80,7 +82,8 @@ export async function forceReinstallDependencies(
   if (yarn || npm) {
     try {
       await withCacheInvalidate(
-        yarn ? forceReinstallYarnDependencies : forceReinstallNpmDependencies, `${projectPath}-npm`,
+        yarn ? forceReinstallYarnDependencies : forceReinstallNpmDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`,
         projectPathDecoded);
     } catch (e) {
       console.error('npm/yarn', e);
@@ -90,7 +93,8 @@ export async function forceReinstallDependencies(
   if (bower) {
     try {
       await withCacheInvalidate(
-        forceReinstallBowerDependencies, `${projectPath}-bower`,
+        forceReinstallBowerDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-bower`,
         projectPathDecoded);
     } catch (e) {
       console.error('bower', e);

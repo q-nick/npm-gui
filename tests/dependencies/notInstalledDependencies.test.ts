@@ -16,7 +16,7 @@ function clearProject(projectPath: string): void {
 }
 
 // TODO REFACTOR
-describe.only('not installed project', () => {
+describe('not installed project', () => {
   projects.forEach((project) => {
     project.tests.forEach((test) => {
       const dependenciesToTest =
