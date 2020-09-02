@@ -5,7 +5,7 @@ import { mapNpmDependency } from '../../mapDependencies';
 import { withCachePut } from '../../../cache';
 import { parseJSON } from '../../parseJSON';
 
-async function getGlobalNpmDependencies():Promise<Dependency.Npm[]> {
+async function getGlobalNpmDependencies():Promise<Dependency.Entire[]> {
   const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
   const { dependencies } = parseJSON(commandResult.stdout);
 
@@ -13,7 +13,7 @@ async function getGlobalNpmDependencies():Promise<Dependency.Npm[]> {
   const versions = parseJSON(commandOutdatedResult.stdout);
 
   return Object.keys(dependencies)
-    .map((name):Dependency.Npm => mapNpmDependency(
+    .map((name):any => mapNpmDependency(
       name,
       dependencies[name],
       versions && versions[name],
@@ -28,10 +28,10 @@ async function getGlobalNpmDependenciesSimple():Promise<Dependency.Npm[]> {
   const { dependencies } = parseJSON(commandResult.stdout);
 
   return Object.keys(dependencies)
-    .map((name):Dependency.Npm => mapNpmDependency(
+    .map((name):any => mapNpmDependency(
       name,
       dependencies[name],
-      undefined,
+      undefined as any,
       dependencies[name].version,
       'global',
       false,
@@ -39,7 +39,8 @@ async function getGlobalNpmDependenciesSimple():Promise<Dependency.Npm[]> {
 }
 
 export async function getGlobalDependencies(_:express.Request, res:express.Response):Promise<void> {
-  let npmDependencies:Dependency.Npm[] = [];
+  // let npmDependencies:Dependency.Npm[] = [];
+  let npmDependencies:any[] = [];
 
   try {
     npmDependencies = await withCachePut(getGlobalNpmDependencies, 'npm-global');
@@ -49,7 +50,8 @@ export async function getGlobalDependencies(_:express.Request, res:express.Respo
 }
 
 export async function getGlobalDependenciesSimple(
-  _:express.Request, res:express.Response):Promise<void> {
+  _:express.Request, res:express.Response,
+):Promise<void> {
   let npmDependencies:Dependency.Npm[] = [];
 
   try {

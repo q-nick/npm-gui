@@ -1,4 +1,4 @@
-import * as api from 'supertest';
+import api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../server';
 
@@ -75,7 +75,7 @@ describe('installation errors', () => {
       it('malformed / undefined', (done) => {
         api(app)
           .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
-          .send([{  }])
+          .send([{ }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);
             expect(res.body).to.have.property('error');
@@ -86,7 +86,7 @@ describe('installation errors', () => {
       it('malformed / undefined (multiple)', (done) => {
         api(app)
           .post(`/api/project/${repo.projectPath}/dependencies/prod/${repo.name}`)
-          .send([{  }, { }])
+          .send([{ }, { }])
           .end((_: any, res: api.Response) => {
             expect(res.status).to.equal(400);
             expect(res.body).to.have.property('error');

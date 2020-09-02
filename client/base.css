@@ -53,3 +53,10 @@ th {
 th:last-child {
   border-right: 0;
 }
+
+.npm-gui {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  min-height: 100vh;
+}

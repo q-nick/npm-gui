@@ -1,4 +1,4 @@
-import * as api from 'supertest';
+import api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../server';
 

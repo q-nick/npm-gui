@@ -39,9 +39,10 @@ async function forceReinstallBowerDependencies(projectPath: string):Promise<void
 }
 
 export async function installDependencies(
-  req:express.Request, res:express.Response):Promise<void> {
-  const { projectPath }: { projectPath: string } = req.params;
-  const projectPathDecoded = decodePath(projectPath);
+  req:express.Request, res:express.Response,
+):Promise<void> {
+  const { projectPath } = req.params as { projectPath: string };
+  const projectPathDecoded = decodePath(projectPath)!;
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
   const bower = hasBower(projectPathDecoded);
@@ -51,7 +52,8 @@ export async function installDependencies(
       await withCacheInvalidate(
         yarn ? installYarnDependencies : installNpmDependencies,
         `${req.headers['x-cache-id']}-${projectPath}-npm`,
-        projectPathDecoded);
+        projectPathDecoded,
+      );
     } catch (e) {
       console.error('npm/yarn', e);
     }
@@ -62,7 +64,8 @@ export async function installDependencies(
       await withCacheInvalidate(
         installBowerDependencies,
         `${req.headers['x-cache-id']}-${projectPath}-bower`,
-        projectPathDecoded);
+        projectPathDecoded,
+      );
     } catch (e) {
       console.error('bower', e);
     }
@@ -72,9 +75,10 @@ export async function installDependencies(
 }
 
 export async function forceReinstallDependencies(
-  req:express.Request, res:express.Response):Promise<void> {
-  const { projectPath }: { projectPath: string } = req.params;
-  const projectPathDecoded = decodePath(projectPath);
+  req:express.Request, res:express.Response,
+):Promise<void> {
+  const { projectPath } = req.params as { projectPath: string };
+  const projectPathDecoded = decodePath(projectPath)!;
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
   const bower = hasBower(projectPathDecoded);
@@ -84,7 +88,8 @@ export async function forceReinstallDependencies(
       await withCacheInvalidate(
         yarn ? forceReinstallYarnDependencies : forceReinstallNpmDependencies,
         `${req.headers['x-cache-id']}-${projectPath}-npm`,
-        projectPathDecoded);
+        projectPathDecoded,
+      );
     } catch (e) {
       console.error('npm/yarn', e);
     }
@@ -95,7 +100,8 @@ export async function forceReinstallDependencies(
       await withCacheInvalidate(
         forceReinstallBowerDependencies,
         `${req.headers['x-cache-id']}-${projectPath}-bower`,
-        projectPathDecoded);
+        projectPathDecoded,
+      );
     } catch (e) {
       console.error('bower', e);
     }

@@ -1,8 +1,19 @@
-import * as React from 'react';
-import * as style from './Loader.css';
+import React from 'react';
+import styled from 'styled-components';
 
-export class Loader extends React.PureComponent {
-  render(): React.ReactNode {
-    return <span className={`oi ${style.spin} ${style.loader}`} data-glyph="reload" />;
+const LoaderStyled = styled.span`
+  font-size: inherit;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
   }
+`;
+
+export function Loader(): JSX.Element {
+  return <LoaderStyled className="oi" data-glyph="reload" />;
 }

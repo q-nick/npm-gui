@@ -27,7 +27,7 @@ export class ScriptsTable extends React.PureComponent<Props> {
       { name: '' },
     ];
 
-    return (ths.map(th => (
+    return (ths.map((th) => (
       <th>{th.name}</th>
     )));
   }
@@ -37,7 +37,12 @@ export class ScriptsTable extends React.PureComponent<Props> {
       <div className={style.tableContainer}>
         <div className={style.infoContainer}>
           {this.isEmpty() && <>empty...</>}
-          {this.isLoading() && <><Loader />&nbsp;loading...</>}
+          {this.isLoading() && (
+          <>
+            <Loader />
+            &nbsp;loading...
+          </>
+          )}
         </div>
         <table>
           <thead>
@@ -47,17 +52,16 @@ export class ScriptsTable extends React.PureComponent<Props> {
           </thead>
           <tbody>
             {
-              this.props.scripts &&
-              this.props.scripts.map(script =>
-                (
-                  <ScriptRow
-                    key={script.name}
-                    script={script}
-                    isProcessing={this.props.scriptsProcessing[script.name]}
-                    onDeleteScript={this.props.onDeleteScript}
-                    onRunScript={this.props.onRunScript}
-                  />
-                ))
+              this.props.scripts
+              && this.props.scripts.map((script) => (
+                <ScriptRow
+                  key={script.name}
+                  script={script}
+                  isProcessing={this.props.scriptsProcessing[script.name]}
+                  onDeleteScript={this.props.onDeleteScript}
+                  onRunScript={this.props.onRunScript}
+                />
+              ))
             }
           </tbody>
         </table>

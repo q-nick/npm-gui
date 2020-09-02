@@ -1,67 +1,64 @@
 import * as React from 'react';
-import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
-
-import * as style from './App.css';
-import { ConsoleContainer } from '../containers/ConsoleContainer';
+import {
+  Route, Switch, Redirect, useParams,
+} from 'react-router-dom';
 import 'open-iconic';
+
+import styled from 'styled-components';
+import { ConsoleContainer } from '../containers/ConsoleContainer';
 import { DependenciesContainer } from '../containers/DependenciesContainer';
-import { ScriptsContainer } from '../containers/ScriptsContainer';
+// import { ScriptsContainer } from '../containers/ScriptsContainer';
 import { Info } from '../components/Info/Info';
-import { HeaderContainer } from '../containers/HeaderContainer';
+import { Header } from '../components/Header/Header';
 
-export class App extends React.PureComponent<RouteComponentProps> {
-  constructor(props: RouteComponentProps) {
-    super(props);
+const Row = styled.div`
+  flex: 1;
+  display: flex;
+`;
 
-    this.renderRouteProjectDependencies = this.renderRouteProjectDependencies.bind(this);
-    this.renderRouteScripts = this.renderRouteScripts.bind(this);
-  }
+const LeftColumn = styled.div`
+  flex-basis: 30%;
+  display: flex;
+  padding: 15px;
+  transition: flex-basis 1500ms ease-in-out;
+`;
 
-  renderRouteProjectDependencies(): React.ReactNode {
-    const projectPath = (this.props.match.params as any).projectPathEncoded;
-    return <DependenciesContainer projectPath={projectPath} filtersEnabled={['name', 'type']} />;
-  }
+const RightColumn = styled.div`
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  flex-direction: column;
+`;
 
-  renderRouteGlobalDependencies(): React.ReactNode {
-    return <DependenciesContainer filtersEnabled={['name']} />;
-  }
+export function App(): JSX.Element {
+  const { projectPathEncoded } = useParams<{projectPathEncoded:string}>();
 
-  renderRouteScripts(): React.ReactNode {
-    const projectPath = (this.props.match.params as any).projectPathEncoded;
-    return <ScriptsContainer projectPath={projectPath} />;
-  }
-
-  render(): React.ReactNode {
-    return (
-      <>
-        <HeaderContainer />
-        <div className={style.row}>
-          <div className={style.leftColumn}>
-            <ConsoleContainer />
-          </div>
-          <div className={style.rightColumn}>
-            <Switch>
-              <Route
-                path={`${this.props.match.path}/dependencies`}
-                key={`${this.props.match.url}/dependencies`}
-                render={this.renderRouteProjectDependencies}
+  return (
+    <>
+      <Header projectPathEncoded={projectPathEncoded} />
+      <Row>
+        <LeftColumn>
+          <ConsoleContainer />
+        </LeftColumn>
+        <RightColumn>
+          <Switch>
+            <Route path="/project/:projectPathEncoded/dependencies">
+              <DependenciesContainer
+                projectPath={projectPathEncoded}
+                filtersEnabled={['name', 'type']}
               />
-              <Route
-                path={`${this.props.match.path}/global`}
-                key={'global'}
-                render={this.renderRouteGlobalDependencies}
-              />
-              <Route
-                path={`${this.props.match.path}/scripts`}
-                key={`${this.props.match.url}/scripts`}
-                render={this.renderRouteScripts}
-              />
-              <Redirect to={`${this.props.match.url}/dependencies`} />
-            </Switch>
-            <Info />
-          </div>
-        </div>
-      </>
-    );
-  }
+            </Route>
+            <Route path="/project/:projectPathEncoded/global">
+              <DependenciesContainer filtersEnabled={['name']} />
+            </Route>
+            {/* <Route path="/project/:projectPathEncoded/scripts">
+              <ScriptsContainer projectPath={projectPathEncoded} />
+            </Route> */}
+            <Redirect to={`project/${projectPathEncoded}/dependencies`} />
+          </Switch>
+          <Info />
+        </RightColumn>
+      </Row>
+    </>
+  );
 }

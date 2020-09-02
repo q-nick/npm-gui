@@ -1,15 +1,16 @@
-import * as spawn from 'cross-spawn';
+import spawn from 'cross-spawn';
 
 import * as Console from '../console';
 import { parseJSON } from './parseJSON';
 
-export default function executeCommand(cwd:string, wholeCommand:string, pushToConsole = false)
-  :Promise<{ stdout: string, stderr:string}> {
+export default function executeCommand(
+  cwd:string | null, wholeCommand:string, pushToConsole = false,
+):Promise<{ stdout: string, stderr:string}> {
   return new Promise((resolve, reject) => {
     // spawn process
     const args = wholeCommand.split(' ');
     const command = args.shift();
-    const spawned = spawn(command, args, { cwd, detached: false });
+    const spawned = spawn(command!, args, { cwd: cwd as any, detached: false });
     const commandId = new Date().getTime().toString();
     // console.log(`executing: "${wholeCommand}" in "${cwd}"\n`, commandId);
     if (pushToConsole) {
@@ -48,7 +49,9 @@ export default function executeCommand(cwd:string, wholeCommand:string, pushToCo
   });
 }
 
-export async function executeCommandJSON(cwd:string, wholeCommand:string, pushToConsole = false):Promise<any> { // tslint:disable:max-line-length
+export async function executeCommandJSON(
+  cwd:string, wholeCommand:string, pushToConsole = false,
+):Promise<any> {
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
     return parseJSON(stdout);

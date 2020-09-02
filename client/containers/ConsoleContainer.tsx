@@ -1,32 +1,65 @@
-import * as React from 'react';
-import { observer, inject } from 'mobx-react';
-import { ConsoleStore } from '../stores/console.store';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Console } from '../components/Console/Console';
-import { toJS } from 'mobx';
 
-interface Props {
-  consoleStore?: ConsoleStore;
-}
+export function ConsoleContainer(): JSX.Element {
+  const [sessions, setSessions] = useState<NpmGui.ConsoleSession[]>([]);
 
-@inject('consoleStore') @observer
-export class ConsoleContainer extends React.Component<Props> {
-  onRemoveSession = (id: string): void => {
-    this.props.consoleStore.removeSession(id);
+  const addMessageToSession = useCallback(
+    (message: NpmGui.ConsoleSession): void => {
+      setSessions((prevSessions): typeof sessions => {
+        const sessionExists = prevSessions.some((session) => session.id === message.id);
+
+        if (!sessionExists) {
+          return [
+            ...prevSessions,
+            message,
+          ];
+        }
+
+        return prevSessions.map((session) => {
+          if (session.id === message.id) {
+            return {
+              id: session.id,
+              status: message.status,
+              msg: session.msg + message.msg,
+            };
+          }
+
+          return session;
+        });
+      });
+    },
+    [],
+  );
+
+  const onRemoveSession = useCallback((id:string) => {
+    setSessions((prevSessions) => {
+      if (!prevSessions) {
+        return prevSessions;
+      }
+
+      return prevSessions.filter((session) => session.id !== id);
+    });
+  }, []);
+
+  const onStopSession = useCallback((id:string) => {
+    console.log(id);
+  }, []);
+
+  useEffect(() => {
+    const consoleSocket = new WebSocket(`ws://${window.location.host}/api/console`);
+    consoleSocket.onmessage = (msg) => addMessageToSession(JSON.parse(msg.data));
+  }, [addMessageToSession]);
+  console.log(sessions);
+  if (!sessions) {
+    return <></>;
   }
 
-  onStopSession = (_: string): void => {
-    // TODO
-    // this.props.consoleStore.removeSession(id);
-  }
-
-  render(): React.ReactNode {
-    const sessions = toJS(this.props.consoleStore.sessions);
-    return (
-      <Console
-        sessions={sessions}
-        onRemoveSession={this.onRemoveSession}
-        onStopSession={this.onStopSession}
-      />
-    );
-  }
+  return (
+    <Console
+      sessions={sessions}
+      onRemoveSession={onRemoveSession}
+      onStopSession={onStopSession}
+    />
+  );
 }

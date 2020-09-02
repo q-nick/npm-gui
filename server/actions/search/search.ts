@@ -1,5 +1,5 @@
-import * as request from 'request';
-import * as express from 'express';
+import request from 'request';
+import express from 'express';
 
 function requestWithPromise(url:string):Promise<any> {
   return new Promise((resolve) => {
@@ -34,7 +34,7 @@ async function searchNPM(query:string):Promise<Search.Result> {
 }
 
 const methodsFor:{
-  [key:string]: Function,
+  [key:string]: (query: string) => Promise<Search.Result>,
 } = {
   bower: searchBower,
   npm: searchNPM,

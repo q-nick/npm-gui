@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-export function decodePath(pathEncoded:string):string {
+export function decodePath(pathEncoded:string):string | null {
   if (!pathEncoded) {
     return null;
   }

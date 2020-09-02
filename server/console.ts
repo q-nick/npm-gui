@@ -1,7 +1,7 @@
-import * as Ws from 'ws';
+import Ws from 'ws';
 import { Server } from 'http';
 
-let consoleSocket: Ws = null;
+let consoleSocket: Ws | undefined;
 
 export function send(msg: string, id: string, status = 'LIVE'):void {
   if (consoleSocket) {

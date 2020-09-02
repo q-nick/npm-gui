@@ -1,11 +1,12 @@
+import express from 'express';
 import executeCommand from '../../executeCommand';
 import { withCacheSplice } from '../../../cache';
 import { decodePath } from '../../decodePath';
-import * as express from 'express';
 import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
 async function deleteNpmDependency(
-  projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
+  projectPath: string, dependencyName:string, type: Dependency.Type,
+):Promise<string> {
   // delete
   await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'prod' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
@@ -13,7 +14,8 @@ async function deleteNpmDependency(
 }
 
 async function deleteYarnDependency(
-  projectPath: string, dependencyName:string, _: Dependency.Type):Promise<string> {
+  projectPath: string, dependencyName:string, _: Dependency.Type,
+):Promise<string> {
   // delete
   await executeCommand(projectPath, `yarn remove ${dependencyName}`, true);
 
@@ -21,16 +23,19 @@ async function deleteYarnDependency(
 }
 
 async function deleteBowerDependency(
-  projectPath: string, dependencyName:string, type: Dependency.Type):Promise<string> {
+  projectPath: string, dependencyName:string, type: Dependency.Type,
+):Promise<string> {
   await executeCommand(projectPath, `bower uninstall ${dependencyName} -${type === 'prod' ? 'S' : 'D'}`, true); // tslint:disable-line:max-line-length
 
   return dependencyName;
 }
 
 export async function deleteDependency(req: express.Request, res: express.Response):Promise<void> {
-  const { repoName, projectPath, type, packageName } :
-  { repoName: string, projectPath: string, type: Dependency.Type, packageName:string } = req.params;
-  const projectPathDecoded = decodePath(projectPath);
+  const {
+    repoName, projectPath, type, packageName,
+  } :
+  any = req.params;
+  const projectPathDecoded = decodePath(projectPath) as string;
   const yarn = hasYarn(projectPathDecoded);
   const bower = hasBower(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
@@ -54,7 +59,8 @@ export async function deleteDependency(req: express.Request, res: express.Respon
         await withCacheSplice(
           deleteBowerDependency,
           `${req.headers['x-cache-id']}-${projectPath}-bower`, 'name',
-          projectPathDecoded, packageName, type);
+          projectPathDecoded, packageName, type,
+        );
         res.json({});
       } catch (e) {
         console.log(e);

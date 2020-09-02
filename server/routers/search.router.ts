@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import { search } from '../actions/search/search';
 
 const searchRouter = express.Router();

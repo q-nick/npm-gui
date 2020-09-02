@@ -1,7 +1,0 @@
-{
-  "extends": ["tslint-config-airbnb", "tslint-react"],
-  "rules": {
-    "typedef": [true, "call-signature"],
-    "jsx-no-multiline-js": false
-  }
-}

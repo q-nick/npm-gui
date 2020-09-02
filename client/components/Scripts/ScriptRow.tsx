@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as style from './Scripts.css';
-import { Button } from '../Button/Button';
-import { ConfirmButton } from '../ConfirmButton/ConfirmButton';
+import { Button } from '../../ui/Button/Button';
+import { ConfirmButton } from '../../ui/ConfirmButton/ConfirmButton';
 
 interface Props {
   script: NpmGui.Script;
@@ -33,7 +33,8 @@ export class ScriptRow extends React.PureComponent<Props> {
             variant="info"
             scale="small"
             onClick={this.onRunScript}
-          >run
+          >
+            run
           </Button>
         </td>
         <td>{name}</td>

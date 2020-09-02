@@ -1,6 +1,10 @@
-import * as React from 'react';
-import * as style from './Dependencies.css';
-import { Button } from '../Button/Button';
+import React, { ReactNode } from 'react';
+import styled from 'styled-components';
+import { Button } from '../../ui/Button/Button';
+
+const RightSection = styled.div`
+  float: right;
+`;
 
 interface Props {
   onInstallAll: () => void;
@@ -8,24 +12,31 @@ interface Props {
   onUpdateAllToWanted: () => void;
   onUpdateAllToLatest: () => void;
   onForceReInstall: () => void;
+  children: ReactNode;
 }
 
-export class DependenciesHeader extends React.PureComponent<Props> {
-  render(): React.ReactNode {
-    return (
-      <header>
-        {this.props.children}
-        <div className={style.right}>
-          <small>Install:</small>
-          &nbsp;
-          <Button
-            variant="primary"
-            scale="small"
-            icon="data-transfer-download"
-            onClick={this.props.onInstallAll}
-          >All
-          </Button>
-          {/* <Button
+export function DependenciesHeader({
+  onInstallAll, children,
+  onUpdateAllToInstalled,
+  onUpdateAllToWanted,
+  onUpdateAllToLatest,
+  onForceReInstall,
+}:Props):JSX.Element {
+  return (
+    <header>
+      {children}
+      <RightSection>
+        <small>Install:</small>
+        &nbsp;
+        <Button
+          variant="primary"
+          scale="small"
+          icon="data-transfer-download"
+          onClick={onInstallAll}
+        >
+          All
+        </Button>
+        {/* <Button
             variant="primary"
             scale="small"
             icon="data-transfer-download"
@@ -39,41 +50,48 @@ export class DependenciesHeader extends React.PureComponent<Props> {
             disabled={true}
           >Dev
           </Button> */}
-          &nbsp;
-          <small>Update all to:</small>
-          &nbsp;
-          <Button
-            variant="success"
-            scale="small"
-            icon="cloud-download"
-            onClick={this.props.onUpdateAllToInstalled}
-          >Installed
-          </Button>
-          <Button
-            variant="success"
-            scale="small"
-            icon="cloud-download"
-            onClick={this.props.onUpdateAllToWanted}
-          >Wanted
-          </Button>
-          <Button
-            variant="success"
-            scale="small"
-            icon="cloud-download"
-            onClick={this.props.onUpdateAllToLatest}
-          >Latest
-          </Button>
-          &nbsp;
-          &nbsp;
-          <Button
-            variant="danger"
-            scale="small"
-            icon="loop-circular"
-            onClick={this.props.onForceReInstall}
-          >Re-Install
-          </Button>
-        </div>
-      </header>
-    );
-  }
+        &nbsp;
+        <small>Update all to:</small>
+        &nbsp;
+        <Button
+          variant="success"
+          scale="small"
+          icon="cloud-download"
+          onClick={onUpdateAllToInstalled}
+          title="Reinstall all packages without changing package.json"
+        >
+          Installed
+        </Button>
+        <Button
+          variant="success"
+          scale="small"
+          icon="cloud-download"
+          onClick={onUpdateAllToWanted}
+          title="Install all wanted package version"
+        >
+          Wanted
+        </Button>
+        <Button
+          variant="success"
+          scale="small"
+          icon="cloud-download"
+          onClick={onUpdateAllToLatest}
+          title="Install all latest packages version"
+        >
+          Latest
+        </Button>
+        &nbsp;
+        &nbsp;
+        <Button
+          variant="danger"
+          scale="small"
+          icon="loop-circular"
+          onClick={onForceReInstall}
+          title="Remove and re-nstall all packages"
+        >
+          Re-Install
+        </Button>
+      </RightSection>
+    </header>
+  );
 }

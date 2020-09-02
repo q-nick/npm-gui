@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as express from 'express';
+import express from 'express';
 
 import { decodePath } from '../decodePath';
 import executeCommand from '../executeCommand';
@@ -11,7 +11,7 @@ export async function getScripts(req: express.Request, res: express.Response):Pr
   const packageJson = parseJSON(fs.readFileSync(path.normalize(`${projectPath}/package.json`), { encoding: 'utf8' })); // tslint:disable:max-line-length
   const scripts = packageJson.scripts || [];
 
-  res.json(Object.keys(scripts).map(name => ({
+  res.json(Object.keys(scripts).map((name) => ({
     name,
     command: scripts[name],
   })));
@@ -30,7 +30,7 @@ export async function removeScript(req: express.Request, res: express.Response):
 }
 
 export async function runScript(req: express.Request, res: express.Response):Promise<void> {
-  const projectPath = decodePath(req.params.projectPath);
+  const projectPath = decodePath(req.params.projectPath)!;
 
   await executeCommand(projectPath, `npm run ${req.params.scriptName}`, true);
 
