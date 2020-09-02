@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import { explorer } from '../actions/explorer/explorer';
 
 const explorerRouter = express.Router();

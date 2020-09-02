@@ -1,8 +1,9 @@
 import * as React from 'react';
-import * as style from './Dependencies.css';
-import { Button } from '../Button/Button';
+import styled, { css } from 'styled-components';
+import { Button } from '../../ui/Button/Button';
 import { Loader } from '../Loader/Loader';
-import { ConfirmButton } from '../ConfirmButton/ConfirmButton';
+import { ConfirmButton } from '../../ui/ConfirmButton/ConfirmButton';
+import { Icon } from '../../ui/Icon/Icon';
 
 interface Props {
   dependency: Dependency.Entire;
@@ -11,17 +12,7 @@ interface Props {
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
 }
 
-function getLabelClassNameForRepo(repo: Dependency.Repo): string {
-  const classNames = {
-    bower: style.labelWarning,
-    npm: style.labelWarning,
-    yarn: style.labelWarning,
-  };
-
-  return `${style.label} ${classNames[repo]}`;
-}
-
-function getNormalizedVersion(version: string): string {
+function getNormalizedVersion(version?: string | null): string | null {
   if (!version) {
     return null;
   }
@@ -32,145 +23,199 @@ function getNormalizedVersion(version: string): string {
   return match[0];
 }
 
-export class DependencyRow extends React.PureComponent<Props> {
-  onDeleteDependency = (): void => {
-    this.props.onDeleteDependency(this.props.dependency);
-  }
+interface TrStyledProps {
+  isProcessing:boolean;
+}
 
-  onInstallDependencyLatestVersion = (): void => {
-    this.props.onInstallDependencyVersion(this.props.dependency, this.props.dependency.latest);
-  }
-
-  onInstallDependencyWantedVersion = (): void => {
-    this.props.onInstallDependencyVersion(this.props.dependency, this.props.dependency.wanted);
-  }
-
-  onInstallDependencyInstalledVersion = (): void => {
-    this.props.onInstallDependencyVersion(this.props.dependency, this.props.dependency.installed);
-  }
-
-  renderInstalledVersion(dependency: Dependency.Entire): React.ReactNode {
-    if (dependency.installed === undefined) {
-      return <Loader />;
+const TrStyled = styled.tr`
+  @keyframes Gradient {
+    0% {
+      background-position: 0% 50%;
     }
 
-    if (dependency.installed === null) {
-      return <span className={style.missing}>missing</span>;
+    50% {
+      background-position: 100% 50%;
     }
 
-    if (getNormalizedVersion(dependency.required) === dependency.installed) {
-      return (
-        <span>
-          {dependency.installed}
-          {dependency.unused && (
-            <span
-              className="oi"
-              title="Probably this dependency is unused"
-              data-glyph="fork"
-            />
-          )}
-        </span>
-      );
+    100% {
+      background-position: 0% 50%;
     }
+  }
 
+  ${({ isProcessing }: TrStyledProps) => isProcessing && css`
+    background: linear-gradient(-45deg, #dfd7ca, #fff);
+    background-size: 200% 200%;
+    animation: Gradient 2s ease infinite;
+  `}
+`;
+
+const ColumnName = styled.td`
+  text-align: left;
+  padding-left: 5px;
+`;
+
+const ColumnVersion = styled.td`
+  width: 10%;
+  min-width: 80px;
+`;
+
+const ColumnAction = styled.td`
+  width: 30px;
+`;
+
+const RepoName = styled.span`
+  border-radius: 2px;
+  color: #fff;
+  float: right;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0.2em 0.4em;
+  background: #ef5c0e;
+`;
+
+const Missing = styled.span`
+  color: #d9534f;
+`;
+
+interface VersionProps {
+  dependency: Dependency.Entire;
+  isProcessing: boolean;
+  onInstall: (version: string) => void;
+}
+
+function InstalledVersion({ dependency, isProcessing, onInstall }:VersionProps): JSX.Element {
+  const dependencyInstalled = dependency.installed;
+
+  if (dependencyInstalled === undefined) {
+    return <Loader />;
+  }
+
+  if (dependencyInstalled === null) {
+    return <Missing>missing</Missing>;
+  }
+
+  if (getNormalizedVersion(dependency.required) === dependencyInstalled) {
+    return (
+      <span>
+        {dependencyInstalled}
+        {dependency.unused && <Icon title="Probably this dependency is unused" glyph="fork" />}
+      </span>
+    );
+  }
+
+  return (
+    <Button
+      disabled={isProcessing}
+      icon="cloud-download"
+      variant="success"
+      scale="small"
+      onClick={() => onInstall(dependencyInstalled)}
+      title={`Install ${dependencyInstalled} version of ${dependency.name}`}
+    >
+      {dependencyInstalled}
+      {dependency.unused && <Icon title="Probably this dependency is unused" glyph="fork" />}
+    </Button>
+  );
+}
+
+function WantedVersion({ dependency, isProcessing, onInstall }:VersionProps):JSX.Element {
+  const dependencyWanted = dependency.wanted;
+
+  if (dependencyWanted === null) {
+    return <>-</>;
+  }
+
+  if (dependencyWanted) {
     return (
       <Button
-        disabled={this.props.isProcessing}
+        disabled={isProcessing}
         icon="cloud-download"
         variant="success"
         scale="small"
-        onClick={this.onInstallDependencyInstalledVersion}
+        onClick={() => onInstall(dependencyWanted)}
+        title={`Install ${dependencyWanted} version of ${dependency.name}`}
       >
-        {dependency.installed}
-        {dependency.unused && (
-          <span
-            className="oi"
-            title="Probably this dependency is unused"
-            data-glyph="fork"
-          />
-        )}
+        {dependencyWanted}
       </Button>
     );
   }
 
-  renderWantedVersion(dependency: Dependency.Entire): React.ReactNode {
-    if (dependency.wanted === null) {
-      return '-';
-    }
+  return <></>;
+}
 
-    if (dependency.wanted) {
-      return (
-        <Button
-          disabled={this.props.isProcessing}
-          icon="cloud-download"
-          variant="success"
-          scale="small"
-          onClick={this.onInstallDependencyWantedVersion}
-        >{dependency.wanted}
-        </Button>
-      );
-    }
+function LatestVersion({ dependency, isProcessing, onInstall }:VersionProps):JSX.Element {
+  const dependencyLatest = dependency.latest;
 
-    return '';
+  if (dependencyLatest === null) {
+    return <>-</>;
   }
 
-  renderLatestVersion(dependency: Dependency.Entire): React.ReactNode {
-    if (dependency.latest === null) {
-      return '-';
-    }
-
-    if (dependency.latest) {
-      return (
-        <Button
-          disabled={this.props.isProcessing}
-          icon="cloud-download"
-          variant="success"
-          scale="small"
-          onClick={this.onInstallDependencyLatestVersion}
-        >{dependency.latest}
-        </Button>
-      );
-    }
-
-    return '';
-  }
-
-  render(): React.ReactNode {
+  if (dependencyLatest) {
     return (
-      <tr
-        key={`${this.props.dependency.name}${this.props.dependency.repo}`}
-        className={this.props.isProcessing && style.processing}
+      <Button
+        disabled={isProcessing}
+        icon="cloud-download"
+        variant="success"
+        scale="small"
+        onClick={() => onInstall(dependencyLatest)}
+        title={`Install ${dependencyLatest} version of ${dependency.name}`}
       >
-        <td>{this.props.dependency.type !== 'prod' && this.props.dependency.type}</td>
-        <td className={style.columnName}>
-          {this.props.dependency.name}
-          <span className={getLabelClassNameForRepo(this.props.dependency.repo)}>
-            {this.props.dependency.repo}</span>
-        </td>
-        {/* <td className={style.columnNsp}> ? </td> */}
-        <td className={style.columnVersion}>
-          {this.props.dependency.required}
-          {!this.props.dependency.required && <span className={style.missing}>extraneous</span>}
-        </td>
-        <td className={style.columnVersion}>
-          {this.renderInstalledVersion(this.props.dependency)}
-        </td>
-        <td className={style.columnVersion}>
-          {this.renderWantedVersion(this.props.dependency)}
-        </td>
-        <td className={style.columnVersion}>
-          {this.renderLatestVersion(this.props.dependency)}
-        </td>
-        <td className={style.columnAction}>
-          <ConfirmButton
-            disabled={this.props.isProcessing}
-            icon="trash"
-            variant="danger"
-            scale="small"
-            onClick={this.onDeleteDependency}
-          />
-        </td>
-      </tr>
+        {dependencyLatest}
+      </Button>
     );
   }
+
+  return <></>;
+}
+
+export function DependencyRow({
+  dependency, isProcessing, onDeleteDependency, onInstallDependencyVersion,
+}:Props):JSX.Element {
+  return (
+    <TrStyled
+      key={`${dependency.name}${dependency.repo}`}
+      isProcessing={isProcessing}
+    >
+      <td>{dependency.type !== 'prod' && dependency.type}</td>
+      <ColumnName>
+        {dependency.name}
+        <RepoName>{dependency.repo}</RepoName>
+      </ColumnName>
+      {/* <td className={style.columnNsp}> ? </td> */}
+      <ColumnVersion>
+        {dependency.required}
+        {!dependency.required && <Missing>extraneous</Missing>}
+      </ColumnVersion>
+      <ColumnVersion>
+        <InstalledVersion
+          isProcessing={isProcessing}
+          dependency={dependency}
+          onInstall={(version) => onInstallDependencyVersion(dependency, version)}
+        />
+      </ColumnVersion>
+      <ColumnVersion>
+        <WantedVersion
+          isProcessing={isProcessing}
+          dependency={dependency}
+          onInstall={(version) => onInstallDependencyVersion(dependency, version)}
+        />
+      </ColumnVersion>
+      <ColumnVersion>
+        <LatestVersion
+          isProcessing={isProcessing}
+          dependency={dependency}
+          onInstall={(version) => onInstallDependencyVersion(dependency, version)}
+        />
+      </ColumnVersion>
+      <ColumnAction>
+        <ConfirmButton
+          disabled={isProcessing}
+          icon="trash"
+          variant="danger"
+          scale="small"
+          onClick={() => onDeleteDependency(dependency)}
+        />
+      </ColumnAction>
+    </TrStyled>
+  );
 }

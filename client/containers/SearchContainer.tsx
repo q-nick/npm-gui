@@ -1,11 +1,8 @@
-import * as React from 'react';
-import { observer, inject } from 'mobx-react';
-import { SearchStore } from '../stores/search.store';
+import React, { useCallback, useState } from 'react';
+import Axios from 'axios';
 import { Search } from '../components/Search/Search';
-import { toJS } from 'mobx';
 
 interface Props {
-  searchStore?: SearchStore;
   onInstall: (repo: Dependency.Repo, dependency: Dependency.Basic, type: Dependency.Type) => void;
   type: 'global' | 'project';
 }
@@ -17,21 +14,21 @@ const types:{
   project: ['prod', 'dev'],
 };
 
-@inject('searchStore') @observer
-export class SearchContainer extends React.Component<Props> {
-  onSearch = (query: string, repo: Dependency.Repo): void => {
-    this.props.searchStore.fetchSearch(query, repo);
-  }
+export function SearchContainer({ onInstall, type }:Props):JSX.Element {
+  const [searchResults, setSearchResults] = useState<Dependency.SearchResult[]>([]);
 
-  render(): React.ReactNode {
-    const searchResults = toJS(this.props.searchStore.results);
-    return (
-      <Search
-        searchResults={searchResults}
-        onSearch={this.onSearch}
-        onInstall={this.props.onInstall}
-        types={types[this.props.type]}
-      />
-    );
-  }
+  const onSearch = useCallback(async (query: string, repo: Dependency.Repo) => {
+    const { data } = await Axios.post(`/api/search/${repo}`, { query });
+
+    setSearchResults(data);
+  }, []);
+
+  return (
+    <Search
+      searchResults={searchResults}
+      onSearch={onSearch}
+      onInstall={onInstall}
+      types={types[type]}
+    />
+  );
 }

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "lib": ["es2015", "es2016", "dom"]
+    // "lib": ["es2015", "es2016", "dom"]
   },
   "exclude": [
     "dist",

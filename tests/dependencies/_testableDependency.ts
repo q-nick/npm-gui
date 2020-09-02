@@ -4,14 +4,14 @@ interface Entire {
   required: string;
   installed: string;
   type?: 'dev' | 'prod';
-  wanted: string;
-  latest: string;
+  wanted: string | null;
+  latest: string | null;
   unused: boolean;
 }
 
 interface Dependency {
   name: string;
-  version: string;
+  version: string | null;
   entire: Entire;
 }
 
@@ -103,7 +103,7 @@ export const bowerTest: Test = {
   }, {
     name: 'that-value',
     version: '0.1.1',
-    entire:{
+    entire: {
       repo: 'bower',
       name: 'that-value',
       required: '0.1.1',

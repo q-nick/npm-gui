@@ -1,9 +1,9 @@
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import * as path from 'path';
-import * as morgan from 'morgan';
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
+import morgan from 'morgan';
 // import opn from 'opn';
-import * as http from 'http';
+import http from 'http';
 import * as Console from './console';
 
 import { projectRouter } from './routers/project.router';
@@ -43,10 +43,13 @@ app.get('*', (_, res) => {
 });
 
 // error handler
-app.use((err:any, _:express.Request, res:express.Response, next:Function) => {
+app.use((err:any, _:express.Request, res:express.Response, next:express.NextFunction) => {
   // No routes handled the request and no system error, that means 404 issue.
   // Forward to next middleware to handle it.
-  if (!err) return next();
+  if (!err) {
+    next();
+    return;
+  }
 
   res.status(400).send({ error: err });
 });

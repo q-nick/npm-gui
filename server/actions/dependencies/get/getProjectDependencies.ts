@@ -1,3 +1,4 @@
+import express from 'express';
 import executeCommand, { executeCommandJSON } from '../../executeCommand';
 import { withCachePut } from '../../../cache';
 import {
@@ -8,7 +9,6 @@ import {
 } from '../../mapDependencies';
 import { decodePath } from '../../decodePath';
 import { getProjectPackageJSON, getProjectBowerJSON } from '../../getProjectPackageJSON';
-import * as express from 'express';
 import { parseJSON } from '../../parseJSON';
 import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
 
@@ -40,7 +40,7 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   const dependenciesInPackageJson = { ...dependencies, ...devDependencies };
 
   // installed
-  const { dependencies: dependenciesInstalled } = await executeCommandJSON(projectPath, 'npm ls --depth=0 --json'); // tslint:disable-line:max-line-length
+  const { dependencies: dependenciesInstalled } = await executeCommandJSON(projectPath, 'npm ls --depth=0 --json');
 
   // latest, wanted
   const outdated = await executeCommandJSON(projectPath, 'npm outdated --json');
@@ -51,16 +51,16 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
 
   // extraenous
   const extraneousInstalled = Object.keys(dependenciesInstalled)
-    .filter(name => dependenciesInstalled[name].extraneous);
+    .filter((name) => dependenciesInstalled[name].extraneous);
 
   const dependenciesWithType: Dependency.Npm[] = [
     ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod' })),
     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev' })),
-    ...Object.keys(extraneousInstalled).map((name): Dependency.Npm => ({ name, type: 'extraneous' })), // tslint:disable-line:max-line-length
+    ...Object.keys(extraneousInstalled).map((name): Dependency.Npm => ({ name, type: 'extraneous' })),
   ];
 
   return dependenciesWithType
-    .map(dependency => mapNpmDependency(
+    .map((dependency) => mapNpmDependency(
       dependency.name,
       dependenciesInstalled[dependency.name],
       outdated && outdated[dependency.name],
@@ -79,14 +79,14 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
 
   // installed
   const commandLsJSON = await executeCommand(projectPath, 'yarn list --depth=0 --json');
-  const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter(s => s).map(parseJSON); // tslint:disable-line:max-line-length
+  const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter((s) => s).map(parseJSON);
   const dependenciesInstalled = mapYarnResultTreeToBasic(commandLsJSONResults);
   // latest, wanted
   const outdatedResult = await executeCommand(projectPath, 'yarn outdated --depth=0 --json');
   if (outdatedResult.stderr) {
     throw JSON.parse(outdatedResult.stderr).data;
   }
-  const outdatedResults: Yarn.Result[] = outdatedResult.stdout.split('\n').filter(s => s).map(parseJSON); // tslint:disable-line:max-line-length
+  const outdatedResults: Yarn.Result[] = outdatedResult.stdout.split('\n').filter((s) => s).map(parseJSON);
   const outdated = mapYarnResultTableToVersion(outdatedResults);
 
   // unused (only regular dependencies for now)
@@ -106,7 +106,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   ];
 
   return dependenciesWithType
-    .map(dependency => mapNpmDependency(
+    .map((dependency) => mapNpmDependency(
       dependency.name,
       dependenciesInstalled[dependency.name],
       outdated && outdated[dependency.name],
@@ -124,8 +124,7 @@ async function getAllBowerDependencies(projectPath: string): Promise<Dependency.
   const commandLsJSON = await executeCommandJSON(projectPath, 'bower ls --json');
 
   return Object.keys(commandLsJSON.dependencies)
-    .map((name: string) => // TODO better code
-      mapBowerDependency(name, commandLsJSON.dependencies[name], dependencies[name] ? 'prod' : 'dev')); // tslint:disable-line:max-line-length
+    .map((name: string) => mapBowerDependency(name, commandLsJSON.dependencies[name], dependencies[name] ? 'prod' : 'dev'));
 }
 
 function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Dependency.Entire[] {
@@ -133,13 +132,13 @@ function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Depend
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
   const npmDependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })), // tslint:disable-line:max-line-length
-    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })),
+    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })),
   ];
 
   const repo: Dependency.Repo = yarn ? 'yarn' : 'npm';
 
-  return npmDependenciesWithType.map(dependency => ({
+  return npmDependenciesWithType.map((dependency) => ({
     ...dependency,
     repo,
     installed: undefined,
@@ -155,13 +154,13 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
 
   // we will use npm type
   const bowerDependenciesWithType: Dependency.Npm[] = [
-    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })), // tslint:disable-line:max-line-length
-    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })), // tslint:disable-line:max-line-length
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })),
+    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })),
   ];
 
   const repo: Dependency.Repo = 'bower';
 
-  return bowerDependenciesWithType.map(dependency => ({
+  return bowerDependenciesWithType.map((dependency) => ({
     ...dependency,
     repo,
     installed: undefined,
@@ -173,12 +172,13 @@ function getAllDependenciesSimpleBower(projectPath: string): Dependency.Entire[]
 
 // controllers
 export async function getAllDependenciesSimple(
-  req: express.Request, res: express.Response): Promise<void> {
+  req: express.Request, res: express.Response,
+): Promise<void> {
   // TODO tests
-  const projectPathDecoded = decodePath(req.params.projectPath);
+  const projectPathDecoded = decodePath(req.params.projectPath) as string;
 
-  let npmDependencies: Dependency.Npm[] = [];
-  let bowerDependencies: Dependency.Npm[] = [];
+  let npmDependencies: Dependency.Entire[] = [];
+  let bowerDependencies: Dependency.Entire[] = [];
 
   const yarn = hasYarn(projectPathDecoded);
 
@@ -189,9 +189,10 @@ export async function getAllDependenciesSimple(
 }
 
 export async function getAllDependencies(
-  req: express.Request, res: express.Response): Promise<void> {
-  const { projectPath }: { projectPath: string } = req.params;
-  const projectPathDecoded = decodePath(projectPath);
+  req: express.Request, res: express.Response,
+): Promise<void> {
+  const { projectPath }: any = req.params;
+  const projectPathDecoded = decodePath(projectPath) as string;
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
   const bower = hasBower(projectPathDecoded);
@@ -204,7 +205,8 @@ export async function getAllDependencies(
       npmDependencies = await withCachePut(
         getAllYarnDependencies,
         `${req.headers['x-cache-id']}-${projectPath}-npm`,
-        projectPathDecoded);
+        projectPathDecoded,
+      );
     } catch (e) {
       // yarn ?exception?
       console.log(e);
@@ -214,14 +216,16 @@ export async function getAllDependencies(
     npmDependencies = await withCachePut(
       getAllNpmDependencies,
       `${req.headers['x-cache-id']}-${projectPath}-npm`,
-      projectPathDecoded);
+      projectPathDecoded,
+    );
   }
 
   if (bower) {
     bowerDependencies = await withCachePut(
       getAllBowerDependencies,
       `${req.headers['x-cache-id']}-${projectPath}-bower`,
-      projectPathDecoded);
+      projectPathDecoded,
+    );
   }
 
   res.json([...npmDependencies, ...bowerDependencies]);

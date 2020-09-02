@@ -37,11 +37,11 @@ declare namespace Dependency {
 
   interface Entire {
     name: string,
-    type: Type,
-    required?: string,
-    installed?: string,
-    wanted?: string,
-    latest?: string,
+    type?: Type | null,
+    required?: string | null,
+    installed?: string | null,
+    wanted?: string | null,
+    latest?: string | null,
     repo: Repo;
     unused: boolean,
   }

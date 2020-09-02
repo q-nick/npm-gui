@@ -1,5 +1,5 @@
-import * as request from 'request';
-import * as express from 'express';
+import request from 'request';
+import express from 'express';
 
 function requestWithPromise(url:string):Promise<string> {
   return new Promise((resolve) => {

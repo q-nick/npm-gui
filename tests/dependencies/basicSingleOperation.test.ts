@@ -1,4 +1,4 @@
-import * as api from 'supertest';
+import api from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../server';
 import { projects } from './_testableDependency';
@@ -8,14 +8,17 @@ describe('single dependency operations', () => {
     project.tests.forEach((test) => {
       let dependenciesToTest = [];
       if (test.repo === 'bower') {
-        dependenciesToTest =
-          test.dependencies.map(
-            dependency => ({ ...dependency, entire:
-              { ...dependency.entire, type: test.type, wanted: null } }));
+        dependenciesToTest = test.dependencies.map(
+          (dependency) => ({
+            ...dependency,
+            entire:
+              { ...dependency.entire, type: test.type, wanted: null },
+          }),
+        );
       } else {
-        dependenciesToTest =
-          test.dependencies.map(
-            dependency => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }));
+        dependenciesToTest = test.dependencies.map(
+          (dependency) => ({ ...dependency, entire: { ...dependency.entire, type: test.type } }),
+        );
       }
       const dependency = {
         name: dependenciesToTest[0].name,

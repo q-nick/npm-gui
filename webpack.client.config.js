@@ -1,4 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // eslint-disable-line
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default; // eslint-disable-line
+
+const styledComponentsTransformer = createStyledComponentsTransformer();
 
 const EXCLUDE = /(node_modules|bower_components|dist|server)/;
 
@@ -16,15 +19,8 @@ module.exports = {
         test: /\.css$/,
         exclude: EXCLUDE,
         use: [
-          'style-loader?sourceMap',
-          {
-            loader: 'typings-for-css-modules-loader',
-            options: {
-              modules: true,
-              namedExport: true,
-              localIdentName: '[name]-[local]--[hash:base64:5]',
-            },
-          },
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
         ],
       },
       {
@@ -33,6 +29,8 @@ module.exports = {
         exclude: EXCLUDE,
         options: {
           configFile: 'tsconfig.client.json',
+          getCustomTransformers: () => ({ before: [styledComponentsTransformer] }),
+
         },
       },
       {
@@ -55,7 +53,6 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
     alias: {
-      // vue$: 'vue/dist/vue.esm.js',
       'github-buttons$': './github-buttons.common.js',
       'open-iconic$': 'open-iconic/font/css/open-iconic.css',
     },

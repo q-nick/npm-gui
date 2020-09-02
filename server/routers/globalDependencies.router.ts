@@ -1,8 +1,9 @@
-import * as express from 'express';
+import express from 'express';
 
 import {
   getGlobalDependencies,
-  getGlobalDependenciesSimple } from '../actions/dependencies/get/getGlobalDependencies';
+  getGlobalDependenciesSimple,
+} from '../actions/dependencies/get/getGlobalDependencies';
 import { addGlobalDependencies } from '../actions/dependencies/add/addGlobalDependencies';
 import { deleteGlobalDependency } from '../actions/dependencies/delete/deleteGlobalDependencies';
 
@@ -15,6 +16,7 @@ globalDependenciesRouter.get('/dependencies/simple', catchErrors(getGlobalDepend
 globalDependenciesRouter.post('/dependencies/:repoName', catchErrors(addGlobalDependencies));
 globalDependenciesRouter.delete(
   '/dependencies/:repoName/:packageName',
-  catchErrors(deleteGlobalDependency));
+  catchErrors(deleteGlobalDependency),
+);
 
 export { globalDependenciesRouter };

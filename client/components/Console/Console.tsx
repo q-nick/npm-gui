@@ -1,6 +1,7 @@
-import * as React from 'react';
-import * as style from './Console.css';
-import { Session } from './Session';
+import React, { useState, useCallback } from 'react';
+import styled from 'styled-components';
+import { Icon } from '../../ui/Icon/Icon';
+import { Session } from './components/Session';
 
 interface Props {
   sessions: NpmGui.ConsoleSession[];
@@ -8,49 +9,58 @@ interface Props {
   onStopSession: (id: string) => void;
 }
 
-interface State {
-  fullScreenSessionId: string;
-}
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+`;
 
-export class Console extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      fullScreenSessionId: null,
-    };
-  }
+const Header = styled.header`
+  min-height: 26px;
+`;
 
-  onEnterFullScreenSession = (id: string): void => {
-    this.setState(prevState => ({ ...prevState, fullScreenSessionId: id }));
-  }
+const Title = styled.p`
+  display: inline-block;
+  margin: 0;
+`;
 
-  onQuitFullScreenSession = (): void => {
-    this.setState(prevState => ({ ...prevState, fullScreenSessionId: null }));
-  }
+export function Console({ sessions, onRemoveSession, onStopSession }:Props):JSX.Element {
+  const [
+    fullScreenSessionId,
+    setFullScreenSessionId,
+  ] = useState<string | undefined>(undefined);
 
-  render(): React.ReactNode {
-    return (
-      <div className={style.console}>
-        <header>
-          <p><span className="oi" data-glyph="terminal" /> Console</p>
-        </header>
-        {
-          this.props.sessions &&
-          this.props.sessions.map(session =>
-            (
-              <Session
-                key={session.id}
-                session={session}
-                onEnterFullScreenSession={this.onEnterFullScreenSession}
-                onQuitFullScreenSession={this.onQuitFullScreenSession}
-                onRemoveSession={this.props.onRemoveSession}
-                onStopSession={this.props.onStopSession}
-                isFullscreen={this.state.fullScreenSessionId === session.id}
-              />
-            ),
-          )
+  const onEnterFullScreenSession = useCallback((id: string): void => {
+    setFullScreenSessionId(id);
+  }, []);
+
+  const onQuitFullScreenSession = useCallback((): void => {
+    setFullScreenSessionId(undefined);
+  }, []);
+
+  return (
+    <Wrapper>
+      <Header>
+        <Title>
+          <Icon glyph="terminal" />
+          {' '}
+          Console
+        </Title>
+      </Header>
+      {
+          sessions.map((session) => (
+            <Session
+              key={session.id}
+              session={session}
+              onEnterFullScreenSession={onEnterFullScreenSession}
+              onQuitFullScreenSession={onQuitFullScreenSession}
+              onRemoveSession={onRemoveSession}
+              onStopSession={onStopSession}
+              isFullscreen={fullScreenSessionId === session.id}
+            />
+          ))
         }
-      </div>
-    );
-  }
+    </Wrapper>
+  );
 }
