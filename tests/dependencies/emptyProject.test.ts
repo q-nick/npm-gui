@@ -38,33 +38,12 @@ describe('empty project tests', () => {
           done();
         });
     });
-
-    it('bower', (done) => {
-      api(app)
-        .post(`/api/project/${pathEncoded}/dependencies/prod/bower`)
-        .send([{ name: 'that-value', version: '0.1.1' }])
-        .end((_: any, res: api.Response) => {
-          expect(res.status).to.equal(400);
-          expect(res.body).to.deep.equal(null);
-          done();
-        });
-    });
   });
 
   describe('should block deletion of any dependency', () => {
     it('npm', (done) => {
       api(app)
         .delete(`/api/project/${pathEncoded}/dependencies/prod/npm/that-value`)
-        .end((_: any, res: api.Response) => {
-          expect(res.status).to.equal(400);
-          expect(res.body).to.deep.equal(null);
-          done();
-        });
-    });
-
-    it('bower', (done) => {
-      api(app)
-        .delete(`/api/project/${pathEncoded}/dependencies/prod/bower/that-value`)
         .end((_: any, res: api.Response) => {
           expect(res.status).to.equal(400);
           expect(res.body).to.deep.equal(null);

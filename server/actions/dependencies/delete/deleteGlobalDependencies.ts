@@ -10,18 +10,10 @@ async function deleteGlobalNpmDependency(req:express.Request):Promise<string> {
   return packageName;
 }
 
-async function deleteGlobalBowerDependency(_:express.Request):Promise<void> {
-  console.log('no defined');
-}
-
 export async function deleteGlobalDependency(
   req:express.Request, res:express.Response,
 ):Promise<void> {
-  if (req.params.repoName === 'npm') {
-    await withCacheSplice(deleteGlobalNpmDependency, 'npm-global', 'name', req);
-  } else if (req.params.repoName === 'bower') {
-    await withCacheSplice(deleteGlobalBowerDependency, 'bower-global', 'name', req);
-  }
+  await withCacheSplice(deleteGlobalNpmDependency, 'npm-global', 'name', req);
 
   res.json({});
 }

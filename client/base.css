@@ -59,4 +59,5 @@ th:last-child {
   flex-direction: column;
   max-height: 100vh;
   min-height: 100vh;
+  overflow: hidden;
 }

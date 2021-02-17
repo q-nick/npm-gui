@@ -15,7 +15,6 @@ import {
 
 import {
   installDependencies,
-  forceReinstallDependencies,
 } from '../actions/dependencies/install/installProjectDependencies';
 
 import { catchErrors } from '../catchErrors';
@@ -25,8 +24,7 @@ dependenciesRouter.post('/:repoName/', catchErrors(addDependencies));
 dependenciesRouter.delete('/:repoName/:packageName', catchErrors(deleteDependency));
 
 const installRouter = express.Router({ mergeParams: true });
-installRouter.post('/', catchErrors(installDependencies));
-installRouter.post('/force', catchErrors(forceReinstallDependencies));
+installRouter.post('/:force?', catchErrors(installDependencies));
 
 const getAllDependenciesRouter = express.Router({ mergeParams: true });
 getAllDependenciesRouter.get('/', catchErrors(getAllDependencies));

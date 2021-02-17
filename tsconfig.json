@@ -8,6 +8,6 @@
     // "downlevelIteration": true,
     "esModuleInterop": true,
     "lib": ["es2015", "es2016", "dom"],
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
 }

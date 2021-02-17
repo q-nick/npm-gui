@@ -16,7 +16,7 @@ interface Dependency {
 }
 
 export interface Test {
-  repo: 'npm' | 'yarn' | 'bower';
+  repo: 'npm' | 'yarn';
   type: 'dev' | 'prod';
   repoDir: string;
   dependencies: Dependency[];
@@ -84,37 +84,6 @@ export const yarnTest: Test = {
   }],
 };
 
-export const bowerTest: Test = {
-  repo: 'bower',
-  repoDir: 'bower_components',
-  type: 'prod',
-  dependencies: [{
-    name: 'react',
-    version: '15.5.0',
-    entire: {
-      repo: 'bower',
-      name: 'react',
-      required: '15.5.0',
-      installed: '15.5.0',
-      wanted: '15.5.0',
-      latest: '16.1.0',
-      unused: false,
-    },
-  }, {
-    name: 'that-value',
-    version: '0.1.1',
-    entire: {
-      repo: 'bower',
-      name: 'that-value',
-      required: '0.1.1',
-      installed: '0.1.1',
-      wanted: '0.1.1',
-      latest: '0.1.3',
-      unused: false,
-    },
-  }],
-};
-
 interface Project {
   pathEncoded: string;
   tests: Test[];
@@ -128,14 +97,6 @@ export const projectsNPM:Project[] = [{
   ],
 }];
 
-export const projectsBower:Project[] = [{
-  pathEncoded: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=', // 'tests/projects/bower',
-  tests: [
-    { ...bowerTest },
-    { ...bowerTest, type: 'dev' },
-  ],
-}];
-
 export const projectsYarn:Project[] = [{
   pathEncoded: 'dGVzdHMvcHJvamVjdHMveWFybg==', // 'tests/projects/yarn',
   tests: [
@@ -144,4 +105,4 @@ export const projectsYarn:Project[] = [{
   ],
 }];
 
-export const projects = [...projectsNPM, ...projectsBower, ...projectsYarn];
+export const projects = [...projectsNPM, ...projectsYarn];

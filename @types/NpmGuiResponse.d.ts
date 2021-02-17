@@ -4,4 +4,6 @@ declare namespace NpmGuiResponse {
     path: string,
     changed: boolean;
   }
+
+  type DependenciesSimple = Dependency.Entire[];
 }

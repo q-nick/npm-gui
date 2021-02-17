@@ -9,18 +9,6 @@ function requestWithPromise(url:string):Promise<any> {
   });
 }
 
-async function searchBower(query:string):Promise<Search.Result> {
-  const results = await requestWithPromise(`https://libraries.io/api/bower-search?q=${query}`);
-
-  return results.map((result:any) => ({
-    name: result.name,
-    version: result.latest_release_number,
-    score: result.stars,
-    url: result.repository_url,
-    description: result.description,
-  }));
-}
-
 async function searchNPM(query:string):Promise<Search.Result> {
   const { results } = await requestWithPromise(`https://api.npms.io/v2/search?from=0&size=25&q=${query}`); // tslint:disable:max-line-length
 
@@ -36,7 +24,6 @@ async function searchNPM(query:string):Promise<Search.Result> {
 const methodsFor:{
   [key:string]: (query: string) => Promise<Search.Result>,
 } = {
-  bower: searchBower,
   npm: searchNPM,
 };
 
