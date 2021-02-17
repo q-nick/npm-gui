@@ -1,40 +1,33 @@
-import * as React from 'react';
-import * as style from './Info.css';
-import axios from 'axios';
+import React , {useEffect, useState} from 'react';
+import Axios from 'axios';
+import styled from 'styled-components';
+import GitHubButton from 'react-github-btn';
 
-interface State {
-  content: { __html: string };
-}
+const InfoWrapper = styled.div`
+  min-height: 45px;
+  max-height: 45px;
+  background: #3e3f3a;
+  padding: 5px 15px;
+`;
 
-export class Info extends React.PureComponent<{}, State> {
-  constructor(props: {}) {
-    super(props);
+export function Info(): JSX.Element {
+  const [content, setContent] = useState('');
 
-    this.state = {
-      content: { __html: '' },
-    };
-  }
-
-  componentDidMount(): void {
-    axios
-      .get('/api/info')
-      .then((response) => {
+  useEffect(() => {
+    Axios
+      .get<string>('/api/info')
+      .then(({ data }) => {
         // tricky one
+        setContent(data);
         setTimeout(() => {
-          if ((window as any).GithubApi) {
-            this.setState(prevState => ({ ...prevState, content: { __html: response.data } }));
-            (window as any).GithubApi.render();
-          }
-        });
+          const script = document.createElement('script');
+          script.src = 'https://buttons.github.io/buttons.js';
+          document.head.appendChild(script);
+        }, 0);
       });
-  }
+  },[]);
 
-  render(): React.ReactNode {
-    return (
-      <div
-        className={this.state.content.__html ? style.info : ''}
-        dangerouslySetInnerHTML={this.state.content}
-      />
-    );
-  }
+  return (<InfoWrapper>
+    <div dangerouslySetInnerHTML={{ __html: content}} />
+  </InfoWrapper>)
 }

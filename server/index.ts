@@ -23,7 +23,7 @@ export const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 if (!process.env.NODE_TEST) {
-  app.use(morgan('combined'));
+  // app.use(morgan('combined'));
 }
 // routes
 // app

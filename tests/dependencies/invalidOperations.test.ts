@@ -13,11 +13,6 @@ const repos = [
     describe: 'yarn',
     name: 'npm',
   },
-  {
-    projectPath: 'dGVzdHMvcHJvamVjdHMvYm93ZXI=',
-    describe: 'bower',
-    name: 'bower',
-  },
 ];
 
 describe('installation errors', () => {

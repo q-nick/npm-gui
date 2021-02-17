@@ -10,6 +10,6 @@ function requestWithPromise(url:string):Promise<string> {
 }
 
 export async function info(_:express.Request, res:express.Response):Promise<void> {
-  const results = await requestWithPromise(`https://raw.githubusercontent.com/q-nick/npm-gui/master/INFO?${new Date().getTime()}`); // tslint:disable:max-line-length
+  const results = await requestWithPromise(`https://raw.githubusercontent.com/q-nick/npm-gui/master/INFO?${new Date().getTime()}`);
   res.send(results);
 }

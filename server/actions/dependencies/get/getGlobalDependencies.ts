@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import executeCommand from '../../executeCommand';
-import { mapNpmDependency } from '../../mapDependencies';
+import { mapNpmDependency2 as mapNpmDependency } from '../../mapDependencies';
 import { withCachePut } from '../../../cache';
 import { parseJSON } from '../../parseJSON';
 
@@ -13,7 +13,7 @@ async function getGlobalNpmDependencies():Promise<Dependency.Entire[]> {
   const versions = parseJSON(commandOutdatedResult.stdout);
 
   return Object.keys(dependencies)
-    .map((name):any => mapNpmDependency(
+    .map((name):any => (mapNpmDependency as any)(
       name,
       dependencies[name],
       versions && versions[name],
@@ -28,7 +28,7 @@ async function getGlobalNpmDependenciesSimple():Promise<Dependency.Npm[]> {
   const { dependencies } = parseJSON(commandResult.stdout);
 
   return Object.keys(dependencies)
-    .map((name):any => mapNpmDependency(
+    .map((name):any => (mapNpmDependency as any)(
       name,
       dependencies[name],
       undefined as any,

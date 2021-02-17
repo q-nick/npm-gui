@@ -8,7 +8,3 @@ export function hasYarn(projectPath:string):boolean {
 export function hasNpm(projectPath:string):boolean {
   return fs.existsSync(path.join(projectPath, 'package.json'));
 }
-
-export function hasBower(projectPath:string):boolean {
-  return fs.existsSync(path.join(projectPath, 'bower.json'));
-}

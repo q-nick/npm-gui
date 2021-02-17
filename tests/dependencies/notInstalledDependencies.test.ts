@@ -8,7 +8,6 @@ import { app } from '../../server';
 
 function clearProject(projectPath: string): void {
   rimraf.sync(path.join(`${projectPath}`, 'node_modules'));
-  rimraf.sync(path.join(`${projectPath}`, 'bower_components'));
   rimraf.sync(path.join(`${projectPath}`, 'package-lock.json'));
   if (fs.existsSync(path.join(`${projectPath}`, 'yarn.lock'))) {
     fs.writeFileSync(path.join(`${projectPath}`, 'yarn.lock'), '');

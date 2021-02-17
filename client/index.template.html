@@ -9,14 +9,7 @@
 </head>
 
 <body>
-  <div class="npm-gui"></div>
-  <script>
-    // tricky one
-    function define(_, GithubApi) {
-      window.GithubApi = GithubApi;
-    }
-    define.amd = true;
+  <script async defer src="./api/info/github"></script>
 
-  </script>
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <div class="npm-gui"></div>
 </body>

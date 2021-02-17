@@ -4,16 +4,17 @@ import * as express from 'express';
 import executeCommand, { executeCommandJSON } from '../../executeCommand';
 import { withCacheUpdate, withCacheInvalidate } from '../../../cache';
 import {
-  mapNpmDependency,
+  getInstalledVersion,
+  getLatestVersion,
+  getWantedVersion,
   mapYarnResultTableToVersion,
   mapYarnResultTreeToBasic,
-  mapBowerDependency,
 } from '../../mapDependencies';
 import { decodePath } from '../../decodePath';
 import { parseJSON } from '../../parseJSON';
-import { hasYarn, hasNpm, hasBower } from '../../hasYarn';
+import { hasYarn, hasNpm } from '../../hasYarn';
 
-function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'prod' | 'dev' | null {
+function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'prod' | 'dev' | 'extraneous' {
   if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
     return 'prod';
   }
@@ -22,7 +23,7 @@ function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'prod
     return 'dev';
   }
 
-  return null;
+  return 'extraneous';
 }
 
 function getRequiredFromPackageJson(packageJson: any, dependencyName: string): 'prod' | 'dev' | null {
@@ -41,26 +42,29 @@ async function getNpmPackageWithInfo(
   projectPath: string, dependencyName: string,
 ): Promise<Dependency.Entire> {
   // installed or not
-  const commandLsResult = await executeCommand(projectPath, `npm ls ${dependencyName} --depth=0 --json`);
-  const { dependencies } = parseJSON(commandLsResult.stdout);
+  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(projectPath, `npm ls ${dependencyName} --depth=0 --json`);
 
   // latest, wanted
-  const commandOutdatedResult = await executeCommand(projectPath, `npm outdated ${dependencyName} --json`);
-  const outdated = parseJSON(commandOutdatedResult.stdout) || { outdated: [] };
+  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(projectPath, `npm outdated ${dependencyName} --json`);
 
   // required & type
   const packageJson = parseJSON(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
   const type = getTypeFromPackageJson(packageJson, dependencyName);
   const required = getRequiredFromPackageJson(packageJson, dependencyName);
 
-  return mapNpmDependency(
-    dependencyName, // name
-    dependencies[dependencyName],
-    outdated && outdated[dependencyName],
+  const installed = getInstalledVersion(installedInfo[dependencyName]);
+  const wanted = getWantedVersion(installed, outdatedInfo[dependencyName]);
+  const latest = getLatestVersion(installed, wanted, outdatedInfo[dependencyName]);
+
+  return {
+    repo: 'npm',
     required,
+    name: dependencyName,
     type,
-    true,
-  );
+    installed,
+    wanted,
+    latest,
+  };
 }
 
 async function getYarnNpmPackageWithInfo(
@@ -80,6 +84,7 @@ async function getYarnNpmPackageWithInfo(
   const packageJson = parseJSON(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
   const type = getTypeFromPackageJson(packageJson, dependencyName);
   const required = getRequiredFromPackageJson(packageJson, dependencyName);
+  const mapNpmDependency:any = 1;
 
   return mapNpmDependency(
     dependencyName,
@@ -90,13 +95,6 @@ async function getYarnNpmPackageWithInfo(
     true,
     'yarn',
   );
-}
-
-async function getBowerPackageWithInfo(
-  projectPath: string, dependencyName: string, type: Dependency.Type,
-): Promise<Dependency.Entire> {
-  const { dependencies } = await executeCommandJSON(projectPath, 'bower ls --json');
-  return mapBowerDependency(dependencyName, dependencies[dependencyName], type);
 }
 
 async function addNpmDependency(
@@ -124,39 +122,6 @@ async function addNpmDependencies(
 
   if (error) {
     throw error.summary;
-  }
-}
-
-async function addBowerDependency(
-  projectPath: string, dependency: Dependency.Basic, type: Dependency.Type,
-): Promise<Dependency.Entire> {
-  // add
-  const { stderr } = await executeCommand(projectPath, `bower install ${dependency.name}#${dependency.version || ''}${type === 'prod' ? ' -S' : ' -D'} --json`, true);
-
-  if (stderr) {
-    const errors = JSON.parse(stderr).filter((e:any) => e.level === 'error');
-    if (errors.length) {
-      throw errors.map((e:any) => e.message).join(', ');
-    }
-  }
-
-  return getBowerPackageWithInfo(projectPath, dependency.name, type);
-}
-
-async function addBowerDependencies(
-  projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type,
-): Promise<void> {
-  // add list
-  const dependenciesToInstall = dependencies.map((d) => `${d.name}#${d.version || ''}`);
-
-  const command = `bower install ${dependenciesToInstall.join(' ')}${type === 'prod' ? ' -S' : ' -D'} --json`;
-  const { stderr } = await executeCommand(projectPath, command, true);
-
-  if (stderr) {
-    const errors = JSON.parse(stderr).filter((e:any) => e.level === 'error');
-    if (errors.length) {
-      throw errors.map((e:any) => e.message).join(', ');
-    }
   }
 }
 
@@ -188,58 +153,34 @@ async function addYarnDependencies(
 
 // controllers
 export async function addDependencies(req: express.Request, res: express.Response): Promise<void> {
-  const { repoName, projectPath, type }: any = req.params;
+  const { projectPath, type }: any = req.params;
   const projectPathDecoded = decodePath(projectPath) as string;
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
-  const bower = hasBower(projectPathDecoded);
 
   const dependenciesToInstall = (req.body as Dependency.Basic[]).filter((d) => d.name);
   let result: any = null;
 
-  if (repoName === 'npm') {
-    if (npm || yarn) {
-      if (dependenciesToInstall.length === 1) {
-        result = await withCacheUpdate(
-          yarn ? addYarnDependency : addNpmDependency,
-          `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
-          projectPathDecoded, dependenciesToInstall[0], type,
-        );
-      } else if (dependenciesToInstall.length > 1) {
-        result = await withCacheInvalidate(
-          yarn ? addYarnDependencies : addNpmDependencies,
-          `${req.headers['x-cache-id']}-${projectPath}-npm`,
-          projectPathDecoded, dependenciesToInstall, type,
-        );
-      } else {
-        throw Error('Invalid depedencies');
-      }
-      res.json(result);
+  if (npm || yarn) {
+    if (dependenciesToInstall.length === 1) {
+      result = await withCacheUpdate(
+        yarn ? addYarnDependency : addNpmDependency,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
+        projectPathDecoded, dependenciesToInstall[0], type,
+      );
+    } else if (dependenciesToInstall.length > 1) {
+      result = await withCacheInvalidate(
+        yarn ? addYarnDependencies : addNpmDependencies,
+        `${req.headers['x-cache-id']}-${projectPath}-npm`,
+        projectPathDecoded,
+        dependenciesToInstall,
+        type,
+      );
     } else {
-      res.status(400).json(null);
+      throw Error('Invalid depedencies');
     }
-  }
-
-  if (repoName === 'bower') {
-    if (bower) {
-      if (dependenciesToInstall.length === 1) {
-        result = await withCacheUpdate(
-          addBowerDependency,
-          `${req.headers['x-cache-id']}-${projectPath}-bower`, 'name',
-          projectPathDecoded, dependenciesToInstall[0], type,
-        );
-      } else if (dependenciesToInstall.length > 1) {
-        result = await withCacheInvalidate(
-          addBowerDependencies,
-          `${req.headers['x-cache-id']}-${projectPath}-bower`,
-          projectPathDecoded, dependenciesToInstall, type,
-        );
-      } else {
-        throw Error('Invalid depedencies');
-      }
-      res.json(result);
-    } else {
-      res.status(400).json(null);
-    }
+    res.json(result);
+  } else {
+    res.status(400).json(null);
   }
 }

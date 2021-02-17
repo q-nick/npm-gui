@@ -1,15 +1,15 @@
-function uniqueOrNull(value: string, comparision: (string|null|undefined)[]): string | undefined {
-  return comparision.includes(value) ? undefined : value;
+import { version } from "react";
+
+export function uniqueOrNull(
+  value: string, comparision: (string|null|undefined)[],
+): string | null {
+  return comparision.includes(value) ? null : value;
 }
 
-export function mapNpmDependency(
-  name: string,
-  dependency: Dependency.Basic,
-  version: Dependency.Version,
+export function mapNpmDependency2(
+  dependency: Dependency.Npm,
+  version: Commands.OutdatedBody,
   required: string | null,
-  type: Dependency.Type | null,
-  unused: boolean,
-  repo: 'npm' | 'yarn' = 'npm',
 ): Dependency.Entire {
   const installed = (dependency && dependency.version) || null;
   let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
@@ -21,35 +21,12 @@ export function mapNpmDependency(
   }
 
   return {
-    name,
+    ...dependency,
     required,
     installed: installed || undefined,
     wanted: wanted || undefined,
     latest: latest || undefined,
-    type,
-    repo,
-    unused,
-  };
-}
-
-export function mapBowerDependency(
-  name: string, dependency: Dependency.Bower, type: Dependency.Type,
-): Dependency.Entire {
-  return {
-    name,
-    type,
-    repo: 'bower',
-    required: dependency.endpoint.target,
-    installed: dependency.pkgMeta ? dependency.pkgMeta.version : undefined,
-    wanted: uniqueOrNull(
-      dependency.update.target,
-      [dependency.pkgMeta && dependency.pkgMeta.version],
-    ),
-    latest: uniqueOrNull(
-      dependency.update.latest,
-      [dependency.pkgMeta && dependency.pkgMeta.version],
-    ),
-    unused: false,
+    repo: 'npm',
   };
 }
 
@@ -64,7 +41,7 @@ export function mapYarnDependencyToDependency(
     installed: yarnDependency[1],
     wanted: yarnDependency[2],
     latest: yarnDependency[3],
-    type: undefined,
+    type: 'prod',
     repo: 'yarn',
   };
 }
@@ -105,4 +82,40 @@ export function mapYarnResultTableToVersion(
     });
 
   return dependencies;
+}
+
+export function getInstalledVersion(installed?: Commands.InstalledBody): string | null {
+  if (!installed) {
+    return null;
+  }
+
+  if ('version' in installed) {
+    return installed.version;
+  }
+
+  if (typeof installed.required === 'string') {
+    return null;
+  }
+
+  return installed.required.version; // TODO peerMissing
+}
+
+export function getWantedVersion(
+  installed: string | null, outdated?: Commands.OutdatedBody,
+): string | null {
+  if (!installed || !outdated) {
+    return null;
+  }
+
+  return uniqueOrNull(outdated.wanted, [installed]);
+}
+
+export function getLatestVersion(
+  installed: string | null, wanted: string | null, outdated?: Commands.OutdatedBody,
+): string | null {
+  if (!installed || !outdated) {
+    return null;
+  }
+
+  return uniqueOrNull(outdated.latest, [installed, wanted]);
 }

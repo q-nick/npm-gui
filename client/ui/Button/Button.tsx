@@ -6,6 +6,7 @@ export interface Props extends ComponentPropsWithoutRef<'button'> {
   variant: 'dark' | 'primary' | 'warning' | 'danger' | 'success' | 'info';
   icon?: string;
   scale?: 'small';
+  lowercase?: boolean;
 }
 
 const variantToColor = {
@@ -26,7 +27,6 @@ const ButtonStyled = styled.button<Props>`
   font-weight: 500;
   outline: none;
   padding: 8px;
-  text-transform: uppercase;
   transition: background-color 200ms;
   vertical-align: middle;
   margin-right: 5px;
@@ -60,6 +60,10 @@ const ButtonStyled = styled.button<Props>`
   ${({ scale }: Props) => scale === 'small' && css`
     font-size: 10px;
     padding: 6px;
+  `}
+
+  ${({ lowercase }: Props) => css`
+    text-transform: ${lowercase ? 'unset' : 'uppercase'};
   `}
 `;
 

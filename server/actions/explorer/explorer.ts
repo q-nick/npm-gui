@@ -16,7 +16,7 @@ export async function explorer(req:express.Request, res:express.Response):Promis
     .map((name) => ({
       name,
       isDirectory: fs.lstatSync(`${normalizedPath}/${name}`).isDirectory(),
-      isProject: ['package.json', 'package-lock.json', 'yarn.lock', 'bower.json'].includes(name),
+      isProject: ['package.json', 'package-lock.json', 'yarn.lock'].includes(name),
     }));
 
   res.json({

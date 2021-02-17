@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React, { useCallback, useContext } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { Button } from '../../ui/Button/Button';
-import { Project } from './components/Project';
+import { Explorer } from './components/Explorer';
+import { StoreContext } from '../../app/StoreContext';
 
 export interface HeaderButton {
   text: string;
@@ -37,32 +38,34 @@ const Title = styled.h1`
   margin: 0 15px 0 0;
 `;
 
-const buttons: HeaderButton[] = [
-  {
-    text: 'Global',
-    routeName: 'global',
-    icon: 'globe',
-  },
-  {
-    text: 'Project',
-    routeName: 'dependencies',
-    icon: 'code',
-  },
-  {
-    text: 'Scripts',
-    routeName: 'scripts',
-    icon: 'media-play',
-  },
-];
+// const buttons: HeaderButton[] = [
+//   // {
+//   //   text: 'Global',
+//   //   routeName: 'global',
+//   //   icon: 'globe',
+//   // },
+//   {
+//     text: 'Project',
+//     routeName: 'dependencies',
+//     icon: 'code',
+//   },
+//   // {
+//   //   text: 'Scripts',
+//   //   routeName: 'scripts',
+//   //   icon: 'media-play',
+//   // },
+// ];
 
 interface Props {
-  projectPathEncoded: string;
+  projectPathEncoded?: string;
 }
 
 export function Header({ projectPathEncoded }:Props): JSX.Element {
+  const { projects } = useContext(StoreContext);
+
   const history = useHistory();
 
-  const onSelectPath = React.useCallback(
+  const onSelectPath = useCallback(
     (path:string) => history.push(`/project/${window.btoa(path)}/dependencies`),
     [history],
   );
@@ -71,22 +74,28 @@ export function Header({ projectPathEncoded }:Props): JSX.Element {
     <Nav>
       <LeftSection>
         <Title>npm-gui</Title>
-        {buttons.map((button) => (
           <Button
-            key={button.routeName}
-            variant="dark"
-            icon={button.icon}
-            onClick={() => history.push(`/project/${projectPathEncoded}/${button.routeName}`)}
+            variant={!projectPathEncoded ? "info": 'dark'}
+            key="global"
+            icon="code"
+            onClick={() => history.push(`/`)}
           >
-            {button.text}
+            Global
           </Button>
-        ))}
       </LeftSection>
       <RightSection>
-        <Project
-          onSelectPath={onSelectPath}
-          projectPathEncoded={projectPathEncoded}
-        />
+      {Object.keys(projects).map((oneOfProjectPathEncoded) => (
+          <Button
+            key={oneOfProjectPathEncoded}
+            variant={oneOfProjectPathEncoded === projectPathEncoded ? "info": 'dark'}
+            icon={'code'}
+            onClick={() => history.push(`/project/${oneOfProjectPathEncoded}/dependencies`)}
+            lowercase
+          >
+            {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
+          </Button>
+        ))}
+        <Explorer onSelectPath={onSelectPath} />
       </RightSection>
     </Nav>
   );

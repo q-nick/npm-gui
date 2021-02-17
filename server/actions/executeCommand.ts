@@ -49,13 +49,11 @@ export default function executeCommand(
   });
 }
 
-export async function executeCommandJSON(
+export async function executeCommandJSON<T>(
   cwd:string, wholeCommand:string, pushToConsole = false,
-):Promise<any> {
-  try {
-    const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
-    return parseJSON(stdout);
-  } catch (e) {
-    return null;
-  }
+):Promise<T> {
+  console.time(`Command: ${wholeCommand}, took:`);
+  const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
+  console.timeEnd(`Command: ${wholeCommand}, took:`);
+  return parseJSON(stdout);
 }

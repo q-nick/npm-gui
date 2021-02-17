@@ -1,0 +1,46 @@
+Arguments: 
+  /home/pst/.nvm/versions/node/v10.17.0/bin/node /home/pst/.nvm/versions/node/v10.17.0/bin/yarn add sdmvladbf3@v1.0.0
+
+PATH: 
+  /home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/pst/workspace/npm-gui/node_modules/.bin:/home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/pst/workspace/npm-gui/node_modules/.bin:/home/pst/.nvm/versions/node/v10.17.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  10.17.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.npmjs.org/sdmvladbf3: Not found
+      at Request.params.callback [as _callback] (/home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/yarn/lib/cli.js:66988:18)
+      at Request.self.callback (/home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/yarn/lib/cli.js:140662:22)
+      at Request.emit (events.js:198:13)
+      at Request.<anonymous> (/home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/yarn/lib/cli.js:141634:10)
+      at Request.emit (events.js:198:13)
+      at IncomingMessage.<anonymous> (/home/pst/.nvm/versions/node/v10.17.0/lib/node_modules/yarn/lib/cli.js:141556:12)
+      at Object.onceWrapper (events.js:286:20)
+      at IncomingMessage.emit (events.js:203:15)
+      at endReadableNT (_stream_readable.js:1143:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
+
+npm manifest: 
+  {
+    "name": "npm-gui-test-project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "UNLICENSED"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  
