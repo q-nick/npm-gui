@@ -1,12 +1,14 @@
-import express from 'express';
+import type {
+  Request, Response, NextFunction
+} from 'express';
 
 export const catchErrors = (
-  fn: (req: express.Request, res: express.Response)=> Promise<void>,
-): any => (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => Promise.resolve(fn(req, res))
+  fn: (req: Request<any>, res: Response) => Promise<void>,
+): any => async (
+  req: Request<any>,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => Promise.resolve(fn(req, res))
   .catch((e) => {
     next(e);
   });

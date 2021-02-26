@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { Button } from '../../ui/Button/Button';
@@ -38,35 +38,19 @@ const Title = styled.h1`
   margin: 0 15px 0 0;
 `;
 
-// const buttons: HeaderButton[] = [
-//   // {
-//   //   text: 'Global',
-//   //   routeName: 'global',
-//   //   icon: 'globe',
-//   // },
-//   {
-//     text: 'Project',
-//     routeName: 'dependencies',
-//     icon: 'code',
-//   },
-//   // {
-//   //   text: 'Scripts',
-//   //   routeName: 'scripts',
-//   //   icon: 'media-play',
-//   // },
-// ];
-
 interface Props {
   projectPathEncoded?: string;
 }
 
-export function Header({ projectPathEncoded }:Props): JSX.Element {
+export function Header({ projectPathEncoded }: Props): JSX.Element {
   const { projects } = useContext(StoreContext);
 
   const history = useHistory();
 
   const onSelectPath = useCallback(
-    (path:string) => history.push(`/project/${window.btoa(path)}/dependencies`),
+    (path: string) => {
+      history.push(`/project/${window.btoa(path)}/dependencies`);
+    },
     [history],
   );
 
@@ -74,23 +58,27 @@ export function Header({ projectPathEncoded }:Props): JSX.Element {
     <Nav>
       <LeftSection>
         <Title>npm-gui</Title>
-          <Button
-            variant={!projectPathEncoded ? "info": 'dark'}
-            key="global"
-            icon="code"
-            onClick={() => history.push(`/`)}
-          >
-            Global
-          </Button>
+        <Button
+          key="global"
+          icon="code"
+          onClick={(): void => {
+            history.push('/');
+          }}
+          variant={projectPathEncoded !== undefined ? 'info' : 'dark'}
+        >
+          Global
+        </Button>
       </LeftSection>
       <RightSection>
-      {Object.keys(projects).map((oneOfProjectPathEncoded) => (
+        {Object.keys(projects).map((oneOfProjectPathEncoded) => (
           <Button
             key={oneOfProjectPathEncoded}
-            variant={oneOfProjectPathEncoded === projectPathEncoded ? "info": 'dark'}
-            icon={'code'}
-            onClick={() => history.push(`/project/${oneOfProjectPathEncoded}/dependencies`)}
+            icon="code"
             lowercase
+            onClick={(): void => {
+              history.push(`/project/${oneOfProjectPathEncoded}/dependencies`);
+            }}
+            variant={oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'}
           >
             {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
           </Button>

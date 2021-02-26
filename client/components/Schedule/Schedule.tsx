@@ -15,7 +15,15 @@ export function Schedule(): JSX.Element {
 
   return (
     <ScheduleWrapper>
-      {schedule.map((task) => (<TaskElement task={task} onClick={() => removeTask(task)} />))}
+      {schedule.map((task) => (
+        <TaskElement
+          key={task.description}
+          onClick={(): void => {
+            removeTask(task);
+          }}
+          task={task}
+        />
+      ))}
     </ScheduleWrapper>
   );
 }

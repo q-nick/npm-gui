@@ -28,7 +28,7 @@ module.exports = {
         loader: 'ts-loader',
         exclude: EXCLUDE,
         options: {
-          configFile: 'tsconfig.client.json',
+          configFile: 'tsconfig.json',
           getCustomTransformers: () => ({ before: [styledComponentsTransformer] }),
 
         },

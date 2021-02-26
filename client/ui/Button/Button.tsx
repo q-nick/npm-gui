@@ -1,9 +1,11 @@
-import React, { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import styled, { css } from 'styled-components';
-import { Icon, Props as IconPropsOriginal } from '../Icon/Icon';
+import type { CSSType } from '../../Styled';
+import type { Props as IconPropsOriginal } from '../Icon/Icon';
+import { Icon } from '../Icon/Icon';
 
 export interface Props extends ComponentPropsWithoutRef<'button'> {
-  variant: 'dark' | 'primary' | 'warning' | 'danger' | 'success' | 'info';
+  variant: 'danger' | 'dark' | 'info' | 'primary' | 'success' | 'warning';
   icon?: string;
   scale?: 'small';
   lowercase?: boolean;
@@ -53,17 +55,17 @@ const ButtonStyled = styled.button<Props>`
     filter: grayscale(100%);
   }
 
-  ${({ variant }: Props) => css`
+  ${({ variant }: Readonly<Props>): CSSType => css`
     background-color: ${variantToColor[variant]};
   `}
 
-  ${({ scale }: Props) => scale === 'small' && css`
+  ${({ scale }: Readonly<Props>): CSSType => scale === 'small' && css`
     font-size: 10px;
     padding: 6px;
   `}
 
-  ${({ lowercase }: Props) => css`
-    text-transform: ${lowercase ? 'unset' : 'uppercase'};
+  ${({ lowercase }: Readonly<Props>): CSSType => css`
+    text-transform: ${lowercase === true ? 'unset' : 'uppercase'};
   `}
 `;
 
@@ -75,19 +77,19 @@ const ButtonIcon = styled(Icon)<IconProps>`
   margin-right: 3px;
   vertical-align: middle;
 
-  ${({ isAlone }: IconProps) => isAlone && css`
+  ${({ isAlone }: Readonly<IconProps>): CSSType => isAlone && css`
     margin-right: 0;
   `}
 `;
 
 export function Button({
   icon, children, ...props
-}:Props):JSX.Element {
+}: Readonly<Props>): JSX.Element {
   return (
     <ButtonStyled
-      {...props as Props} // eslint-disable-line
+      {...props} // eslint-disable-line
     >
-      {icon && <ButtonIcon glyph={icon} isAlone={!children} />}
+      {icon !== undefined && <ButtonIcon glyph={icon} isAlone={children !== null} />}
       {children}
     </ButtonStyled>
   );

@@ -1,9 +1,9 @@
 import Ws from 'ws';
-import { Server } from 'http';
+import type { Server } from 'http';
 
 let consoleSocket: Ws | undefined;
 
-export function send(msg: string, id: string, status = 'LIVE'):void {
+export function send(msg: string, id: string, status = 'LIVE'): void {
   if (consoleSocket) {
     // TODO we will send command ID to group commands in separated console windows
     consoleSocket.send(JSON.stringify({
@@ -14,7 +14,7 @@ export function send(msg: string, id: string, status = 'LIVE'):void {
   }
 }
 
-export function bind(server: Server):void {
+export function bind(server: Readonly<Server>): void {
   const wss = new Ws.Server({
     server,
   });

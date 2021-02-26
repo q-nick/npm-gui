@@ -1,6 +1,4 @@
-const cache: {
-  [key: string]: any,
-} = {};
+const cache: Record<string, any> = {};
 
 export function getFromCache(name: string): any {
   return cache[name];
@@ -52,8 +50,7 @@ export async function withCachePut<T extends (...argss: any[]) => any>(
 }
 
 export async function withCacheUpdate<T extends (...argss: any[]) => any>(
-  method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>)
-  : Promise<ReturnType<T>> {
+  method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>): Promise<ReturnType<T>> {
   const result = await method(...args);
   updateInCache(cacheName, result, keyToCompare);
 
@@ -61,8 +58,7 @@ export async function withCacheUpdate<T extends (...argss: any[]) => any>(
 }
 
 export async function withCacheInvalidate<T extends (...argss: any[]) => any>(
-  method: T, cacheName: string, ...args: Parameters<T>)
-  : Promise<ReturnType<T>> {
+  method: T, cacheName: string, ...args: Parameters<T>): Promise<ReturnType<T>> {
   const result = await method(...args);
   putToCache(cacheName, null);
 
@@ -70,8 +66,7 @@ export async function withCacheInvalidate<T extends (...argss: any[]) => any>(
 }
 
 export async function withCacheSplice<T extends (...argss: any[]) => any>(
-  method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>)
-  : Promise<ReturnType<T>> {
+  method: T, cacheName: string, keyToCompare: string, ...args: Parameters<T>): Promise<ReturnType<T>> {
   const result = await method(...args);
   spliceFromCache(cacheName, { [keyToCompare]: result }, keyToCompare);
 

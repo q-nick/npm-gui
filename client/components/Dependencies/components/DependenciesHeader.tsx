@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
@@ -21,7 +21,7 @@ export function DependenciesHeader({
   onUpdateAllToWanted,
   onUpdateAllToLatest,
   onForceReInstall,
-}:Props):JSX.Element {
+}: Props): JSX.Element {
   return (
     <header>
       <Search />
@@ -29,10 +29,10 @@ export function DependenciesHeader({
         <small>Install:</small>
         &nbsp;
         <Button
-          variant="primary"
-          scale="small"
           icon="data-transfer-download"
           onClick={onInstallAll}
+          scale="small"
+          variant="primary"
         >
           All
         </Button>
@@ -54,40 +54,40 @@ export function DependenciesHeader({
         <small>Update all to:</small>
         &nbsp;
         <Button
-          variant="success"
-          scale="small"
           icon="cloud-download"
           onClick={onUpdateAllToInstalled}
+          scale="small"
           title="Reinstall all packages without changing package.json"
+          variant="success"
         >
           Installed
         </Button>
         <Button
-          variant="success"
-          scale="small"
           icon="cloud-download"
           onClick={onUpdateAllToWanted}
+          scale="small"
           title="Install all wanted package version"
+          variant="success"
         >
           Wanted
         </Button>
         <Button
-          variant="success"
-          scale="small"
           icon="cloud-download"
           onClick={onUpdateAllToLatest}
+          scale="small"
           title="Install all latest packages version"
+          variant="success"
         >
           Latest
         </Button>
         &nbsp;
         &nbsp;
         <Button
-          variant="danger"
-          scale="small"
           icon="loop-circular"
           onClick={onForceReInstall}
+          scale="small"
           title="Remove and re-nstall all packages"
+          variant="danger"
         >
           Re-Install
         </Button>

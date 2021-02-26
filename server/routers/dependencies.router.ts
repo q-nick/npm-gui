@@ -19,7 +19,7 @@ import {
 
 import { catchErrors } from '../catchErrors';
 
-const dependenciesRouter = express.Router({ mergeParams: true }); // eslint-disable-line
+const dependenciesRouter = express.Router({ mergeParams: true });
 dependenciesRouter.post('/:repoName/', catchErrors(addDependencies));
 dependenciesRouter.delete('/:repoName/:packageName', catchErrors(deleteDependency));
 
@@ -28,7 +28,7 @@ installRouter.post('/:force?', catchErrors(installDependencies));
 
 const getAllDependenciesRouter = express.Router({ mergeParams: true });
 getAllDependenciesRouter.get('/', catchErrors(getAllDependencies));
-getAllDependenciesRouter.get('/simple', catchErrors(getAllDependenciesSimple));
+getAllDependenciesRouter.get('/simple', getAllDependenciesSimple);
 
 export {
   dependenciesRouter,
