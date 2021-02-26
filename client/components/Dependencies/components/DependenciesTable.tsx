@@ -1,13 +1,14 @@
-import * as React from 'react';
 import styled, { css } from 'styled-components';
+import { Fragment } from 'react';
 import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
 import { Loader } from '../../Loader/Loader';
+import type * as Dependency from '../../../../server/Dependency';
 
 interface Props {
   sortKey: string;
   sortReversed: boolean;
-  filters: { [key:string] : string };
+  filters: Record<string, string>;
   filtersEnabled?: ('name' | 'type')[];
   dependencies: Dependency.Entire[];
   dependenciesProcessing: Record<string, boolean>;
@@ -66,7 +67,7 @@ export function DependenciesTable({
   dependenciesProcessing,
   onDeleteDependency,
   onInstallDependencyVersion,
-}:Props): JSX.Element {
+}: Props): JSX.Element {
   const isEmpty = dependencies && dependencies.length === 0;
   const isLoading = !dependencies;
 
@@ -112,23 +113,23 @@ export function DependenciesTable({
         <thead>
           <tr>
             {ths.map((th) => (
-              <React.Fragment key={th.name}>
+              <Fragment key={th.name}>
                 {
                   th.sortMatch ? (
                     <ThSortable
                       appearance={th.appearance}
                       filter={th.filter as any}
-                      sortMatch={th.sortMatch}
-                      sortKey={sortKey}
-                      sortReversed={sortReversed}
-                      onSortChange={onSortChange}
                       onFilterChange={onFilterChange}
+                      onSortChange={onSortChange}
+                      sortKey={sortKey}
+                      sortMatch={th.sortMatch}
+                      sortReversed={sortReversed}
                     >
                       {th.name}
                     </ThSortable>
                   ) : <ThStyled appearance={th.appearance}>{th.name}</ThStyled>
-                  }
-              </React.Fragment>
+                }
+              </Fragment>
             ))}
           </tr>
         </thead>

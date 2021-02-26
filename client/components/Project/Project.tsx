@@ -33,7 +33,7 @@ const RightColumn = styled.div`
 `;
 
 export function Project(): JSX.Element {
-  const { projectPathEncoded } = useParams<{projectPathEncoded:string}>();
+  const { projectPathEncoded } = useParams<{projectPathEncoded: string}>();
   const { projects, addProject } = useContext(StoreContext);
   const scope = projects[projectPathEncoded];
 
@@ -44,7 +44,7 @@ export function Project(): JSX.Element {
   }, [projectPathEncoded, addProject, scope]);
 
   if (!scope) {
-    return <></>;
+    return <>{null}</>;
   }
 
   return (
@@ -58,8 +58,8 @@ export function Project(): JSX.Element {
           <Switch>
             <Route path="/project/:projectPathEncoded/dependencies">
               <Dependencies
-                projectPath={projectPathEncoded}
                 filtersEnabled={['name', 'type']}
+                projectPath={projectPathEncoded}
               />
             </Route>
             {/* <Route path="/project/:projectPathEncoded/global">

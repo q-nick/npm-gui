@@ -1,5 +1,5 @@
 import express from 'express';
-import AnalyticsNode = require('analytics-node');
+import AnalyticsNode from 'analytics-node';
 
 export const logRouter = express.Router();
 const client = new AnalyticsNode(

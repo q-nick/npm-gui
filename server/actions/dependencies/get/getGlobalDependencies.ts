@@ -1,62 +1,50 @@
-import * as express from 'express';
+import type * as express from 'express';
 
-import executeCommand from '../../executeCommand';
-import { mapNpmDependency2 as mapNpmDependency } from '../../mapDependencies';
+import { executeCommandJSON } from '../../executeCommand';
+import { getInstalledVersion, getLatestVersion } from '../../mapDependencies';
 import { withCachePut } from '../../../cache';
-import { parseJSON } from '../../parseJSON';
+import type * as Dependency from '../../../Dependency';
+import type * as Commands from '../../../Commands';
 
-async function getGlobalNpmDependencies():Promise<Dependency.Entire[]> {
-  const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
-  const { dependencies } = parseJSON(commandResult.stdout);
+async function getGlobalNpmDependencies(): Promise<Dependency.Entire[]> {
+  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(undefined, 'npm ls -g --depth=0 --json');
 
-  const commandOutdatedResult = await executeCommand(null, 'npm outdated -g --json');
-  const versions = parseJSON(commandOutdatedResult.stdout);
+  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(undefined, 'npm outdated -g --json');
 
-  return Object.keys(dependencies)
-    .map((name):any => (mapNpmDependency as any)(
+  return Object.keys(installedInfo)
+    .map((name): Dependency.Entire => ({
+      repo: 'npm',
       name,
-      dependencies[name],
-      versions && versions[name],
-      dependencies[name].version,
-      'global',
-      false,
-    ));
+      type: 'global',
+      installed: getInstalledVersion(installedInfo[name]),
+      latest: getLatestVersion(getInstalledVersion(installedInfo[name]), null, outdatedInfo[name])
+    }));
 }
 
-async function getGlobalNpmDependenciesSimple():Promise<Dependency.Npm[]> {
-  const commandResult = await executeCommand(null, 'npm ls -g --depth=0 --json');
-  const { dependencies } = parseJSON(commandResult.stdout);
+async function getGlobalNpmDependenciesSimple(): Promise<Dependency.Entire[]> {
+  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(undefined, 'npm ls -g --depth=0 --json');
 
-  return Object.keys(dependencies)
-    .map((name):any => (mapNpmDependency as any)(
+  return Object.keys(installedInfo)
+    .map((name): Dependency.Entire => ({
+      repo: 'npm',
       name,
-      dependencies[name],
-      undefined as any,
-      dependencies[name].version,
-      'global',
-      false,
-    ));
+      type: 'global',
+      installed: getInstalledVersion(installedInfo[name])
+    }));
 }
 
-export async function getGlobalDependencies(_:express.Request, res:express.Response):Promise<void> {
-  // let npmDependencies:Dependency.Npm[] = [];
-  let npmDependencies:any[] = [];
-
-  try {
-    npmDependencies = await withCachePut(getGlobalNpmDependencies, 'npm-global');
-  } catch (e) { console.error(e); }
+export async function getGlobalDependencies(
+  _: unknown, res: express.Response<Dependency.Entire[]>
+): Promise<void> {
+  const npmDependencies = await withCachePut(getGlobalNpmDependencies, 'npm-global');
 
   res.json(npmDependencies);
 }
 
 export async function getGlobalDependenciesSimple(
-  _:express.Request, res:express.Response,
-):Promise<void> {
-  let npmDependencies:Dependency.Npm[] = [];
-
-  try {
-    npmDependencies = await withCachePut(getGlobalNpmDependenciesSimple, 'npm-global-simple');
-  } catch (e) { console.error(e); }
+  _: unknown, res: express.Response<Dependency.Entire[]>
+): Promise<void> {
+  const npmDependencies = await withCachePut(getGlobalNpmDependenciesSimple, 'npm-global-simple');
 
   res.json(npmDependencies);
 }

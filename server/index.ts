@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 // import opn from 'opn';
-import http from 'http';
+import type http from 'http';
 import * as Console from './console';
 
 import { projectRouter } from './routers/project.router';
@@ -22,7 +22,7 @@ export const app = express();
 // middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-if (!process.env.NODE_TEST) {
+if (process.env.NODE_TEST !== undefined) {
   // app.use(morgan('combined'));
 }
 // routes
@@ -43,7 +43,7 @@ app.get('*', (_, res) => {
 });
 
 // error handler
-app.use((err:any, _:express.Request, res:express.Response, next:express.NextFunction) => {
+app.use((err: unknown, _: unknown, res: express.Response, next: express.NextFunction) => {
   // No routes handled the request and no system error, that means 404 issue.
   // Forward to next middleware to handle it.
   if (!err) {
@@ -54,7 +54,7 @@ app.use((err:any, _:express.Request, res:express.Response, next:express.NextFunc
   res.status(400).send({ error: err });
 });
 
-function start(host: string, port: number): http.Server {
+export function start(host = 'localhost', port = 3000): http.Server {
   // start server
   const server = app.listen(port || PORT, host || HOST, () => {
     console.log(`npm-gui web-server running at http://${(host || HOST)}:${(port || PORT)}/`);
@@ -65,5 +65,3 @@ function start(host: string, port: number): http.Server {
 
   return server;
 }
-
-export default start;

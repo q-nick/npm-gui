@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom';
-import 'open-iconic';
+import 'open-iconic'; // eslint-disable-line
 import { Project } from '../components/Project/Project';
 import { StoreContext, useStoreContextValue } from './StoreContext';
 import { Header } from '../components/Header/Header';

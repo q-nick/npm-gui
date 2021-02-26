@@ -1,36 +1,42 @@
-import * as express from 'express';
+import type { Request, Response } from 'express';
 
-import executeCommand from '../../executeCommand';
-import { mapNpmDependency2 as mapNpmDependency } from '../../mapDependencies';
+import { executeCommand, executeCommandJSON } from '../../executeCommand';
+import { getInstalledVersion, getLatestVersion } from '../../mapDependencies';
 import { withCacheUpdate } from '../../../cache';
-import { parseJSON } from '../../parseJSON';
+import type * as Dependency from '../../../Dependency';
+import type * as Commands from '../../../Commands';
 
-async function addGlobalNpmDependency(req:express.Request):Promise<Dependency.Entire> {
+type RequestBody ={name: string; version: string}[];
+
+async function addGlobalNpmDependency(
+  req: Request<unknown, unknown, RequestBody>
+): Promise<Dependency.Entire | null> {
+  if (req.body[0] === undefined) {
+    return null;
+  }
+
   const { name, version } = req.body[0];
 
   // add
-  await executeCommand(null, `npm install ${name}@${version || ''} -g`, true);
+  await executeCommand(undefined, `npm install ${name}@${version || ''} -g`, true);
 
   // get package info
-  const commandLsResult = await executeCommand(null, `npm ls ${name} --depth=0 -g --json`);
-  const { dependencies } = parseJSON(commandLsResult.stdout);
+  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(undefined, `npm ls ${name} --depth=0 -g --json`);
 
-  const commandOutdtedResult = await executeCommand(null, `npm outdated ${name} -g --json`);
-  const versions = parseJSON(commandOutdtedResult.stdout) || { versions: [] };
+  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(undefined, `npm outdated ${name} -g --json`);
 
-  return (mapNpmDependency as any)(
+  return {
+    repo: 'npm',
     name,
-    dependencies[name],
-    versions[name],
-    dependencies[name].version,
-    'global',
-    false,
-  );
+    type: 'global',
+    installed: getInstalledVersion(installedInfo[name]),
+    latest: getLatestVersion(getInstalledVersion(installedInfo[name]), null, outdatedInfo[name])
+  };
 }
 
 export async function addGlobalDependencies(
-  req:express.Request, res:express.Response,
-):Promise<void> {
+  req: Request, res: Response,
+): Promise<void> {
   // TODO yarn?
   await withCacheUpdate(addGlobalNpmDependency, 'npm-global', 'name', req);
 

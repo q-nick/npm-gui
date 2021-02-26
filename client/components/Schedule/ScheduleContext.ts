@@ -4,7 +4,7 @@ export interface Task {
   projectPath: string;
   description: string;
   executeMe: () => Promise<void>;
-  status: 'WAITING' | 'RUNNING' | 'ERROR' | 'SUCCESS';
+  status: 'ERROR' | 'RUNNING' | 'SUCCESS' | 'WAITING';
 }
 
 interface Hook {
@@ -22,47 +22,47 @@ export function useScheduleContextValue(): Hook {
   }, []);
 
   const removeTask = useCallback<Hook['removeTask']>((taskToRemove) => {
-    if(taskToRemove.status !== 'RUNNING') {
-      setSchedule((prevSchedule) => prevSchedule.filter(task => task.executeMe !== taskToRemove.executeMe));
+    if (taskToRemove.status !== 'RUNNING') {
+      setSchedule((prevSchedule) => prevSchedule.filter((task) => task.executeMe !== taskToRemove.executeMe));
     }
   }, []);
 
   async function checkSchedule() {
     console.log('checking', !doing);
     if (!doing) {
-      const toDo = schedule.find(task => task.status === 'WAITING');
-      if(toDo) {
-        setSchedule(prevSchedule => prevSchedule.map(task => {
-          if(task.executeMe !== toDo.executeMe) {
+      const toDo = schedule.find((task) => task.status === 'WAITING');
+      if (toDo) {
+        setSchedule((prevSchedule) => prevSchedule.map((task) => {
+          if (task.executeMe !== toDo.executeMe) {
             return task;
           }
           return {
             ...task,
             status: 'RUNNING'
-          }
+          };
         }));
         setDoing(toDo);
         try {
           await toDo.executeMe();
-          setSchedule(prevSchedule => prevSchedule.map(task => {
-            if(task.executeMe !== toDo.executeMe) {
+          setSchedule((prevSchedule) => prevSchedule.map((task) => {
+            if (task.executeMe !== toDo.executeMe) {
               return task;
             }
             return {
               ...task,
               status: 'SUCCESS'
-            }
+            };
           }));
-        } catch(e) {
+        } catch (e) {
           console.error(e);
-          setSchedule(prevSchedule => prevSchedule.map(task => {
-            if(task.executeMe !== toDo.executeMe) {
+          setSchedule((prevSchedule) => prevSchedule.map((task) => {
+            if (task.executeMe !== toDo.executeMe) {
               return task;
             }
             return {
               ...task,
               status: 'ERROR'
-            }
+            };
           }));
         }
         setDoing(undefined);
