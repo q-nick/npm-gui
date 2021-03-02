@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
 import type * as Dependency from '../../server/Dependency';
 
 interface ProjectScope {
@@ -12,12 +12,14 @@ interface Hook {
 }
 
 const projectsFromStorage = localStorage.getItem('projects');
-const initialProjects: Record<string, ProjectScope> = projectsFromStorage ? JSON.parse(projectsFromStorage) : {};
+const initialProjects = projectsFromStorage !== null
+  ? JSON.parse(projectsFromStorage) as Record<string, ProjectScope> : {};
 
 function saveProjectsToLocalStorage(projects: Record<string, ProjectScope>): void {
   localStorage.setItem(
     'projects',
-    JSON.stringify(Object.keys(projects).reduce((prev, current) => ({...prev, [current]: { dependencies: [] }}), {})),
+    JSON.stringify(Object.keys(projects)
+      .reduce((prev, current) => ({ ...prev, [current]: { dependencies: [] } }), {})),
   );
 }
 
@@ -49,7 +51,7 @@ export function useStoreContextValue(): Hook {
   };
 }
 
-export const StoreContext = React.createContext<Hook>({
+export const StoreContext = createContext<Hook>({
   projects: {},
   addProject() {},
   setProjectDependencies() {},

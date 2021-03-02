@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { useCallback, useState } from 'react';
+import type * as Dependency from '../../../../../../server/Dependency';
 
 interface Hook {
   searchResults?: Dependency.SearchResult[];

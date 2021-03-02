@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-export function useInterval(callback: (...args: any) => void, delay:number):void {
-  const savedCallback = useRef<(...args: any) => void>();
+export function useInterval(callback: (...args: unknown[]) => void, delay: number): void {
+  const savedCallback = useRef<(...args: unknown[]) => void>();
 
   useEffect(
     () => {
@@ -10,14 +10,18 @@ export function useInterval(callback: (...args: any) => void, delay:number):void
     [callback],
   );
 
-  useEffect(() => { // eslint-disable-line
+  useEffect((): void => {
     const currentCallback = savedCallback.current;
 
-    const handler = (...args: any) => currentCallback && currentCallback(...args);
+    const handler = (...args: unknown[]): void => {
+      currentCallback(...args);
+    };
 
     if (delay !== null) {
       const id = setInterval(handler, delay);
-      return () => clearInterval(id);
+      return (): void => {
+        clearInterval(id);
+      };
     }
   },
   [delay]);

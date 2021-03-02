@@ -58,17 +58,19 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
     <Nav>
       <LeftSection>
         <Title>npm-gui</Title>
+
         <Button
           key="global"
           icon="code"
           onClick={(): void => {
             history.push('/');
           }}
-          variant={projectPathEncoded !== undefined ? 'info' : 'dark'}
+          variant={projectPathEncoded === undefined ? 'info' : 'dark'}
         >
           Global
         </Button>
       </LeftSection>
+
       <RightSection>
         {Object.keys(projects).map((oneOfProjectPathEncoded) => (
           <Button
@@ -83,6 +85,7 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
             {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
           </Button>
         ))}
+
         <Explorer onSelectPath={onSelectPath} />
       </RightSection>
     </Nav>

@@ -54,7 +54,7 @@ async function getNpmPackageWithInfo(
   const type = getTypeFromPackageJson(packageJson, dependencyName);
   const required = getRequiredFromPackageJson(packageJson, dependencyName);
 
-  const installed = getInstalledVersion(installedInfo[dependencyName]);
+  const installed = getInstalledVersion(installedInfo ? installedInfo[dependencyName] : undefined);
   const wanted = getWantedVersion(installed, outdatedInfo[dependencyName]);
   const latest = getLatestVersion(installed, wanted, outdatedInfo[dependencyName]);
 
@@ -68,36 +68,6 @@ async function getNpmPackageWithInfo(
     latest,
   };
 }
-
-// async function getYarnNpmPackageWithInfo(
-//   projectPath: string, dependencyName: string,
-// ): Promise<Dependency.Entire> {
-//   // installed or not
-//   const commandLsJSON = await executeCommand(projectPath, `yarn list --pattern ${dependencyName} --depth=0 --json`);
-//   const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter((s) => s).map(parseJSON);
-//   const installed = mapYarnResultTreeToBasic(commandLsJSONResults);
-
-//   // latest, wanted
-//   const outdatedResult = await executeCommand(projectPath, `yarn outdated ${dependencyName} --depth=0 --json`);
-//   const outdatedResults: Yarn.Result[] = outdatedResult.stdout.split('\n').filter((s) => s).map(parseJSON);
-//   const outdated = mapYarnResultTableToVersion(outdatedResults);
-
-//   // required & type
-//   const packageJson = parseJSON(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
-//   const type = getTypeFromPackageJson(packageJson, dependencyName);
-//   const required = getRequiredFromPackageJson(packageJson, dependencyName);
-//   const mapNpmDependency: any = 1;
-
-//   return mapNpmDependency(
-//     dependencyName,
-//     installed[dependencyName],
-//     outdated && outdated[dependencyName],
-//     required,
-//     type,
-//     true,
-//     'yarn',
-//   );
-// }
 
 async function addNpmDependency(
   projectPath: string, dependency: Dependency.Basic, type: Dependency.Type,
@@ -119,36 +89,11 @@ async function addNpmDependencies(
   await executeCommandJSON(projectPath, command, true);
 }
 
-// async function addYarnDependency(
-//   projectPath: string, dependency: Dependency.Basic, type: Dependency.Type,
-// ): Promise<Dependency.Entire> {
-//   // add
-//   const { stderr } = await executeCommand(projectPath, `yarn add ${dependency.name}@${dependency.version || ''}${type === 'prod' ? '' : ' -D'} --json`, true);
-
-//   if (stderr) {
-//     throw JSON.parse(stderr).data;
-//   }
-
-//   return getYarnNpmPackageWithInfo(projectPath, dependency.name);
-// }
-
-// async function addYarnDependencies(
-//   projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type,
-// ): Promise<void> {
-//   // add list
-//   const dependenciesToInstall = dependencies.map((d) => `${d.name}@${d.version || ''}`);
-//   const command = `yarn add ${dependenciesToInstall.join(' ')}${type === 'prod' ? '' : ' -D'} --json`;
-//   const { stderr } = await executeCommand(projectPath, command, true);
-
-//   if (stderr) {
-//     throw JSON.parse(stderr).data;
-//   }
-// }
-
 // controllers
 export async function addDependencies(
-  req: express.Request<{projectPath: unknown; type: Dependency.Type}, unknown, Dependency.Basic[]>,
-  res: express.Response<Dependency.Entire | null>
+  req: express.Request<{
+    projectPath: unknown; type: Dependency.Type; }, unknown, Dependency.Basic[]>,
+  res: express.Response<Dependency.Entire | null>,
 ): Promise<void> {
   const { projectPath, type } = req.params;
   const projectPathDecoded = decodePath(projectPath);

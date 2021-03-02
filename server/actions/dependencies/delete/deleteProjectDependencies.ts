@@ -1,16 +1,15 @@
 import type express from 'express';
-import {executeCommand} from '../../executeCommand';
 // import { withCacheSplice } from '../../../cache';
 import { decodePath } from '../../decodePath';
 import { hasYarn, hasNpm } from '../../hasYarn';
 import type * as Dependency from '../../../Dependency';
+import { executeCommandJSON } from '../../executeCommand';
 
 async function deleteNpmDependency(
-  projectPath: string, dependencyName: string, type: Dependency.Type,
-): Promise<string> {
+  projectPath: string, packageName: string, type: Dependency.Type,
+): Promise<void> {
   // delete
-  await executeCommand(projectPath, `npm uninstall ${dependencyName} -${type === 'prod' ? 'S' : 'D'}`, true);
-  return dependencyName;
+  await executeCommandJSON(projectPath, `npm uninstall ${packageName} -${type === 'prod' ? 'S' : 'D'} --json`, true);
 }
 
 // async function deleteYarnDependency(
@@ -29,24 +28,22 @@ export async function deleteDependency(
   res: express.Response
 ): Promise<void> {
   const {
-    repoName, projectPath, type, packageName,
+    projectPath, type, packageName,
   } = req.params;
 
   const projectPathDecoded = decodePath(projectPath);
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
 
-  if (repoName === 'npm') {
-    if (yarn || npm) {
-      // await withCacheSplice(
-      //   yarn ? deleteYarnDependency : deleteNpmDependency,
-      //   `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
-      //   projectPathDecoded, packageName, type,
-      // );
-      await deleteNpmDependency(projectPathDecoded, packageName, type);
-      res.json({});
-    } else {
-      res.status(400).json(null);
-    }
+  if (yarn || npm) {
+    // await withCacheSplice(
+    //   yarn ? deleteYarnDependency : deleteNpmDependency,
+    //   `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
+    //   projectPathDecoded, packageName, type,
+    // );
+    await deleteNpmDependency(projectPathDecoded, packageName, type);
+    res.json({});
+  } else {
+    res.status(400).json(null);
   }
 }

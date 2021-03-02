@@ -20,18 +20,21 @@ import {
 import { catchErrors } from '../catchErrors';
 
 const dependenciesRouter = express.Router({ mergeParams: true });
-dependenciesRouter.post('/:repoName/', catchErrors(addDependencies));
-dependenciesRouter.delete('/:repoName/:packageName', catchErrors(deleteDependency));
+dependenciesRouter.get('/simple', getAllDependenciesSimple);
+dependenciesRouter.get('/', catchErrors(getAllDependencies));
+
+dependenciesRouter.post('/', catchErrors(addDependencies));
+dependenciesRouter.delete('/:type/:packageName', catchErrors(deleteDependency));
 
 const installRouter = express.Router({ mergeParams: true });
 installRouter.post('/:force?', catchErrors(installDependencies));
 
-const getAllDependenciesRouter = express.Router({ mergeParams: true });
-getAllDependenciesRouter.get('/', catchErrors(getAllDependencies));
-getAllDependenciesRouter.get('/simple', getAllDependenciesSimple);
+// const getAllDependenciesRouter = express.Router({ mergeParams: true });
+// getAllDependenciesRouter.get('/', catchErrors(getAllDependencies));
+// getAllDependenciesRouter.get('/simple', getAllDependenciesSimple);
 
 export {
   dependenciesRouter,
   installRouter,
-  getAllDependenciesRouter,
+  // getAllDependenciesRouter,
 };

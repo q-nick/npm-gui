@@ -1,6 +1,6 @@
-export interface FilterProps {
-  value: string;
-  onFilterChange: (newValue:string) => void;
+export interface FilterProps<T extends string> {
+  value: T;
+  onFilterChange: (newValue: T) => void;
 }
 
 export function preventEvent(event: React.MouseEvent<HTMLInputElement | HTMLSelectElement>): void {

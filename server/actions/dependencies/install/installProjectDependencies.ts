@@ -2,19 +2,18 @@ import * as rimraf from 'rimraf';
 import * as path from 'path';
 import type * as express from 'express';
 
-import { executeCommandJSON } from '../../executeCommand';
+import { executeCommandJSON, executeCommandSimple } from '../../executeCommand';
 import { putToCache } from '../../../cache';
 import { decodePath } from '../../decodePath';
 import { hasYarn, hasNpm } from '../../hasYarn';
-import type * as Commands from '../../../Commands';
 
 // installation
-async function installNpmDependencies(projectPath: string, force = false): Promise<void> {
+async function installNpmDependencies(projectPath: string, force = false): Promise<string> {
   if (force) {
     rimraf.sync(`${path.normalize(projectPath)}/node_modules`);
     rimraf.sync(`${path.normalize(projectPath)}/yarn-lock.json`);
   }
-  await executeCommandJSON<Commands.Install>(projectPath, 'npm install --json', true);
+  return executeCommandSimple(projectPath, 'npm install', true);
 }
 
 async function installYarnDependencies(projectPath: string, force = false): Promise<void> {
@@ -40,10 +39,10 @@ export async function installDependencies(
     } else {
       await installNpmDependencies(projectPathDecoded, force === 'force');
     }
+
     putToCache(`${req.headers['x-cache-id']}-${projectPath}-npm`, null);
+    res.json({});
   } else {
     throw 'no yarn or npm in project';
   }
-
-  res.json({});
 }

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import type { CSSType } from '../../../Styled';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -22,7 +23,7 @@ export const ExplorerList = styled.ul`
   transition: max-width 300ms, max-height 300ms;
   width: 200px;
 
-  ${({ isOpen }: ExplorerListProps) => isOpen && css`
+  ${({ isOpen }: ExplorerListProps): CSSType => isOpen && css`
     border-color: #dfd7ca;
     max-height: 80vh;
     max-width: 200px;
@@ -60,12 +61,12 @@ export const ExplorerButton = styled.button<ExplorerButtonProps>`
     background: #8e8c84;
   }
 
-  ${({ isDirectory }: ExplorerButtonProps) => isDirectory && css`
+  ${({ isDirectory }: ExplorerButtonProps): CSSType => isDirectory && css`
     max-height: 80vh;
     max-width: 100%;
   `}
 
-  ${({ isProject }: ExplorerButtonProps) => isProject && css`
+  ${({ isProject }: ExplorerButtonProps): CSSType => isProject === true && css`
     color: #d9534f;
 
     :hover {

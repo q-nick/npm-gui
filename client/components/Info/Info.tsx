@@ -1,7 +1,6 @@
-import React , {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
-import GitHubButton from 'react-github-btn';
 
 const InfoWrapper = styled.div`
   min-height: 45px;
@@ -14,7 +13,7 @@ export function Info(): JSX.Element {
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    Axios
+    void Axios
       .get<string>('/api/info')
       .then(({ data }) => {
         // tricky one
@@ -23,11 +22,17 @@ export function Info(): JSX.Element {
           const script = document.createElement('script');
           script.src = 'https://buttons.github.io/buttons.js';
           document.head.appendChild(script);
-        }, 0);
+        });
       });
-  },[]);
+  }, []);
 
-  return (<InfoWrapper>
-    <div dangerouslySetInnerHTML={{ __html: content}} />
-  </InfoWrapper>)
+  return (
+    <InfoWrapper>
+      <div
+        dangerouslySetInnerHTML={{ // eslint-disable-line
+          __html: content,
+        }}
+      />
+    </InfoWrapper>
+  );
 }

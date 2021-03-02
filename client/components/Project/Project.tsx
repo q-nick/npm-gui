@@ -2,12 +2,11 @@ import React, { useContext, useEffect } from 'react';
 import {
   Route, Switch, Redirect, useParams,
 } from 'react-router-dom';
-import 'open-iconic';
 
 import styled from 'styled-components';
 import { Dependencies } from '../Dependencies/Dependencies';
 // import { ScriptsContainer } from '../containers/ScriptsContainer';
-import { Info } from '../Info/Info';
+// import { Info } from '../Info/Info';
 import { Header } from '../Header/Header';
 import { Schedule } from '../Schedule/Schedule';
 import { StoreContext } from '../../app/StoreContext';
@@ -33,7 +32,7 @@ const RightColumn = styled.div`
 `;
 
 export function Project(): JSX.Element {
-  const { projectPathEncoded } = useParams<{projectPathEncoded: string}>();
+  const { projectPathEncoded } = useParams<{ projectPathEncoded: string }>();
   const { projects, addProject } = useContext(StoreContext);
   const scope = projects[projectPathEncoded];
 
@@ -44,34 +43,40 @@ export function Project(): JSX.Element {
   }, [projectPathEncoded, addProject, scope]);
 
   if (!scope) {
-    return <>{null}</>;
+    return <></>; // eslint-disable-line
   }
 
   return (
     <>
       <Header projectPathEncoded={projectPathEncoded} />
+
       <Row>
         {/* <LeftColumn>
           <ConsoleContainer />
         </LeftColumn> */}
+
         <RightColumn>
           <Switch>
             <Route path="/project/:projectPathEncoded/dependencies">
               <Dependencies
-                filtersEnabled={['name', 'type']}
+                // filtersEnabled={['name', 'type']}
                 projectPath={projectPathEncoded}
               />
             </Route>
+
             {/* <Route path="/project/:projectPathEncoded/global">
               <DependenciesContainer filtersEnabled={['name']} />
             </Route> */}
+
             {/* <Route path="/project/:projectPathEncoded/scripts">
               <ScriptsContainer projectPath={projectPathEncoded} />
             </Route> */}
+
             <Redirect to={`project/${projectPathEncoded}/dependencies`} />
           </Switch>
         </RightColumn>
       </Row>
+
       <Schedule />
     </>
   );

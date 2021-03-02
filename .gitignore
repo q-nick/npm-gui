@@ -12,3 +12,4 @@ tests/projects/bower/package-lock.json
 electron
 .vscode
 report.*
+.cache

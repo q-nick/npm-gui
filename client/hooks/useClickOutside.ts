@@ -1,4 +1,5 @@
-import { useRef, useEffect, RefObject } from 'react';
+import type { RefObject } from 'react';
+import { useRef, useEffect } from 'react';
 
 export function useClickOutsideRef(onClickOutside: () => void): RefObject<HTMLDivElement> {
   const ref = useRef<HTMLDivElement>(null);
@@ -6,14 +7,14 @@ export function useClickOutsideRef(onClickOutside: () => void): RefObject<HTMLDi
   useEffect(
     () => {
       function onHandleClick(event: MouseEvent): void {
-        if (ref.current  && !ref.current.contains(event.target as Node)) {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
           onClickOutside();
         }
       }
 
       window.addEventListener('click', onHandleClick);
 
-      return ():void => {
+      return (): void => {
         window.removeEventListener('click', onHandleClick);
       };
     },

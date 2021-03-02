@@ -46,18 +46,20 @@ app.get('*', (_, res) => {
 app.use((err: unknown, _: unknown, res: express.Response, next: express.NextFunction) => {
   // No routes handled the request and no system error, that means 404 issue.
   // Forward to next middleware to handle it.
+  console.error(err);
+
   if (!err) {
     next();
     return;
   }
 
-  res.status(400).send({ error: err });
+  res.status(400).send(err);
 });
 
 export function start(host = 'localhost', port = 3000): http.Server {
   // start server
   const server = app.listen(port || PORT, host || HOST, () => {
-    console.log(`npm-gui web-server running at http://${(host || HOST)}:${(port || PORT)}/`);
+    console.log(`npm-gui web-server running at http://${host || HOST}:${port || PORT}/`);
     // opn(`http://${(host || HOST)}:${(port || PORT)}`);
   });
 

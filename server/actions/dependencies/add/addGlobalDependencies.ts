@@ -6,10 +6,10 @@ import { withCacheUpdate } from '../../../cache';
 import type * as Dependency from '../../../Dependency';
 import type * as Commands from '../../../Commands';
 
-type RequestBody ={name: string; version: string}[];
+type RequestBody ={ name: string; version: string }[];
 
 async function addGlobalNpmDependency(
-  req: Request<unknown, unknown, RequestBody>
+  req: Request<unknown, unknown, RequestBody>,
 ): Promise<Dependency.Entire | null> {
   if (req.body[0] === undefined) {
     return null;
@@ -25,12 +25,14 @@ async function addGlobalNpmDependency(
 
   const outdatedInfo = await executeCommandJSON<Commands.Outdated>(undefined, `npm outdated ${name} -g --json`);
 
+  const installed = getInstalledVersion(installedInfo ? installedInfo[name] : undefined);
+
   return {
     repo: 'npm',
     name,
     type: 'global',
-    installed: getInstalledVersion(installedInfo[name]),
-    latest: getLatestVersion(getInstalledVersion(installedInfo[name]), null, outdatedInfo[name])
+    installed,
+    latest: getLatestVersion(installed, null, outdatedInfo[name]),
   };
 }
 

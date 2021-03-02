@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom';
-import 'open-iconic'; // eslint-disable-line
+import 'open-iconic/font/css/open-iconic.css';
 import { Project } from '../components/Project/Project';
 import { StoreContext, useStoreContextValue } from './StoreContext';
 import { Header } from '../components/Header/Header';
@@ -24,14 +24,17 @@ export function App(): JSX.Element {
                 <Header />
                 Global
               </Route>
+
               <Route path="/project/:projectPathEncoded">
                 <Project />
               </Route>
+
               <Redirect to="/" />
             </Switch>
           </Router>
         </ScheduleContext.Provider>
       </StoreContext.Provider>
+
       <Info />
     </>
   );

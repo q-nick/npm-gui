@@ -1,27 +1,23 @@
-import React, { ReactNode } from 'react';
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import type { ReactNode } from 'react';
+import React from 'react';
+import type { CSSProp } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Icon } from '../../ui/Icon/Icon';
 import { TextFilter } from './components/TextFilter';
 import { SelectFilter } from './components/SelectFilter';
 
-export interface Filter {
-  type: 'text' | 'select' | null;
-  value: any;
-  options: any[];
-}
-
 interface ThStyledProps {
   sortable?: boolean;
-  appearance?: FlattenSimpleInterpolation;
+  appearance?: CSSProp;
 }
 
 export const ThStyled = styled.th`
-  ${({ sortable }: ThStyledProps) => sortable && css`
+  ${({ sortable }: ThStyledProps): CSSProp => (sortable ? css`
     cursor: pointer;
     user-select: none;
-  `}
+  ` : '')}
 
-  ${({ appearance }: ThStyledProps) => appearance}
+  ${({ appearance }: ThStyledProps): CSSProp => appearance ?? ''}
 `;
 
 const SortableIcon = styled(Icon)`
@@ -29,41 +25,53 @@ const SortableIcon = styled(Icon)`
   margin-left: -1.2em;
 `;
 
-export interface Props {
-  sortMatch: string;
-  sortKey: string;
-  sortReversed?: boolean;
-  filter?: Filter;
-  onSortChange: (sortKey: string) => void;
-  onFilterChange: (filterName: string, filterValue: any) => void;
+export interface Props<T extends string> {
   children: ReactNode;
-  appearance?: FlattenSimpleInterpolation;
+  appearance?: CSSProp;
+
+  sortActive: boolean;
+  sortReversed?: boolean;
+  onClick: () => void;
+
+  filterType?: 'select' | 'text';
+  filterValue?: T;
+  filterOptions?: T[];
+  onFilterChange?: (filterValue: T) => void;
 }
 
-const isTextFilter = (filter:Filter): boolean => filter.type === 'text';
-
-const isSelectFilter = (filter:Filter): boolean => filter.type === 'select';
-
-export function ThSortable({
-  sortKey, sortMatch, sortReversed, onSortChange, children, filter, onFilterChange, appearance,
-}: Props): JSX.Element {
+export function ThSortable<T extends string>({
+  children, appearance,
+  sortActive, sortReversed, onClick,
+  filterType, filterValue, onFilterChange,
+}: Props<T>): JSX.Element {
   return (
-    <ThStyled onClick={() => onSortChange(sortMatch)} sortable appearance={appearance}>
-      {sortKey === sortMatch && <SortableIcon glyph={sortReversed ? 'caret-bottom' : 'caret-top'} />}
+    <ThStyled
+      appearance={appearance}
+      onClick={onClick}
+      sortable
+    >
+      {sortActive && <SortableIcon glyph={sortReversed === true ? 'caret-bottom' : 'caret-top'} />}
+
       {children}
       &nbsp;
-      {filter && isTextFilter(filter) && (
-        <TextFilter
-          value={filter.value}
-          onFilterChange={(newValue) => onFilterChange(sortMatch, newValue)}
+      {onFilterChange && filterValue!== undefined && (
+      <>
+        {filterType === 'text' && (
+          <TextFilter<T>
+            onFilterChange={onFilterChange}
+            value={filterValue}
+          />
+        )}
+
+        {filterType === 'select' && (
+        <SelectFilter<T>
+          onFilterChange={onFilterChange}
+          value={filterValue}
         />
+        )}
+      </>
       )}
-      {filter && isSelectFilter(filter) && (
-      <SelectFilter
-        value={filter.value}
-        onFilterChange={(newValue) => onFilterChange(sortMatch, newValue)}
-      />
-      )}
+
     </ThStyled>
   );
 }
