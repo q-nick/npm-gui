@@ -1,21 +1,16 @@
 import styled, { css } from 'styled-components';
-import { Fragment } from 'react';
+import { useCallback, useState } from 'react';
 import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
 import { Loader } from '../../Loader/Loader';
 import type * as Dependency from '../../../../server/Dependency';
+import { ZERO } from '../../../utils';
 
 interface Props {
-  sortKey: string;
-  sortReversed: boolean;
-  filters: Record<string, string>;
-  filtersEnabled?: ('name' | 'type')[];
-  dependencies: Dependency.Entire[];
+  dependencies?: Dependency.Entire[];
   dependenciesProcessing: Record<string, boolean>;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
-  onSortChange: (sortKey: string) => void;
-  onFilterChange: (filterName: string, filterValue: string) => void;
 }
 
 const Wrapper = styled.div`
@@ -57,51 +52,32 @@ const headerNameAppearance = css`
 `;
 
 export function DependenciesTable({
-  sortKey,
-  sortReversed,
-  onSortChange,
-  filters,
-  filtersEnabled,
-  onFilterChange,
   dependencies,
   dependenciesProcessing,
   onDeleteDependency,
   onInstallDependencyVersion,
 }: Props): JSX.Element {
-  const isEmpty = dependencies && dependencies.length === 0;
+  const [sort, setSort] = useState<string | undefined>();
+  const [sortReversed, setSortReversed] = useState(false);
+  const [filterTypeValue, setFilterTypeValue] = useState<Dependency.Type | undefined>(undefined);
+  const [filterNameValue, setFilterNameValue] = useState<string>('');
+  const isEmpty = !!dependencies && dependencies.length === ZERO;
   const isLoading = !dependencies;
 
-  const ths = React.useMemo(() => [
-    {
-      name: 'Env',
-      sortMatch: 'type',
-      appearance: headerEnvAppearance,
-      filter: filtersEnabled && filtersEnabled.includes('type') && {
-        type: 'select',
-        value: filters.type,
-        options: ['dev', 'prod'],
-      },
-    },
-    {
-      name: 'Name',
-      sortMatch: 'name',
-      appearance: headerNameAppearance,
-      filter: {
-        type: 'text', value: filters.name,
-      },
-    },
-    // { name: 'Nsp' },
-    { name: 'Required', sortMatch: 'required', appearance: columnVersionAppearance },
-    { name: 'Installed', sortMatch: 'installed', appearance: columnVersionAppearance },
-    { name: 'Wanted', sortMatch: 'wanted', appearance: columnVersionAppearance },
-    { name: 'Latest', sortMatch: 'latest', appearance: columnVersionAppearance },
-    { name: '', appearance: headerActionAppearance },
-  ], [filters, filtersEnabled]);
+  const onSortChange = useCallback((sortName: string) => {
+    if (sort === sortName) {
+      setSortReversed((v) => !v);
+    } else {
+      setSortReversed(false);
+      setSort(sortName);
+    }
+  }, [sort]);
 
   return (
     <Wrapper>
       <Info>
         {isEmpty && <>empty...</>}
+
         {isLoading && (
           <>
             <Loader />
@@ -109,36 +85,83 @@ export function DependenciesTable({
           </>
         )}
       </Info>
+
       <table>
         <thead>
           <tr>
-            {ths.map((th) => (
-              <Fragment key={th.name}>
-                {
-                  th.sortMatch ? (
-                    <ThSortable
-                      appearance={th.appearance}
-                      filter={th.filter as any}
-                      onFilterChange={onFilterChange}
-                      onSortChange={onSortChange}
-                      sortKey={sortKey}
-                      sortMatch={th.sortMatch}
-                      sortReversed={sortReversed}
-                    >
-                      {th.name}
-                    </ThSortable>
-                  ) : <ThStyled appearance={th.appearance}>{th.name}</ThStyled>
-                }
-              </Fragment>
-            ))}
+            <ThSortable<Dependency.Type>
+              appearance={headerEnvAppearance}
+              filterOptions={['dev', 'prod']}
+              filterType="select"
+              filterValue={filterTypeValue}
+              onClick={(): void => { onSortChange('env'); }}
+              onFilterChange={setFilterTypeValue}
+              sortActive={sort === 'env'}
+              sortReversed={sortReversed}
+            >
+              Env
+            </ThSortable>
+
+            <ThSortable<string>
+              appearance={headerNameAppearance}
+              filterType="text"
+              filterValue={filterNameValue}
+              onClick={(): void => { onSortChange('name'); }}
+              onFilterChange={setFilterNameValue}
+              sortActive={sort === 'name'}
+              sortReversed={sortReversed}
+            >
+              Name
+            </ThSortable>
+
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => { onSortChange('required'); }}
+              sortActive={sort === 'required'}
+              sortReversed={sortReversed}
+            >
+              Required
+            </ThSortable>
+
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => { onSortChange('installed'); }}
+              sortActive={sort === 'installed'}
+              sortReversed={sortReversed}
+            >
+              Installed
+            </ThSortable>
+
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => { onSortChange('wanted'); }}
+              sortActive={sort === 'wanted'}
+              sortReversed={sortReversed}
+            >
+              Wanted
+            </ThSortable>
+
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => { onSortChange('latest'); }}
+              sortActive={sort === 'latest'}
+              sortReversed={sortReversed}
+            >
+              Latest
+            </ThSortable>
+
+            <ThStyled
+              appearance={headerActionAppearance}
+            />
           </tr>
         </thead>
+
         <tbody>
-          {dependencies && dependencies.map((dependency) => (
+          {dependencies?.map((dependency) => (
             <DependencyRow
               key={dependency.name}
               dependency={dependency}
-              isProcessing={dependenciesProcessing[dependency.name]}
+              isProcessing={dependenciesProcessing[dependency.name] === true}
               onDeleteDependency={onDeleteDependency}
               onInstallDependencyVersion={onInstallDependencyVersion}
             />

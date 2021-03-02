@@ -32,5 +32,6 @@
     "isolatedModules": true,
     "noEmit": true,
   },
-  "exclude": ["@types", "tests"]
+  "include": ["client", "server"],
+  "exclude": ["**/node_modules", "**/.*/", "@types", "tests"]
 }

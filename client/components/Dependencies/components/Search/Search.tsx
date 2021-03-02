@@ -1,11 +1,14 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useClickOutsideRef } from '../../../../hooks/useClickOutside';
 import { Button } from '../../../../ui/Button/Button';
-import { DependenciesContext } from '../../DependenciesContext';
 import { SearchForm } from './components/SearchForm';
-import { SearchResults, Props as SearchResultsProps } from './components/SearchResults';
+import type { Props as SearchResultsProps } from './components/SearchResults';
+import { SearchResults } from './components/SearchResults';
 import { useSearch } from './hooks/useSearch';
+import type * as Dependency from '../../../../../server/Dependency';
+import type { CSSType } from '../../../../Styled';
+import { ZERO } from '../../../../utils';
 
 const Wrapper = styled.div`
   background: #fff;
@@ -21,7 +24,7 @@ const Wrapper = styled.div`
   transition: max-width 300ms, max-height 300ms;
   z-index: 1;
 
-  ${({ isOpen }:{ isOpen: boolean }) => isOpen && css`
+  ${({ isOpen }: { isOpen: boolean }): CSSType => isOpen && css`
     border-color: #dfd7ca;
     max-height: 100%;
     max-width: 100%;
@@ -34,8 +37,11 @@ const TableContainer = styled.div`
   overflow-y: scroll;
 `;
 
-export function Search():JSX.Element {
-  const { onInstallNewDependency } = useContext(DependenciesContext);
+interface Props {
+  onInstallNewDependency: (dependency: Dependency.Basic, type: Dependency.Type) => void;
+}
+
+export function Search({ onInstallNewDependency }: Props): JSX.Element {
   const { searchResults, onSearch } = useSearch();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -57,22 +63,24 @@ export function Search():JSX.Element {
   );
 
   return (
-    <Wrapper isOpen={isOpen} ref={ref}>
+    <Wrapper ref={ref} isOpen={isOpen}>
       <Button
-        variant="primary"
-        scale="small"
         icon="plus"
         onClick={onToggleOpen}
+        scale="small"
+        variant="primary"
       >
         Search / Add
       </Button>
+
       <SearchForm
-        onSubmit={(query) => onSearch(query)}
+        onSubmit={(query): void => { void onSearch(query); }}
         searchResults={searchResults}
       />
+
       <TableContainer>
-        {!!searchResults && searchResults.length > 0 && (
-          <SearchResults searchResults={searchResults} onInstall={onInstallAndClose} />
+        {!!searchResults && searchResults.length > ZERO && (
+          <SearchResults onInstall={onInstallAndClose} searchResults={searchResults} />
         )}
       </TableContainer>
     </Wrapper>

@@ -1,3 +1,4 @@
+import React from 'react';
 import type { ComponentPropsWithoutRef } from 'react';
 import styled, { css } from 'styled-components';
 import type { CSSType } from '../../Styled';
@@ -89,7 +90,13 @@ export function Button({
     <ButtonStyled
       {...props} // eslint-disable-line
     >
-      {icon !== undefined && <ButtonIcon glyph={icon} isAlone={children !== null} />}
+      {icon !== undefined && (
+        <ButtonIcon
+          glyph={icon}
+          isAlone={!React.Children.toArray(children).length}
+        />
+      )}
+
       {children}
     </ButtonStyled>
   );

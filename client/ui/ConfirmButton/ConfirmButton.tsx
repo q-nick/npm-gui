@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import type { Props } from '../Button/Button';
 import { Button } from '../Button/Button';
@@ -38,9 +38,10 @@ export function ConfirmButton({ onClick, ...props }: Readonly<Props>): JSX.Eleme
         {...props} // eslint-disable-line
         onClick={onStartClick}
       />
+
       {!!countdown && (
         <ConfirmButtonThe
-        {...props} // eslint-disable-line
+          {...props} // eslint-disable-line
           onClick={onClick}
         >
           {`confirm (${countdown})`}

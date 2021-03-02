@@ -1,17 +1,27 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import type {Response, Request} from 'express';
+import type { Response, Request } from 'express';
 import { decodePath } from '../decodePath';
 
-interface Explorer {
-  ls: {}[]; // TODO FileOrFolder
+export interface FileOrFolder {
+  name: string;
+  isDirectory: boolean;
+  isProject: boolean;
+}
+export interface Explorer {
+  ls: FileOrFolder[];
   path: string;
   changed: boolean;
 }
 
+export interface API {
+  Request: { path?: unknown };
+  Response: Explorer;
+}
+
 export function explorer(
-  req: Request<{path?: string}>,
-  res: Response<Explorer>
+  req: Request<API['Request']>,
+  res: Response<API['Response']>,
 ): void {
   let normalizedPath = req.params.path !== undefined
     ? path.normalize(decodePath(req.params.path)) : null;

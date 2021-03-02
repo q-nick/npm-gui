@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { executeCommandJSON } from '../../executeCommand';
+import { executeCommandJSONWithFallback } from '../../executeCommand';
 import {
   getInstalledVersion,
   getWantedVersion,
@@ -27,10 +27,14 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
   // installed
-  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(projectPath, 'npm ls --depth=0 --json');
+  // let installedInfo: Commands.Installed['dependencies'] | undefined; // eslint-disable-line
 
+  // const installedInfo = await handleListWithException(projectPath);
+  const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(projectPath, 'npm ls --depth=0 --json');
   // latest, wanted
-  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(projectPath, 'npm outdated --json');
+  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(projectPath, 'npm outdated --json');
+  // const outdatedInfo = await
+  // executeCommandJSON<Commands.Outdated>(projectPath, 'npm outdated --json');
 
   // unused (only regular dependencies for now)
   // TODO
@@ -38,8 +42,11 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   // const unused = unusedResponse ? unusedResponse.dependencies : [];
 
   // extraneous
-  const extraneousInstalled = Object.keys(installedInfo)
-    .filter((name) => 'extraneous' in installedInfo[name]!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const extraneousInstalled = installedInfo ? Object.keys(installedInfo)
+    .filter((name) => {
+      const depInfo = installedInfo[name];
+      return depInfo && 'extraenous' in depInfo;
+    }) : [];
 
   const allDependencies: Dependency.Npm[] = [
     ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })),
@@ -48,7 +55,9 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   ];
 
   return allDependencies.map((dependency): Dependency.Entire => {
-    const installed = getInstalledVersion(installedInfo[dependency.name]);
+    const installed = getInstalledVersion(
+      installedInfo ? installedInfo[dependency.name] : undefined,
+    );
     const wanted = getWantedVersion(installed, outdatedInfo[dependency.name]);
     const latest = getLatestVersion(installed, wanted, outdatedInfo[dependency.name]);
 
@@ -61,54 +70,6 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
     };
   });
 }
-
-// async function getAllYarnDependencies(projectPath: string): Promise<Dependency.Entire[]> {
-//   // type
-//   const dependencies = getDependenciesFromPackageJson(projectPath);
-//   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
-//   // required
-//   const dependenciesInPackageJson = { ...dependencies, ...devDependencies };
-
-//   // installed
-//   const commandLsJSON = await executeCommand(projectPath, 'yarn list --depth=0 --json');
-//   const commandLsJSONResults: Yarn.Result[] = commandLsJSON.stdout.split('\n').filter((s) => s).map(parseJSON);
-//   const dependenciesInstalled = mapYarnResultTreeToBasic(commandLsJSONResults);
-//   // latest, wanted
-//   const outdatedResult = await executeCommand(projectPath, 'yarn outdated --depth=0 --json');
-//   if (outdatedResult.stderr) {
-//     throw JSON.parse(outdatedResult.stderr).data;
-//   }
-//   const outdatedResults: Yarn.Result[] = outdatedResult.stdout.split('\n').filter((s) => s).map(parseJSON);
-//   const outdated = mapYarnResultTableToVersion(outdatedResults);
-
-//   // unused (only regular dependencies for now)
-//   // const unusedResponse = await executeCommandJSON(projectPath, 'depcheck --json');
-//   // const unused = unusedResponse ? unusedResponse.dependencies : [];
-
-//   // extraenous
-//   // const extraneousInstalled = Object.keys(dependenciesInstalled)
-//   //   .filter(name => dependenciesInstalled[name].extraneous);
-
-//   // console.log('here', outdated);
-
-//   const dependenciesWithType: Dependency.Npm[] = [
-//     ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod' })),
-//     ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev' })),
-//     // ...Object.keys(extraneousInstalled).map(name => ({ name, type: 'extraneous' })),
-//   ];
-//   const mapNpmDependency: any = 1;
-
-//   return dependenciesWithType
-//     .map((dependency) => mapNpmDependency(
-//       dependency.name,
-//       dependenciesInstalled[dependency.name],
-//       outdated && outdated[dependency.name],
-//       dependenciesInPackageJson[dependency.name],
-//       dependency.type,
-//       // unused.includes(dependency.name),
-//       'yarn',
-//     ));
-// }
 
 function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Dependency.Entire[] {
   const dependencies = getDependenciesFromPackageJson(projectPath);

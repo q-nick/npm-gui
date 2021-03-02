@@ -5,7 +5,7 @@ import {
   ExplorerList, ExplorerButton, ExplorerFile, Wrapper,
 } from './ExplorerUI';
 import { useClickOutsideRef } from '../../../hooks/useClickOutside';
-import type { FileOrFolder } from '../../../Explorer';
+import type { API, FileOrFolder } from '../../../../server/actions/explorer/explorer';
 
 interface Props {
   onSelectPath: (path: string) => void;
@@ -13,8 +13,6 @@ interface Props {
 
 export function Explorer({ onSelectPath }: Props): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState<any>();
   const [list, setList] = useState<FileOrFolder[] | undefined>();
   const [currentPath, setCurrentPath] = useState<string>('');
 
@@ -33,19 +31,11 @@ export function Explorer({ onSelectPath }: Props): JSX.Element {
   }, [currentPath, onSelectPath]);
 
   const loadPath = useCallback(async (encodedPath: string): Promise<void> => {
-    // setIsLoading(true);
-
     const { data } = await Axios
-      .get<NpmGuiResponse.Explorer>(`/api/explorer/${encodedPath || ''}`);
+      .get<API['Response']>(`/api/explorer/${encodedPath || ''}`);
 
-    // setIsLoading(false);
-    // setError(false);
     setList(data.ls);
     setCurrentPath(data.path);
-    // .catch((err) => {
-    //   setIsLoading(false);
-    //   setError(err);
-    // });
   }, []);
 
   useEffect(() => {
@@ -55,24 +45,26 @@ export function Explorer({ onSelectPath }: Props): JSX.Element {
   return (
     <Wrapper ref={ref}>
       <Button icon="folder" onClick={onToggleIsOpen} variant="dark">Open</Button>
+
       <ExplorerList isOpen={isOpen}>
         <li>
           <ExplorerButton
             isDirectory
-            onClick={async (): Promise<void> => loadPath(window.btoa(`${currentPath}/../`))}
+            onClick={(): void => { void loadPath(window.btoa(`${currentPath}/../`)); }}
           >
             ../
           </ExplorerButton>
         </li>
+
         {list?.map((folderOrFile) => (
           <li key={folderOrFile.name}>
             {folderOrFile.isDirectory && !folderOrFile.isProject && (
               <ExplorerButton
                 isDirectory
-                onClick={async (): Promise<void> => loadPath(window.btoa(`${currentPath}/${folderOrFile.name}`))}
+                onClick={(): void => { void loadPath(window.btoa(`${currentPath}/${folderOrFile.name}`)); }}
               >
                 <span className="oi" data-glyph="folder" />
-                {' '}
+
                 {folderOrFile.name}
                 /
               </ExplorerButton>
@@ -84,9 +76,8 @@ export function Explorer({ onSelectPath }: Props): JSX.Element {
                 isProject
                 onClick={onClickProject}
               >
-                {' '}
                 <span className="oi" data-glyph="arrow-thick-right" />
-                {' '}
+
                 {folderOrFile.name}
               </ExplorerButton>
             )}
@@ -94,7 +85,7 @@ export function Explorer({ onSelectPath }: Props): JSX.Element {
             {!folderOrFile.isDirectory && !folderOrFile.isProject && (
               <ExplorerFile>
                 <span className="oi" data-glyph="file" />
-                {' '}
+
                 {folderOrFile.name}
               </ExplorerFile>
             )}

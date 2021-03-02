@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FilterProps, preventEvent } from './shared';
+import type { FilterProps } from './shared';
+import { preventEvent } from './shared';
 
 const Input = styled.input`
   display: inline-block;
@@ -10,13 +11,15 @@ const Input = styled.input`
   width: 4em;
 `;
 
-export function TextFilter({ value, onFilterChange }:FilterProps): JSX.Element {
+export function TextFilter<T extends string>({
+  value, onFilterChange,
+}: FilterProps<T>): JSX.Element {
   return (
     <Input
-      value={value}
-      type="text"
+      onChange={(event): void => onFilterChange(event.target.value as T)}
       onClick={preventEvent}
-      onChange={(event) => onFilterChange(event.target.value)}
+      type="text"
+      value={value}
     />
   );
 }

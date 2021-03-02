@@ -1,5 +1,5 @@
 import type {
-  Request, Response, NextFunction
+  Request, Response, NextFunction,
 } from 'express';
 
 export const catchErrors = (

@@ -4,29 +4,29 @@ export interface OutdatedBody {
   latest: string;
 }
 
-interface InstalledBodyA {
+interface InstalledBodyBase {
   required: {
     version: string;
   };
   peerMissing: boolean;
 }
 
-interface InstalledBodyB {
+interface InstalledBodyMissing {
   required: string;
   missing: boolean;
 }
 
-interface InstalledBodyC {
+interface InstalledBodyExtra {
   version: string;
   extraneous?: boolean;
 }
 
-export type InstalledBody = InstalledBodyA | InstalledBodyB | InstalledBodyC;
+export type InstalledBody = InstalledBodyBase | InstalledBodyExtra | InstalledBodyMissing;
 
 export type Outdated = Record<string, OutdatedBody>;
 
 export interface Installed {
-  dependencies: Record<string, InstalledBody>;
+  dependencies?: Record<string, InstalledBody>;
 }
 
 interface InstallA {

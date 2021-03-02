@@ -4,6 +4,7 @@ export type Repo = 'npm' | 'yarn';
 export interface Basic {
   name: string;
   version?: string;
+  type?: Type;
 }
 
 export interface Npm {

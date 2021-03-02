@@ -2,12 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
+import type * as Dependency from '../../../../server/Dependency';
 
 const RightSection = styled.div`
   float: right;
 `;
 
 interface Props {
+  onInstallNewDependency: (dependency: Dependency.Basic, type: Dependency.Type) => void;
   onInstallAll: () => void;
   onUpdateAllToInstalled: () => void;
   onUpdateAllToWanted: () => void;
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export function DependenciesHeader({
+  onInstallNewDependency,
   onInstallAll,
   onUpdateAllToInstalled,
   onUpdateAllToWanted,
@@ -24,7 +27,9 @@ export function DependenciesHeader({
 }: Props): JSX.Element {
   return (
     <header>
-      <Search />
+
+      <Search onInstallNewDependency={onInstallNewDependency} />
+
       <RightSection>
         <small>Install:</small>
         &nbsp;
@@ -36,6 +41,7 @@ export function DependenciesHeader({
         >
           All
         </Button>
+
         {/* <Button
             variant="primary"
             scale="small"
@@ -62,6 +68,7 @@ export function DependenciesHeader({
         >
           Installed
         </Button>
+
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToWanted}
@@ -71,6 +78,7 @@ export function DependenciesHeader({
         >
           Wanted
         </Button>
+
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToLatest}

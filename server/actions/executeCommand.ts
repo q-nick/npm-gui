@@ -4,7 +4,7 @@ import * as Console from '../console';
 
 export async function executeCommand(
   cwd: string | undefined, wholeCommand: string, pushToConsole = false,
-): Promise<{ stdout: string; stderr: string}> {
+): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     // spawn process
     const args = wholeCommand.split(' ');
@@ -16,7 +16,7 @@ export async function executeCommand(
       const commandId = new Date().getTime().toString();
       // console.log(`executing: "${wholeCommand}" in "${cwd}"\n`, commandId);
       if (pushToConsole) {
-        Console.send(`executing: "${wholeCommand}" in "${cwd}"\n`, commandId);
+        Console.send(`executing: "${wholeCommand}" in "${cwd ?? 'global'}"\n`, commandId);
       }
 
       // wait for stdout, stderr
@@ -40,13 +40,22 @@ export async function executeCommand(
 
       // wait for finish and resolve
       spawned.on('close', (exitStatus: number) => {
-        if (pushToConsole) {
-          Console.send('', commandId, exitStatus === 0 ? 'CLOSE' : 'ERROR');
+        console.log(exitStatus);
+        if (exitStatus === 0) {
+          resolve({
+            stdout,
+            stderr,
+          });
+        } else {
+          reject(stdout);
         }
-        resolve({
-          stdout,
-          stderr,
-        });
+        // if (pushToConsole) {
+        //   Console.send('', commandId, exitStatus === 0 ? 'CLOSE' : 'ERROR');
+        // }
+        // resolve({
+        //   stdout,
+        //   stderr,
+        // });
       });
 
       // if error
@@ -60,11 +69,34 @@ export async function executeCommand(
   });
 }
 
+export async function executeCommandSimple(
+  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
+): Promise<string> {
+  console.time(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+  const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
+  console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+  return stdout;
+}
+
 export async function executeCommandJSON<T>(
   cwd: string | undefined, wholeCommand: string, pushToConsole = false,
 ): Promise<T> {
-  console.time(`Command: ${wholeCommand}, took:`);
+  console.time(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
   const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
-  console.timeEnd(`Command: ${wholeCommand}, took:`);
+  console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
   return JSON.parse(stdout) as T;
+}
+
+export async function executeCommandJSONWithFallback<T>(
+  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
+): Promise<T> {
+  console.time(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+  try {
+    const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
+    console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+    return JSON.parse(stdout) as T;
+  } catch (err: unknown) {
+    console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+    return JSON.parse(err as string) as T;
+  }
 }

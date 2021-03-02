@@ -1,10 +1,12 @@
+import type { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 
 export interface Task {
   projectPath: string;
   description: string;
-  executeMe: () => Promise<void>;
+  executeMe: () => Promise<unknown>;
   status: 'ERROR' | 'RUNNING' | 'SUCCESS' | 'WAITING';
+  stdout?: string;
 }
 
 interface Hook {
@@ -18,16 +20,17 @@ export function useScheduleContextValue(): Hook {
   const [doing, setDoing] = useState<Task>();
 
   const addToApiSchedule = useCallback<Hook['addToApiSchedule']>((task) => {
-    setSchedule((prevSchedule) => [...prevSchedule, {...task, status: 'WAITING'}]);
+    setSchedule((prevSchedule) => [...prevSchedule, { ...task, status: 'WAITING' }]);
   }, []);
 
   const removeTask = useCallback<Hook['removeTask']>((taskToRemove) => {
     if (taskToRemove.status !== 'RUNNING') {
-      setSchedule((prevSchedule) => prevSchedule.filter((task) => task.executeMe !== taskToRemove.executeMe));
+      setSchedule((prevSchedule) => prevSchedule
+        .filter((task) => task.executeMe !== taskToRemove.executeMe));
     }
   }, []);
 
-  async function checkSchedule() {
+  async function checkSchedule(): Promise<void> {
     console.log('checking', !doing);
     if (!doing) {
       const toDo = schedule.find((task) => task.status === 'WAITING');
@@ -38,7 +41,7 @@ export function useScheduleContextValue(): Hook {
           }
           return {
             ...task,
-            status: 'RUNNING'
+            status: 'RUNNING',
           };
         }));
         setDoing(toDo);
@@ -50,18 +53,20 @@ export function useScheduleContextValue(): Hook {
             }
             return {
               ...task,
-              status: 'SUCCESS'
+              status: 'SUCCESS',
             };
           }));
-        } catch (e) {
-          console.error(e);
+        } catch (e: unknown) {
+          const errToDisplay = (e as AxiosError).response?.data as string;
+          console.error(errToDisplay);
           setSchedule((prevSchedule) => prevSchedule.map((task) => {
             if (task.executeMe !== toDo.executeMe) {
               return task;
             }
             return {
               ...task,
-              status: 'ERROR'
+              status: 'ERROR',
+              stdout: errToDisplay,
             };
           }));
         }
@@ -71,7 +76,7 @@ export function useScheduleContextValue(): Hook {
   }
 
   useEffect(() => {
-    checkSchedule();
+    void checkSchedule();
   });
 
   return {

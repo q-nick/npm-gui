@@ -103,7 +103,7 @@ export function getInstalledVersion(installed?: Commands.InstalledBody): string 
 export function getWantedVersion(
   installed: string | null, outdated?: Commands.OutdatedBody,
 ): string | null {
-  if (installed !== null || !outdated) {
+  if (installed === null || !outdated) {
     return null;
   }
 
@@ -113,7 +113,7 @@ export function getWantedVersion(
 export function getLatestVersion(
   installed: string | null, wanted: string | null, outdated?: Commands.OutdatedBody,
 ): string | null {
-  if (installed !== null || !outdated) {
+  if (installed === null || !outdated) {
     return null;
   }
 

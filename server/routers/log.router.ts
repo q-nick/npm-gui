@@ -1,15 +1,10 @@
 import express from 'express';
-import AnalyticsNode from 'analytics-node';
+import { catchErrors } from '../catchErrors';
+import { requestWithPromise } from '../requestWithPromise';
 
 export const logRouter = express.Router();
-const client = new AnalyticsNode(
-  Buffer.from('NjBWYkZnMmFVajB3Mjlib2NyZm1xc1lZS1FRS2tKdFQ=', 'base64').toString(),
-);
 
-logRouter.post('/', (req, res) => {
-  client.track({
-    event: 'npm-gui-start',
-    userId: req.body.id,
-  });
-  res.status(200).send('');
-});
+logRouter.post('/', catchErrors(async (req, res) => {
+  const result = await requestWithPromise(`https://npm-gui-stats.herokuapp.com/log/${req.body.id}`);
+  res.status(200).send(result);
+}));
