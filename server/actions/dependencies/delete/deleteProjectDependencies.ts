@@ -1,15 +1,20 @@
-import type express from 'express';
-// import { withCacheSplice } from '../../../cache';
-import { decodePath } from '../../decodePath';
-import { hasYarn, hasNpm } from '../../hasYarn';
-import type * as Dependency from '../../../Dependency';
+import type { Request, Response } from 'express';
+import type * as Dependency from '../../../types/Dependency';
+import { spliceFromCache } from '../../../utils/cache';
 import { executeCommandJSON } from '../../executeCommand';
 
+const commandTypeFlag = {
+  prod: '-S',
+  dev: '-D',
+  global: '-g',
+  extraneous: '',
+};
+
 async function deleteNpmDependency(
-  projectPath: string, packageName: string, type: Dependency.Type,
+  projectPath: string | undefined, packageName: string, type: Dependency.Type,
 ): Promise<void> {
   // delete
-  await executeCommandJSON(projectPath, `npm uninstall ${packageName} -${type === 'prod' ? 'S' : 'D'} --json`, true);
+  await executeCommandJSON(projectPath, `npm uninstall ${packageName} ${commandTypeFlag[type]} --json`, true);
 }
 
 // async function deleteYarnDependency(
@@ -21,29 +26,15 @@ async function deleteNpmDependency(
 //   return dependencyName;
 // }
 
-export async function deleteDependency(
-  req: express.Request<{
-    repoName: string; projectPath: unknown; type: Dependency.Type; packageName: string;
-  }>,
-  res: express.Response
-): Promise<void> {
-  const {
-    projectPath, type, packageName,
-  } = req.params;
+export const deleteDependency = async (
+  req: Request<{ type?: Dependency.Type; dependencyName: string }>,
+  res: Response,
+): Promise<void> => {
+  const { type = 'global', dependencyName } = req.params;
 
-  const projectPathDecoded = decodePath(projectPath);
-  const yarn = hasYarn(projectPathDecoded);
-  const npm = hasNpm(projectPathDecoded);
+  await deleteNpmDependency(req.projectPathDecoded, dependencyName, type);
 
-  if (yarn || npm) {
-    // await withCacheSplice(
-    //   yarn ? deleteYarnDependency : deleteNpmDependency,
-    //   `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
-    //   projectPathDecoded, packageName, type,
-    // );
-    await deleteNpmDependency(projectPathDecoded, packageName, type);
-    res.json({});
-  } else {
-    res.status(400).json(null);
-  }
-}
+  spliceFromCache(req.projectPathDecoded, dependencyName);
+
+  res.json({});
+};

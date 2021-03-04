@@ -1,5 +1,7 @@
 import type { AxiosError } from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import {
+  createContext, useCallback, useEffect, useState,
+} from 'react';
 
 export interface Task {
   projectPath: string;
@@ -86,7 +88,7 @@ export function useScheduleContextValue(): Hook {
   };
 }
 
-export const ScheduleContext = React.createContext<Hook>({
+export const ScheduleContext = createContext<Hook>({
   schedule: [],
   addToApiSchedule() {},
   removeTask() {},

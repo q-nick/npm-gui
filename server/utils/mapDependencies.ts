@@ -1,4 +1,4 @@
-import type * as Dependency from '../Dependency';
+import type * as Dependency from '../types/Dependency';
 import type * as Commands from '../Commands';
 
 export function uniqueOrNull(

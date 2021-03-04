@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import type { Task } from '../ScheduleContext';
 import type { Props as ButtonProps } from '../../../ui/Button/Button';

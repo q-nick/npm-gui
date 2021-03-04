@@ -72,19 +72,22 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
       </LeftSection>
 
       <RightSection>
-        {Object.keys(projects).map((oneOfProjectPathEncoded) => (
-          <Button
-            key={oneOfProjectPathEncoded}
-            icon="code"
-            lowercase
-            onClick={(): void => {
-              history.push(`/project/${oneOfProjectPathEncoded}/dependencies`);
-            }}
-            variant={oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'}
-          >
-            {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
-          </Button>
-        ))}
+        {Object.keys(projects)
+          .filter((p) => p !== 'global')
+          .map((oneOfProjectPathEncoded) => (
+            <Button
+              key={oneOfProjectPathEncoded}
+              icon="code"
+              lowercase
+              onClick={(): void => {
+                history.push(`/project/${oneOfProjectPathEncoded}/dependencies`);
+              }}
+              title={window.atob(oneOfProjectPathEncoded)}
+              variant={oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'}
+            >
+              {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
+            </Button>
+          ))}
 
         <Explorer onSelectPath={onSelectPath} />
       </RightSection>

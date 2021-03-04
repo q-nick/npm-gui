@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useClickOutsideRef } from '../../../../hooks/useClickOutside';
 import { Button } from '../../../../ui/Button/Button';
@@ -6,7 +6,7 @@ import { SearchForm } from './components/SearchForm';
 import type { Props as SearchResultsProps } from './components/SearchResults';
 import { SearchResults } from './components/SearchResults';
 import { useSearch } from './hooks/useSearch';
-import type * as Dependency from '../../../../../server/Dependency';
+import type * as Dependency from '../../../../../server/types/Dependency';
 import type { CSSType } from '../../../../Styled';
 import { ZERO } from '../../../../utils';
 

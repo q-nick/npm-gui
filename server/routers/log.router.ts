@@ -1,6 +1,6 @@
 import express from 'express';
 import { catchErrors } from '../catchErrors';
-import { requestWithPromise } from '../requestWithPromise';
+import { requestWithPromise } from '../utils/requestWithPromise';
 
 export const logRouter = express.Router();
 

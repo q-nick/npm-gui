@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '../../../../../ui/Button/Button';
 import type { useSearch } from '../hooks/useSearch';
 

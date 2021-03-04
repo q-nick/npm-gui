@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import type { FilterProps } from './shared';
 import { preventEvent } from './shared';
@@ -15,7 +14,7 @@ export function SelectFilter<T extends string>({
 }: FilterProps<T>): JSX.Element {
   return (
     <Select
-      onChange={(event): void => onFilterChange(event.target.value as T)}
+      onChange={(event): void => { onFilterChange(event.target.value as T); }}
       onClick={preventEvent}
       value={value}
     >

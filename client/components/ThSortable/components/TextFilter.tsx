@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import type { FilterProps } from './shared';
 import { preventEvent } from './shared';
@@ -16,7 +15,7 @@ export function TextFilter<T extends string>({
 }: FilterProps<T>): JSX.Element {
   return (
     <Input
-      onChange={(event): void => onFilterChange(event.target.value as T)}
+      onChange={(event): void => { onFilterChange(event.target.value as T); }}
       onClick={preventEvent}
       type="text"
       value={value}

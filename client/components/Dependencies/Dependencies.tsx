@@ -1,13 +1,13 @@
-import React from 'react';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
 import { useDependencies } from './hooks/useDependencies';
 
-interface Props {projectPath: string}
+interface Props { projectPath: string }
 
 export function Dependencies({ projectPath }: Props): JSX.Element {
   const {
     dependencies,
+    dependenciesProcessing,
     onInstallAllDependencies,
     onInstallNewDependency,
     onDeleteDependency,
@@ -17,6 +17,7 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
   return (
     <>
       <DependenciesHeader
+        isGlobal={projectPath === 'global'}
         onForceReInstall={(): void => { onInstallAllDependencies(true); }}
         onInstallAll={onInstallAllDependencies}
         onInstallNewDependency={onInstallNewDependency}
@@ -27,7 +28,8 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
 
       <DependenciesTable
         dependencies={dependencies}
-        dependenciesProcessing={{}}
+        dependenciesProcessing={dependenciesProcessing}
+        isGlobal={projectPath === 'global'}
         onDeleteDependency={onDeleteDependency}
         onInstallDependencyVersion={(): void => {}}
       />

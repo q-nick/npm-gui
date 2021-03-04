@@ -1,28 +1,18 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   Route, Switch, Redirect, useParams,
 } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { Dependencies } from '../Dependencies/Dependencies';
-// import { ScriptsContainer } from '../containers/ScriptsContainer';
-// import { Info } from '../Info/Info';
-import { Header } from '../Header/Header';
-import { Schedule } from '../Schedule/Schedule';
-import { StoreContext } from '../../app/StoreContext';
+import { Dependencies } from './Dependencies/Dependencies';
+import { StoreContext } from '../app/StoreContext';
+import { Header } from './Header/Header';
 
 const Row = styled.div`
   flex: 1;
   display: flex;
   overflow: hidden;
 `;
-
-// const LeftColumn = styled.div`
-//   flex-basis: 30%;
-//   display: flex;
-//   padding: 15px;
-//   transition: flex-basis 1500ms ease-in-out;
-// `;
 
 const RightColumn = styled.div`
   display: flex;
@@ -51,10 +41,6 @@ export function Project(): JSX.Element {
       <Header projectPathEncoded={projectPathEncoded} />
 
       <Row>
-        {/* <LeftColumn>
-          <ConsoleContainer />
-        </LeftColumn> */}
-
         <RightColumn>
           <Switch>
             <Route path="/project/:projectPathEncoded/dependencies">
@@ -64,20 +50,10 @@ export function Project(): JSX.Element {
               />
             </Route>
 
-            {/* <Route path="/project/:projectPathEncoded/global">
-              <DependenciesContainer filtersEnabled={['name']} />
-            </Route> */}
-
-            {/* <Route path="/project/:projectPathEncoded/scripts">
-              <ScriptsContainer projectPath={projectPathEncoded} />
-            </Route> */}
-
             <Redirect to={`project/${projectPathEncoded}/dependencies`} />
           </Switch>
         </RightColumn>
       </Row>
-
-      <Schedule />
     </>
   );
 }

@@ -1,58 +1,30 @@
-import * as fs from 'fs';
 import type * as express from 'express';
 
-import { executeCommandJSON } from '../../executeCommand';
-// import { withCacheUpdate, withCacheInvalidate } from '../../../cache';
+import { executeCommandJSON, executeCommandJSONWithFallback } from '../../executeCommand';
 import {
   getInstalledVersion,
   getLatestVersion,
   getWantedVersion,
   // mapYarnResultTableToVersion,
   // mapYarnResultTreeToBasic,
-} from '../../mapDependencies';
-import { decodePath } from '../../decodePath';
-import { parseJSON } from '../../parseJSON';
-import { hasYarn, hasNpm } from '../../hasYarn';
-import type * as Dependency from '../../../Dependency';
+} from '../../../utils/mapDependencies';
+import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
-
-function getTypeFromPackageJson(packageJson: any, dependencyName: string): 'dev' | 'extraneous' | 'prod' {
-  if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
-    return 'prod';
-  }
-
-  if (packageJson.devDependencies && packageJson.devDependencies[dependencyName]) {
-    return 'dev';
-  }
-
-  return 'extraneous';
-}
-
-function getRequiredFromPackageJson(packageJson: any, dependencyName: string): 'dev' | 'prod' | null {
-  if (packageJson.dependencies && packageJson.dependencies[dependencyName]) {
-    return packageJson.dependencies[dependencyName];
-  }
-
-  if (packageJson.devDependencies && packageJson.devDependencies[dependencyName]) {
-    return packageJson.devDependencies[dependencyName];
-  }
-
-  return null;
-}
+import { getRequiredFromPackageJson, getTypeFromPackageJson } from '../../../utils/getProjectPackageJSON';
+import { clearCache, updateInCache } from '../../../utils/cache';
 
 async function getNpmPackageWithInfo(
   projectPath: string, dependencyName: string,
 ): Promise<Dependency.Entire> {
   // installed or not
-  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(projectPath, `npm ls ${dependencyName} --depth=0 --json`);
+  const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(projectPath, `npm ls ${dependencyName} --depth=0 --json`);
 
   // latest, wanted
-  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(projectPath, `npm outdated ${dependencyName} --json`);
+  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(projectPath, `npm outdated ${dependencyName} --json`);
 
   // required & type
-  const packageJson = parseJSON(fs.readFileSync(`${projectPath}/package.json`, 'utf-8'));
-  const type = getTypeFromPackageJson(packageJson, dependencyName);
-  const required = getRequiredFromPackageJson(packageJson, dependencyName);
+  const type = getTypeFromPackageJson(projectPath, dependencyName);
+  const required = getRequiredFromPackageJson(projectPath, dependencyName);
 
   const installed = getInstalledVersion(installedInfo ? installedInfo[dependencyName] : undefined);
   const wanted = getWantedVersion(installed, outdatedInfo[dependencyName]);
@@ -92,37 +64,21 @@ async function addNpmDependencies(
 // controllers
 export async function addDependencies(
   req: express.Request<{
-    projectPath: unknown; type: Dependency.Type; }, unknown, Dependency.Basic[]>,
-  res: express.Response<Dependency.Entire | null>,
+    type: Dependency.Type; }, unknown, Dependency.Basic[]>,
+  res: express.Response<null>,
 ): Promise<void> {
-  const { projectPath, type } = req.params;
-  const projectPathDecoded = decodePath(projectPath);
-  const yarn = hasYarn(projectPathDecoded);
-  const npm = hasNpm(projectPathDecoded);
+  const { type } = req.params;
 
   const dependenciesToInstall = req.body.filter((d) => d.name);
+  const ONE = 1;
 
-  if (npm || yarn) {
-    if (dependenciesToInstall.length === 1) {
-      const result = await addNpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type);
-      res.json(result);
-      // result = await withCacheUpdate(
-      //   yarn ? addYarnDependency : addNpmDependency,
-      //   `${req.headers['x-cache-id']}-${projectPath}-npm`, 'name',
-      //   projectPathDecoded, dependenciesToInstall[0], type,
-      // );
-    } else if (dependenciesToInstall.length > 1) {
-      await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type);
-      // result = await withCacheInvalidate(
-      //   yarn ? addYarnDependencies : addNpmDependencies,
-      //   `${req.headers['x-cache-id']}-${projectPath}-npm`,
-      //   projectPathDecoded,
-      //   dependenciesToInstall,
-      //   type,
-      // );
-      res.status(200).json(null);
-    }
-  } else {
-    res.status(400).json(null);
+  if (dependenciesToInstall.length === ONE) {
+    const result = await addNpmDependency(req.projectPathDecoded, dependenciesToInstall[0]!, type); // eslint-disable-line
+    updateInCache(req.projectPathDecoded, result);
+  } else if (dependenciesToInstall.length > ONE) {
+    await addNpmDependencies(req.projectPathDecoded, dependenciesToInstall, type);
+    clearCache(req.projectPathDecoded);
   }
+
+  res.json(null);
 }

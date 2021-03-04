@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../../../ui/Button/Button';
-import { Loader } from '../../../../Loader/Loader';
+import { Loader } from '../../../../Loader';
 import type { useSearch } from '../hooks/useSearch';
 
 const Form = styled.form`
