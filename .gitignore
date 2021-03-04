@@ -13,3 +13,5 @@ electron
 .vscode
 report.*
 .cache
+tests-new/test-project/*
+!tests-new/test-project/.gitkeep

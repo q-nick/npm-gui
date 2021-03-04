@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import type { Response, Request } from 'express';
-import { decodePath } from '../decodePath';
+import { decodePath } from '../../middlewares/projectPathAndNpmYarnMiddleware';
 
 export interface FileOrFolder {
   name: string;
@@ -15,7 +15,7 @@ export interface Explorer {
 }
 
 export interface API {
-  Request: { path?: unknown };
+  Request: { path?: string };
   Response: Explorer;
 }
 

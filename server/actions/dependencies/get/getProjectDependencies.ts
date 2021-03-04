@@ -4,22 +4,11 @@ import {
   getInstalledVersion,
   getWantedVersion,
   getLatestVersion,
-} from '../../mapDependencies';
-import { decodePath } from '../../decodePath';
-import { getProjectPackageJSON } from '../../getProjectPackageJSON';
-import { hasYarn } from '../../hasYarn';
-import type * as Dependency from '../../../Dependency';
+} from '../../../utils/mapDependencies';
+import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
-
-function getDependenciesFromPackageJson(projectPath: string): Record<string, string> {
-  const packageJson = getProjectPackageJSON(projectPath);
-  return packageJson ? packageJson.dependencies : {};
-}
-
-function getDevDependenciesFromPackageJson(projectPath: string): Record<string, string> {
-  const packageJson = getProjectPackageJSON(projectPath);
-  return packageJson ? packageJson.devDependencies : {};
-}
+import { getDependenciesFromPackageJson, getDevDependenciesFromPackageJson } from '../../../utils/getProjectPackageJSON';
+import { getFromCache, putToCache } from '../../../utils/cache';
 
 async function getAllNpmDependencies(projectPath: string): Promise<Dependency.Entire[]> {
   // type
@@ -45,7 +34,7 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   const extraneousInstalled = installedInfo ? Object.keys(installedInfo)
     .filter((name) => {
       const depInfo = installedInfo[name];
-      return depInfo && 'extraenous' in depInfo;
+      return depInfo && 'extraneous' in depInfo;
     }) : [];
 
   const allDependencies: Dependency.Npm[] = [
@@ -71,7 +60,7 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   });
 }
 
-function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Dependency.Entire[] {
+function getAllDependenciesSimpleNpm(projectPath: string, yarn = false): Dependency.Entire[] {
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
@@ -91,34 +80,21 @@ function getAllDependenciesSimpleNpm(projectPath: string, yarn: boolean): Depend
 
 // controllers
 export function getAllDependenciesSimple(
-  req: Request<{ projectPath: unknown }>, res: Response,
+  req: Request, res: Response,
 ): void {
-  // TODO tests
-  const projectPathDecoded = decodePath(req.params.projectPath);
-
-  const yarn = hasYarn(projectPathDecoded);
-
-  const dependencies = getAllDependenciesSimpleNpm(projectPathDecoded, yarn);
+  const dependencies = getAllDependenciesSimpleNpm(req.projectPathDecoded);
 
   res.json(dependencies);
 }
 
 export async function getAllDependencies(
-  req: Request<{ projectPath: unknown }>, res: Response,
+  req: Request, res: Response,
 ): Promise<void> {
-  const { projectPath } = req.params;
+  const cache = getFromCache(req.projectPathDecoded);
+  if (cache) { res.json(cache); return; }
 
-  const projectPathDecoded = decodePath(projectPath);
-  // const yarn = hasYarn(projectPathDecoded);
-  // const npm = hasNpm(projectPathDecoded);
-
-  const dependencies = await getAllNpmDependencies(projectPathDecoded);
-
-  // dependencies = await withCachePut(
-  //   yarn ? (): void => {} : getAllNpmDependencies,
-  //   req.headers,
-  //   projectPathDecoded,
-  // );
+  const dependencies = await getAllNpmDependencies(req.projectPathDecoded);
+  putToCache(req.projectPathDecoded, dependencies);
 
   res.json(dependencies);
 }

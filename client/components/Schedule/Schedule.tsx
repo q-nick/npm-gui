@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { ScheduleContext } from './ScheduleContext';
 import { TaskElement } from './components/Task';

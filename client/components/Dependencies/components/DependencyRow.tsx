@@ -1,17 +1,17 @@
 /* eslint-disable react/no-multi-comp */
-import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Button } from '../../../ui/Button/Button';
-import { Loader } from '../../Loader/Loader';
+import { Loader } from '../../Loader';
 import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
 import { Icon } from '../../../ui/Icon/Icon';
-import type * as Dependency from '../../../../server/Dependency';
+import type * as Dependency from '../../../../server/types/Dependency';
 import type { CSSType } from '../../../Styled';
 import { getNormalizedRequiredVersion } from '../../../utils';
 
 interface Props {
   dependency: Dependency.Entire;
   isProcessing: boolean;
+  isGlobal: boolean;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
 }
@@ -87,7 +87,7 @@ function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps)
     return <Missing>missing</Missing>;
   }
 
-  if (getNormalizedRequiredVersion(dependency.required) === dependencyInstalled) {
+  if (dependency.type === 'global' || getNormalizedRequiredVersion(dependency.required) === dependencyInstalled) {
     return (
       <span>
         {dependencyInstalled}
@@ -164,14 +164,16 @@ function LatestVersion({ dependency, isProcessing, onInstall }: VersionProps): J
 }
 
 export function DependencyRow({
-  dependency, isProcessing, onDeleteDependency, onInstallDependencyVersion,
+  dependency, isProcessing, onDeleteDependency, onInstallDependencyVersion, isGlobal,
 }: Props): JSX.Element {
   return (
     <TrStyled
       key={`${dependency.name}${dependency.repo}`}
       isProcessing={isProcessing}
     >
-      <td>{dependency.type !== 'prod' && dependency.type}</td>
+      {!isGlobal && (
+        <td>{dependency.type !== 'prod' && dependency.type}</td>
+      )}
 
       <ColumnName>
         {dependency.name}
@@ -181,11 +183,13 @@ export function DependencyRow({
 
       {/* <td className={style.columnNsp}> ? </td> */}
 
-      <ColumnVersion>
-        {dependency.required}
+      {!isGlobal && (
+        <ColumnVersion>
+          {dependency.required}
 
-        {typeof dependency.required !== 'string' && <Missing>extraneous</Missing>}
-      </ColumnVersion>
+          {typeof dependency.required !== 'string' && <Missing>extraneous</Missing>}
+        </ColumnVersion>
+      )}
 
       <ColumnVersion>
         <InstalledVersion

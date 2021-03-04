@@ -1,5 +1,5 @@
 import request from 'request';
-import type { Request, Response} from 'express';
+import type { Request, Response } from 'express';
 
 interface Result {
   name: string;
@@ -45,9 +45,9 @@ async function searchNPM(query: string): Promise<Result[]> {
 }
 
 export async function search(
-  req: Request,
-  res: Response
+  req: Request<unknown, unknown, { query: string }>,
+  res: Response,
 ): Promise<void> {
-  const results = await searchNPM(req.body.query as string);
+  const results = await searchNPM(req.body.query);
   res.json(results);
 }

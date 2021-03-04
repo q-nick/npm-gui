@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import React from 'react';
 import type { CSSProp } from 'styled-components';
 import styled, { css } from 'styled-components';
 import { Icon } from '../../ui/Icon/Icon';
@@ -54,7 +53,7 @@ export function ThSortable<T extends string>({
 
       {children}
       &nbsp;
-      {onFilterChange && filterValue!== undefined && (
+      {onFilterChange && filterValue !== undefined && (
       <>
         {filterType === 'text' && (
           <TextFilter<T>

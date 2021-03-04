@@ -1,5 +1,5 @@
-import React from 'react';
 import type { ComponentPropsWithoutRef } from 'react';
+import { Children } from 'react';
 import styled, { css } from 'styled-components';
 import type { CSSType } from '../../Styled';
 import type { Props as IconPropsOriginal } from '../Icon/Icon';
@@ -93,7 +93,7 @@ export function Button({
       {icon !== undefined && (
         <ButtonIcon
           glyph={icon}
-          isAlone={!React.Children.toArray(children).length}
+          isAlone={!Children.toArray(children).length}
         />
       )}
 

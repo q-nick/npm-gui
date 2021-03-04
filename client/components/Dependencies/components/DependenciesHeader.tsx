@@ -1,8 +1,7 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
-import type * as Dependency from '../../../../server/Dependency';
+import type * as Dependency from '../../../../server/types/Dependency';
 
 const RightSection = styled.div`
   float: right;
@@ -15,6 +14,7 @@ interface Props {
   onUpdateAllToWanted: () => void;
   onUpdateAllToLatest: () => void;
   onForceReInstall: () => void;
+  isGlobal?: boolean;
 }
 
 export function DependenciesHeader({
@@ -24,6 +24,7 @@ export function DependenciesHeader({
   onUpdateAllToWanted,
   onUpdateAllToLatest,
   onForceReInstall,
+  isGlobal,
 }: Props): JSX.Element {
   return (
     <header>
@@ -31,16 +32,20 @@ export function DependenciesHeader({
       <Search onInstallNewDependency={onInstallNewDependency} />
 
       <RightSection>
-        <small>Install:</small>
-        &nbsp;
-        <Button
-          icon="data-transfer-download"
-          onClick={onInstallAll}
-          scale="small"
-          variant="primary"
-        >
-          All
-        </Button>
+        {isGlobal !== true && (
+        <>
+          <small>Install:</small>
+          &nbsp;
+          <Button
+            icon="data-transfer-download"
+            onClick={onInstallAll}
+            scale="small"
+            variant="primary"
+          >
+            All
+          </Button>
+        </>
+        )}
 
         {/* <Button
             variant="primary"
@@ -59,6 +64,7 @@ export function DependenciesHeader({
         &nbsp;
         <small>Update all to:</small>
         &nbsp;
+        {isGlobal !== true && (
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToInstalled}
@@ -68,6 +74,7 @@ export function DependenciesHeader({
         >
           Installed
         </Button>
+        )}
 
         <Button
           icon="cloud-download"
@@ -88,17 +95,22 @@ export function DependenciesHeader({
         >
           Latest
         </Button>
-        &nbsp;
-        &nbsp;
-        <Button
-          icon="loop-circular"
-          onClick={onForceReInstall}
-          scale="small"
-          title="Remove and re-nstall all packages"
-          variant="danger"
-        >
-          Re-Install
-        </Button>
+
+        {isGlobal !== true && (
+        <>
+          &nbsp;
+          &nbsp;
+          <Button
+            icon="loop-circular"
+            onClick={onForceReInstall}
+            scale="small"
+            title="Remove and re-nstall all packages"
+            variant="danger"
+          >
+            Re-Install
+          </Button>
+        </>
+        )}
       </RightSection>
     </header>
   );

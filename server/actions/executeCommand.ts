@@ -1,6 +1,7 @@
 import spawn from 'cross-spawn';
+import { ZERO } from '../utils/utils';
 
-import * as Console from '../console';
+const Console = { send(...args: any[]) {args;} }; // eslint-disable-line
 
 export async function executeCommand(
   cwd: string | undefined, wholeCommand: string, pushToConsole = false,
@@ -41,7 +42,7 @@ export async function executeCommand(
       // wait for finish and resolve
       spawned.on('close', (exitStatus: number) => {
         console.log(exitStatus);
-        if (exitStatus === 0) {
+        if (exitStatus === ZERO) {
           resolve({
             stdout,
             stderr,

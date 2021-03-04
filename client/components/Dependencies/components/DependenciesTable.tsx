@@ -2,15 +2,16 @@ import styled, { css } from 'styled-components';
 import { useCallback, useState } from 'react';
 import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
-import { Loader } from '../../Loader/Loader';
-import type * as Dependency from '../../../../server/Dependency';
+import { Loader } from '../../Loader';
+import type * as Dependency from '../../../../server/types/Dependency';
 import { ZERO } from '../../../utils';
 
 interface Props {
   dependencies?: Dependency.Entire[];
-  dependenciesProcessing: Record<string, boolean>;
+  dependenciesProcessing: Record<string, boolean | undefined>;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
+  isGlobal: boolean;
 }
 
 const Wrapper = styled.div`
@@ -56,6 +57,7 @@ export function DependenciesTable({
   dependenciesProcessing,
   onDeleteDependency,
   onInstallDependencyVersion,
+  isGlobal,
 }: Props): JSX.Element {
   const [sort, setSort] = useState<string | undefined>();
   const [sortReversed, setSortReversed] = useState(false);
@@ -89,18 +91,20 @@ export function DependenciesTable({
       <table>
         <thead>
           <tr>
-            <ThSortable<Dependency.Type>
-              appearance={headerEnvAppearance}
-              filterOptions={['dev', 'prod']}
-              filterType="select"
-              filterValue={filterTypeValue}
-              onClick={(): void => { onSortChange('env'); }}
-              onFilterChange={setFilterTypeValue}
-              sortActive={sort === 'env'}
-              sortReversed={sortReversed}
-            >
-              Env
-            </ThSortable>
+            {!isGlobal && (
+              <ThSortable<Dependency.Type>
+                appearance={headerEnvAppearance}
+                filterOptions={['dev', 'prod']}
+                filterType="select"
+                filterValue={filterTypeValue}
+                onClick={(): void => { onSortChange('env'); }}
+                onFilterChange={setFilterTypeValue}
+                sortActive={sort === 'env'}
+                sortReversed={sortReversed}
+              >
+                Env
+              </ThSortable>
+            )}
 
             <ThSortable<string>
               appearance={headerNameAppearance}
@@ -114,14 +118,16 @@ export function DependenciesTable({
               Name
             </ThSortable>
 
-            <ThSortable
-              appearance={columnVersionAppearance}
-              onClick={(): void => { onSortChange('required'); }}
-              sortActive={sort === 'required'}
-              sortReversed={sortReversed}
-            >
-              Required
-            </ThSortable>
+            {!isGlobal && (
+              <ThSortable
+                appearance={columnVersionAppearance}
+                onClick={(): void => { onSortChange('required'); }}
+                sortActive={sort === 'required'}
+                sortReversed={sortReversed}
+              >
+                Required
+              </ThSortable>
+            )}
 
             <ThSortable
               appearance={columnVersionAppearance}
@@ -161,6 +167,7 @@ export function DependenciesTable({
             <DependencyRow
               key={dependency.name}
               dependency={dependency}
+              isGlobal={isGlobal}
               isProcessing={dependenciesProcessing[dependency.name] === true}
               onDeleteDependency={onDeleteDependency}
               onInstallDependencyVersion={onInstallDependencyVersion}

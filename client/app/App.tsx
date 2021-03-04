@@ -4,11 +4,12 @@ import {
   Redirect,
 } from 'react-router-dom';
 import 'open-iconic/font/css/open-iconic.css';
-import { Project } from '../components/Project/Project';
+import { Project } from '../components/Project';
+import { Global } from '../components/Global';
 import { StoreContext, useStoreContextValue } from './StoreContext';
-import { Header } from '../components/Header/Header';
 import { ScheduleContext, useScheduleContextValue } from '../components/Schedule/ScheduleContext';
-import { Info } from '../components/Info/Info';
+import { Info } from '../components/Info';
+import { Schedule } from '../components/Schedule/Schedule';
 
 export function App(): JSX.Element {
   const storeContextValue = useStoreContextValue();
@@ -21,8 +22,7 @@ export function App(): JSX.Element {
           <Router>
             <Switch>
               <Route exact path="/">
-                <Header />
-                Global
+                <Global />
               </Route>
 
               <Route path="/project/:projectPathEncoded">
@@ -32,6 +32,8 @@ export function App(): JSX.Element {
               <Redirect to="/" />
             </Switch>
           </Router>
+
+          <Schedule />
         </ScheduleContext.Provider>
       </StoreContext.Provider>
 

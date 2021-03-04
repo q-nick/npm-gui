@@ -31,7 +31,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "typeRoots": ["@types"],
+    "types": ["mocha", "node"]
   },
-  "include": ["client", "server"],
-  "exclude": ["**/node_modules", "**/.*/", "@types", "tests"]
+  "include": ["client", "server", "tests-new"],
+  "exclude": ["**/node_modules", "**/.*/", "tests"]
 }

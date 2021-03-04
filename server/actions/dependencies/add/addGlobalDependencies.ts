@@ -1,29 +1,23 @@
 import type { Request, Response } from 'express';
 
-import { executeCommand, executeCommandJSON } from '../../executeCommand';
-import { getInstalledVersion, getLatestVersion } from '../../mapDependencies';
-import { withCacheUpdate } from '../../../cache';
-import type * as Dependency from '../../../Dependency';
+import { executeCommand, executeCommandJSONWithFallback } from '../../executeCommand';
+import { getInstalledVersion, getLatestVersion } from '../../../utils/mapDependencies';
+import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
+import { updateInCache } from '../../../utils/cache';
 
-type RequestBody ={ name: string; version: string }[];
+type RequestBody = [{ name: string; version: string }]; // eslint-disable-line
 
 async function addGlobalNpmDependency(
-  req: Request<unknown, unknown, RequestBody>,
-): Promise<Dependency.Entire | null> {
-  if (req.body[0] === undefined) {
-    return null;
-  }
-
-  const { name, version } = req.body[0];
-
+  { name, version }: { name: string; version: string },
+): Promise<Dependency.Entire> {
   // add
   await executeCommand(undefined, `npm install ${name}@${version || ''} -g`, true);
 
   // get package info
-  const { dependencies: installedInfo } = await executeCommandJSON<Commands.Installed>(undefined, `npm ls ${name} --depth=0 -g --json`);
+  const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(undefined, `npm ls ${name} --depth=0 -g --json`);
 
-  const outdatedInfo = await executeCommandJSON<Commands.Outdated>(undefined, `npm outdated ${name} -g --json`);
+  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(undefined, `npm outdated ${name} -g --json`);
 
   const installed = getInstalledVersion(installedInfo ? installedInfo[name] : undefined);
 
@@ -37,10 +31,10 @@ async function addGlobalNpmDependency(
 }
 
 export async function addGlobalDependencies(
-  req: Request, res: Response,
+  req: Request<unknown, unknown, RequestBody>, res: Response,
 ): Promise<void> {
-  // TODO yarn?
-  await withCacheUpdate(addGlobalNpmDependency, 'npm-global', 'name', req);
+  const dependency = await addGlobalNpmDependency(req.body[0]);
+  updateInCache('global', dependency);
 
   res.json({});
 }
