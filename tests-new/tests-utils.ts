@@ -62,6 +62,11 @@ export async function add(type: 'dev'| 'prod', dependencies: { name: string; ver
     .send(dependencies);
 }
 
+export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> {
+  return api(app)
+    .delete(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/${type}/${name}`);
+}
+
 export const TEST_PKG = {
   name: 'npm-gui-tests',
   repo: 'npm',
