@@ -56,9 +56,43 @@ export async function installForce(): Promise<api.Test> {
     .post(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/install/force`);
 }
 
+export async function add(type: 'dev'| 'prod', dependencies: { name: string; version: string }[]): Promise<api.Test> {
+  return api(app)
+    .post(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/${type}`)
+    .send(dependencies);
+}
+
 export const TEST_PKG = {
   name: 'npm-gui-tests',
   repo: 'npm',
   required: '^1.0.0',
   type: 'prod',
+};
+
+export const TEST_PKG_UNINSTALLED = {
+  ...TEST_PKG,
+  installed: null,
+  wanted: null,
+  latest: null,
+};
+
+export const TEST_PKG_INSTALLED = {
+  ...TEST_PKG,
+  installed: '1.1.1',
+  wanted: null,
+  latest: '2.1.1',
+};
+
+export const TEST_PKG2 = {
+  name: 'npm-gui-tests',
+  repo: 'npm',
+  required: '^1.1.1',
+  type: 'prod',
+};
+
+export const TEST_PKG2_INSTALLED = {
+  ...TEST_PKG2,
+  installed: '1.1.1',
+  wanted: null,
+  latest: '2.1.1',
 };
