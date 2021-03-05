@@ -6,12 +6,15 @@ os:
   - windows
 
 node_js:
+  - "15.10"
+  - "14.16"
+  - "12.21"
   - "11.1"
   - "10.12"
-  - "9.11"
-  - "8.12"
-  - "7.10" # temporary disable older version in CI
-  - "6.14"
+  # - "9.11"
+  # - "8.12"
+  # - "7.10" # temporary disable older version in CI
+  # - "6.14"
   # - "5.12"
   # - "4.9"
   # - "0.12"
