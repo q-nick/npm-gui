@@ -95,7 +95,7 @@ export async function executeCommandJSONWithFallback<T>(
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
     console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
-    return JSON.parse(stdout) as T;
+    return stdout ? JSON.parse(stdout) as T : {} as T;
   } catch (err: unknown) {
     console.timeEnd(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
     return JSON.parse(err as string) as T;

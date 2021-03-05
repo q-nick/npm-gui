@@ -5,7 +5,7 @@ export const errorHandler: ErrorRequestHandler = (
 ) => {
   // No routes handled the request and no system error, that means 404 issue.
   // Forward to next middleware to handle it.
-  // console.error('ERROR HANDLER', err);
+  console.error('ERROR HANDLER', err);
 
   if (!err) {
     next();
