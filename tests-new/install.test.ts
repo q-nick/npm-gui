@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { expect } from 'chai';
 import {
-  getFull, getSimple, install, prepareTestProject, TEST_PKG,
+  getFull, getSimple, install, prepareTestProject, TEST_PKG, TEST_PKG_INSTALLED,
 } from './tests-utils';
 
 describe('install', () => {
@@ -20,15 +20,7 @@ describe('install', () => {
     await install();
 
     expect((await getSimple()).body).deep.equal([TEST_PKG]);
-
-    expect((await getFull()).body).deep.equal([
-      {
-        ...TEST_PKG,
-        installed: '1.1.1',
-        wanted: null,
-        latest: '2.1.1',
-      },
-    ]);
+    expect((await getFull()).body).deep.equal([TEST_PKG_INSTALLED]);
   });
 
   it('installed', async () => {
@@ -37,14 +29,6 @@ describe('install', () => {
     await install();
 
     expect((await getSimple()).body).deep.equal([TEST_PKG]);
-
-    expect((await getFull()).body).deep.equal([
-      {
-        ...TEST_PKG,
-        installed: '1.1.1',
-        wanted: null,
-        latest: '2.1.1',
-      },
-    ]);
+    expect((await getFull()).body).deep.equal([TEST_PKG_INSTALLED]);
   });
 });
