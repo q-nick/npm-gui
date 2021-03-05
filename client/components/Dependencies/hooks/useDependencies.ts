@@ -104,6 +104,8 @@ export function useDependencies(projectPath: string): Hook {
   // install all dependencies
   const onInstallAllDependencies = useCallback<Hook['onInstallAllDependencies']>(
     (force) => {
+      if (!dependencies) { return; }
+
       addToApiSchedule({
         projectPath,
         description: `${force === true ? 'force' : ''} installing all`,
@@ -125,6 +127,7 @@ export function useDependencies(projectPath: string): Hook {
   // install specific dependencies versions
   const onUpdateDependencies = useCallback<Hook['onUpdateDependencies']>(
     (versionType) => {
+      if (!dependencies) { return; }
       const dependenciesToUpdate = dependencies
         .filter((dependency) => typeof dependency[versionType] === 'string'
           && dependency[versionType] !== getNormalizedRequiredVersion(dependency.required))
