@@ -10,7 +10,6 @@ export function getFromCache(name: string): CacheValue {
 }
 
 export function putToCache(name: string, data: CacheValue): void {
-  console.log('put cache', cache, name, data);
   cache[name] = data;
 }
 

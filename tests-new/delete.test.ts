@@ -17,7 +17,7 @@ describe('delete dependency', () => {
     expect((await getFull()).body).deep.equal([TEST_PKG_INSTALLED]);
   });
 
-  it.only('uninstalled valid name', async () => {
+  it('uninstalled valid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 
     const response = await del('prod', 'npm-gui-tests');
@@ -27,7 +27,7 @@ describe('delete dependency', () => {
     expect((await getFull()).body).deep.equal([]);
   });
 
-  it.only('installed valid name', async () => {
+  it('installed valid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' }, undefined, 'npm');
 
     expect((await getSimple()).body).deep.equal([TEST_PKG]);
