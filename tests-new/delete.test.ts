@@ -7,7 +7,7 @@ import {
 } from './tests-utils';
 
 describe('delete dependency', () => {
-  it('uninstalled invalid name', async () => {
+  it.only('uninstalled invalid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 
     const response = await del('prod', 'sdmvladbf3');
