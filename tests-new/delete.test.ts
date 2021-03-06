@@ -6,7 +6,7 @@ import {
   getFull, getSimple, prepareTestProject, TEST_PKG, TEST_PKG_INSTALLED,
 } from './tests-utils';
 
-describe.only('delete dependency', () => {
+describe('delete dependency', () => {
   it('uninstalled invalid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 
@@ -27,7 +27,7 @@ describe.only('delete dependency', () => {
     expect((await getFull()).body).deep.equal([]);
   });
 
-  it('installed valid name', async () => {
+  it.only('installed valid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' }, undefined, 'npm');
 
     expect((await getSimple()).body).deep.equal([TEST_PKG]);
