@@ -1,16 +1,16 @@
 language: node_js
 
 os:
-  - linux
-  - osx
+  # - linux
+  # - osx
   - windows
 
 node_js:
-  - "15.10"
-  - "14.16"
+  # - "15.10"
+  # - "14.16"
   - "12.21"
-  - "11.1"
-  - "10.12"
+  # - "11.1"
+  # - "10.12"
   # - "9.11"
   # - "8.12"
   # - "7.10" # temporary disable older version in CI

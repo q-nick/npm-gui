@@ -6,7 +6,7 @@ import {
   getFull, getSimple, prepareTestProject, TEST_PKG, TEST_PKG_INSTALLED,
 } from './tests-utils';
 
-describe('add dependency', () => {
+describe('delete dependency', () => {
   it('uninstalled invalid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 

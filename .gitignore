@@ -15,4 +15,6 @@ report.*
 .cache
 tests-new/test-project/*
 !tests-new/test-project/.gitkeep
+tests/test-project/*
+!tests/test-project/.gitkeep
 tsconfig.tsbuildinfo
