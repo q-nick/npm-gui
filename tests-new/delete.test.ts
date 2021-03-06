@@ -6,8 +6,8 @@ import {
   getFull, getSimple, prepareTestProject, TEST_PKG, TEST_PKG_INSTALLED,
 } from './tests-utils';
 
-describe('delete dependency', () => {
-  it.only('uninstalled invalid name', async () => {
+describe.only('delete dependency', () => {
+  it('uninstalled invalid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 
     const response = await del('prod', 'sdmvladbf3');
