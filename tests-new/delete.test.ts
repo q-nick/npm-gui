@@ -17,7 +17,7 @@ describe('delete dependency', () => {
     expect((await getFull()).body).deep.equal([TEST_PKG_INSTALLED]);
   });
 
-  it('uninstalled valid name', async () => {
+  it.only('uninstalled valid name', async () => {
     await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
 
     const response = await del('prod', 'npm-gui-tests');
