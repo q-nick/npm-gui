@@ -1,5 +1,6 @@
 import api from 'supertest';
 import * as fs from 'fs';
+import * as path from 'path';
 import rimraf from 'rimraf';
 import { app } from '../server';
 import PACKAGE_JSON from './test-package.json';
@@ -15,10 +16,10 @@ export async function prepareTestProject(
   devDependencies?: Record<string, string>,
   installRepo?: 'npm' | 'yarn',
 ): Promise<void> {
-  rimraf.sync(`${__dirname}/test-project/node_modules`);
-  rimraf.sync(`${__dirname}/test-project/package.json`);
-  rimraf.sync(`${__dirname}/test-project/package-lock.json`);
-  rimraf.sync(`${__dirname}/test-project/yarn-lock.json`);
+  rimraf.sync(path.join(__dirname, 'test-project', 'node_modules'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'package.json'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'package-lock.json'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'yran-lock.json'));
 
   const packageJsonToWrite = {
     ...PACKAGE_JSON,
@@ -26,45 +27,45 @@ export async function prepareTestProject(
     ...{ devDependencies },
   };
 
-  fs.writeFileSync(`${__dirname}/test-project/package.json`, JSON.stringify(packageJsonToWrite, null, 2));
+  fs.writeFileSync(path.join(__dirname, 'test-project', 'package.json'), JSON.stringify(packageJsonToWrite, null, 2));
   if (installRepo === 'npm') {
-    await executeCommandSimple(`${__dirname}/test-project/`, 'npm install');
+    await executeCommandSimple(path.join(__dirname, 'test-project'), 'npm install');
   }
   if (installRepo === 'yarn') {
-    await executeCommandSimple(`${__dirname}/test-project/`, 'yarn install');
+    await executeCommandSimple(path.join(__dirname, 'test-project'), 'yarn install');
   }
-  clearCache(`${__dirname}/test-project`);
+  clearCache(path.join(__dirname, 'test-project'));
 }
 
 export async function getSimple(): Promise<api.Test> {
   return api(app)
-    .get(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/simple`);
+    .get(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/simple`);
 }
 
 export async function getFull(): Promise<api.Test> {
   return api(app)
-    .get(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/full`);
+    .get(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/full`);
 }
 
 export async function install(): Promise<api.Test> {
   return api(app)
-    .post(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/install`);
+    .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/install`);
 }
 
 export async function installForce(): Promise<api.Test> {
   return api(app)
-    .post(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/install/force`);
+    .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/install/force`);
 }
 
 export async function add(type: 'dev'| 'prod', dependencies: { name: string; version: string }[]): Promise<api.Test> {
   return api(app)
-    .post(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/${type}`)
+    .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}`)
     .send(dependencies);
 }
 
 export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> {
   return api(app)
-    .delete(`/api/project/${encodePath(`${__dirname}/test-project`)}/dependencies/${type}/${name}`);
+    .delete(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}/${name}`);
 }
 
 export const TEST_PKG = {
