@@ -6,7 +6,7 @@ const Console = { send(...args: any[]) {args;} }; // eslint-disable-line
 export async function executeCommand(
   cwd: string | undefined, wholeCommand: string, pushToConsole = false,
 ): Promise<{ stdout: string; stderr: string }> {
-  console.log(`Command: ${cwd ?? ''} ${wholeCommand}, took:`);
+  console.log(`Command: ${cwd ?? ''} ${wholeCommand}, started:`);
   return new Promise((resolve, reject) => {
     // spawn process
     const args = wholeCommand.split(' ');
@@ -90,10 +90,10 @@ export async function executeCommandJSONWithFallback<T>(
 ): Promise<T> {
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
-    console.log(`Command: ${cwd ?? ''} ${wholeCommand}, OK:`);
+    console.log('OK:');
     return stdout ? JSON.parse(stdout) as T : {} as T;
   } catch (err: unknown) {
-    console.log(`Command: ${cwd ?? ''} ${wholeCommand}, ERROR:`);
+    console.log('ERROR:');
     return JSON.parse(err as string) as T;
   }
 }
@@ -103,7 +103,7 @@ export async function executeCommandJSONWithFallbackYarn<T>(
 ): Promise<T | undefined> {
   try {
     const { stdout, stderr } = await executeCommand(cwd, wholeCommand, pushToConsole);
-    console.log(`Command: ${cwd ?? ''} ${wholeCommand}, OK:`);
+    console.log('OK:');
     const JSONs = (stdout + stderr).trim()
       .split('\n')
       .filter((x) => x)
@@ -114,7 +114,7 @@ export async function executeCommandJSONWithFallbackYarn<T>(
     const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as T | undefined; // eslint-disable-line
     if (anyError) { return anyError; }
   } catch (err: unknown) {
-    console.log(`Command: ${cwd ?? ''} ${wholeCommand}, ERROR:\n`);
+    console.log('ERROR:');
 
     if (typeof err === 'string') {
       const JSONs = err.trim()

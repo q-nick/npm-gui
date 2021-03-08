@@ -21,6 +21,7 @@ export async function prepareTestProject(
   rimraf.sync(path.join(__dirname, 'test-project', 'package.json'));
   rimraf.sync(path.join(__dirname, 'test-project', 'package-lock.json'));
   rimraf.sync(path.join(__dirname, 'test-project', 'yarn.lock'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'yarn-error.lock'));
 
   const packageJsonToWrite = {
     ...PACKAGE_JSON,
@@ -75,23 +76,19 @@ export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> 
 }
 
 export function nextManager(cb: (manager: 'npm' | 'yarn') => void): void {
-  // cb('npm');
+  cb('npm');
   cb('yarn');
 }
 
 export const PKG = {
   name: 'npm-gui-tests',
   required: '^1.0.0',
+  repo: 'npm',
   type: 'prod',
 };
 
 export const NPM = {
-  PKG: {
-    name: 'npm-gui-tests',
-    repo: 'npm',
-    required: '^1.0.0',
-    type: 'prod',
-  },
+  PKG,
   PKG_UNINSTALLED: {
     ...PKG,
     installed: null,
