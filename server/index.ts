@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import path from 'path';
 // import opn from 'opn';
 import type http from 'http';
 
@@ -50,7 +49,7 @@ app.use('/api/search', searchRouter);
 app.use('/api/info', infoRouter);
 app.use('/api/log', logRouter);
 
-app.use('/', express.static(path.normalize(`${__dirname}/../client`), { index: ['index.html'] }));
+app.use('/', express.static(__dirname, { index: ['index.html'] }));
 app.get('*', unmatchedHandler);
 app.use(errorHandler);
 
