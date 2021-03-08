@@ -12,7 +12,7 @@ import {
 
 nextManager((manager) => {
   describe(`${manager} delete dependency`, () => {
-    it.skip('uninstalled invalid name', async () => {
+    it('uninstalled invalid name', async () => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       const response = await del('prod', 'sdmvladbf3');
@@ -20,7 +20,6 @@ nextManager((manager) => {
       await del('prod', 'sdmvladbf3'); // we skip checking response status - it behaves different for npm and yarn
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
     });
 
     it('uninstalled valid name', async () => {

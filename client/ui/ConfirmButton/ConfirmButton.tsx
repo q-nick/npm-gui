@@ -1,8 +1,7 @@
-import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import type { Props } from '../Button/Button';
 import { Button } from '../Button/Button';
-import { useInterval } from '../../hooks/useInterval';
+import { useCountdown } from '../../hooks/useCountDown';
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -20,31 +19,21 @@ const ConfirmButtonThe = styled(Button)`
 `;
 
 export function ConfirmButton({ onClick, ...props }: Readonly<Props>): JSX.Element {
-  const [countdown, setCountdown] = useState(0);
-
-  const onStartClick = useCallback(() => {
-    setCountdown(5);
-  }, []);
-
-  useInterval(() => {
-    if (countdown !== 0) {
-      setCountdown((prevCountdown) => prevCountdown - 1);
-    }
-  }, 1000);
+  const { countLeft, onStartCountdown, onStopCountdown } = useCountdown();
 
   return (
     <Wrapper>
       <StartButtonThe
         {...props} // eslint-disable-line
-        onClick={onStartClick}
+        onClick={onStartCountdown}
       />
 
-      {!!countdown && (
+      {countLeft !== undefined && countLeft > 0 && (
         <ConfirmButtonThe
           {...props} // eslint-disable-line
-          onClick={onClick}
+          onClick={(e): void => { if (onClick) { onClick(e); } onStopCountdown(); }}
         >
-          {`confirm (${countdown})`}
+          {`confirm (${countLeft})`}
         </ConfirmButtonThe>
       )}
     </Wrapper>

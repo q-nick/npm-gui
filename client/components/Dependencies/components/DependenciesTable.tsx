@@ -10,7 +10,7 @@ interface Props {
   dependencies?: Dependency.Entire[];
   dependenciesProcessing: Record<string, boolean | undefined>;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
-  onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
+  onInstallDependencyVersion: (dependency: Dependency.Basic, type: Dependency.Type) => void;
   isGlobal: boolean;
 }
 

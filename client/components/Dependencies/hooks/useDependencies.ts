@@ -73,6 +73,7 @@ export function useDependencies(projectPath: string): Hook {
   // add new dependency
   const onInstallNewDependency = useCallback<Hook['onInstallNewDependency']>(
     (dependency, type) => {
+      setDependenciesProcessing({ [dependency.name]: true });
       addToApiSchedule({
         projectPath,
         description: `installing ${dependency.name} as ${type}`,
@@ -80,14 +81,16 @@ export function useDependencies(projectPath: string): Hook {
           setDependenciesProcessing({ [dependency.name]: true });
           await Axios.post<Dependency.Entire[]>(`${getBasePathFor(projectPath)}/${type}`, [dependency]);
           setDependenciesProcessing({ [dependency.name]: false });
+          fetchDependencies();
         },
       });
-    }, [addToApiSchedule, projectPath],
+    }, [addToApiSchedule, fetchDependencies, projectPath],
   );
 
   // delete dependency
   const onDeleteDependency = useCallback<Hook['onDeleteDependency']>(
     (dependency) => {
+      setDependenciesProcessing({ [dependency.name]: true });
       addToApiSchedule({
         projectPath,
         description: `deleting ${dependency.name} as ${dependency.type!}`,
@@ -105,7 +108,7 @@ export function useDependencies(projectPath: string): Hook {
   const onInstallAllDependencies = useCallback<Hook['onInstallAllDependencies']>(
     (force) => {
       if (!dependencies) { return; }
-
+      setDependenciesProcessingFromArr(dependencies, true);
       addToApiSchedule({
         projectPath,
         description: `${force === true ? 'force' : ''} installing all`,
@@ -140,6 +143,7 @@ export function useDependencies(projectPath: string): Hook {
       if (dependenciesToUpdate.length === ZERO) {
         return;
       }
+      setDependenciesProcessingFromArr(dependenciesToUpdate, true);
 
       const dependenciesToUpdateDev = dependenciesToUpdate.filter((d) => d.type === 'dev');
       const dependenciesToUpdateProd = dependenciesToUpdate.filter((d) => d.type === 'prod');

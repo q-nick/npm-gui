@@ -16,7 +16,7 @@ nextManager((manager) => {
       expect((await getFull()).body).deep.equal([]);
     });
 
-    it.skip('uninstalled', async () => {
+    it('uninstalled', async () => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);

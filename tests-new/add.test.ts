@@ -31,7 +31,17 @@ nextManager((manager) => {
       expect((await getFull()).body).deep.equal([]);
     });
 
-    it('correct dependency', async () => {
+    it('correct dependency, no version', async () => {
+      await prepareTestProject(manager);
+
+      const response = await add('prod', [{ name: 'npm-gui-tests' }]);
+      expect(response.status).to.equal(HTTP_STATUS_OK);
+
+      expect((await getSimple()).body).deep.equal([TEST[manager].PKG2]);
+      expect((await getFull()).body).deep.equal([TEST[manager].PKG2_INSTALLED]);
+    });
+
+    it('correct dependency, with version', async () => {
       await prepareTestProject(manager);
 
       const response = await add('prod', [{ name: 'npm-gui-tests', version: '^1.0.0' }]);

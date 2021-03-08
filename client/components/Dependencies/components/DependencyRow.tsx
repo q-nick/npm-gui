@@ -13,7 +13,7 @@ interface Props {
   isProcessing: boolean;
   isGlobal: boolean;
   onDeleteDependency: (dependency: Dependency.Entire) => void;
-  onInstallDependencyVersion: (dependency: Dependency.Entire, version: string) => void;
+  onInstallDependencyVersion: (dependency: Dependency.Basic, type: Dependency.Type) => void;
 }
 
 interface TrStyledProps {
@@ -195,7 +195,9 @@ export function DependencyRow({
         <InstalledVersion
           dependency={dependency}
           isProcessing={isProcessing}
-          onInstall={(version): void => { onInstallDependencyVersion(dependency, version); }}
+          onInstall={(version): void => {
+            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+          }}
         />
       </ColumnVersion>
 
@@ -203,7 +205,9 @@ export function DependencyRow({
         <WantedVersion
           dependency={dependency}
           isProcessing={isProcessing}
-          onInstall={(version): void => { onInstallDependencyVersion(dependency, version); }}
+          onInstall={(version): void => {
+            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+          }}
         />
       </ColumnVersion>
 
@@ -211,7 +215,9 @@ export function DependencyRow({
         <LatestVersion
           dependency={dependency}
           isProcessing={isProcessing}
-          onInstall={(version): void => { onInstallDependencyVersion(dependency, version); }}
+          onInstall={(version): void => {
+            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+          }}
         />
       </ColumnVersion>
 
