@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
-import { executeCommandJSONWithFallback } from '../../executeCommand';
+// import util from 'util';
+import { executeCommandJSONWithFallback, executeCommandJSONWithFallbackYarn } from '../../executeCommand';
 import {
   getInstalledVersion,
   getWantedVersion,
@@ -7,23 +8,37 @@ import {
 } from '../../../utils/mapDependencies';
 import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
+import type * as CommandsYarn from '../../../CommandsYarn';
 import { getDependenciesFromPackageJson, getDevDependenciesFromPackageJson } from '../../../utils/getProjectPackageJSON';
 import { getFromCache, putToCache } from '../../../utils/cache';
+import { extractVersionFromYarnOutdated } from '../../yarn-utils';
+
+function getAllDependenciesSimpleJSON(projectPath: string, yarn = false): Dependency.Entire[] {
+  const dependencies = getDependenciesFromPackageJson(projectPath);
+  const devDependencies = getDevDependenciesFromPackageJson(projectPath);
+
+  const repo = yarn ? 'yarn' : 'npm';
+
+  return [
+    ...Object.keys(dependencies)
+      .map((name): Dependency.Entire => ({
+        repo, name, type: 'prod', required: dependencies[name],
+      })),
+    ...Object.keys(devDependencies)
+      .map((name): Dependency.Entire => ({
+        repo, name, type: 'dev', required: devDependencies[name],
+      })),
+  ];
+}
 
 async function getAllNpmDependencies(projectPath: string): Promise<Dependency.Entire[]> {
   // type
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
-  // installed
-  // let installedInfo: Commands.Installed['dependencies'] | undefined; // eslint-disable-line
-
-  // const installedInfo = await handleListWithException(projectPath);
   const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(projectPath, 'npm ls --depth=0 --json');
   // latest, wanted
   const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(projectPath, 'npm outdated --json');
-  // const outdatedInfo = await
-  // executeCommandJSON<Commands.Outdated>(projectPath, 'npm outdated --json');
 
   // unused (only regular dependencies for now)
   // TODO
@@ -60,29 +75,56 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
   });
 }
 
-function getAllDependenciesSimpleNpm(projectPath: string, yarn = false): Dependency.Entire[] {
+async function getAllYarnDependencies(projectPath: string): Promise<Dependency.Entire[]> {
+  // type
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
 
-  const repo = yarn ? 'yarn' : 'npm';
+  const anyError = await executeCommandJSONWithFallbackYarn<string | undefined>(projectPath, 'yarn check --json');
+  if (anyError !== undefined) {
+    // there is some error in repo, we cant extract correct information
+    return getAllDependenciesSimpleJSON(projectPath, true).map((dep) => ({
+      ...dep,
+      installed: null,
+      wanted: null,
+      latest: null,
+    }));
+  }
 
-  return [
-    ...Object.keys(dependencies)
-      .map((name): Dependency.Entire => ({
-        repo, name, type: 'prod', required: dependencies[name],
-      })),
-    ...Object.keys(devDependencies)
-      .map((name): Dependency.Entire => ({
-        repo, name, type: 'dev', required: devDependencies[name],
-      })),
+  const { data: { trees: installedInfo } } = await executeCommandJSONWithFallback<CommandsYarn.Installed>(projectPath, 'yarn list --depth=0 --json');
+
+  const outdatedInfo = await executeCommandJSONWithFallbackYarn<CommandsYarn.Outdated | undefined>(projectPath, 'yarn outdated --json');
+  const outdatedInfoExtracted = extractVersionFromYarnOutdated(outdatedInfo);
+
+  const allDependencies: Dependency.Npm[] = [
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })),
+    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })),
+    // eslint-disable-next-line
+    // ...Object.keys(extraneousInstalled).map((name): Dependency.Npm => ({ name, type: 'extraneous' })), // TODO
   ];
+
+  return allDependencies.map((dependency): Dependency.Entire => {
+    const info = installedInfo.find((x) => x.name.split('@')[0] === dependency.name);
+    const installed = info?.name.split('@')[1];
+
+    const wanted = getWantedVersion(installed, outdatedInfoExtracted[dependency.name]);
+    const latest = getLatestVersion(installed, wanted, outdatedInfoExtracted[dependency.name]);
+
+    return {
+      repo: 'yarn',
+      ...dependency,
+      installed,
+      wanted,
+      latest,
+    };
+  });
 }
 
 // controllers
 export function getAllDependenciesSimple(
   req: Request, res: Response,
 ): void {
-  const dependencies = getAllDependenciesSimpleNpm(req.projectPathDecoded);
+  const dependencies = getAllDependenciesSimpleJSON(req.projectPathDecoded, req.yarnLock);
 
   res.json(dependencies);
 }
@@ -93,7 +135,13 @@ export async function getAllDependencies(
   const cache = getFromCache(req.projectPathDecoded);
   if (cache) { res.json(cache); return; }
 
-  const dependencies = await getAllNpmDependencies(req.projectPathDecoded);
+  let dependencies = [];
+  if (req.yarnLock) {
+    dependencies = await getAllYarnDependencies(req.projectPathDecoded);
+  } else {
+    dependencies = await getAllNpmDependencies(req.projectPathDecoded);
+  }
+
   putToCache(req.projectPathDecoded, dependencies);
 
   res.json(dependencies);

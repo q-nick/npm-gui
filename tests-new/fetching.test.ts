@@ -1,28 +1,33 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { expect } from 'chai';
 import {
-  getFull, getSimple, prepareTestProject, TEST_PKG, TEST_PKG_INSTALLED, TEST_PKG_UNINSTALLED,
+  getFull,
+  getSimple,
+  nextManager,
+  prepareTestProject,
+  TEST,
 } from './tests-utils';
 
-describe('simple', () => {
-  it('nothing', async () => {
-    await prepareTestProject();
+nextManager((manager) => {
+  describe(`${manager} fetching`, () => {
+    it('nothing', async () => {
+      await prepareTestProject(manager);
 
-    expect((await getSimple()).body).deep.equal([]);
-    expect((await getFull()).body).deep.equal([]);
-  });
+      expect((await getSimple()).body).deep.equal([]);
+      expect((await getFull()).body).deep.equal([]);
+    });
 
-  it('uninstalled', async () => {
-    await prepareTestProject({ 'npm-gui-tests': '^1.0.0' });
+    it('uninstalled', async () => {
+      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
-    expect((await getSimple()).body).deep.equal([TEST_PKG]);
-    expect((await getFull()).body).deep.equal([TEST_PKG_UNINSTALLED]);
-  });
+      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
+      expect((await getFull()).body).deep.equal([TEST[manager].PKG_UNINSTALLED]);
+    });
 
-  it('installed', async () => {
-    await prepareTestProject({ 'npm-gui-tests': '^1.0.0' }, undefined, 'npm');
+    it('installed', async () => {
+      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' }, undefined, true);
 
-    expect((await getSimple()).body).deep.equal([TEST_PKG]);
-    expect((await getFull()).body).deep.equal([TEST_PKG_INSTALLED]);
+      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
+      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
+    });
   });
 });

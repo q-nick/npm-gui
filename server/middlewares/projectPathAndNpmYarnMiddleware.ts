@@ -28,5 +28,6 @@ export const projectPathAndNpmYarnMiddleware = (req: Request<{ projectPath?: str
   }
 
   req.projectPathDecoded = projectPathDecoded;
+  req.yarnLock = yarn;
   next();
 };
