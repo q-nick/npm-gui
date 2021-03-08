@@ -31,7 +31,7 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
         dependenciesProcessing={dependenciesProcessing}
         isGlobal={projectPath === 'global'}
         onDeleteDependency={onDeleteDependency}
-        onInstallDependencyVersion={(): void => {}}
+        onInstallDependencyVersion={onInstallNewDependency}
       />
     </>
   );

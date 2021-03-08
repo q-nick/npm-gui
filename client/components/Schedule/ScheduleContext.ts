@@ -33,7 +33,6 @@ export function useScheduleContextValue(): Hook {
   }, []);
 
   async function checkSchedule(): Promise<void> {
-    console.log('checking', !doing);
     if (!doing) {
       const toDo = schedule.find((task) => task.status === 'WAITING');
       if (toDo) {

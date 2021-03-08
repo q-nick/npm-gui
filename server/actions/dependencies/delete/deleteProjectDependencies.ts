@@ -21,7 +21,12 @@ async function deleteYarnDependency(
   projectPath: string | undefined, packageName: string,
 ): Promise<void> {
   // delete
-  await executeCommandSimple(projectPath, `yarn remove ${packageName}`, true);
+  try {
+    await executeCommandSimple(projectPath, `yarn remove ${packageName}`, true);
+  } catch (err: unknown) {
+    // we are caching error it's unimportant in yarn
+    console.log(err);
+  }
 }
 
 export const deleteDependency = async (

@@ -64,7 +64,7 @@ export async function installForce(): Promise<api.Test> {
     .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/install/force`);
 }
 
-export async function add(type: 'dev'| 'prod', dependencies: { name: string; version: string }[]): Promise<api.Test> {
+export async function add(type: 'dev'| 'prod', dependencies: { name: string; version?: string }[]): Promise<api.Test> {
   return api(app)
     .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}`)
     .send(dependencies);
