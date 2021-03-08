@@ -2,8 +2,12 @@ import type * as Dependency from '../types/Dependency';
 import type * as Commands from '../Commands';
 
 export function uniqueOrNull(
-  value: string, comparision: (string|null|undefined)[],
+  value: string | undefined, comparision: (string|null|undefined)[],
 ): string | null {
+  if (value === undefined) {
+    return null;
+  }
+
   return comparision.includes(value) ? null : value;
 }
 
@@ -101,7 +105,8 @@ export function getInstalledVersion(installed?: Commands.InstalledBody): string 
 }
 
 export function getWantedVersion(
-  installed: string | null, outdated?: Commands.OutdatedBody,
+  installed: string | null | undefined,
+  outdated?: { wanted?: string;latest?: string },
 ): string | null {
   if (installed === null || !outdated) {
     return null;
@@ -111,7 +116,9 @@ export function getWantedVersion(
 }
 
 export function getLatestVersion(
-  installed: string | null, wanted: string | null, outdated?: Commands.OutdatedBody,
+  installed: string | null | undefined,
+  wanted: string | null | undefined,
+  outdated?: { wanted?: string;latest?: string },
 ): string | null {
   if (installed === null || !outdated) {
     return null;

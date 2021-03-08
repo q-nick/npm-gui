@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import type * as Dependency from '../../../types/Dependency';
 import { spliceFromCache } from '../../../utils/cache';
-import { executeCommandJSON } from '../../executeCommand';
+import { executeCommandSimple } from '../../executeCommand';
 
 const commandTypeFlag = {
   prod: '-S',
@@ -14,17 +14,15 @@ async function deleteNpmDependency(
   projectPath: string | undefined, packageName: string, type: Dependency.Type,
 ): Promise<void> {
   // delete
-  await executeCommandJSON(projectPath, `npm uninstall ${packageName} ${commandTypeFlag[type]} --json`, true);
+  await executeCommandSimple(projectPath, `npm uninstall ${packageName} ${commandTypeFlag[type]}`, true);
 }
 
-// async function deleteYarnDependency(
-//   projectPath: string, dependencyName: string
-// ): Promise<string> {
-//   // delete
-//   await executeCommand(projectPath, `yarn remove ${dependencyName}`, true);
-
-//   return dependencyName;
-// }
+async function deleteYarnDependency(
+  projectPath: string | undefined, packageName: string,
+): Promise<void> {
+  // delete
+  await executeCommandSimple(projectPath, `yarn remove ${packageName}`, true);
+}
 
 export const deleteDependency = async (
   req: Request<{ type?: Dependency.Type; dependencyName: string }>,
@@ -32,7 +30,11 @@ export const deleteDependency = async (
 ): Promise<void> => {
   const { type = 'global', dependencyName } = req.params;
 
-  await deleteNpmDependency(req.projectPathDecoded, dependencyName, type);
+  if (req.yarnLock) {
+    await deleteYarnDependency(req.projectPathDecoded, dependencyName);
+  } else {
+    await deleteNpmDependency(req.projectPathDecoded, dependencyName, type);
+  }
 
   spliceFromCache(req.projectPathDecoded, dependencyName);
 
