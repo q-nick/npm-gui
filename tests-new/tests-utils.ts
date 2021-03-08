@@ -112,6 +112,13 @@ export const NPM = {
     wanted: null,
     latest: '2.1.1',
   },
+  PKG2_NEWEST: {
+    ...PKG,
+    required: '^2.1.1',
+    installed: '2.1.1',
+    wanted: null,
+    latest: null,
+  },
 };
 
 export const YARN = {
@@ -120,6 +127,7 @@ export const YARN = {
   PKG_INSTALLED: { ...NPM.PKG_INSTALLED, repo: 'yarn' },
   PKG2: { ...NPM.PKG2, required: '^1.0.0', repo: 'yarn' },
   PKG2_INSTALLED: { ...NPM.PKG2_INSTALLED, required: '^1.0.0', repo: 'yarn' },
+  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, repo: 'yarn' },
 };
 
 export const TEST = {
