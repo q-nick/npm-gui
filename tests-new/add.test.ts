@@ -37,8 +37,8 @@ nextManager((manager) => {
       const response = await add('prod', [{ name: 'npm-gui-tests' }]);
       expect(response.status).to.equal(HTTP_STATUS_OK);
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG2]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG2_INSTALLED]);
+      expect((await getSimple()).body).deep.equal([{ ...TEST[manager].PKG2, required: '^2.1.1' }]);
+      expect((await getFull()).body).deep.equal([TEST[manager].PKG2_NEWEST]);
     });
 
     it('correct dependency, with version', async () => {

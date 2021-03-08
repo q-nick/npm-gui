@@ -4,6 +4,8 @@ export interface OutdatedBody {
   latest: string;
 }
 
+export type Outdated = Record<string, OutdatedBody>;
+
 interface InstalledBodyBase {
   required: {
     version: string;
@@ -23,20 +25,6 @@ interface InstalledBodyExtra {
 
 export type InstalledBody = InstalledBodyBase | InstalledBodyExtra | InstalledBodyMissing;
 
-export type Outdated = Record<string, OutdatedBody>;
-
 export interface Installed {
   dependencies?: Record<string, InstalledBody>;
 }
-
-interface InstallA {
-  any: unknown;
-}
-
-interface InstallB {
-  error: {
-    summary: string;
-  };
-}
-
-export type Install = InstallA | InstallB;
