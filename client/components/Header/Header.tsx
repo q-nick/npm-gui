@@ -61,7 +61,7 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
 
         <Button
           key="global"
-          icon="code"
+          icon="globe"
           onClick={(): void => {
             history.push('/');
           }}

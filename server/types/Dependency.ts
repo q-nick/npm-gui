@@ -27,7 +27,7 @@ export interface Entire {
   wanted?: string | null;
   latest?: string | null;
   repo: Repo;
-  unused?: boolean;
+  // unused?: boolean;
 }
 
 export interface SearchResult {

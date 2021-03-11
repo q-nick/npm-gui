@@ -4,14 +4,19 @@ import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
 import { Loader } from '../../Loader';
 import type * as Dependency from '../../../../server/types/Dependency';
-import { ZERO } from '../../../utils';
 
 interface Props {
   dependencies?: Dependency.Entire[];
-  dependenciesProcessing: Record<string, boolean | undefined>;
+  dependenciesProcessing: string[];
   onDeleteDependency: (dependency: Dependency.Entire) => void;
   onInstallDependencyVersion: (dependency: Dependency.Basic, type: Dependency.Type) => void;
   isGlobal: boolean;
+  isEmpty: boolean;
+  isLoading: boolean;
+  filterTypeValue: Dependency.Type | 'any';
+  filterNameValue: string;
+  setFilterTypeValue: (value: Dependency.Type | 'any') => void;
+  setFilterNameValue: (value: string) => void;
 }
 
 const Wrapper = styled.div`
@@ -58,22 +63,51 @@ export function DependenciesTable({
   onDeleteDependency,
   onInstallDependencyVersion,
   isGlobal,
+  filterTypeValue,
+  setFilterTypeValue,
+  filterNameValue,
+  setFilterNameValue,
+  isEmpty,
+  isLoading,
 }: Props): JSX.Element {
-  const [sort, setSort] = useState<string | undefined>();
+  const [sort, setSort] = useState<'installed' | 'latest' | 'latest' | 'name' | 'required' | 'type' | 'wanted' | undefined>();
   const [sortReversed, setSortReversed] = useState(false);
-  const [filterTypeValue, setFilterTypeValue] = useState<Dependency.Type | undefined>(undefined);
-  const [filterNameValue, setFilterNameValue] = useState<string>('');
-  const isEmpty = !!dependencies && dependencies.length === ZERO;
-  const isLoading = !dependencies;
 
-  const onSortChange = useCallback((sortName: string) => {
+  const onSortChange = useCallback((sortName: 'installed' | 'latest' | 'latest' | 'name' | 'required' | 'type' | 'wanted' | undefined) => {
     if (sort === sortName) {
-      setSortReversed((v) => !v);
+      if (sortReversed) {
+        setSort(undefined);
+      } else {
+        setSortReversed((v) => !v);
+      }
     } else {
       setSortReversed(false);
       setSort(sortName);
     }
-  }, [sort]);
+  }, [sort, sortReversed]);
+
+  const dependenciesSorted = dependencies && [...dependencies];
+
+  if (sort !== undefined && dependenciesSorted) {
+    dependenciesSorted.sort( // mutated
+      (depA, depB): number => {
+        const valueA = depA[sort] ?? undefined;
+        const valueB = depB[sort] ?? undefined;
+        if (valueA !== undefined && valueB === undefined) {
+          return sortReversed ? -1 : 1;
+        }
+        if (valueA === undefined && valueB !== undefined) {
+          return sortReversed ? 1 : -1;
+        }
+        if (valueA > valueB) {
+          return sortReversed ? -1 : 1;
+        } if (valueA < valueB) {
+          return sortReversed ? 1 : -1;
+        }
+        return 0;
+      },
+    );
+  }
 
   return (
     <Wrapper>
@@ -92,14 +126,14 @@ export function DependenciesTable({
         <thead>
           <tr>
             {!isGlobal && (
-              <ThSortable<Dependency.Type>
+              <ThSortable<Dependency.Type | 'any'>
                 appearance={headerEnvAppearance}
-                filterOptions={['dev', 'prod']}
+                filterOptions={['any', 'dev', 'prod']}
                 filterType="select"
                 filterValue={filterTypeValue}
-                onClick={(): void => { onSortChange('env'); }}
+                onClick={(): void => { onSortChange('type'); }}
                 onFilterChange={setFilterTypeValue}
-                sortActive={sort === 'env'}
+                sortActive={sort === 'type'}
                 sortReversed={sortReversed}
               >
                 Env
@@ -163,12 +197,12 @@ export function DependenciesTable({
         </thead>
 
         <tbody>
-          {dependencies?.map((dependency) => (
+          {dependenciesSorted?.map((dependency) => (
             <DependencyRow
               key={dependency.name}
               dependency={dependency}
               isGlobal={isGlobal}
-              isProcessing={dependenciesProcessing[dependency.name] === true}
+              isProcessing={dependenciesProcessing.includes(dependency.name)}
               onDeleteDependency={onDeleteDependency}
               onInstallDependencyVersion={onInstallDependencyVersion}
             />

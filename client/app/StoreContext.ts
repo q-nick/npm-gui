@@ -3,12 +3,14 @@ import type * as Dependency from '../../server/types/Dependency';
 
 interface ProjectScope {
   dependencies?: Dependency.Entire[];
+  dependenciesProcessing: string[];
 }
 
 interface Hook {
   projects: Record<string, ProjectScope>;
   addProject: (projectPath: string) => void;
   setProjectDependencies: (projectPath: string, dependencies: ProjectScope['dependencies']) => void;
+  updateProjectDepsProcessing: (projectPath: string, dependencies: ProjectScope['dependenciesProcessing'], value: boolean) => void;
 }
 
 const projectsFromStorage = localStorage.getItem('projects');
@@ -34,7 +36,7 @@ export function useStoreContextValue(): Hook {
     setProjects((prevProjects) => {
       const newProjects = {
         ...prevProjects,
-        [projectPath]: {},
+        [projectPath]: { dependenciesProcessing: [] },
       };
       saveProjectsToLocalStorage(newProjects);
       return newProjects;
@@ -45,15 +47,36 @@ export function useStoreContextValue(): Hook {
     setProjects((prevProjects) => ({
       ...prevProjects,
       [projectPath]: {
+        dependenciesProcessing: prevProjects[projectPath]?.dependenciesProcessing ?? [],
         dependencies,
       },
     }));
   }, []);
 
+  const updateProjectDepsProcessing = useCallback<Hook['updateProjectDepsProcessing']>(
+    (projectPath, dependenciesToUpdate, value) => {
+      setProjects((prevProjects) => {
+        const project = prevProjects[projectPath] ?? { dependenciesProcessing: [] };
+        const dependenciesProcessing = value
+          ? [...project.dependenciesProcessing, ...dependenciesToUpdate]
+          : project.dependenciesProcessing.filter((d) => !dependenciesToUpdate.includes(d));
+
+        return {
+          ...prevProjects,
+          [projectPath]: {
+            ...prevProjects[projectPath],
+            dependenciesProcessing,
+          },
+        };
+      });
+    }, [],
+  );
+
   return {
     projects,
     addProject,
     setProjectDependencies,
+    updateProjectDepsProcessing,
   };
 }
 
@@ -61,4 +84,5 @@ export const StoreContext = createContext<Hook>({
   projects: {},
   addProject() {},
   setProjectDependencies() {},
+  updateProjectDepsProcessing() {},
 });

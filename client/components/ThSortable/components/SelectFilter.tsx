@@ -18,7 +18,7 @@ export function SelectFilter<T extends string>({
       onClick={preventEvent}
       value={value}
     >
-      <option value="">any</option>
+      <option value="any">any</option>
 
       <option value="dev">dev</option>
 

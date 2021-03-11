@@ -1,6 +1,9 @@
+import { useCallback } from 'react';
+import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
 import { useDependencies } from './hooks/useDependencies';
+import { useFilterDependencies } from './hooks/useFilterDependencies';
 
 interface Props { projectPath: string }
 
@@ -14,6 +17,25 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
     onUpdateDependencies,
   } = useDependencies(projectPath);
 
+  const {
+    dependenciesFiltered, isEmpty, isLoading,
+    filterNameValue, setFilterNameValue,
+    filterTypeValue, setFilterTypeValue,
+  } = useFilterDependencies(dependencies);
+
+  const onUpdateFilteredDependencies = useCallback((versionType: 'installed' | 'latest' | 'wanted'): void => {
+    if (!dependenciesFiltered) { return; }
+    const dependenciesToUpdate = dependenciesFiltered
+      .filter((dependency) => typeof dependency[versionType] === 'string'
+        && dependency[versionType] !== getNormalizedRequiredVersion(dependency.required))
+      .map((dependency) => ({
+        name: dependency.name,
+        version: dependency[versionType]!, // eslint-disable-line
+        type: dependency.type,
+      }));
+    onUpdateDependencies(dependenciesToUpdate);
+  }, [dependenciesFiltered, onUpdateDependencies]);
+
   return (
     <>
       <DependenciesHeader
@@ -21,17 +43,23 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
         onForceReInstall={(): void => { onInstallAllDependencies(true); }}
         onInstallAll={onInstallAllDependencies}
         onInstallNewDependency={onInstallNewDependency}
-        onUpdateAllToInstalled={(): void => { onUpdateDependencies('installed'); }}
-        onUpdateAllToLatest={(): void => { onUpdateDependencies('latest'); }}
-        onUpdateAllToWanted={(): void => { onUpdateDependencies('wanted'); }}
+        onUpdateAllToInstalled={(): void => { onUpdateFilteredDependencies('installed'); }}
+        onUpdateAllToLatest={(): void => { onUpdateFilteredDependencies('latest'); }}
+        onUpdateAllToWanted={(): void => { onUpdateFilteredDependencies('wanted'); }}
       />
 
       <DependenciesTable
-        dependencies={dependencies}
+        dependencies={dependenciesFiltered}
         dependenciesProcessing={dependenciesProcessing}
+        filterNameValue={filterNameValue}
+        filterTypeValue={filterTypeValue}
+        isEmpty={isEmpty}
         isGlobal={projectPath === 'global'}
+        isLoading={isLoading}
         onDeleteDependency={onDeleteDependency}
         onInstallDependencyVersion={onInstallNewDependency}
+        setFilterNameValue={setFilterNameValue}
+        setFilterTypeValue={setFilterTypeValue}
       />
     </>
   );
