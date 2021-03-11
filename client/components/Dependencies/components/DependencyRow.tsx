@@ -70,6 +70,11 @@ const Missing = styled.span`
   color: #d9534f;
 `;
 
+const HealthBadge = styled.img`
+  float: right;
+  margin-right: 50px;
+`;
+
 interface VersionProps {
   dependency: Dependency.Entire;
   isProcessing: boolean;
@@ -91,8 +96,6 @@ function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps)
     return (
       <span>
         {dependencyInstalled}
-
-        {dependency.unused === true && <Icon glyph="fork" title="Probably this dependency is unused" />}
       </span>
     );
   }
@@ -107,8 +110,6 @@ function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps)
       variant="success"
     >
       {dependencyInstalled}
-
-      {dependency.unused === true && <Icon glyph="fork" title="Probably this dependency is unused" />}
     </Button>
   );
 }
@@ -179,6 +180,10 @@ export function DependencyRow({
         {dependency.name}
 
         <RepoName>{dependency.repo}</RepoName>
+
+        <HealthBadge alt="size" src={`https://img.shields.io/bundlephobia/min/${dependency.name}/${getNormalizedRequiredVersion(dependency.installed)}`} />
+
+        <HealthBadge alt="status" src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`} />
       </ColumnName>
 
       {/* <td className={style.columnNsp}> ? </td> */}

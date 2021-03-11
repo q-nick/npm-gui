@@ -34,7 +34,7 @@ export function SearchForm({ onSubmit, searchResults }: Props): JSX.Element {
 
   return (
     <Form onSubmit={(e): void => { e.preventDefault(); onSubmit(query); }}>
-      <select disabled={searchResults === undefined}>
+      <select disabled>
         <option value="npm">npm</option>
       </select>
       &nbsp;
