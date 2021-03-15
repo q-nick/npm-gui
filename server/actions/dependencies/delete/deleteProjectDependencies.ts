@@ -29,7 +29,7 @@ async function deleteYarnDependency(
   }
 }
 
-export const deleteDependency2: ResponserFunction = async ({
+export const deleteDependency: ResponserFunction = async ({
   params: { type = 'global', dependencyName = 'undefined' },
   extraParams: { projectPathDecoded, yarnLock },
 }) => {
