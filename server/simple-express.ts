@@ -1,8 +1,31 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import http from 'http';
+import path from 'path';
 import fs from 'fs';
 import type { MiddlewareFunction, ResponserFunction } from './newServerTypes';
-import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK } from './utils/utils';
+import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK } from './utils/utils';
+
+const mimeTypes = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.jpg': 'image/jpg',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.wav': 'audio/wav',
+  '.mp4': 'video/mp4',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.eot': 'vnd/ms-fontobject',
+  '.otf': 'font/otf',
+  '.wasm': 'application/wasm',
+  '.map': 'application/json',
+  '.css.map': 'application/json',
+  '.js.map': 'application/json',
+};
 
 export class Server {
   public readonly server: http.Server;
@@ -116,8 +139,13 @@ export class Server {
           const params = Server.parseUrlParams(responser.path, req.url);
           try {
             const data = await responser.callback({params, extraParams: extraParams as any, body: bodyJSON}); // eslint-disable-line
-            res.writeHead(HTTP_STATUS_OK, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(data), 'utf-8');
+            if (typeof data === 'string') {
+              res.writeHead(HTTP_STATUS_OK, { 'Content-Type': 'text/html' });
+              res.write(data, 'utf-8');
+            } else {
+              res.writeHead(HTTP_STATUS_OK, { 'Content-Type': 'application/json' });
+              res.write(JSON.stringify(data), 'utf-8');
+            }
           } catch (err: unknown) {
             console.error('ERROR HANDLER', err);
             res.writeHead(HTTP_STATUS_BAD_REQUEST, { 'Content-Type': 'application/json' });
@@ -129,7 +157,20 @@ export class Server {
 
     if (!res.headersSent) {
       // static
-      console.log('TODO', fs.existsSync(req.url!));
+      const pathToFile = path.join('dist', req.url!);
+      console.log('TODO', pathToFile, fs.existsSync(pathToFile));
+      if (req.url! === '/') {
+        res.write(fs.readFileSync(path.join('dist', 'index.html'), 'utf-8'));
+      } else if (fs.existsSync(path.join('dist', req.url!))) {
+        const extname = path.extname(pathToFile).toLowerCase() as keyof typeof mimeTypes;
+        console.log(extname);
+        const contentType = mimeTypes[extname];
+
+        res.writeHead(HTTP_STATUS_OK, { 'Content-Type': contentType });
+        res.write(fs.readFileSync(path.join('dist', req.url!), contentType.includes('text') ? 'utf-8' : undefined));
+      } else {
+        res.writeHead(HTTP_STATUS_NOT_FOUND);
+      }
     }
 
     res.end();

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import Axios from 'axios';
 import { Button } from '../../../ui/Button/Button';
 import {
   ExplorerList, ExplorerButton, ExplorerFile, Wrapper,
@@ -31,8 +30,8 @@ export function Explorer({ onSelectPath }: Props): JSX.Element {
   }, [currentPath, onSelectPath]);
 
   const loadPath = useCallback(async (encodedPath: string): Promise<void> => {
-    const { data } = await Axios
-      .get<API['Response']>(`/api/explorer/${encodedPath || ''}`);
+    const response = await fetch(`/api/explorer/${encodedPath || ''}`);
+    const data = await response.json() as API['Response'];
 
     setList(data.ls);
     setCurrentPath(data.path);
