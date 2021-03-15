@@ -1,7 +1,7 @@
 import { addGlobalDependencies } from './actions/dependencies/add/addGlobalDependencies';
 import { addDependencies } from './actions/dependencies/add/addProjectDependencies';
 import { deleteGlobalDependency } from './actions/dependencies/delete/deleteGlobalDependencies';
-import { deleteDependency2 } from './actions/dependencies/delete/deleteProjectDependencies';
+import { deleteDependency } from './actions/dependencies/delete/deleteProjectDependencies';
 import { getGlobalDependencies, getGlobalDependenciesSimple } from './actions/dependencies/get/getGlobalDependencies';
 import { getAllDependencies, getAllDependenciesSimple } from './actions/dependencies/get/getProjectDependencies';
 import { installDependencies } from './actions/dependencies/install/installProjectDependencies';
@@ -23,7 +23,7 @@ app.get('/api/project/:projectPath/dependencies/full', getAllDependencies);
 app.post('/api/project/:projectPath/dependencies/install/:force', installDependencies); // install/hard install dependencies in project
 app.post('/api/project/:projectPath/dependencies/install', installDependencies); // install/hard install dependencies in project
 app.post('/api/project/:projectPath/dependencies/:type', addDependencies); // add dependencies
-app.delete('/api/project/:projectPath/dependencies/:type/:dependencyName', deleteDependency2); // remove dependency
+app.delete('/api/project/:projectPath/dependencies/:type/:dependencyName', deleteDependency); // remove dependency
 
 // global routes
 app.get('/api/global/dependencies/simple', getGlobalDependenciesSimple); // fast list global
