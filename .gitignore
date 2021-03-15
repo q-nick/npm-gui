@@ -11,3 +11,4 @@ report.*
 tests/test-project/*
 !tests/test-project/.gitkeep
 tsconfig.tsbuildinfo
+.cache
