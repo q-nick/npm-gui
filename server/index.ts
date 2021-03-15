@@ -1,3 +1,4 @@
+import open from 'open';
 import { addGlobalDependencies } from './actions/dependencies/add/addGlobalDependencies';
 import { addDependencies } from './actions/dependencies/add/addProjectDependencies';
 import { deleteGlobalDependency } from './actions/dependencies/delete/deleteGlobalDependencies';
@@ -36,8 +37,11 @@ app.get('/api/explorer/:path', explorer);
 app.get('/api/explorer/', explorer);
 app.post('/api/search/:repoName', search);
 app.get('/api/info', info);
-app.get('/api/log', log);
+app.post('/api/log', log);
 
-export function start(_host?: string, port = DEFAULT_PORT): void {
+export function start(_host?: string, port = DEFAULT_PORT, openBrowser = false): void {
   app.listen(port);
+  if (openBrowser) {
+    void open(`http://localhost:${port}`);
+  }
 }

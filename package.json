@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Graphical tool for managing javascript project dependencies - in a friendly way.",
   "keywords": [
     "gui",
@@ -43,7 +43,7 @@
     "url": "https://github.com/q-nick/npm-gui/issues"
   },
   "bin": {
-    "npm-gui": "./index.js"
+    "npm-gui": "index.js"
   },
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
@@ -73,8 +73,8 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-testing-library": "^3.10.1",
     "mocha": "^8.3.2",
+    "open": "^8.0.2",
     "open-iconic": "^1.1.1",
-    "opn": "^6.0.0",
     "parcel-bundler": "v1.12.3",
     "parcel-proxy-server": "^1.1.0",
     "react": "^17.0.1",
@@ -91,8 +91,5 @@
   "engines": {
     "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
-  },
-  "dependencies": {
-    "axios": "^0.21.1"
   }
 }

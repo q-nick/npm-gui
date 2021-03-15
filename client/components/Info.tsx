@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Axios from 'axios';
 import styled from 'styled-components';
 
 const InfoWrapper = styled.div`
@@ -12,18 +11,20 @@ const InfoWrapper = styled.div`
 export function Info(): JSX.Element {
   const [content, setContent] = useState('');
 
+  async function load(): Promise<void> {
+    const response = await fetch('/api/info');
+    const data = await response.text();
+    // tricky one
+    setContent(data);
+    setTimeout(() => {
+      const script = document.createElement('script');
+      script.src = 'https://buttons.github.io/buttons.js';
+      document.head.appendChild(script);
+    });
+  }
+
   useEffect(() => {
-    void Axios
-      .get<string>('/api/info')
-      .then(({ data }) => {
-        // tricky one
-        setContent(data);
-        setTimeout(() => {
-          const script = document.createElement('script');
-          script.src = 'https://buttons.github.io/buttons.js';
-          document.head.appendChild(script);
-        });
-      });
+    void load();
   }, []);
 
   return (

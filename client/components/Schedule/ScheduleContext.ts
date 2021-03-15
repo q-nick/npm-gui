@@ -1,4 +1,3 @@
-import type { AxiosError } from 'axios';
 import {
   createContext, useCallback, useEffect, useState,
 } from 'react';
@@ -57,7 +56,8 @@ export function useScheduleContextValue(): Hook {
           setSchedule((prevSchedule) => prevSchedule
             .filter((task) => task.executeMe !== toDo.executeMe));
         } catch (e: unknown) {
-          const errToDisplay = (e as AxiosError).response?.data as string;
+          const errToDisplay = (e as any).response?.data as string;
+          // TODO errors?
           console.error(errToDisplay);
           setSchedule((prevSchedule) => prevSchedule.map((task) => {
             if (task.executeMe !== toDo.executeMe) {
