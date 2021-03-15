@@ -32,7 +32,7 @@ describe('Global Packages', () => {
     });
 
     // uninstalling
-    const responseUninstall = await api(app.server).delete('/api/global/dependencies/npm-gui-tests');
+    const responseUninstall = await api(app.server).delete('/api/global/dependencies/global/npm-gui-tests');
     expect(responseUninstall.status).to.equal(HTTP_STATUS_OK);
 
     // simple list (no prev pacakge)
