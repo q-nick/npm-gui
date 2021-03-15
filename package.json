@@ -30,7 +30,7 @@
     "test:lint:ts": "tsc",
     "test:lint:eslint": "eslint client",
     "test:lint": " npm run test:lint:ts",
-    "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests-new/*.test.ts tests-new/**/*.test.ts --timeout 30000",
+    "test:unit": "env NODE_TEST=true TS_NODE_FILES=true mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts --timeout 30000",
     "test": "npm run test:unit && npm run test:lint"
   },
   "repository": {
