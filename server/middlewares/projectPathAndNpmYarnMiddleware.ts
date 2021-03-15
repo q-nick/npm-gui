@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import * as fs from 'fs';
+import type { MiddlewareFunction } from '../newServerTypes';
 
 export function decodePath(pathEncoded: string): string {
   return path.normalize(Buffer.from(pathEncoded, 'base64').toString());
@@ -14,11 +14,13 @@ export function hasNpm(projectPath: string): boolean {
   return fs.existsSync(path.join(projectPath, 'package.json'));
 }
 
-export const projectPathAndNpmYarnMiddleware = (req: Request<{ projectPath?: string }>, _: Response, next: NextFunction): void => { // eslint-disable-line max-len
-  if (req.params.projectPath === undefined) {
+export const projectPathAndNpmYarnMiddleware: MiddlewareFunction = ({
+  params: { projectPath },
+}) => {
+  if (projectPath === undefined) {
     throw new Error('project path not found!');
   }
-  const projectPathDecoded = decodePath(req.params.projectPath);
+  const projectPathDecoded = decodePath(projectPath);
 
   const yarn = hasYarn(projectPathDecoded);
   const npm = hasNpm(projectPathDecoded);
@@ -27,7 +29,8 @@ export const projectPathAndNpmYarnMiddleware = (req: Request<{ projectPath?: str
     throw new Error('npm or yarn not found!');
   }
 
-  req.projectPathDecoded = projectPathDecoded;
-  req.yarnLock = yarn;
-  next();
+  return {
+    projectPathDecoded,
+    yarnLock: yarn,
+  };
 };

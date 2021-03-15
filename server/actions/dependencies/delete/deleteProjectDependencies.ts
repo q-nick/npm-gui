@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { ResponserFunction } from '../../../newServerTypes';
 import type * as Dependency from '../../../types/Dependency';
 import { spliceFromCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../executeCommand';
@@ -29,19 +29,17 @@ async function deleteYarnDependency(
   }
 }
 
-export const deleteDependency = async (
-  req: Request<{ type?: Dependency.Type; dependencyName: string }>,
-  res: Response,
-): Promise<void> => {
-  const { type = 'global', dependencyName } = req.params;
-
-  if (req.yarnLock) {
-    await deleteYarnDependency(req.projectPathDecoded, dependencyName);
+export const deleteDependency2: ResponserFunction = async ({
+  params: { type = 'global', dependencyName = 'undefined' },
+  extraParams: { projectPathDecoded, yarnLock },
+}) => {
+  if (yarnLock) {
+    await deleteYarnDependency(projectPathDecoded, dependencyName);
   } else {
-    await deleteNpmDependency(req.projectPathDecoded, dependencyName, type);
+    await deleteNpmDependency(projectPathDecoded, dependencyName, type as any);
   }
 
-  spliceFromCache(req.projectPathDecoded, dependencyName);
+  spliceFromCache(projectPathDecoded, dependencyName);
 
-  res.json({});
+  return {};
 };

@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
-import { useCallback, useState } from 'react';
 import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { DependencyRow } from './DependencyRow';
 import { Loader } from '../../Loader';
 import type * as Dependency from '../../../../server/types/Dependency';
+import { useSortDependencies } from '../hooks/useSortDependencies';
 
 interface Props {
   dependencies?: Dependency.Entire[];
@@ -70,44 +70,9 @@ export function DependenciesTable({
   isEmpty,
   isLoading,
 }: Props): JSX.Element {
-  const [sort, setSort] = useState<'installed' | 'latest' | 'latest' | 'name' | 'required' | 'type' | 'wanted' | undefined>();
-  const [sortReversed, setSortReversed] = useState(false);
-
-  const onSortChange = useCallback((sortName: 'installed' | 'latest' | 'latest' | 'name' | 'required' | 'type' | 'wanted' | undefined) => {
-    if (sort === sortName) {
-      if (sortReversed) {
-        setSort(undefined);
-      } else {
-        setSortReversed((v) => !v);
-      }
-    } else {
-      setSortReversed(false);
-      setSort(sortName);
-    }
-  }, [sort, sortReversed]);
-
-  const dependenciesSorted = dependencies && [...dependencies];
-
-  if (sort !== undefined && dependenciesSorted) {
-    dependenciesSorted.sort( // mutated
-      (depA, depB): number => {
-        const valueA = depA[sort] ?? undefined;
-        const valueB = depB[sort] ?? undefined;
-        if (valueA !== undefined && valueB === undefined) {
-          return sortReversed ? -1 : 1;
-        }
-        if (valueA === undefined && valueB !== undefined) {
-          return sortReversed ? 1 : -1;
-        }
-        if (valueA > valueB) {
-          return sortReversed ? -1 : 1;
-        } if (valueA < valueB) {
-          return sortReversed ? 1 : -1;
-        }
-        return 0;
-      },
-    );
-  }
+  const {
+    dependenciesSorted, sort, sortReversed, onSortChange,
+  } = useSortDependencies(dependencies);
 
   return (
     <Wrapper>
@@ -151,6 +116,10 @@ export function DependenciesTable({
             >
               Name
             </ThSortable>
+
+            <ThStyled appearance={columnVersionAppearance}>
+              Size
+            </ThStyled>
 
             {!isGlobal && (
               <ThSortable

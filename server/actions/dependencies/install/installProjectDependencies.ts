@@ -1,9 +1,9 @@
 import * as rimraf from 'rimraf';
 import * as path from 'path';
-import type { Request, Response } from 'express';
 
 import { executeCommandSimple } from '../../executeCommand';
 import { clearCache } from '../../../utils/cache';
+import type { ResponserFunction } from '../../../newServerTypes';
 
 // installation
 async function installNpmDependencies(projectPath: string, force = false): Promise<string> {
@@ -25,18 +25,16 @@ async function installYarnDependencies(projectPath: string, force = false): Prom
   await executeCommandSimple(projectPath, 'yarn install', true);
 }
 
-export async function installDependencies(
-  req: Request<{ projectPathDecoded: string; force?: string }>, res: Response,
-): Promise<void> {
-  const { force } = req.params;
-
-  if (req.yarnLock) {
-    await installYarnDependencies(req.projectPathDecoded, force === 'force');
+export const installDependencies: ResponserFunction = async (
+  { params: { force }, extraParams: { projectPathDecoded, yarnLock } },
+) => {
+  if (yarnLock) {
+    await installYarnDependencies(projectPathDecoded, force === 'force');
   } else {
-    await installNpmDependencies(req.projectPathDecoded, force === 'force');
+    await installNpmDependencies(projectPathDecoded, force === 'force');
   }
 
-  clearCache(req.projectPathDecoded);
+  clearCache(projectPathDecoded);
 
-  res.json({});
-}
+  return {};
+};

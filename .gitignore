@@ -4,17 +4,10 @@ bower_components
 npm-debug*
 dist
 npm-gui*
-tests/projects/npm/package-lock.json
-tests/projects/npm/node_modules
-tests/projects/yarn/package-lock.json
-tests/projects/yarn/node_modules
-tests/projects/bower/package-lock.json
 electron
 .vscode
 report.*
 .cache
-tests-new/test-project/*
-!tests-new/test-project/.gitkeep
 tests/test-project/*
 !tests/test-project/.gitkeep
 tsconfig.tsbuildinfo

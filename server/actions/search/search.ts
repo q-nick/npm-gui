@@ -1,5 +1,5 @@
 import request from 'request';
-import type { Request, Response } from 'express';
+import type { ResponserFunction } from '../../newServerTypes';
 
 interface Result {
   name: string;
@@ -44,10 +44,7 @@ async function searchNPM(query: string): Promise<Result[]> {
   }));
 }
 
-export async function search(
-  req: Request<unknown, unknown, { query: string }>,
-  res: Response,
-): Promise<void> {
-  const results = await searchNPM(req.body.query);
-  res.json(results);
-}
+export const search: ResponserFunction<{ query: string }> = async ({ body: { query } }) => {
+  const results = await searchNPM(query);
+  return results;
+};

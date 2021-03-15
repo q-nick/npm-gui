@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import styled, { css } from 'styled-components';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../ui/Button/Button';
 import { Loader } from '../../Loader';
 import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
-import { Icon } from '../../../ui/Icon/Icon';
 import type * as Dependency from '../../../../server/types/Dependency';
 import type { CSSType } from '../../../Styled';
 import { getNormalizedRequiredVersion } from '../../../utils';
@@ -48,6 +48,11 @@ const ColumnName = styled.td`
 `;
 
 const ColumnVersion = styled.td`
+  width: 10%;
+  min-width: 80px;
+`;
+
+const ColumnSize = styled.td`
   width: 10%;
   min-width: 80px;
 `;
@@ -164,9 +169,23 @@ function LatestVersion({ dependency, isProcessing, onInstall }: VersionProps): J
   return <></>; // eslint-disable-line
 }
 
+interface BundleInfo {
+  size: number;
+}
+
 export function DependencyRow({
   dependency, isProcessing, onDeleteDependency, onInstallDependencyVersion, isGlobal,
 }: Props): JSX.Element {
+  const [bundleInfo, setBundleInfo] = useState<BundleInfo | undefined>(undefined);
+
+  useEffect(() => {
+    if (typeof dependency.installed === 'string') {
+      void fetch(`https://bundlephobia.com/api/size?package=${dependency.name}@${dependency.installed}`)
+        .then(async (response) => response.json())
+        .then(setBundleInfo);
+    }
+  }, [dependency.name, dependency.installed]);
+
   return (
     <TrStyled
       key={`${dependency.name}${dependency.repo}`}
@@ -181,10 +200,10 @@ export function DependencyRow({
 
         <RepoName>{dependency.repo}</RepoName>
 
-        <HealthBadge alt="size" src={`https://img.shields.io/bundlephobia/min/${dependency.name}/${getNormalizedRequiredVersion(dependency.installed)}`} />
-
         <HealthBadge alt="status" src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`} />
       </ColumnName>
+
+      <ColumnSize>{bundleInfo && `${parseFloat(`${bundleInfo.size / 1024}`).toFixed(2)}kB` }</ColumnSize>
 
       {/* <td className={style.columnNsp}> ? </td> */}
 
