@@ -1,4 +1,3 @@
-import type { Request, Response } from 'express';
 // import util from 'util';
 import { executeCommandJSONWithFallback, executeCommandJSONWithFallbackYarn } from '../../executeCommand';
 import {
@@ -12,6 +11,7 @@ import type * as CommandsYarn from '../../../CommandsYarn';
 import { getDependenciesFromPackageJson, getDevDependenciesFromPackageJson } from '../../../utils/getProjectPackageJSON';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
+import type { ResponserFunction } from '../../../newServerTypes';
 
 function getAllDependenciesSimpleJSON(projectPath: string, yarn = false): Dependency.Entire[] {
   const dependencies = getDependenciesFromPackageJson(projectPath);
@@ -120,29 +120,28 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   });
 }
 
-// controllers
-export function getAllDependenciesSimple(
-  req: Request, res: Response,
-): void {
-  const dependencies = getAllDependenciesSimpleJSON(req.projectPathDecoded, req.yarnLock);
+export const getAllDependenciesSimple: ResponserFunction = ({
+  extraParams: { projectPathDecoded, yarnLock },
+}) => {
+  const dependencies = getAllDependenciesSimpleJSON(projectPathDecoded, yarnLock);
 
-  res.json(dependencies);
-}
+  return dependencies;
+};
 
-export async function getAllDependencies(
-  req: Request, res: Response,
-): Promise<void> {
-  const cache = getFromCache(req.projectPathDecoded);
-  if (cache) { res.json(cache); return; }
+export const getAllDependencies: ResponserFunction = async ({
+  extraParams: { projectPathDecoded, yarnLock },
+}) => {
+  const cache = getFromCache(projectPathDecoded);
+  if (cache) { return cache; }
 
   let dependencies = [];
-  if (req.yarnLock) {
-    dependencies = await getAllYarnDependencies(req.projectPathDecoded);
+  if (yarnLock) {
+    dependencies = await getAllYarnDependencies(projectPathDecoded);
   } else {
-    dependencies = await getAllNpmDependencies(req.projectPathDecoded);
+    dependencies = await getAllNpmDependencies(projectPathDecoded);
   }
 
-  putToCache(req.projectPathDecoded, dependencies);
+  putToCache(projectPathDecoded, dependencies);
 
-  res.json(dependencies);
-}
+  return dependencies;
+};

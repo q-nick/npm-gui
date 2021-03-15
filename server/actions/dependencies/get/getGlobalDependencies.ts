@@ -1,10 +1,9 @@
-import type { Response } from 'express';
-
 import { executeCommandJSONWithFallback } from '../../executeCommand';
 import { getInstalledVersion, getLatestVersion } from '../../../utils/mapDependencies';
 import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
 import { getFromCache, putToCache } from '../../../utils/cache';
+import type { ResponserFunction } from '../../../newServerTypes';
 
 async function getGlobalNpmDependencies(): Promise<Dependency.Entire[]> {
   const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(undefined, 'npm ls -g --depth=0 --json');
@@ -35,22 +34,18 @@ async function getGlobalNpmDependenciesSimple(): Promise<Dependency.Entire[]> {
     }));
 }
 
-export async function getGlobalDependencies(
-  _: unknown, res: Response<Dependency.Entire[]>,
-): Promise<void> {
+export const getGlobalDependencies: ResponserFunction = async () => {
   const cache = getFromCache('global');
-  if (cache) { res.json(cache); return; }
+  if (cache) { return cache; }
 
   const npmDependencies = await getGlobalNpmDependencies();
   putToCache('global', npmDependencies); // TODO cache-id
 
-  res.json(npmDependencies);
-}
+  return npmDependencies;
+};
 
-export async function getGlobalDependenciesSimple(
-  _: unknown, res: Response<Dependency.Entire[]>,
-): Promise<void> {
+export const getGlobalDependenciesSimple: ResponserFunction = async () => {
   const npmDependencies = await getGlobalNpmDependenciesSimple();
 
-  res.json(npmDependencies);
-}
+  return npmDependencies;
+};

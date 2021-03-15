@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { ResponserFunction } from '../../../newServerTypes';
 import { spliceFromCache } from '../../../utils/cache';
 import { executeCommand } from '../../executeCommand';
 
@@ -6,13 +6,14 @@ async function deleteGlobalNpmDependency(dependencyName: string): Promise<void> 
   await executeCommand(undefined, `npm uninstall ${dependencyName} -g`, true);
 }
 
-export const deleteGlobalDependency = async (
-  req: Request<{ dependencyName: string }>,
-  res: Response,
-): Promise<void> => {
-  await deleteGlobalNpmDependency(req.params.dependencyName);
+export const deleteGlobalDependency: ResponserFunction = async ({
+  params: { dependencyName },
+}) => {
+  if (dependencyName === undefined) { throw new Error('no depednency name'); }
 
-  spliceFromCache('global', req.params.dependencyName);
+  await deleteGlobalNpmDependency(dependencyName);
 
-  res.json({});
+  spliceFromCache('global', dependencyName);
+
+  return {};
 };

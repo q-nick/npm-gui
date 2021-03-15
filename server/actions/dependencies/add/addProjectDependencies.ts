@@ -1,4 +1,3 @@
-import type * as express from 'express';
 import type * as CommandsYarn from '../../../CommandsYarn';
 
 import { executeCommandJSONWithFallback, executeCommandJSONWithFallbackYarn, executeCommandSimple } from '../../executeCommand';
@@ -14,6 +13,7 @@ import type * as Commands from '../../../Commands';
 import { getRequiredFromPackageJson, getTypeFromPackageJson } from '../../../utils/getProjectPackageJSON';
 import { clearCache, updateInCache } from '../../../utils/cache';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
+import type { ResponserFunction } from '../../../newServerTypes';
 
 async function getNpmPackageWithInfo(
   projectPath: string, dependencyName: string,
@@ -114,30 +114,26 @@ async function addYarnDependencies(
   await executeCommandSimple(projectPath, command, true);
 }
 
-// controllers
-export async function addDependencies(
-  req: express.Request<{
-    type: Dependency.Type; }, unknown, Dependency.Basic[]>,
-  res: express.Response<null>,
-): Promise<void> {
-  const { type } = req.params;
-
-  const dependenciesToInstall = req.body.filter((d) => d.name);
+export const addDependencies: ResponserFunction<{ name: string }[]> = async (
+  { params: { type }, extraParams: { projectPathDecoded, yarnLock }, body },
+) => {
+  if (type === undefined) { throw new Error(' no type'); }
+  const dependenciesToInstall = body.filter((d) => d.name);
   const ONE = 1;
 
   if (dependenciesToInstall.length === ONE) {
-    const result = req.yarnLock
-      ? await addYarnDependency(req.projectPathDecoded, dependenciesToInstall[0]!, type) // eslint-disable-line
-      : await addNpmDependency(req.projectPathDecoded, dependenciesToInstall[0]!, type); // eslint-disable-line
-    updateInCache(req.projectPathDecoded, result);
+    const result = yarnLock
+      ? await addYarnDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type) // eslint-disable-line
+      : await addNpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type); // eslint-disable-line
+    updateInCache(projectPathDecoded, result);
   } else if (dependenciesToInstall.length > ONE) {
-    if (req.yarnLock) {
-      await addYarnDependencies(req.projectPathDecoded, dependenciesToInstall, type);
+    if (yarnLock) {
+      await addYarnDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     } else {
-      await addNpmDependencies(req.projectPathDecoded, dependenciesToInstall, type);
+      await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     }
-    clearCache(req.projectPathDecoded);
+    clearCache(projectPathDecoded);
   }
 
-  res.json(null);
-}
+  return {};
+};

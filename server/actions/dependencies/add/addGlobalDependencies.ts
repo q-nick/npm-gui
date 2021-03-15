@@ -1,12 +1,9 @@
-import type { Request, Response } from 'express';
-
 import { executeCommand, executeCommandJSONWithFallback } from '../../executeCommand';
 import { getInstalledVersion, getLatestVersion } from '../../../utils/mapDependencies';
 import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
 import { updateInCache } from '../../../utils/cache';
-
-type RequestBody = [{ name: string; version: string }]; // eslint-disable-line
+import type { ResponserFunction } from '../../../newServerTypes';
 
 async function addGlobalNpmDependency(
   { name, version }: { name: string; version: string },
@@ -30,11 +27,11 @@ async function addGlobalNpmDependency(
   };
 }
 
-export async function addGlobalDependencies(
-  req: Request<unknown, unknown, RequestBody>, res: Response,
-): Promise<void> {
-  const dependency = await addGlobalNpmDependency(req.body[0]);
+type RequestBody = [{ name: string; version: string }]; // eslint-disable-line
+
+export const addGlobalDependencies: ResponserFunction<RequestBody> = async ({ body }) => {
+  const dependency = await addGlobalNpmDependency(body[0]);
   updateInCache('global', dependency);
 
-  res.json({});
-}
+  return {};
+};

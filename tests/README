@@ -1,4 +1,0 @@
-cases:
-- project with invalid version in package.json
-- project with uninstall uninstalled version
-- project with install/uninstall not existsed package

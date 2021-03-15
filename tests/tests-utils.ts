@@ -29,7 +29,7 @@ export async function prepareTestProject(
     ...{ devDependencies },
   };
 
-  fs.writeFileSync(path.join(__dirname, 'test-project', 'package.json'), JSON.stringify(packageJsonToWrite, null, 2));
+  fs.writeFileSync(path.join(__dirname, 'test-project', 'package.json'), JSON.stringify(packageJsonToWrite, null, 2)); // eslint-disable-line
 
   if (manager === 'yarn') {
     fs.writeFileSync(path.join(__dirname, 'test-project', 'yarn.lock'), '');
@@ -45,33 +45,33 @@ export async function prepareTestProject(
 }
 
 export async function getSimple(): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .get(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/simple`);
 }
 
 export async function getFull(): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .get(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/full`);
 }
 
 export async function install(): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/install`);
 }
 
 export async function installForce(): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/install/force`);
 }
 
 export async function add(type: 'dev'| 'prod', dependencies: { name: string; version?: string }[]): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .post(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}`)
     .send(dependencies);
 }
 
 export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> {
-  return api(app)
+  return api(app.server)
     .delete(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}/${name}`);
 }
 
