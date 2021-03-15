@@ -93,8 +93,8 @@ export async function executeCommandJSONWithFallback<T>(
     console.log('OK:');
     return stdout ? JSON.parse(stdout) as T : {} as T;
   } catch (err: unknown) {
-    console.log('ERROR:');
-    return JSON.parse((err as string).replace(/npm ERR.+/gm, '')) as T;
+    console.log('ERROR:', err);
+    return JSON.parse((err as string).replace(/npm ERR[\S\s]+/gm, '')) as T;
   }
 }
 

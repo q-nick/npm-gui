@@ -29,7 +29,7 @@ app.delete('/api/project/:projectPath/dependencies/:type/:dependencyName', delet
 app.get('/api/global/dependencies/simple', getGlobalDependenciesSimple); // fast list global
 app.get('/api/global/dependencies/full', getGlobalDependencies); // full list global
 app.post('/api/global/dependencies', addGlobalDependencies); // add dependencies global
-app.delete('/api/global/dependencies/:dependencyName', deleteGlobalDependency); // remove dependency global
+app.delete('/api/global/dependencies/global/:dependencyName', deleteGlobalDependency); // remove dependency global
 
 // other apis
 app.get('/api/explorer/:path', explorer);

@@ -1,17 +1,7 @@
 import * as ReactDOM from 'react-dom';
-import axios from 'axios';
 
 import { App } from './app/App';
 import './base.css';
-
-const xCacheId = new Date().getTime();
-axios.interceptors.request.use((config) => ({
-  ...config,
-  headers: { // eslint-disable-line
-    ...config.headers,
-    'x-cache-id': xCacheId,
-  },
-}));
 
 ReactDOM.render(
   <App />,
@@ -23,5 +13,8 @@ if (window.localStorage.getItem('npm-gui-id') === null) {
 }
 
 if (window.localStorage.getItem('npm-gui-id') !== 'developer') {
-  void axios.post('/api/log', { id: window.localStorage.getItem('npm-gui-id') });
+  void fetch(
+    '/api/log',
+    { method: 'POST', body: JSON.stringify({ id: window.localStorage.getItem('npm-gui-id') }) },
+  );
 }

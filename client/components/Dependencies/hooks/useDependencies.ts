@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
@@ -49,15 +48,18 @@ export function useDependencies(projectPath: string): Hook {
       projectPath,
       description: 'fetching dependencies',
       executeMe: async () => {
-        const responseSimple = await Axios.get<Dependency.Entire[]>(`${getBasePathFor(projectPath)}/simple`);
-        setProjectDependencies(projectPath, responseSimple.data);
+        const responseSimple = await fetch(`${getBasePathFor(projectPath)}/simple`);
+        const simpleData = await responseSimple.json() as Dependency.Entire[];
+        setProjectDependencies(projectPath, simpleData);
 
-        updateProjectDepsProcessing(projectPath, responseSimple.data.map((d) => d.name), true);
+        updateProjectDepsProcessing(projectPath, simpleData.map((d) => d.name), true);
 
-        const responseFull = await Axios.get<Dependency.Entire[]>(`${getBasePathFor(projectPath)}/full`);
-        setProjectDependencies(projectPath, responseFull.data);
-
-        updateProjectDepsProcessing(projectPath, responseSimple.data.map((d) => d.name), false);
+        const responseFull = await fetch(`${getBasePathFor(projectPath)}/full`);
+        const fullData = await responseFull.json() as Dependency.Entire[];
+        if (Array.isArray(fullData)) {
+          setProjectDependencies(projectPath, fullData);
+        }
+        updateProjectDepsProcessing(projectPath, simpleData.map((d) => d.name), false);
       },
     });
   }, [setProjectDependencies, updateProjectDepsProcessing, addToApiSchedule, projectPath]);
@@ -71,7 +73,10 @@ export function useDependencies(projectPath: string): Hook {
         description: `installing ${dependency.name} as ${type}`,
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, [dependency.name], true);
-          await Axios.post<Dependency.Entire[]>(`${getBasePathFor(projectPath)}/${type}`, [dependency]);
+          await fetch(
+            `${getBasePathFor(projectPath)}/${type}`,
+            { method: 'POST', body: JSON.stringify([dependency]) },
+          );
           fetchDependencies();
         },
       });
@@ -88,7 +93,7 @@ export function useDependencies(projectPath: string): Hook {
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, [dependency.name], true);
           // eslint-disable-next-line
-          await Axios.delete(`${getBasePathFor(projectPath)}/${dependency.type!}/${dependency.name}`);
+          await fetch(`${getBasePathFor(projectPath)}/${dependency.type!}/${dependency.name}`, { method: 'DELETE' })
           fetchDependencies();
         },
       });
@@ -105,7 +110,7 @@ export function useDependencies(projectPath: string): Hook {
         description: `${force === true ? 'force' : ''} installing all`,
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, dependencies.map((d) => d.name), true);
-          await Axios.post(`${getBasePathFor(projectPath)}/install${force === true ? '/force' : ''}`);
+          await fetch(`${getBasePathFor(projectPath)}/install${force === true ? '/force' : ''}`, { method: 'POST' });
           fetchDependencies();
         },
       });
@@ -135,8 +140,14 @@ export function useDependencies(projectPath: string): Hook {
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, dependenciesToUpdate.map((d) => d.name), true);
 
-          await Axios.post(`${getBasePathFor(projectPath)}/dev`, dependenciesToUpdateDev);
-          await Axios.post(`${getBasePathFor(projectPath)}/prod`, dependenciesToUpdateProd);
+          await fetch(
+            `${getBasePathFor(projectPath)}/dev`,
+            { method: 'POST', body: JSON.stringify(dependenciesToUpdateDev) },
+          );
+          await fetch(
+            `${getBasePathFor(projectPath)}/prod`,
+            { method: 'POST', body: JSON.stringify(dependenciesToUpdateProd) },
+          );
 
           fetchDependencies();
         },
