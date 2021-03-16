@@ -7,13 +7,13 @@ async function deleteGlobalNpmDependency(dependencyName: string): Promise<void> 
 }
 
 export const deleteGlobalDependency: ResponserFunction = async ({
-  params: { dependencyName },
+  params: { dependencyName }, extraParams: { xCacheId },
 }) => {
   if (dependencyName === undefined) { throw new Error('no depednency name'); }
 
   await deleteGlobalNpmDependency(dependencyName);
 
-  spliceFromCache('global', dependencyName);
+  spliceFromCache(`${xCacheId}global`, dependencyName);
 
   return {};
 };

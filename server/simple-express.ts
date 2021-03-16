@@ -31,12 +31,12 @@ export class Server {
   public readonly server: http.Server;
 
   private readonly middlewares: {
-    path: string;
+    url: string;
     callback: MiddlewareFunction;
   }[] = [];
 
   private readonly responsers: {
-    path: string;
+    url: string;
     method?: string;
     callback: ResponserFunction;
   }[] = [];
@@ -72,58 +72,60 @@ export class Server {
     });
   }
 
-  public listen(port: number): void {
-    this.server.listen(port);
-    console.log('listening on: ', port);
+  public listen(port: number, host: string): void {
+    this.server.listen(port, host);
+    console.log('listening on: ', host, port);
   }
 
-  public use(path: string, callback: MiddlewareFunction): void {
+  public use(url: string, callback: MiddlewareFunction): void {
     this.middlewares.push({
-      path,
+      url,
       callback,
     });
   }
 
-  public get(path: string, callback: ResponserFunction): void {
+  public get(url: string, callback: ResponserFunction): void {
     this.responsers.push({
-      path,
+      url,
       method: 'GET',
       callback,
     });
   }
 
-  public post(path: string, callback: ResponserFunction): void {
+  public post(url: string, callback: ResponserFunction): void {
     this.responsers.push({
-      path,
+      url,
       method: 'POST',
       callback,
     });
   }
 
-  public delete(path: string, callback: ResponserFunction): void {
+  public delete(url: string, callback: ResponserFunction): void {
     this.responsers.push({
-      path,
+      url,
       method: 'DELETE',
       callback,
     });
   }
 
-  public any(path: string, callback: ResponserFunction): void {
+  public any(url: string, callback: ResponserFunction): void {
     this.responsers.push({
-      path,
+      url,
       callback,
     });
   }
 
   private async onIncomingMessage(req: IncomingMessage, res: ServerResponse): Promise<void> {
-    let extraParams: Record<string, boolean | string> = {};
+    let extraParams: Record<string, boolean | string> = {
+      xCacheId: req.headers['x-cache-id'] as string,
+    };
     const bodyJSON = await Server.readBody(req);
 
     for (const middleware of this.middlewares) { // eslint-disable-line
-      const pathRegex = new RegExp(middleware.path.replace(/:[\w]+/g, '.+'));
+      const pathRegex = new RegExp(middleware.url.replace(/:[\w]+/g, '.+'));
 
       if (req.url !== undefined && pathRegex.test(req.url)) {
-        const params = Server.parseUrlParams(middleware.path, req.url);
+        const params = Server.parseUrlParams(middleware.url, req.url);
         const myExtraParams = middleware.callback({
           params, extraParams,
         });
@@ -132,11 +134,11 @@ export class Server {
     }
 
     for (const responser of this.responsers) { // eslint-disable-line
-      const pathRegex = new RegExp(responser.path.replace(/:[\w]+/g, '.+'));
+      const pathRegex = new RegExp(responser.url.replace(/:[\w]+/g, '.+'));
       const isMethodOk = responser.method === undefined || responser.method === req.method;
       if (!res.headersSent) { // ignore if already sent
         if (req.url !== undefined && isMethodOk && pathRegex.test(req.url)) {
-          const params = Server.parseUrlParams(responser.path, req.url);
+          const params = Server.parseUrlParams(responser.url, req.url);
           try {
             const data = await responser.callback({params, extraParams: extraParams as any, body: bodyJSON}); // eslint-disable-line
             if (typeof data === 'string') {

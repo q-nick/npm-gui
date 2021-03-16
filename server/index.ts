@@ -14,6 +14,7 @@ import { projectPathAndNpmYarnMiddleware } from './middlewares/projectPathAndNpm
 import { Server } from './simple-express';
 
 const DEFAULT_PORT = 3000;
+const DEFAULT_HOST = 'localhost';
 
 export const app = new Server();
 
@@ -39,9 +40,9 @@ app.post('/api/search/:repoName', search);
 app.get('/api/info', info);
 app.post('/api/log', log);
 
-export function start(_host?: string, port = DEFAULT_PORT, openBrowser = false): void {
-  app.listen(port);
+export function start(host = DEFAULT_HOST, port = DEFAULT_PORT, openBrowser = false): void {
+  app.listen(port, host);
   if (openBrowser) {
-    void open(`http://localhost:${port}`);
+    void open(`http://${host}:${port}`);
   }
 }

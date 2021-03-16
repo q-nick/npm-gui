@@ -31,7 +31,7 @@ async function deleteYarnDependency(
 
 export const deleteDependency: ResponserFunction = async ({
   params: { type = 'global', dependencyName = 'undefined' },
-  extraParams: { projectPathDecoded, yarnLock },
+  extraParams: { projectPathDecoded, yarnLock, xCacheId },
 }) => {
   if (yarnLock) {
     await deleteYarnDependency(projectPathDecoded, dependencyName);
@@ -39,7 +39,7 @@ export const deleteDependency: ResponserFunction = async ({
     await deleteNpmDependency(projectPathDecoded, dependencyName, type as any);
   }
 
-  spliceFromCache(projectPathDecoded, dependencyName);
+  spliceFromCache(xCacheId + projectPathDecoded, dependencyName);
 
   return {};
 };

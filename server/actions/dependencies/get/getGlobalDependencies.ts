@@ -34,12 +34,12 @@ async function getGlobalNpmDependenciesSimple(): Promise<Dependency.Entire[]> {
     }));
 }
 
-export const getGlobalDependencies: ResponserFunction = async () => {
-  const cache = getFromCache('global');
+export const getGlobalDependencies: ResponserFunction = async ({ extraParams: { xCacheId } }) => {
+  const cache = getFromCache(`${xCacheId}global`);
   if (cache) { return cache; }
 
   const npmDependencies = await getGlobalNpmDependencies();
-  putToCache('global', npmDependencies); // TODO cache-id
+  putToCache(`${xCacheId}global`, npmDependencies); // TODO cache-id
 
   return npmDependencies;
 };

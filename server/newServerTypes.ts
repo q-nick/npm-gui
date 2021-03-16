@@ -8,7 +8,7 @@ export type MiddlewareFunction = ( // eslint-disable-line
 export type ResponserFunction<T = any> = ( // eslint-disable-line
   reqData: {
     params: Record<string, string>;
-    extraParams: { projectPathDecoded: string; yarnLock: boolean };
+    extraParams: { projectPathDecoded: string; yarnLock: boolean; xCacheId: string };
     body: T;
   }
 ) => Promise<any> | any;

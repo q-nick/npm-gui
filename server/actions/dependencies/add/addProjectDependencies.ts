@@ -115,7 +115,7 @@ async function addYarnDependencies(
 }
 
 export const addDependencies: ResponserFunction<{ name: string }[]> = async (
-  { params: { type }, extraParams: { projectPathDecoded, yarnLock }, body },
+  { params: { type }, extraParams: { projectPathDecoded, yarnLock, xCacheId }, body },
 ) => {
   if (type === undefined) { throw new Error(' no type'); }
   const dependenciesToInstall = body.filter((d) => d.name);
@@ -125,14 +125,14 @@ export const addDependencies: ResponserFunction<{ name: string }[]> = async (
     const result = yarnLock
       ? await addYarnDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type) // eslint-disable-line
       : await addNpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type); // eslint-disable-line
-    updateInCache(projectPathDecoded, result);
+    updateInCache(xCacheId + projectPathDecoded, result);
   } else if (dependenciesToInstall.length > ONE) {
     if (yarnLock) {
       await addYarnDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     } else {
       await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     }
-    clearCache(projectPathDecoded);
+    clearCache(xCacheId + projectPathDecoded);
   }
 
   return {};

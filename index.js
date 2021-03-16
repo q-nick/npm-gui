@@ -10,4 +10,4 @@ if (args[0]) {
   host = args[0].split(':')[0];
   port = args[0].split(':')[1];
 }
-start(host, port || 13377, true);
+start(host || 'localhost', port || 13377, true);
