@@ -159,17 +159,17 @@ export class Server {
 
     if (!res.headersSent) {
       // static
-      const pathToFile = path.join('dist', req.url!);
-      console.log('TODO', pathToFile, fs.existsSync(pathToFile));
+      const pathToFile = path.join(__dirname, req.url!);
+
       if (req.url! === '/') {
-        res.write(fs.readFileSync(path.join('dist', 'index.html'), 'utf-8'));
-      } else if (fs.existsSync(path.join('dist', req.url!))) {
+        res.write(fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8'));
+      } else if (fs.existsSync(pathToFile)) {
         const extname = path.extname(pathToFile).toLowerCase() as keyof typeof mimeTypes;
         console.log(extname);
         const contentType = mimeTypes[extname];
 
         res.writeHead(HTTP_STATUS_OK, { 'Content-Type': contentType });
-        res.write(fs.readFileSync(path.join('dist', req.url!), contentType.includes('text') ? 'utf-8' : undefined));
+        res.write(fs.readFileSync(pathToFile, contentType.includes('text') ? 'utf-8' : undefined));
       } else {
         res.writeHead(HTTP_STATUS_NOT_FOUND);
       }
