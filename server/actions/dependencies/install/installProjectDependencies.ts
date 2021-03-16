@@ -26,7 +26,7 @@ async function installYarnDependencies(projectPath: string, force = false): Prom
 }
 
 export const installDependencies: ResponserFunction = async (
-  { params: { force }, extraParams: { projectPathDecoded, yarnLock } },
+  { params: { force }, extraParams: { projectPathDecoded, yarnLock, xCacheId } },
 ) => {
   if (yarnLock) {
     await installYarnDependencies(projectPathDecoded, force === 'force');
@@ -34,7 +34,7 @@ export const installDependencies: ResponserFunction = async (
     await installNpmDependencies(projectPathDecoded, force === 'force');
   }
 
-  clearCache(projectPathDecoded);
+  clearCache(xCacheId + projectPathDecoded);
 
   return {};
 };

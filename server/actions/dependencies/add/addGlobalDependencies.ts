@@ -29,9 +29,11 @@ async function addGlobalNpmDependency(
 
 type RequestBody = [{ name: string; version: string }]; // eslint-disable-line
 
-export const addGlobalDependencies: ResponserFunction<RequestBody> = async ({ body }) => {
+export const addGlobalDependencies: ResponserFunction<RequestBody> = async ({
+  body, extraParams: { xCacheId },
+}) => {
   const dependency = await addGlobalNpmDependency(body[0]);
-  updateInCache('global', dependency);
+  updateInCache(`${xCacheId}global`, dependency);
 
   return {};
 };

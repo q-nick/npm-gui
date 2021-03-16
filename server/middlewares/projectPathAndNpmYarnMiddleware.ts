@@ -32,5 +32,6 @@ export const projectPathAndNpmYarnMiddleware: MiddlewareFunction = ({
   return {
     projectPathDecoded,
     yarnLock: yarn,
+    xCache: 'any',
   };
 };

@@ -5,6 +5,7 @@ import { ScheduleContext } from '../../Schedule/ScheduleContext';
 import { StoreContext } from '../../../app/StoreContext';
 import type * as Dependency from '../../../../server/types/Dependency';
 import { ZERO } from '../../../utils';
+import { xCacheId } from '../../../xcache';
 
 function getBasePathFor(projectPath: string): string {
   if (projectPath !== 'global') {
@@ -48,13 +49,13 @@ export function useDependencies(projectPath: string): Hook {
       projectPath,
       description: 'fetching dependencies',
       executeMe: async () => {
-        const responseSimple = await fetch(`${getBasePathFor(projectPath)}/simple`);
+        const responseSimple = await fetch(`${getBasePathFor(projectPath)}/simple`, { headers: { 'x-cache-id': xCacheId } });
         const simpleData = await responseSimple.json() as Dependency.Entire[];
         setProjectDependencies(projectPath, simpleData);
 
         updateProjectDepsProcessing(projectPath, simpleData.map((d) => d.name), true);
 
-        const responseFull = await fetch(`${getBasePathFor(projectPath)}/full`);
+        const responseFull = await fetch(`${getBasePathFor(projectPath)}/full`, { headers: { 'x-cache-id': xCacheId } });
         const fullData = await responseFull.json() as Dependency.Entire[];
         if (Array.isArray(fullData)) {
           setProjectDependencies(projectPath, fullData);
@@ -75,7 +76,7 @@ export function useDependencies(projectPath: string): Hook {
           updateProjectDepsProcessing(projectPath, [dependency.name], true);
           await fetch(
             `${getBasePathFor(projectPath)}/${type}`,
-            { method: 'POST', body: JSON.stringify([dependency]) },
+            { method: 'POST', body: JSON.stringify([dependency]), headers: { 'x-cache-id': xCacheId } },
           );
           fetchDependencies();
         },

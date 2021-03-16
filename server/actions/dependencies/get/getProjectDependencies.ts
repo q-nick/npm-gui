@@ -129,9 +129,9 @@ export const getAllDependenciesSimple: ResponserFunction = ({
 };
 
 export const getAllDependencies: ResponserFunction = async ({
-  extraParams: { projectPathDecoded, yarnLock },
+  extraParams: { projectPathDecoded, yarnLock, xCacheId },
 }) => {
-  const cache = getFromCache(projectPathDecoded);
+  const cache = getFromCache(xCacheId + projectPathDecoded);
   if (cache) { return cache; }
 
   let dependencies = [];
@@ -141,7 +141,7 @@ export const getAllDependencies: ResponserFunction = async ({
     dependencies = await getAllNpmDependencies(projectPathDecoded);
   }
 
-  putToCache(projectPathDecoded, dependencies);
+  putToCache(xCacheId + projectPathDecoded, dependencies);
 
   return dependencies;
 };
