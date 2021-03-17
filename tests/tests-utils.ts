@@ -41,7 +41,7 @@ export async function prepareTestProject(
   if (manager === 'yarn' && doInstall) {
     await executeCommandSimple(path.join(__dirname, 'test-project'), 'yarn install');
   }
-  clearCache(path.join(__dirname, 'test-project'));
+  clearCache();
 }
 
 export async function getSimple(): Promise<api.Test> {

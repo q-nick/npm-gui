@@ -3,7 +3,7 @@ import { ONE, ZERO } from './utils';
 
 type CacheValue = Dependency.Entire[] | undefined;
 
-const cache: Record<string, CacheValue> = {};
+let cache: Record<string, CacheValue> = {};
 
 export function getFromCache(name: string): CacheValue {
   return cache[name];
@@ -41,6 +41,9 @@ export function spliceFromCache(name: string, dependencyName: string): void {
   }
 }
 
-export function clearCache(name: string): void {
-  putToCache(name, undefined);
+export function clearCache(name?: string): void {
+  if (name === undefined) {
+    cache = {};
+  }
+  putToCache(name!, undefined);
 }

@@ -135,6 +135,7 @@ export const getAllDependencies: ResponserFunction = async ({
   if (cache) { return cache; }
 
   let dependencies = [];
+
   if (yarnLock) {
     dependencies = await getAllYarnDependencies(projectPathDecoded);
   } else {

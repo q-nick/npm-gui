@@ -7,7 +7,6 @@ import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
 import type * as Dependency from '../../../../server/types/Dependency';
 import type { CSSType } from '../../../Styled';
 import { getNormalizedRequiredVersion } from '../../../utils';
-import { xCacheId } from '../../../xcache';
 
 interface Props {
   dependency: Dependency.Entire;
