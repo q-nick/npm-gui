@@ -10,11 +10,15 @@ export function hasYarn(projectPath: string): boolean {
   return fs.existsSync(path.join(projectPath, 'yarn.lock'));
 }
 
+export function hasPnpm(projectPath: string): boolean {
+  return fs.existsSync(path.join(projectPath, 'pnpm-lock.yaml'));
+}
+
 export function hasNpm(projectPath: string): boolean {
   return fs.existsSync(path.join(projectPath, 'package.json'));
 }
 
-export const projectPathAndNpmYarnMiddleware: MiddlewareFunction = ({
+export const projectPathAndManagerMiddleware: MiddlewareFunction = ({
   params: { projectPath },
 }) => {
   if (projectPath === undefined) {
@@ -22,16 +26,25 @@ export const projectPathAndNpmYarnMiddleware: MiddlewareFunction = ({
   }
   const projectPathDecoded = decodePath(projectPath);
 
-  const yarn = hasYarn(projectPathDecoded);
-  const npm = hasNpm(projectPathDecoded);
+  const isYarn = hasYarn(projectPathDecoded);
+  const isNpm = hasNpm(projectPathDecoded);
+  const isPnpm = hasPnpm(projectPathDecoded);
 
-  if (!yarn && !npm) {
-    throw new Error('npm or yarn not found!');
+  if (!isYarn && !isNpm && !isPnpm) {
+    throw new Error('invalid project structure!');
+  }
+
+  let manager = 'npm'; // default
+
+  if (isPnpm) { // special
+    manager = 'pnpm';
+  } else if (isYarn) {
+    manager = 'yarn';
   }
 
   return {
     projectPathDecoded,
-    yarnLock: yarn,
+    manager,
     xCache: 'any',
   };
 };

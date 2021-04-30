@@ -31,7 +31,7 @@ export function mapNpmDependency2(
     installed: installed ?? undefined,
     wanted: wanted ?? undefined,
     latest: latest ?? undefined,
-    repo: 'npm',
+    manager: 'npm',
   };
 }
 
