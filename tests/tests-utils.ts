@@ -84,8 +84,8 @@ export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> 
 }
 
 export function nextManager(cb: (manager: Manager) => void): void {
-  cb('npm');
-  cb('yarn');
+  // cb('npm');
+  // cb('yarn');
   cb('pnpm');
 }
 
