@@ -31,7 +31,7 @@ node_js:
   # - "iojs"
 
 before_install:
-  - npm i -g yarn pnpm
+  - npm i -g yarn pnpm@5
 
 cache:
   directories:
