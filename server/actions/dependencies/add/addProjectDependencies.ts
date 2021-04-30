@@ -10,10 +10,12 @@ import {
 } from '../../../utils/mapDependencies';
 import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
+import type * as CommandsPnpm from '../../../CommandsPnpm';
 import { getRequiredFromPackageJson, getTypeFromPackageJson } from '../../../utils/getProjectPackageJSON';
 import { clearCache, updateInCache } from '../../../utils/cache';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
 import type { ResponserFunction } from '../../../newServerTypes';
+import { executePnpmOutdated } from '../../pnpm-utils';
 
 async function getNpmPackageWithInfo(
   projectPath: string, dependencyName: string,
@@ -33,7 +35,41 @@ async function getNpmPackageWithInfo(
   const latest = getLatestVersion(installed, wanted, outdatedInfo[dependencyName]);
 
   return {
-    repo: 'npm',
+    manager: 'npm',
+    required,
+    name: dependencyName,
+    type,
+    installed,
+    wanted,
+    latest,
+  };
+}
+
+async function getPnpmPackageWithInfo(
+  projectPath: string, dependencyName: string,
+): Promise<Dependency.Entire> {
+  // installed or not
+  const [{
+    devDependencies: installedInfoDev,
+    dependencies: installedInfoRegular,
+  }] = await executeCommandJSONWithFallback<CommandsPnpm.Installed>(projectPath, `pnpm ls ${dependencyName} --depth=0 --json=`);
+  const installedInfo = { ...installedInfoDev, ...installedInfoRegular };
+
+  // latest, wanted
+  const outdatedInfo: Commands.Outdated = {};
+  await executePnpmOutdated(outdatedInfo, projectPath);
+  await executePnpmOutdated(outdatedInfo, projectPath, true);
+
+  // required & type
+  const type = getTypeFromPackageJson(projectPath, dependencyName);
+  const required = getRequiredFromPackageJson(projectPath, dependencyName);
+
+  const installed = getInstalledVersion(installedInfo[dependencyName]);
+  const wanted = getWantedVersion(installed, outdatedInfo[dependencyName]);
+  const latest = getLatestVersion(installed, wanted, outdatedInfo[dependencyName]);
+
+  return {
+    manager: 'npm',
     required,
     name: dependencyName,
     type,
@@ -64,7 +100,7 @@ async function getYarnPackageWithInfo(
   const latest = getLatestVersion(installed, wanted, outdatedInfoExtracted[dependencyName]);
 
   return {
-    repo: 'yarn',
+    manager: 'yarn',
     required,
     name: dependencyName,
     type,
@@ -94,6 +130,26 @@ async function addNpmDependencies(
   await executeCommandSimple(projectPath, command, true);
 }
 
+async function addPnpmDependency(
+  projectPath: string, dependency: Dependency.Basic, type: Dependency.Type,
+): Promise<Dependency.Entire> {
+  // add
+  await executeCommandSimple(projectPath, `pnpm install ${dependency.name}@${dependency.version ?? ''} -${type === 'prod' ? 'P' : 'D'}`, true);
+  // here is a change, we change param -S
+  // to -P in case to move dependency from dev to regular(prod?)?
+
+  return getPnpmPackageWithInfo(projectPath, dependency.name);
+}
+
+async function addPnpmDependencies(
+  projectPath: string, dependencies: Dependency.Basic[], type: Dependency.Type,
+): Promise<void> {
+  // add list
+  const dependenciesToInstall = dependencies.map((d) => `${d.name}@${d.version ?? ''}`);
+  const command = `pnpm install ${dependenciesToInstall.join(' ')} -${type === 'prod' ? 'P' : 'D'} --json`;
+  await executeCommandSimple(projectPath, command, true);
+}
+
 async function addYarnDependency(
   projectPath: string, dependency: Dependency.Basic, type: Dependency.Type,
 ): Promise<Dependency.Entire> {
@@ -115,20 +171,28 @@ async function addYarnDependencies(
 }
 
 export const addDependencies: ResponserFunction<{ name: string }[]> = async (
-  { params: { type }, extraParams: { projectPathDecoded, yarnLock, xCacheId }, body },
+  { params: { type }, extraParams: { projectPathDecoded, manager, xCacheId }, body },
 ) => {
   if (type === undefined) { throw new Error(' no type'); }
   const dependenciesToInstall = body.filter((d) => d.name);
   const ONE = 1;
 
   if (dependenciesToInstall.length === ONE) {
-    const result = yarnLock
-      ? await addYarnDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type) // eslint-disable-line
-      : await addNpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type); // eslint-disable-line
+    let result: Dependency.Entire; // eslint-disable-line
+
+    if (manager === 'yarn') {
+      result = await addYarnDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type) // eslint-disable-line
+    } else if (manager === 'pnpm') {
+      result = await addPnpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type); // eslint-disable-line
+    } else {
+      result = await addNpmDependency(projectPathDecoded, dependenciesToInstall[0]!, type as Dependency.Type); // eslint-disable-line
+    }
     updateInCache(xCacheId + projectPathDecoded, result);
   } else if (dependenciesToInstall.length > ONE) {
-    if (yarnLock) {
+    if (manager === 'yarn') {
       await addYarnDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
+    } else if (manager === 'pnpm') {
+      await addPnpmDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     } else {
       await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type as Dependency.Type);
     }

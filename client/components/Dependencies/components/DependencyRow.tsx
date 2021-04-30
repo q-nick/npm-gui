@@ -188,7 +188,7 @@ export function DependencyRow({
 
   return (
     <TrStyled
-      key={`${dependency.name}${dependency.repo}`}
+      key={`${dependency.name}${dependency.manager}`}
       isProcessing={isProcessing}
     >
       {!isGlobal && (
@@ -198,7 +198,7 @@ export function DependencyRow({
       <ColumnName>
         {dependency.name}
 
-        <RepoName>{dependency.repo}</RepoName>
+        <RepoName>{dependency.manager}</RepoName>
 
         <HealthBadge alt="status" src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`} />
       </ColumnName>

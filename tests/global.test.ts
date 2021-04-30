@@ -16,7 +16,7 @@ describe('Global Packages', () => {
     const npmGuiTestsSimple = responseSimple.body.find((d: any) => d.name === 'npm-gui-tests'); // eslint-disable-line
     expect(npmGuiTestsSimple).to.include({
       name: 'npm-gui-tests',
-      repo: 'npm',
+      manager: 'npm',
       installed: '1.0.0',
     });
 
@@ -26,7 +26,7 @@ describe('Global Packages', () => {
     const npmGuiTestsFull = responseFull.body.find((d: any) => d.name === 'npm-gui-tests'); // eslint-disable-line
     expect(npmGuiTestsFull).to.include({
       name: 'npm-gui-tests',
-      repo: 'npm',
+      manager: 'npm',
       installed: '1.0.0',
       latest: '2.1.1',
     });

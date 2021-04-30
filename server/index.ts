@@ -10,7 +10,7 @@ import { explorer } from './actions/explorer/explorer';
 import { info } from './actions/info/info';
 import { log } from './actions/log/log';
 import { search } from './actions/search/search';
-import { projectPathAndNpmYarnMiddleware } from './middlewares/projectPathAndNpmYarnMiddleware';
+import { projectPathAndManagerMiddleware } from './middlewares/projectPathAndManagerMiddleware';
 import { Server } from './simple-express';
 
 const DEFAULT_PORT = 3000;
@@ -18,7 +18,7 @@ const DEFAULT_HOST = 'localhost';
 
 export const app = new Server();
 
-app.use('/api/project/:projectPath/', projectPathAndNpmYarnMiddleware);
+app.use('/api/project/:projectPath/', projectPathAndManagerMiddleware);
 
 app.get('/api/project/:projectPath/dependencies/simple', getAllDependenciesSimple); // fast list
 app.get('/api/project/:projectPath/dependencies/full', getAllDependencies);

@@ -6,13 +6,14 @@ import { app } from '../server';
 import PACKAGE_JSON from './test-package.json';
 import { executeCommandSimple } from '../server/actions/executeCommand';
 import { clearCache } from '../server/utils/cache';
+import type { Manager } from '../server/types/Dependency';
 
 export function encodePath(b64Encoded: string): string {
   return Buffer.from(b64Encoded).toString('base64');
 }
 
 export async function prepareTestProject(
-  manager: 'npm' | 'yarn',
+  manager: Manager,
   dependencies?: Record<string, string>,
   devDependencies?: Record<string, string>,
   doInstall = false,
@@ -21,6 +22,7 @@ export async function prepareTestProject(
   rimraf.sync(path.join(__dirname, 'test-project', 'package.json'));
   rimraf.sync(path.join(__dirname, 'test-project', 'package-lock.json'));
   rimraf.sync(path.join(__dirname, 'test-project', 'yarn.lock'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'pnpm-lock.yaml'));
   rimraf.sync(path.join(__dirname, 'test-project', 'yarn-error.lock'));
 
   const packageJsonToWrite = {
@@ -34,12 +36,18 @@ export async function prepareTestProject(
   if (manager === 'yarn') {
     fs.writeFileSync(path.join(__dirname, 'test-project', 'yarn.lock'), '');
   }
+  if (manager === 'pnpm') {
+    fs.writeFileSync(path.join(__dirname, 'test-project', 'pnpm-lock.yaml'), '');
+  }
 
   if (manager === 'npm' && doInstall) {
     await executeCommandSimple(path.join(__dirname, 'test-project'), 'npm install');
   }
   if (manager === 'yarn' && doInstall) {
     await executeCommandSimple(path.join(__dirname, 'test-project'), 'yarn install');
+  }
+  if (manager === 'pnpm' && doInstall) {
+    await executeCommandSimple(path.join(__dirname, 'test-project'), 'pnpm install');
   }
   clearCache();
 }
@@ -75,15 +83,16 @@ export async function del(type: 'dev'| 'prod', name: string): Promise<api.Test> 
     .delete(`/api/project/${encodePath(path.join(__dirname, 'test-project'))}/dependencies/${type}/${name}`);
 }
 
-export function nextManager(cb: (manager: 'npm' | 'yarn') => void): void {
+export function nextManager(cb: (manager: Manager) => void): void {
   cb('npm');
   cb('yarn');
+  cb('pnpm');
 }
 
 export const PKG = {
   name: 'npm-gui-tests',
   required: '^1.0.0',
-  repo: 'npm',
+  manager: 'npm',
   type: 'prod',
 };
 
@@ -122,15 +131,25 @@ export const NPM = {
 };
 
 export const YARN = {
-  PKG: { ...NPM.PKG, repo: 'yarn' },
-  PKG_UNINSTALLED: { ...NPM.PKG_UNINSTALLED, repo: 'yarn' },
-  PKG_INSTALLED: { ...NPM.PKG_INSTALLED, repo: 'yarn' },
-  PKG2: { ...NPM.PKG2, required: '^1.0.0', repo: 'yarn' },
-  PKG2_INSTALLED: { ...NPM.PKG2_INSTALLED, required: '^1.0.0', repo: 'yarn' },
-  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, repo: 'yarn' },
+  PKG: { ...NPM.PKG, manager: 'yarn' },
+  PKG_UNINSTALLED: { ...NPM.PKG_UNINSTALLED, manager: 'yarn' },
+  PKG_INSTALLED: { ...NPM.PKG_INSTALLED, manager: 'yarn' },
+  PKG2: { ...NPM.PKG2, required: '^1.0.0', manager: 'yarn' },
+  PKG2_INSTALLED: { ...NPM.PKG2_INSTALLED, required: '^1.0.0', manager: 'yarn' },
+  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, manager: 'yarn' },
+};
+
+export const PNPM = {
+  PKG: { ...NPM.PKG, manager: 'pnpm' },
+  PKG_UNINSTALLED: { ...NPM.PKG_UNINSTALLED, manager: 'pnpm' },
+  PKG_INSTALLED: { ...NPM.PKG_INSTALLED, manager: 'pnpm' },
+  PKG2: { ...NPM.PKG2, required: '^1.0.0', manager: 'pnpm' },
+  PKG2_INSTALLED: { ...NPM.PKG2_INSTALLED, required: '^1.0.0', manager: 'pnpm' },
+  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, manager: 'pnpm' },
 };
 
 export const TEST = {
   npm: NPM,
+  pnpm: PNPM,
   yarn: YARN,
 };

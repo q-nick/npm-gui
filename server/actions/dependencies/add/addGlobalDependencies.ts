@@ -19,7 +19,7 @@ async function addGlobalNpmDependency(
   const installed = getInstalledVersion(installedInfo ? installedInfo[name] : undefined);
 
   return {
-    repo: 'npm',
+    manager: 'npm',
     name,
     type: 'global',
     installed,

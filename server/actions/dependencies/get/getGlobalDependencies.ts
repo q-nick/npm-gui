@@ -13,7 +13,7 @@ async function getGlobalNpmDependencies(): Promise<Dependency.Entire[]> {
 
   return Object.keys(installedInfo)
     .map((name): Dependency.Entire => ({
-      repo: 'npm',
+      manager: 'npm',
       name,
       type: 'global',
       installed: getInstalledVersion(installedInfo[name]),
@@ -27,7 +27,7 @@ async function getGlobalNpmDependenciesSimple(): Promise<Dependency.Entire[]> {
 
   return Object.keys(installedInfo)
     .map((name): Dependency.Entire => ({
-      repo: 'npm',
+      manager: 'npm',
       name,
       type: 'global',
       installed: getInstalledVersion(installedInfo[name]),

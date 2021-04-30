@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { decodePath } from '../../middlewares/projectPathAndNpmYarnMiddleware';
+import { decodePath } from '../../middlewares/projectPathAndManagerMiddleware';
 import type { ResponserFunction } from '../../newServerTypes';
 
 export interface FileOrFolder {

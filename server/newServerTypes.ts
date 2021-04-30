@@ -1,3 +1,5 @@
+import type { Manager } from './types/Dependency';
+
 export type MiddlewareFunction = ( // eslint-disable-line
   reqData: {
     params: Record<string, string>;
@@ -8,7 +10,7 @@ export type MiddlewareFunction = ( // eslint-disable-line
 export type ResponserFunction<T = any> = ( // eslint-disable-line
   reqData: {
     params: Record<string, string>;
-    extraParams: { projectPathDecoded: string; yarnLock: boolean; xCacheId: string };
+    extraParams: { projectPathDecoded: string; manager: Manager; xCacheId: string };
     body: T;
   }
 ) => Promise<any> | any;

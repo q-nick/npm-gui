@@ -8,25 +8,27 @@ import {
 import type * as Dependency from '../../../types/Dependency';
 import type * as Commands from '../../../Commands';
 import type * as CommandsYarn from '../../../CommandsYarn';
+import type * as CommandsPnpm from '../../../CommandsPnpm';
 import { getDependenciesFromPackageJson, getDevDependenciesFromPackageJson } from '../../../utils/getProjectPackageJSON';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
 import type { ResponserFunction } from '../../../newServerTypes';
+import { executePnpmOutdated } from '../../pnpm-utils';
 
-function getAllDependenciesSimpleJSON(projectPath: string, yarn = false): Dependency.Entire[] {
+function getAllDependenciesSimpleJSON(
+  projectPath: string, manager: Dependency.Manager,
+): Dependency.Entire[] {
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies = getDevDependenciesFromPackageJson(projectPath);
-
-  const repo = yarn ? 'yarn' : 'npm';
 
   return [
     ...Object.keys(dependencies)
       .map((name): Dependency.Entire => ({
-        repo, name, type: 'prod', required: dependencies[name],
+        manager, name, type: 'prod', required: dependencies[name],
       })),
     ...Object.keys(devDependencies)
       .map((name): Dependency.Entire => ({
-        repo, name, type: 'dev', required: devDependencies[name],
+        manager, name, type: 'dev', required: devDependencies[name],
       })),
   ];
 }
@@ -66,7 +68,56 @@ async function getAllNpmDependencies(projectPath: string): Promise<Dependency.En
     const latest = getLatestVersion(installed, wanted, outdatedInfo[dependency.name]);
 
     return {
-      repo: 'npm',
+      manager: 'npm',
+      ...dependency,
+      installed,
+      wanted,
+      latest,
+    };
+  });
+}
+
+async function getAllPnpmDependencies(projectPath: string): Promise<Dependency.Entire[]> {
+  // type
+  const dependencies = getDependenciesFromPackageJson(projectPath);
+  const devDependencies = getDevDependenciesFromPackageJson(projectPath);
+
+  const [{
+    devDependencies: installedInfoDev,
+    dependencies: installedInfoRegular,
+  }] = await executeCommandJSONWithFallback<CommandsPnpm.Installed>(projectPath, 'pnpm ls --depth=0 --json');
+  const installedInfo = { ...installedInfoDev, ...installedInfoRegular };
+
+  // latest, wanted
+  const outdatedInfo: Commands.Outdated = {};
+  await executePnpmOutdated(outdatedInfo, projectPath);
+  await executePnpmOutdated(outdatedInfo, projectPath, true);
+  console.log(outdatedInfo);
+  // unused (only regular dependencies for now)
+  // TODO
+  // const unusedResponse = await executeCommandJSON(projectPath, 'depcheck --json');
+  // const unused = unusedResponse ? unusedResponse.dependencies : [];
+
+  // extraneous
+  const extraneousInstalled = Object.keys(installedInfo)
+    .filter((name) => {
+      const depInfo = installedInfo[name];
+      return depInfo && 'extraneous' in depInfo;
+    });
+
+  const allDependencies: Dependency.Npm[] = [
+    ...Object.keys(dependencies).map((name): Dependency.Npm => ({ name, type: 'prod', required: dependencies[name] })),
+    ...Object.keys(devDependencies).map((name): Dependency.Npm => ({ name, type: 'dev', required: devDependencies[name] })),
+    ...Object.keys(extraneousInstalled).map((name): Dependency.Npm => ({ name, type: 'extraneous' })),
+  ];
+
+  return allDependencies.map((dependency): Dependency.Entire => {
+    const installed = getInstalledVersion(installedInfo[dependency.name]);
+    const wanted = getWantedVersion(installed, outdatedInfo[dependency.name]);
+    const latest = getLatestVersion(installed, wanted, outdatedInfo[dependency.name]);
+
+    return {
+      manager: 'pnpm',
       ...dependency,
       installed,
       wanted,
@@ -83,7 +134,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
   const anyError = await executeCommandJSONWithFallbackYarn<string | undefined>(projectPath, 'yarn check --json');
   if (anyError !== undefined) {
     // there is some error in repo, we cant extract correct information
-    return getAllDependenciesSimpleJSON(projectPath, true).map((dep) => ({
+    return getAllDependenciesSimpleJSON(projectPath, 'yarn').map((dep) => ({
       ...dep,
       installed: null,
       wanted: null,
@@ -111,7 +162,7 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
     const latest = getLatestVersion(installed, wanted, outdatedInfoExtracted[dependency.name]);
 
     return {
-      repo: 'yarn',
+      manager: 'yarn',
       ...dependency,
       installed,
       wanted,
@@ -121,23 +172,25 @@ async function getAllYarnDependencies(projectPath: string): Promise<Dependency.E
 }
 
 export const getAllDependenciesSimple: ResponserFunction = ({
-  extraParams: { projectPathDecoded, yarnLock },
+  extraParams: { projectPathDecoded, manager },
 }) => {
-  const dependencies = getAllDependenciesSimpleJSON(projectPathDecoded, yarnLock);
+  const dependencies = getAllDependenciesSimpleJSON(projectPathDecoded, manager);
 
   return dependencies;
 };
 
 export const getAllDependencies: ResponserFunction = async ({
-  extraParams: { projectPathDecoded, yarnLock, xCacheId },
+  extraParams: { projectPathDecoded, manager, xCacheId },
 }) => {
   const cache = getFromCache(xCacheId + projectPathDecoded);
   if (cache) { return cache; }
 
   let dependencies = [];
 
-  if (yarnLock) {
+  if (manager === 'yarn') {
     dependencies = await getAllYarnDependencies(projectPathDecoded);
+  } else if (manager === 'pnpm') {
+    dependencies = await getAllPnpmDependencies(projectPathDecoded);
   } else {
     dependencies = await getAllNpmDependencies(projectPathDecoded);
   }

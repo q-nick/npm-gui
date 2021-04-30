@@ -1,5 +1,5 @@
 export type Type = 'dev' | 'extraneous' | 'global' | 'prod';
-export type Repo = 'npm' | 'yarn';
+export type Manager = 'npm' | 'pnpm' | 'yarn';
 
 export interface Basic {
   name: string;
@@ -26,7 +26,7 @@ export interface Entire {
   installed?: string | null;
   wanted?: string | null;
   latest?: string | null;
-  repo: Repo;
+  manager: Manager;
   // unused?: boolean;
 }
 
