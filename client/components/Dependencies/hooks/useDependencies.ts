@@ -21,7 +21,7 @@ export interface Hook {
   onInstallNewDependency: (
     dependency: Dependency.Basic, type: Dependency.Type
   ) => void;
-  onInstallAllDependencies: (force? : boolean) => void;
+  onInstallAllDependencies: (force?: boolean) => void;
   onUpdateDependencies: (dependencies: Dependency.Basic[]) => void;
   onDeleteDependency: (
     dependency: Dependency.Basic

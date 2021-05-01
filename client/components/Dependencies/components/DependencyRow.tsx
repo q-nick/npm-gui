@@ -20,6 +20,9 @@ interface TrStyledProps {
   isProcessing: boolean;
 }
 
+const ONE_KB = 1024;
+const DIGITS = 2;
+
 const TrStyled = styled.tr`
   @keyframes Gradient {
     0% {
@@ -203,7 +206,7 @@ export function DependencyRow({
         <HealthBadge alt="status" src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`} />
       </ColumnName>
 
-      <ColumnSize>{bundleInfo && `${parseFloat(`${bundleInfo.size / 1024}`).toFixed(2)}kB` }</ColumnSize>
+      <ColumnSize>{bundleInfo && `${parseFloat(`${bundleInfo.size / ONE_KB}`).toFixed(DIGITS)}kB` }</ColumnSize>
 
       {/* <td className={style.columnNsp}> ? </td> */}
 

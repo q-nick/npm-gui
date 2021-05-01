@@ -56,7 +56,7 @@ export function useScheduleContextValue(): Hook {
           setSchedule((prevSchedule) => prevSchedule
             .filter((task) => task.executeMe !== toDo.executeMe));
         } catch (e: unknown) {
-          const errToDisplay = (e as any).response?.data as string;
+          const errToDisplay = (e as any).response?.data as string; // eslint-disable-line
           // TODO errors?
           console.error(errToDisplay);
           setSchedule((prevSchedule) => prevSchedule.map((task) => {

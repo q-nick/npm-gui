@@ -10,6 +10,9 @@ export interface Props {
 
 const types: ('dev' | 'prod')[] = ['prod', 'dev'];
 
+const DIGITS = 2;
+const SCORE = 100;
+
 export function SearchResults({
   searchResults, onInstall,
 }: Props): JSX.Element {
@@ -32,7 +35,7 @@ export function SearchResults({
             searchResults?.map((result) => (
               <tr key={result.name}>
                 <td>
-                  {(result.score * 100).toFixed(2)}
+                  {(result.score * SCORE).toFixed(DIGITS)}
                   %
                 </td>
 

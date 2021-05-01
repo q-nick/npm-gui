@@ -28,7 +28,7 @@ export function ConfirmButton({ onClick, ...props }: Readonly<Props>): JSX.Eleme
         onClick={onStartCountdown}
       />
 
-      {countLeft !== undefined && countLeft > 0 && (
+      {countLeft !== undefined && countLeft > 0 && ( // eslint-disable-line
         <ConfirmButtonThe
           {...props} // eslint-disable-line
           onClick={(e): void => { if (onClick) { onClick(e); } onStopCountdown(); }}
