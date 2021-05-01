@@ -15,6 +15,7 @@ interface Props {
   onUpdateAllToLatest: () => void;
   onForceReInstall: () => void;
   isGlobal?: boolean;
+  availableManagers?: { npm: boolean; yarn: boolean; pnpm: boolean };
 }
 
 export function DependenciesHeader({
@@ -25,6 +26,7 @@ export function DependenciesHeader({
   onUpdateAllToLatest,
   onForceReInstall,
   isGlobal,
+  availableManagers,
 }: Props): JSX.Element {
   return (
     <header>
@@ -98,6 +100,7 @@ export function DependenciesHeader({
 
         {isGlobal !== true && (
         <>
+          {JSON.stringify(availableManagers)}
           &nbsp;
           &nbsp;
           <Button

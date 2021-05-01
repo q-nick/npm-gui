@@ -1,9 +1,9 @@
-const { spawnSync } = require("child_process");
+const { execSync } = require("child_process");
 
 const version = /v(\d+)\./.exec(process.version);
 if (+version[1] > 12) {
-  spawnSync('npm',['install','-g', 'pnpm']).output.toString();
+  execSync('npm',['install','-g', 'pnpm']).output.toString();
 } else {
-  spawnSync('npm',['install','-g', 'pnpm@5']).output.toString();
+  execSync('npm',['install','-g', 'pnpm@5']).output.toString();
 }
-console.log('pnpm installed: ',spawnSync('pnpm', ['-v']).output.toString());
+console.log('pnpm installed: ',execSync('pnpm', ['-v']).output.toString());

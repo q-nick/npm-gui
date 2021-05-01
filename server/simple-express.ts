@@ -3,7 +3,7 @@ import http from 'http';
 import path from 'path';
 import fs from 'fs';
 import type { MiddlewareFunction, ResponserFunction } from './newServerTypes';
-import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK } from './utils/utils';
+import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK } from './utils/utils';
 
 const mimeTypes = {
   '.html': 'text/html',
@@ -119,7 +119,7 @@ export class Server {
     let extraParams: Record<string, boolean | string> = {
       xCacheId: req.headers['x-cache-id'] as string,
     };
-    const bodyJSON = await Server.readBody(req);
+    const bodyJSON: any = await Server.readBody(req);
 
     for (const middleware of this.middlewares) { // eslint-disable-line
       const pathRegex = new RegExp(middleware.url.replace(/:[\w]+/g, '.+'));
@@ -157,11 +157,11 @@ export class Server {
       }
     }
 
-    if (!res.headersSent) {
+    if (!res.headersSent && req.url !== undefined) {
       // static
-      const pathToFile = path.join(__dirname, req.url!);
+      const pathToFile = path.join(__dirname, req.url);
 
-      if (req.url! === '/') {
+      if (req.url === '/') { // index.html
         res.write(fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8'));
       } else if (fs.existsSync(pathToFile)) {
         const extname = path.extname(pathToFile).toLowerCase() as keyof typeof mimeTypes;
@@ -170,8 +170,8 @@ export class Server {
 
         res.writeHead(HTTP_STATUS_OK, { 'Content-Type': contentType });
         res.write(fs.readFileSync(pathToFile, contentType.includes('text') ? 'utf-8' : undefined));
-      } else {
-        res.writeHead(HTTP_STATUS_NOT_FOUND);
+      } else { // 404 always return index.html
+        res.write(fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8'));
       }
     }
 

@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
+import { useAvailableManagers } from './hooks/useAvailableManagers';
 import { useDependencies } from './hooks/useDependencies';
 import { useFilterDependencies } from './hooks/useFilterDependencies';
 
@@ -36,9 +37,12 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
     onUpdateDependencies(dependenciesToUpdate);
   }, [dependenciesFiltered, onUpdateDependencies]);
 
+  const { availableManagers } = useAvailableManagers();
+
   return (
     <>
       <DependenciesHeader
+        availableManagers={availableManagers}
         isGlobal={projectPath === 'global'}
         onForceReInstall={(): void => { onInstallAllDependencies(true); }}
         onInstallAll={onInstallAllDependencies}
