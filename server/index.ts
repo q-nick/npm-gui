@@ -7,6 +7,7 @@ import { getGlobalDependencies, getGlobalDependenciesSimple } from './actions/de
 import { getAllDependencies, getAllDependenciesSimple } from './actions/dependencies/get/getProjectDependencies';
 import { installDependencies } from './actions/dependencies/install/installProjectDependencies';
 import { explorer } from './actions/explorer/explorer';
+import { availableManagers } from './actions/available-managers/available-managers';
 import { info } from './actions/info/info';
 import { log } from './actions/log/log';
 import { search } from './actions/search/search';
@@ -36,6 +37,7 @@ app.delete('/api/global/dependencies/global/:dependencyName', deleteGlobalDepend
 // other apis
 app.get('/api/explorer/:path', explorer);
 app.get('/api/explorer/', explorer);
+app.get('/api/available-managers', availableManagers);
 app.post('/api/search/:repoName', search);
 app.get('/api/info', info);
 app.post('/api/log', log);
