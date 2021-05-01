@@ -47,6 +47,7 @@ module.exports = {
     '@typescript-eslint/prefer-readonly-parameter-types': 'off',
     '@typescript-eslint/no-type-alias':['error', { "allowAliases": "always" }],
     'no-void': ["error", { "allowAsStatement": true }],
+    'linebreak-style': 'off'
 
     // 'import/no-cycle': 'off', // slow performance
     // '@typescript-eslint/no-implied-eval': 'off', // very slow performance
