@@ -10,7 +10,7 @@ node_js:
   # - "15.1" #windows error on 15.0.0 invalid version
   - "14"
   - "14.14"
-  - "14.0.0"
+  - "14.1"
   - "12"
   - "12.12"
   - "12.0.0"
@@ -31,7 +31,11 @@ node_js:
   # - "iojs"
 
 before_install:
-  - npm i -g yarn pnpm@5
+  - node -v
+  - npm i -g yarn
+  - node install-correct-pnpm-version.js
+  - yarn -v
+  - pnpm -v
 
 cache:
   directories:

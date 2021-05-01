@@ -6,12 +6,16 @@ interface Hook {
   onStartCountdown: () => void;
 }
 
-export function useCountdown(count = 5): Hook {
+const COUNT_SEC = 5;
+const SECOND = 1000;
+const ZERO = 0;
+
+export function useCountdown(count = COUNT_SEC): Hook {
   const [countLeft, setCount] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    if (countLeft !== 0) {
-      setTimeout(() => { setCount((c) => c! - 1); }, 1000);
+    if (countLeft !== ZERO) {
+      setTimeout(() => { setCount((c) => c! - 1); }, SECOND); // eslint-disable-line
     }
   }, [countLeft]);
 
@@ -20,7 +24,7 @@ export function useCountdown(count = 5): Hook {
   }, [count]);
 
   const onStopCountdown = useCallback(() => {
-    setCount(0);
+    setCount(ZERO);
   }, []);
 
   return { countLeft, onStartCountdown, onStopCountdown };

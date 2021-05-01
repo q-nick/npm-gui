@@ -18,7 +18,7 @@ export function useSortDependencies(dependencies?: Dependency.Entire[]): Hook {
   const [sort, setSort] = useState<SortType>();
   const [sortReversed, setSortReversed] = useState(false);
 
-  const onSortChange = useCallback((sortName) => {
+  const onSortChange = useCallback<Hook['onSortChange']>((sortName) => {
     if (sort === sortName) {
       if (sortReversed) {
         setSort(undefined);

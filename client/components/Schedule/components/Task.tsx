@@ -9,6 +9,9 @@ const CloseButton = styled(Button)`
   margin-right: 15px;
   margin-left: -3px;
 `;
+
+const INDENT = 2;
+
 interface Props {
   task: Task;
   onClick: () => void;
@@ -43,7 +46,7 @@ export function TaskElement({ task, onClick }: Props): JSX.Element {
 
       {detailsOpen && (
         <Modal onClose={(): void => { setDetailsOpen(false); }}>
-          <pre>{JSON.stringify(task.stdout, null, 2)}</pre>
+          <pre>{JSON.stringify(task.stdout, null, INDENT)}</pre>
         </Modal>
       )}
     </>

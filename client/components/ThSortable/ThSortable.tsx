@@ -11,7 +11,7 @@ interface ThStyledProps {
 }
 
 export const ThStyled = styled.th`
-  ${({ sortable }: ThStyledProps): CSSProp => (sortable ? css`
+  ${({ sortable }: ThStyledProps): CSSProp => (sortable === true ? css`
     cursor: pointer;
     user-select: none;
   ` : '')}
