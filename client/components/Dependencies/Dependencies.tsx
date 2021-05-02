@@ -44,7 +44,7 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
       <DependenciesHeader
         availableManagers={availableManagers}
         isGlobal={projectPath === 'global'}
-        onForceReInstall={(): void => { onInstallAllDependencies(true); }}
+        onForceReInstall={onInstallAllDependencies}
         onInstallAll={onInstallAllDependencies}
         onInstallNewDependency={onInstallNewDependency}
         onUpdateAllToInstalled={(): void => { onUpdateFilteredDependencies('installed'); }}

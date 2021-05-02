@@ -194,7 +194,6 @@ export const getAllDependencies: ResponserFunction = async ({
   } else {
     dependencies = await getAllNpmDependencies(projectPathDecoded);
   }
-
   putToCache(xCacheId + projectPathDecoded, dependencies);
 
   return dependencies;

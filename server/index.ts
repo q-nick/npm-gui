@@ -23,7 +23,7 @@ app.use('/api/project/:projectPath/', projectPathAndManagerMiddleware);
 
 app.get('/api/project/:projectPath/dependencies/simple', getAllDependenciesSimple); // fast list
 app.get('/api/project/:projectPath/dependencies/full', getAllDependencies);
-app.post('/api/project/:projectPath/dependencies/install/:force', installDependencies); // install/hard install dependencies in project
+app.post('/api/project/:projectPath/dependencies/install/:forceManager', installDependencies); // install/hard install dependencies in project
 app.post('/api/project/:projectPath/dependencies/install', installDependencies); // install/hard install dependencies in project
 app.post('/api/project/:projectPath/dependencies/:type', addDependencies); // add dependencies
 app.delete('/api/project/:projectPath/dependencies/:type/:dependencyName', deleteDependency); // remove dependency

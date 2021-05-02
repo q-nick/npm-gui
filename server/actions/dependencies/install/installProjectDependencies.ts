@@ -9,6 +9,7 @@ function clearManagerFiles(projectPath: string): void {
   rimraf.sync(`${path.normalize(projectPath)}/node_modules`);
   rimraf.sync(`${path.normalize(projectPath)}/yarn.lock`);
   rimraf.sync(`${path.normalize(projectPath)}/package-lock.json`);
+  rimraf.sync(`${path.normalize(projectPath)}/pnpm-lock.yaml`);
 }
 // installation
 async function installNpmDependencies(projectPath: string, force = false): Promise<string> {
@@ -35,14 +36,20 @@ async function installYarnDependencies(projectPath: string, force = false): Prom
 }
 
 export const installDependencies: ResponserFunction = async (
-  { params: { force }, extraParams: { projectPathDecoded, manager, xCacheId } },
+  { params: { forceManager }, extraParams: { projectPathDecoded, manager, xCacheId } },
 ) => {
-  if (manager === 'yarn') {
-    await installYarnDependencies(projectPathDecoded, force === 'force');
+  if (forceManager === 'yarn') {
+    await installYarnDependencies(projectPathDecoded, true);
+  } else if (forceManager === 'pnpm') {
+    await installPnpmDependencies(projectPathDecoded, true);
+  } else if (forceManager === 'npm') {
+    await installNpmDependencies(projectPathDecoded, true);
+  } else if (manager === 'yarn') {
+    await installYarnDependencies(projectPathDecoded, false);
   } else if (manager === 'pnpm') {
-    await installPnpmDependencies(projectPathDecoded, force === 'force');
+    await installPnpmDependencies(projectPathDecoded, false);
   } else {
-    await installNpmDependencies(projectPathDecoded, force === 'force');
+    await installNpmDependencies(projectPathDecoded, false);
   }
 
   clearCache(xCacheId + projectPathDecoded);
