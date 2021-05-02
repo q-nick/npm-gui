@@ -18,6 +18,9 @@ interface Hook {
   removeTask: (task: Task) => void;
 }
 
+const THOUSAND = 1000;
+const FIVE_SEC = 5000;
+
 export function useScheduleContextValue(): Hook {
   const [schedule, setSchedule] = useState<Hook['schedule']>([]);
   const [doing, setDoing] = useState<Task>();
@@ -52,9 +55,24 @@ export function useScheduleContextValue(): Hook {
         }));
         setDoing(toDo);
         try {
+          const startTime = new Date();
           await toDo.executeMe();
-          setSchedule((prevSchedule) => prevSchedule
-            .filter((task) => task.executeMe !== toDo.executeMe));
+          const executionTime = (new Date().getTime() - startTime.getTime()) / THOUSAND;
+          setSchedule((prevSchedule) => prevSchedule.map((task) => {
+            if (task.executeMe !== toDo.executeMe) {
+              return task;
+            }
+            return {
+              ...task,
+              description: `${task.description} (took: ${executionTime} s)`,
+              status: 'SUCCESS',
+            };
+          }));
+
+          setTimeout(() => {
+            setSchedule((prevSchedule) => prevSchedule
+              .filter((task) => task.executeMe !== toDo.executeMe));
+          }, FIVE_SEC);
         } catch (e: unknown) {
           const errToDisplay = (e as any).response?.data as string; // eslint-disable-line
           // TODO errors?

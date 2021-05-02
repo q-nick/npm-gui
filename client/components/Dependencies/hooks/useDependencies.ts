@@ -21,7 +21,7 @@ export interface Hook {
   onInstallNewDependency: (
     dependency: Dependency.Basic, type: Dependency.Type
   ) => void;
-  onInstallAllDependencies: (force?: boolean) => void;
+  onInstallAllDependencies: (manager?: Dependency.Manager) => void;
   onUpdateDependencies: (dependencies: Dependency.Basic[]) => void;
   onDeleteDependency: (
     dependency: Dependency.Basic
@@ -94,7 +94,7 @@ export function useDependencies(projectPath: string): Hook {
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, [dependency.name], true);
           // eslint-disable-next-line
-          await fetch(`${getBasePathFor(projectPath)}/${dependency.type!}/${dependency.name}`, { method: 'DELETE' })
+          await fetch(`${getBasePathFor(projectPath)}/${dependency.type!}/${dependency.name}`, { method: 'DELETE', headers: { 'x-cache-id': xCacheId }  })
           fetchDependencies();
         },
       });
@@ -103,15 +103,15 @@ export function useDependencies(projectPath: string): Hook {
 
   // install all dependencies
   const onInstallAllDependencies = useCallback<Hook['onInstallAllDependencies']>(
-    (force) => {
+    (manager) => {
       if (!dependencies) { return; }
       updateProjectDepsProcessing(projectPath, dependencies.map((d) => d.name), true);
       addToApiSchedule({
         projectPath,
-        description: `${force === true ? 'force' : ''} installing all`,
+        description: `${manager ?? ''} installing all`,
         executeMe: async () => {
           updateProjectDepsProcessing(projectPath, dependencies.map((d) => d.name), true);
-          await fetch(`${getBasePathFor(projectPath)}/install${force === true ? '/force' : ''}`, { method: 'POST' });
+          await fetch(`${getBasePathFor(projectPath)}/install${manager ? `/${manager}` : ''}`, { method: 'POST', headers: { 'x-cache-id': xCacheId } });
           fetchDependencies();
         },
       });
@@ -143,11 +143,11 @@ export function useDependencies(projectPath: string): Hook {
 
           await fetch(
             `${getBasePathFor(projectPath)}/dev`,
-            { method: 'POST', body: JSON.stringify(dependenciesToUpdateDev) },
+            { method: 'POST', body: JSON.stringify(dependenciesToUpdateDev), headers: { 'x-cache-id': xCacheId } },
           );
           await fetch(
             `${getBasePathFor(projectPath)}/prod`,
-            { method: 'POST', body: JSON.stringify(dependenciesToUpdateProd) },
+            { method: 'POST', body: JSON.stringify(dependenciesToUpdateProd), headers: { 'x-cache-id': xCacheId } },
           );
 
           fetchDependencies();

@@ -13,10 +13,30 @@ interface Props {
   onUpdateAllToInstalled: () => void;
   onUpdateAllToWanted: () => void;
   onUpdateAllToLatest: () => void;
-  onForceReInstall: () => void;
+  onForceReInstall: (manager: Dependency.Manager) => void;
   isGlobal?: boolean;
   availableManagers?: { npm: boolean; yarn: boolean; pnpm: boolean };
 }
+
+const Select = styled.select`
+  border: 0;
+  border-radius: 2px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  outline: none;
+  padding: 8px;
+  -webkit-transition: background-color 200ms;
+  transition: background-color 200ms;
+  vertical-align: middle;
+  margin-right: 5px;
+  white-space: nowrap;
+  background-color: #d9534f;
+  font-size: 10px;
+  padding: 6px;
+  text-transform: uppercase;
+`;
 
 export function DependenciesHeader({
   onInstallNewDependency,
@@ -40,7 +60,7 @@ export function DependenciesHeader({
           &nbsp;
           <Button
             icon="data-transfer-download"
-            onClick={onInstallAll}
+            onClick={(): void => { onInstallAll(); }}
             scale="small"
             variant="primary"
           >
@@ -82,10 +102,10 @@ export function DependenciesHeader({
           icon="cloud-download"
           onClick={onUpdateAllToWanted}
           scale="small"
-          title="Install all wanted package version"
+          title="Install all compatible package version"
           variant="success"
         >
-          Wanted
+          Compatible
         </Button>
 
         <Button
@@ -100,18 +120,22 @@ export function DependenciesHeader({
 
         {isGlobal !== true && (
         <>
-          {JSON.stringify(availableManagers)}
           &nbsp;
           &nbsp;
-          <Button
-            icon="loop-circular"
-            onClick={onForceReInstall}
-            scale="small"
+          <Select
+            onChange={(e): void => { onForceReInstall(e.target.value as Dependency.Manager); }}
+            style={{ display: 'inline-block' }}
             title="Remove and re-nstall all packages"
-            variant="danger"
+            value=""
           >
-            Re-Install
-          </Button>
+            <option disabled selected value="">Re-Install</option>
+
+            <option disabled={availableManagers?.npm === false} value="npm">npm</option>
+
+            <option disabled={availableManagers?.yarn === false} value="yarn">yarn</option>
+
+            <option disabled={availableManagers?.pnpm === false} value="pnpm">pnpm</option>
+          </Select>
         </>
         )}
       </RightSection>

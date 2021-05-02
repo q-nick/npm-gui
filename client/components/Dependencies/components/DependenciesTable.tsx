@@ -147,7 +147,7 @@ export function DependenciesTable({
               sortActive={sort === 'wanted'}
               sortReversed={sortReversed}
             >
-              Wanted
+              Compatible
             </ThSortable>
 
             <ThSortable
