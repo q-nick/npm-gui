@@ -1,6 +1,6 @@
 {
   "name": "npm-gui",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Graphical tool for managing javascript project dependencies - in a friendly way.",
   "keywords": [
     "gui",
@@ -27,7 +27,7 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" ",
     "build:server": "tsc --project tsconfig-build-server.json",
     "build:client": "parcel build client/index.html --no-source-maps",
-    "build": "npm run build:server && npm run build:client",
+    "build": "rm -rf dist && npm run build:server && npm run build:client",
     "test:lint:ts": "tsc",
     "test:lint:eslint": "eslint client",
     "test:lint": " npm run test:lint:ts && npm run test:lint:eslint",
