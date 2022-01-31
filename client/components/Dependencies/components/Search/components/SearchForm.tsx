@@ -1,5 +1,7 @@
+import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
+
 import { Button } from '../../../../../ui/Button/Button';
 import { Loader } from '../../../../Loader';
 import type { useSearch } from '../hooks/useSearch';
@@ -29,18 +31,25 @@ export interface Props {
   searchResults: Hook['searchResults'];
 }
 
-export function SearchForm({ onSubmit, searchResults }: Props): JSX.Element {
+export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
   const [query, setQuery] = useState('');
 
   return (
-    <Form onSubmit={(e): void => { e.preventDefault(); onSubmit(query); }}>
+    <Form
+      onSubmit={(e): void => {
+        e.preventDefault();
+        onSubmit(query);
+      }}
+    >
       <select disabled>
         <option value="npm">npm</option>
       </select>
       &nbsp;
       <input
         disabled={searchResults === undefined}
-        onChange={(event): void => { setQuery(event.currentTarget.value); }}
+        onChange={(event): void => {
+          setQuery(event.currentTarget.value);
+        }}
         placeholder="type name"
         type="text"
         value={query}
@@ -56,4 +65,4 @@ export function SearchForm({ onSubmit, searchResults }: Props): JSX.Element {
       </Button>
     </Form>
   );
-}
+};

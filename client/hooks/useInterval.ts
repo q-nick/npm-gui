@@ -1,20 +1,20 @@
 import { useEffect, useRef } from 'react';
 
-export function useInterval(callback: (...args: unknown[]) => void, delay: number | null): void {
-  const savedCallback = useRef<(...args: unknown[]) => void>();
+export const useInterval = (
+  callback: (...arguments_: unknown[]) => void,
+  delay: number | null,
+): void => {
+  const savedCallback = useRef<(...arguments_: unknown[]) => void>();
 
-  useEffect(
-    () => {
-      savedCallback.current = callback;
-    },
-    [callback],
-  );
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
 
-  useEffect((): (() => void) | undefined => { // eslint-disable-line
+  useEffect((): (() => void) | undefined => {
     const currentCallback = savedCallback.current;
 
-    const handler = (...args: unknown[]): void => {
-      currentCallback && currentCallback(...args); // eslint-disable-line
+    const handler = (...arguments_: unknown[]): void => {
+      currentCallback && currentCallback(...arguments_);
     };
 
     if (delay !== null) {
@@ -23,8 +23,5 @@ export function useInterval(callback: (...args: unknown[]) => void, delay: numbe
         clearInterval(id);
       };
     }
-
-    return; // eslint-disable-line
-  },
-  [delay]);
-}
+  }, [delay]);
+};

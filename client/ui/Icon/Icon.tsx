@@ -4,11 +4,6 @@ export interface Props extends HTMLAttributes<HTMLSpanElement> {
   glyph: string;
 }
 
-export function Icon({ className = '', glyph }: Props): JSX.Element {
-  return (
-    <span
-      className={`oi ${className}`}
-      data-glyph={glyph}
-    />
-  );
-}
+export const Icon: React.FC<Props> = ({ className = '', glyph }) => (
+  <span className={`oi ${className}`} data-glyph={glyph} />
+);

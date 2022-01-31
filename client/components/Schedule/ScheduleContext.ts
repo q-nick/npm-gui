@@ -1,6 +1,4 @@
-import {
-  createContext, useCallback, useEffect, useState,
-} from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 
 export interface Task {
   id: number;
@@ -21,77 +19,95 @@ interface Hook {
 const THOUSAND = 1000;
 const FIVE_SEC = 5000;
 
-export function useScheduleContextValue(): Hook {
+export const useScheduleContextValue = (): Hook => {
   const [schedule, setSchedule] = useState<Hook['schedule']>([]);
-  const [doing, setDoing] = useState<Task>();
+  const [doing, setDoing] = useState<Task | undefined>();
 
   const addToApiSchedule = useCallback<Hook['addToApiSchedule']>((task) => {
     if (task.instantSchedule === true) {
-      setSchedule((prevSchedule) => [{ ...task, status: 'WAITING', id: new Date().getTime() }, ...prevSchedule]);
+      setSchedule((previousSchedule) => [
+        { ...task, status: 'WAITING', id: Date.now() },
+        ...previousSchedule,
+      ]);
     } else {
-      setSchedule((prevSchedule) => [...prevSchedule, { ...task, status: 'WAITING', id: new Date().getTime() }]);
+      setSchedule((previousSchedule) => [
+        ...previousSchedule,
+        { ...task, status: 'WAITING', id: Date.now() },
+      ]);
     }
   }, []);
 
   const removeTask = useCallback<Hook['removeTask']>((taskToRemove) => {
     if (taskToRemove.status !== 'RUNNING') {
-      setSchedule((prevSchedule) => prevSchedule
-        .filter((task) => task.executeMe !== taskToRemove.executeMe));
+      setSchedule((previousSchedule) =>
+        previousSchedule.filter(
+          (task) => task.executeMe !== taskToRemove.executeMe,
+        ),
+      );
     }
   }, []);
 
-  async function checkSchedule(): Promise<void> {
+  const checkSchedule = async (): Promise<void> => {
     if (!doing) {
       const toDo = schedule.find((task) => task.status === 'WAITING');
       if (toDo) {
-        setSchedule((prevSchedule) => prevSchedule.map((task) => {
-          if (task.executeMe !== toDo.executeMe) {
-            return task;
-          }
-          return {
-            ...task,
-            status: 'RUNNING',
-          };
-        }));
+        setSchedule((previousSchedule) =>
+          previousSchedule.map((task) => {
+            if (task.executeMe !== toDo.executeMe) {
+              return task;
+            }
+            return {
+              ...task,
+              status: 'RUNNING',
+            };
+          }),
+        );
         setDoing(toDo);
         try {
           const startTime = new Date();
           await toDo.executeMe();
-          const executionTime = (new Date().getTime() - startTime.getTime()) / THOUSAND;
-          setSchedule((prevSchedule) => prevSchedule.map((task) => {
-            if (task.executeMe !== toDo.executeMe) {
-              return task;
-            }
-            return {
-              ...task,
-              description: `${task.description} (took: ${executionTime} s)`,
-              status: 'SUCCESS',
-            };
-          }));
+          const executionTime = (Date.now() - startTime.getTime()) / THOUSAND;
+          setSchedule((previousSchedule) =>
+            previousSchedule.map((task) => {
+              if (task.executeMe !== toDo.executeMe) {
+                return task;
+              }
+              return {
+                ...task,
+                description: `${task.description} (took: ${executionTime} s)`,
+                status: 'SUCCESS',
+              };
+            }),
+          );
 
           setTimeout(() => {
-            setSchedule((prevSchedule) => prevSchedule
-              .filter((task) => task.executeMe !== toDo.executeMe));
+            setSchedule((previousSchedule) =>
+              previousSchedule.filter(
+                (task) => task.executeMe !== toDo.executeMe,
+              ),
+            );
           }, FIVE_SEC);
-        } catch (e: unknown) {
-          const errToDisplay = (e as any).response?.data as string; // eslint-disable-line
+        } catch (error: unknown) {
+          const errorToDisplay = (error as any).response?.data as string;
           // TODO errors?
-          console.error(errToDisplay);
-          setSchedule((prevSchedule) => prevSchedule.map((task) => {
-            if (task.executeMe !== toDo.executeMe) {
-              return task;
-            }
-            return {
-              ...task,
-              status: 'ERROR',
-              stdout: errToDisplay,
-            };
-          }));
+          console.error(errorToDisplay);
+          setSchedule((previousSchedule) =>
+            previousSchedule.map((task) => {
+              if (task.executeMe !== toDo.executeMe) {
+                return task;
+              }
+              return {
+                ...task,
+                status: 'ERROR',
+                stdout: errorToDisplay,
+              };
+            }),
+          );
         }
         setDoing(undefined);
       }
     }
-  }
+  };
 
   useEffect(() => {
     void checkSchedule();
@@ -102,7 +118,7 @@ export function useScheduleContextValue(): Hook {
     addToApiSchedule,
     removeTask,
   };
-}
+};
 
 export const ScheduleContext = createContext<Hook>({
   schedule: [],

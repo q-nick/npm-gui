@@ -1,8 +1,10 @@
 interface InstalledBase {
   data: {
-    trees: [{
-      name: string;
-    }];
+    trees: [
+      {
+        name: string;
+      },
+    ];
   };
 }
 

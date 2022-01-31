@@ -1,3 +1,5 @@
+import type { VFC } from 'react';
+
 import { Button } from '../../../../../ui/Button/Button';
 import type { useSearch } from '../hooks/useSearch';
 
@@ -13,9 +15,7 @@ const types: ('dev' | 'prod')[] = ['prod', 'dev'];
 const DIGITS = 2;
 const SCORE = 100;
 
-export function SearchResults({
-  searchResults, onInstall,
-}: Props): JSX.Element {
+export const SearchResults: VFC<Props> = ({ searchResults, onInstall }) => {
   return (
     <table>
       <tbody>
@@ -31,49 +31,39 @@ export function SearchResults({
           <th>install</th>
         </tr>
 
-        {
-            searchResults?.map((result) => (
-              <tr key={result.name}>
-                <td>
-                  {(result.score * SCORE).toFixed(DIGITS)}
-                  %
-                </td>
+        {searchResults?.map((result) => (
+          <tr key={result.name}>
+            <td>{(result.score * SCORE).toFixed(DIGITS)}%</td>
 
-                <td>
-                  <strong>{result.name}</strong>
-                </td>
+            <td>
+              <strong>{result.name}</strong>
+            </td>
 
-                <td>{result.version}</td>
+            <td>{result.version}</td>
 
-                <td>
-                  <a href={result.url} rel="noreferrer" target="_blank">show repo</a>
-                </td>
+            <td>
+              <a href={result.url} rel="noreferrer" target="_blank">
+                show repo
+              </a>
+            </td>
 
-                <td>
-                  {
-                    types.map((type) => (
-                      <Button
-                        key={`${result.name}${type}`}
-                        onClick={(): void => {
-                          onInstall(
-                            result.name,
-                            result.version,
-                            type,
-                          );
-                        }}
-                        scale="small"
-                        variant="info"
-                      >
-                        {type}
-                      </Button>
-                    ))
-                  }
-                </td>
-              </tr>
-            ))
-}
+            <td>
+              {types.map((type) => (
+                <Button
+                  key={`${result.name}${type}`}
+                  onClick={(): void => {
+                    onInstall(result.name, result.version, type);
+                  }}
+                  scale="small"
+                  variant="info"
+                >
+                  {type}
+                </Button>
+              ))}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
-
   );
-}
+};

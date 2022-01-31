@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 import type { CSSProp } from 'styled-components';
 import styled, { css } from 'styled-components';
+
 import { Icon } from '../../ui/Icon/Icon';
-import { TextFilter } from './components/TextFilter';
 import { SelectFilter } from './components/SelectFilter';
+import { TextFilter } from './components/TextFilter';
 
 interface ThStyledProps {
   sortable?: boolean;
@@ -11,10 +12,13 @@ interface ThStyledProps {
 }
 
 export const ThStyled = styled.th`
-  ${({ sortable }: ThStyledProps): CSSProp => (sortable === true ? css`
-    cursor: pointer;
-    user-select: none;
-  ` : '')}
+  ${({ sortable }: ThStyledProps): CSSProp =>
+    sortable === true
+      ? css`
+          cursor: pointer;
+          user-select: none;
+        `
+      : ''}
 
   ${({ appearance }: ThStyledProps): CSSProp => appearance ?? ''}
 `;
@@ -38,39 +42,38 @@ export interface Props<T extends string> {
   onFilterChange?: (filterValue: T) => void;
 }
 
-export function ThSortable<T extends string>({
-  children, appearance,
-  sortActive, sortReversed, onClick,
-  filterType, filterValue, onFilterChange,
-}: Props<T>): JSX.Element {
-  return (
-    <ThStyled
-      appearance={appearance}
-      onClick={onClick}
-      sortable
-    >
-      {sortActive && <SortableIcon glyph={sortReversed === true ? 'caret-bottom' : 'caret-top'} />}
-
-      {children}
-      &nbsp;
-      {onFilterChange && filterValue !== undefined && (
+export const ThSortable = <T extends string>({
+  children,
+  appearance,
+  sortActive,
+  sortReversed,
+  onClick,
+  filterType,
+  filterValue,
+  onFilterChange,
+}: // eslint-disable-next-line @typescript-eslint/ban-types
+Props<T>): JSX.Element => (
+  <ThStyled appearance={appearance} onClick={onClick} sortable>
+    {sortActive && (
+      <SortableIcon
+        glyph={sortReversed === true ? 'caret-bottom' : 'caret-top'}
+      />
+    )}
+    {children}
+    &nbsp;
+    {onFilterChange && filterValue !== undefined && (
       <>
         {filterType === 'text' && (
-          <TextFilter<T>
+          <TextFilter<T> onFilterChange={onFilterChange} value={filterValue} />
+        )}
+
+        {filterType === 'select' && (
+          <SelectFilter<T>
             onFilterChange={onFilterChange}
             value={filterValue}
           />
         )}
-
-        {filterType === 'select' && (
-        <SelectFilter<T>
-          onFilterChange={onFilterChange}
-          value={filterValue}
-        />
-        )}
       </>
-      )}
-
-    </ThStyled>
-  );
-}
+    )}
+  </ThStyled>
+);

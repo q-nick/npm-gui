@@ -1,24 +1,34 @@
 import spawn from 'cross-spawn';
+
 import { ZERO } from '../utils/utils';
 
-const Console = { send(...args: any[]) {args;} }; // eslint-disable-line
+const Console = {
+  send(...arguments_: any[]) {
+    arguments_;
+  },
+};
 
-export async function executeCommand(
-  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
-): Promise<{ stdout: string; stderr: string }> {
+export const executeCommand = (
+  cwd: string | undefined,
+  wholeCommand: string,
+  pushToConsole = false,
+): Promise<{ stdout: string; stderr: string }> => {
   console.log(`Command: ${cwd ?? ''} ${wholeCommand}, started:`);
   return new Promise((resolve, reject) => {
     // spawn process
-    const args = wholeCommand.split(' ');
-    const command = args.shift();
+    const arguments_ = wholeCommand.split(' ');
+    const command = arguments_.shift();
     if (command === undefined) {
       reject(new Error('command not passed'));
     } else {
-      const spawned = spawn(command, args, { cwd, detached: false });
-      const commandId = new Date().getTime().toString();
+      const spawned = spawn(command, arguments_, { cwd, detached: false });
+      const commandId = Date.now().toString();
       // console.log(`executing: "${wholeCommand}" in "${cwd}"\n`, commandId);
       if (pushToConsole) {
-        Console.send(`executing: "${wholeCommand}" in "${cwd ?? 'global'}"\n`, commandId);
+        Console.send(
+          `executing: "${wholeCommand}" in "${cwd ?? 'global'}"\n`,
+          commandId,
+        );
       }
 
       // wait for stdout, stderr
@@ -49,7 +59,7 @@ export async function executeCommand(
             stderr,
           });
         } else {
-          reject(stdout+stderr); // eslint-disable-line
+          reject(stdout + stderr);
         }
         // if (pushToConsole) {
         //   Console.send('', commandId, exitStatus === 0 ? 'CLOSE' : 'ERROR');
@@ -69,66 +79,101 @@ export async function executeCommand(
       });
     }
   });
-}
+};
 
-export async function executeCommandSimple(
-  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
-): Promise<string> {
+export const executeCommandSimple = async (
+  cwd: string | undefined,
+  wholeCommand: string,
+  pushToConsole = false,
+): Promise<string> => {
   const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
   return stdout;
-}
+};
 
+// eslint-disable-next-line func-style
 export async function executeCommandJSON<T>(
-  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
+  cwd: string | undefined,
+  wholeCommand: string,
+  pushToConsole = false,
 ): Promise<T> {
   const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
   return JSON.parse(stdout) as T;
 }
 
+// eslint-disable-next-line func-style
 export async function executeCommandJSONWithFallback<T>(
-  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
+  cwd: string | undefined,
+  wholeCommand: string,
+  pushToConsole = false,
 ): Promise<T> {
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand, pushToConsole);
     console.log('OK:');
-    return stdout ? JSON.parse(stdout) as T : {} as T;
-  } catch (err: unknown) {
-    console.log('ERROR:', err);
-    return JSON.parse((err as string).replace(/(\n{[\S\s]+)?npm ERR[\S\s]+/gm, '')) as T;
+    return stdout ? (JSON.parse(stdout) as T) : ({} as T);
+  } catch (error: unknown) {
+    console.log('ERROR:', error);
+    return JSON.parse(
+      (error as string).replace(/(\n{[\S\s]+)?npm ERR[\S\s]+/gm, ''),
+    ) as T;
   }
 }
 
+// eslint-disable-next-line func-style
 export async function executeCommandJSONWithFallbackYarn<T>(
-  cwd: string | undefined, wholeCommand: string, pushToConsole = false,
+  cwd: string | undefined,
+  wholeCommand: string,
+  pushToConsole = false,
 ): Promise<T | undefined> {
   try {
-    const { stdout, stderr } = await executeCommand(cwd, wholeCommand, pushToConsole);
+    const { stdout, stderr } = await executeCommand(
+      cwd,
+      wholeCommand,
+      pushToConsole,
+    );
     console.log('OK:');
-    const JSONs = (stdout + stderr).trim()
+    const JSONs = (stdout + stderr)
+      .trim()
       .split('\n')
       .filter((x) => x)
-      .map((r) => JSON.parse(r)); // eslint-disable-line
-    const table = JSONs.find((x) => 'type' in x && x.type === 'table') as T | undefined; // eslint-disable-line
-    if (table) { return table; }
-
-    const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as T | undefined; // eslint-disable-line
-    if (anyError) { return anyError; }
-  } catch (err: unknown) {
-    console.log('ERROR:');
-
-    if (typeof err === 'string') {
-      const JSONs = err.trim()
-        .split('\n')
-        .filter((x) => x)
-      .map((r) => JSON.parse(r)); // eslint-disable-line
-      const table = JSONs.find((x) => 'type' in x && x.type === 'table') as T | undefined; // eslint-disable-line
-      if (table) { return table; }
-
-      const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as T | undefined; // eslint-disable-line
-      if (anyError) { return anyError; }
+      .map((r) => JSON.parse(r));
+    const table = JSONs.find((x) => 'type' in x && x.type === 'table') as
+      | T
+      | undefined;
+    if (table) {
+      return table;
     }
 
-    return JSON.parse(err as string) as T;
+    const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as
+      | T
+      | undefined;
+    if (anyError) {
+      return anyError;
+    }
+  } catch (error: unknown) {
+    console.log('ERROR:');
+
+    if (typeof error === 'string') {
+      const JSONs = error
+        .trim()
+        .split('\n')
+        .filter((x) => x)
+        .map((r) => JSON.parse(r));
+      const table = JSONs.find((x) => 'type' in x && x.type === 'table') as
+        | T
+        | undefined;
+      if (table) {
+        return table;
+      }
+
+      const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as
+        | T
+        | undefined;
+      if (anyError) {
+        return anyError;
+      }
+    }
+
+    return JSON.parse(error as string) as T;
   }
 
   return undefined;

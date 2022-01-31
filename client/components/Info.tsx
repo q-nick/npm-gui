@@ -1,3 +1,4 @@
+import type { VFC } from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,20 +9,20 @@ const InfoWrapper = styled.div`
   padding: 5px 15px;
 `;
 
-export function Info(): JSX.Element {
+export const Info: VFC = () => {
   const [content, setContent] = useState('');
 
-  async function load(): Promise<void> {
+  const load = async (): Promise<void> => {
     const response = await fetch('/api/info');
     const data = await response.text();
-    // tricky one
+    // Tricky one
     setContent(data);
     setTimeout(() => {
       const script = document.createElement('script');
       script.src = 'https://buttons.github.io/buttons.js';
-      document.head.appendChild(script);
+      document.head.append(script);
     });
-  }
+  };
 
   useEffect(() => {
     void load();
@@ -30,10 +31,12 @@ export function Info(): JSX.Element {
   return (
     <InfoWrapper>
       <div
-        dangerouslySetInnerHTML={{ // eslint-disable-line
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           __html: content,
         }}
       />
     </InfoWrapper>
   );
-}
+};

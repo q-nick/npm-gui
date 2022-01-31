@@ -1,9 +1,11 @@
+import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
-import type { Task } from '../ScheduleContext';
+
 import type { Props as ButtonProps } from '../../../ui/Button/Button';
 import { Button } from '../../../ui/Button/Button';
 import { Modal } from '../../../ui/Modal/Modal';
+import type { Task } from '../ScheduleContext';
 
 const CloseButton = styled(Button)`
   margin-right: 15px;
@@ -17,19 +19,22 @@ interface Props {
   onClick: () => void;
 }
 
-const mapStatusToButtonVariant: Record<Task['status'], ButtonProps['variant']> = {
-  WAITING: 'info',
-  RUNNING: 'success',
-  ERROR: 'danger',
-  SUCCESS: 'dark',
-};
+const mapStatusToButtonVariant: Record<Task['status'], ButtonProps['variant']> =
+  {
+    WAITING: 'info',
+    RUNNING: 'success',
+    ERROR: 'danger',
+    SUCCESS: 'dark',
+  };
 
-export function TaskElement({ task, onClick }: Props): JSX.Element {
+export const TaskElement: VFC<Props> = ({ task, onClick }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <>
       <Button
-        onClick={(): void => { setDetailsOpen(true); }}
+        onClick={(): void => {
+          setDetailsOpen(true);
+        }}
         variant={mapStatusToButtonVariant[task.status]}
       >
         {task.description}
@@ -45,10 +50,14 @@ export function TaskElement({ task, onClick }: Props): JSX.Element {
       />
 
       {detailsOpen && (
-        <Modal onClose={(): void => { setDetailsOpen(false); }}>
+        <Modal
+          onClose={(): void => {
+            setDetailsOpen(false);
+          }}
+        >
           <pre>{JSON.stringify(task.stdout, null, INDENT)}</pre>
         </Modal>
       )}
     </>
   );
-}
+};

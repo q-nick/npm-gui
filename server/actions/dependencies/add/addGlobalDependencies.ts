@@ -1,22 +1,45 @@
-import { executeCommand, executeCommandJSONWithFallback } from '../../executeCommand';
-import { getInstalledVersion, getLatestVersion } from '../../../utils/mapDependencies';
-import type * as Dependency from '../../../types/Dependency';
-import type * as Commands from '../../../Commands';
-import { updateInCache } from '../../../utils/cache';
+import type { Installed } from '../../../Commands';
 import type { ResponserFunction } from '../../../newServerTypes';
+import type { Entire } from '../../../types/Dependency';
+import { updateInCache } from '../../../utils/cache';
+import {
+  getInstalledVersion,
+  getLatestVersion,
+} from '../../../utils/mapDependencies';
+import {
+  executeCommand,
+  executeCommandJSONWithFallback,
+} from '../../executeCommand';
 
-async function addGlobalNpmDependency(
-  { name, version }: { name: string; version: string },
-): Promise<Dependency.Entire> {
+const addGlobalNpmDependency = async ({
+  name,
+  version,
+}: {
+  name: string;
+  version: string;
+}): Promise<Entire> => {
   // add
-  await executeCommand(undefined, `npm install ${name}@${version || ''} -g`, true);
+  await executeCommand(
+    undefined,
+    `npm install ${name}@${version || ''} -g`,
+    true,
+  );
 
   // get package info
-  const { dependencies: installedInfo } = await executeCommandJSONWithFallback<Commands.Installed>(undefined, `npm ls ${name} --depth=0 -g --json`);
+  const { dependencies: installedInfo } =
+    await executeCommandJSONWithFallback<Installed>(
+      undefined,
+      `npm ls ${name} --depth=0 -g --json`,
+    );
 
-  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(undefined, `npm outdated ${name} -g --json`);
+  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(
+    undefined,
+    `npm outdated ${name} -g --json`,
+  );
 
-  const installed = getInstalledVersion(installedInfo ? installedInfo[name] : undefined);
+  const installed = getInstalledVersion(
+    installedInfo ? installedInfo[name] : undefined,
+  );
 
   return {
     manager: 'npm',
@@ -25,12 +48,13 @@ async function addGlobalNpmDependency(
     installed,
     latest: getLatestVersion(installed, null, outdatedInfo[name]),
   };
-}
+};
 
-type RequestBody = [{ name: string; version: string }]; // eslint-disable-line
+type RequestBody = [{ name: string; version: string }];
 
 export const addGlobalDependencies: ResponserFunction<RequestBody> = async ({
-  body, extraParams: { xCacheId },
+  body,
+  extraParams: { xCacheId },
 }) => {
   const dependency = await addGlobalNpmDependency(body[0]);
   updateInCache(`${xCacheId}global`, dependency);

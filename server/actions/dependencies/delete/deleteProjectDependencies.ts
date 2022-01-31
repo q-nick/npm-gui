@@ -11,33 +11,45 @@ const commandTypeFlag = {
 };
 
 async function deleteNpmDependency(
-  projectPath: string | undefined, packageName: string, type: Dependency.Type,
+  projectPath: string | undefined,
+  packageName: string,
+  type: Dependency.Type,
 ): Promise<void> {
   // delete
-  await executeCommandSimple(projectPath, `npm uninstall ${packageName} ${commandTypeFlag[type]}`, true);
+  await executeCommandSimple(
+    projectPath,
+    `npm uninstall ${packageName} ${commandTypeFlag[type]}`,
+    true,
+  );
 }
 
 async function deletePnpmDependency(
-  projectPath: string | undefined, packageName: string,
+  projectPath: string | undefined,
+  packageName: string,
 ): Promise<void> {
   // delete
   try {
-    await executeCommandSimple(projectPath, `pnpm uninstall ${packageName}`, true);
-  } catch (err: unknown) {
-  // we are caching error it's unimportant in yarn
-    console.log(err);
+    await executeCommandSimple(
+      projectPath,
+      `pnpm uninstall ${packageName}`,
+      true,
+    );
+  } catch (error: unknown) {
+    // we are caching error it's unimportant in yarn
+    console.log(error);
   }
 }
 
 async function deleteYarnDependency(
-  projectPath: string | undefined, packageName: string,
+  projectPath: string | undefined,
+  packageName: string,
 ): Promise<void> {
   // delete
   try {
     await executeCommandSimple(projectPath, `yarn remove ${packageName}`, true);
-  } catch (err: unknown) {
+  } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
-    console.log(err);
+    console.log(error);
   }
 }
 

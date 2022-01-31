@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import styled from 'styled-components';
+
 import type { FilterProps } from './shared';
 import { preventEvent } from './shared';
 
@@ -9,20 +11,21 @@ const Select = styled.select`
   padding: 0;
 `;
 
-export function SelectFilter<T extends string>({
-  value, onFilterChange,
-}: FilterProps<T>): JSX.Element {
-  return (
-    <Select
-      onChange={(event): void => { onFilterChange(event.target.value as T); }}
-      onClick={preventEvent}
-      value={value}
-    >
-      <option value="any">any</option>
+export const SelectFilter = <T extends string>({
+  value,
+  onFilterChange,
+}: FilterProps<T>): JSX.Element => (
+  <Select
+    onBlur={(event): void => {
+      onFilterChange(event.target.value as T);
+    }}
+    onClick={preventEvent}
+    value={value}
+  >
+    <option value="any">any</option>
 
-      <option value="dev">dev</option>
+    <option value="dev">dev</option>
 
-      <option value="prod">prod</option>
-    </Select>
-  );
-}
+    <option value="prod">prod</option>
+  </Select>
+);

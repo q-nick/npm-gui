@@ -1,3 +1,4 @@
+import type { VFC } from 'react';
 import styled from 'styled-components';
 
 const LoaderStyled = styled.span`
@@ -13,6 +14,6 @@ const LoaderStyled = styled.span`
   }
 `;
 
-export function Loader(): JSX.Element {
-  return <LoaderStyled className="oi" data-glyph="reload" />;
-}
+export const Loader: VFC = () => (
+  <LoaderStyled aria-owns="s" className="oi" data-glyph="reload" />
+);

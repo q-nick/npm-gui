@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { expect } from 'chai';
+
 import {
   getFull,
   getSimple,
@@ -30,7 +31,12 @@ nextManager((manager) => {
     });
 
     it('installed', async () => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' }, undefined, true);
+      await prepareTestProject(
+        manager,
+        { 'npm-gui-tests': '^1.0.0' },
+        undefined,
+        true,
+      );
 
       await install();
 

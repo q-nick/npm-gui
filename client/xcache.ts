@@ -1,1 +1,1 @@
-export const xCacheId = `${new Date().getTime()}`;
+export const xCacheId = `${Date.now()}`;

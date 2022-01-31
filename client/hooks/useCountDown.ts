@@ -10,12 +10,14 @@ const COUNT_SEC = 5;
 const SECOND = 1000;
 const ZERO = 0;
 
-export function useCountdown(count = COUNT_SEC): Hook {
-  const [countLeft, setCount] = useState<number | undefined>(undefined);
+export const useCountdown = (count = COUNT_SEC): Hook => {
+  const [countLeft, setCount] = useState<number | undefined>();
 
   useEffect(() => {
     if (countLeft !== ZERO) {
-      setTimeout(() => { setCount((c) => c! - 1); }, SECOND); // eslint-disable-line
+      setTimeout(() => {
+        setCount((c) => c! - 1);
+      }, SECOND);
     }
   }, [countLeft]);
 
@@ -28,4 +30,4 @@ export function useCountdown(count = COUNT_SEC): Hook {
   }, []);
 
   return { countLeft, onStartCountdown, onStopCountdown };
-}
+};

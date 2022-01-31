@@ -1,22 +1,23 @@
+import { existsSync } from 'fs';
 import path from 'path';
-import * as fs from 'fs';
+
 import type { MiddlewareFunction } from '../newServerTypes';
 
-export function decodePath(pathEncoded: string): string {
+export const decodePath = (pathEncoded: string): string => {
   return path.normalize(Buffer.from(pathEncoded, 'base64').toString());
-}
+};
 
-export function hasYarn(projectPath: string): boolean {
-  return fs.existsSync(path.join(projectPath, 'yarn.lock'));
-}
+export const hasYarn = (projectPath: string): boolean => {
+  return existsSync(path.join(projectPath, 'yarn.lock'));
+};
 
-export function hasPnpm(projectPath: string): boolean {
-  return fs.existsSync(path.join(projectPath, 'pnpm-lock.yaml'));
-}
+export const hasPnpm = (projectPath: string): boolean => {
+  return existsSync(path.join(projectPath, 'pnpm-lock.yaml'));
+};
 
-export function hasNpm(projectPath: string): boolean {
-  return fs.existsSync(path.join(projectPath, 'package.json'));
-}
+export const hasNpm = (projectPath: string): boolean => {
+  return existsSync(path.join(projectPath, 'package.json'));
+};
 
 export const projectPathAndManagerMiddleware: MiddlewareFunction = ({
   params: { projectPath },
@@ -34,9 +35,11 @@ export const projectPathAndManagerMiddleware: MiddlewareFunction = ({
     throw new Error('invalid project structure!');
   }
 
-  let manager = 'npm'; // default
+  // default
+  let manager = 'npm';
 
-  if (isPnpm) { // special
+  if (isPnpm) {
+    // special
     manager = 'pnpm';
   } else if (isYarn) {
     manager = 'yarn';

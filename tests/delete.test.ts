@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { expect } from 'chai';
+
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 import {
   del,
@@ -17,7 +17,8 @@ nextManager((manager) => {
 
       const response = await del('prod', 'sdmvladbf3');
       expect(response.status).to.equal(HTTP_STATUS_OK);
-      await del('prod', 'sdmvladbf3'); // we skip checking response status - it behaves different for npm and yarn
+      // we skip checking response status - it behaves different for npm and yarn
+      await del('prod', 'sdmvladbf3');
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
     });
@@ -33,7 +34,12 @@ nextManager((manager) => {
     });
 
     it('installed valid name', async () => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' }, undefined, true);
+      await prepareTestProject(
+        manager,
+        { 'npm-gui-tests': '^1.0.0' },
+        undefined,
+        true,
+      );
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
       expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);

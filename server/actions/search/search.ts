@@ -1,4 +1,5 @@
 import request from 'request';
+
 import type { ResponserFunction } from '../../newServerTypes';
 
 interface Result {
@@ -25,6 +26,7 @@ interface NPMApiResult {
   }[];
 }
 
+// eslint-disable-next-line func-style
 async function requestWithPromise<T>(url: string): Promise<T> {
   return new Promise((resolve) => {
     request(url, (_: unknown, __: unknown, body) => {
@@ -33,8 +35,11 @@ async function requestWithPromise<T>(url: string): Promise<T> {
   });
 }
 
+// eslint-disable-next-line func-style
 async function searchNPM(query: string): Promise<Result[]> {
-  const { results } = await requestWithPromise<NPMApiResult>(`https://api.npms.io/v2/search?from=0&size=25&q=${query}`);
+  const { results } = await requestWithPromise<NPMApiResult>(
+    `https://api.npms.io/v2/search?from=0&size=25&q=${query}`,
+  );
   return results.map((result) => ({
     name: result.package.name,
     version: result.package.version,
@@ -44,7 +49,9 @@ async function searchNPM(query: string): Promise<Result[]> {
   }));
 }
 
-export const search: ResponserFunction<{ query: string }> = async ({ body: { query } }) => {
+export const search: ResponserFunction<{ query: string }> = async ({
+  body: { query },
+}) => {
   const results = await searchNPM(query);
   return results;
 };

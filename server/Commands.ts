@@ -23,7 +23,10 @@ interface InstalledBodyExtra {
   extraneous?: boolean;
 }
 
-export type InstalledBody = InstalledBodyBase | InstalledBodyExtra | InstalledBodyMissing;
+export type InstalledBody =
+  | InstalledBodyBase
+  | InstalledBodyExtra
+  | InstalledBodyMissing;
 
 export interface Installed {
   dependencies?: Record<string, InstalledBody>;

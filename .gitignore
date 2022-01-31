@@ -11,3 +11,4 @@ tests/test-project/*
 !tests/test-project/.gitkeep
 tsconfig.tsbuildinfo
 .cache
+eslint-config*

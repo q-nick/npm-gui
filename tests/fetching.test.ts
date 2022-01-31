@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import {
   getFull,
   getSimple,
@@ -20,11 +21,18 @@ nextManager((manager) => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_UNINSTALLED]);
+      expect((await getFull()).body).deep.equal([
+        TEST[manager].PKG_UNINSTALLED,
+      ]);
     });
 
     it('installed', async () => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' }, undefined, true);
+      await prepareTestProject(
+        manager,
+        { 'npm-gui-tests': '^1.0.0' },
+        undefined,
+        true,
+      );
 
       expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
       expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);

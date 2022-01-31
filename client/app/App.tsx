@@ -1,17 +1,23 @@
+import 'open-iconic/font/css/open-iconic.css';
+
 import {
-  Route, Switch,
   BrowserRouter as Router,
   Redirect,
+  Route,
+  Switch,
 } from 'react-router-dom';
-import 'open-iconic/font/css/open-iconic.css';
-import { Project } from '../components/Project';
-import { Global } from '../components/Global';
-import { StoreContext, useStoreContextValue } from './StoreContext';
-import { ScheduleContext, useScheduleContextValue } from '../components/Schedule/ScheduleContext';
-import { Info } from '../components/Info';
-import { Schedule } from '../components/Schedule/Schedule';
 
-export function App(): JSX.Element {
+import { Global } from '../components/Global';
+import { Info } from '../components/Info';
+import { Project } from '../components/Project';
+import { Schedule } from '../components/Schedule/Schedule';
+import {
+  ScheduleContext,
+  useScheduleContextValue,
+} from '../components/Schedule/ScheduleContext';
+import { StoreContext, useStoreContextValue } from './StoreContext';
+
+export const App: React.FC = () => {
   const storeContextValue = useStoreContextValue();
   const scheduleContextValue = useScheduleContextValue();
 
@@ -40,4 +46,4 @@ export function App(): JSX.Element {
       <Info />
     </>
   );
-}
+};

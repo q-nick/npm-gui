@@ -3,7 +3,9 @@ export interface FilterProps<T extends string> {
   onFilterChange: (newValue: T) => void;
 }
 
-export function preventEvent(event: React.MouseEvent<HTMLInputElement | HTMLSelectElement>): void {
+export const preventEvent = (
+  event: React.MouseEvent<HTMLInputElement | HTMLSelectElement>,
+): void => {
   event.stopPropagation();
   event.preventDefault();
-}
+};
