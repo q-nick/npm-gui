@@ -1,19 +1,20 @@
 import styled from 'styled-components';
+
+import type { Basic, Manager, Type } from '../../../../server/types/Dependency';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
-import type * as Dependency from '../../../../server/types/Dependency';
 
 const RightSection = styled.div`
   float: right;
 `;
 
 interface Props {
-  onInstallNewDependency: (dependency: Dependency.Basic, type: Dependency.Type) => void;
+  onInstallNewDependency: (dependency: Basic, type: Type) => void;
   onInstallAll: () => void;
   onUpdateAllToInstalled: () => void;
   onUpdateAllToWanted: () => void;
   onUpdateAllToLatest: () => void;
-  onForceReInstall: (manager: Dependency.Manager) => void;
+  onForceReInstall: (manager: Manager) => void;
   isGlobal?: boolean;
   availableManagers?: { npm: boolean; yarn: boolean; pnpm: boolean };
 }
@@ -38,7 +39,7 @@ const Select = styled.select`
   text-transform: uppercase;
 `;
 
-export function DependenciesHeader({
+export const DependenciesHeader: React.FC<Props> = ({
   onInstallNewDependency,
   onInstallAll,
   onUpdateAllToInstalled,
@@ -47,29 +48,28 @@ export function DependenciesHeader({
   onForceReInstall,
   isGlobal,
   availableManagers,
-}: Props): JSX.Element {
-  return (
-    <header>
+}) => (
+  <header>
+    <Search onInstallNewDependency={onInstallNewDependency} />
 
-      <Search onInstallNewDependency={onInstallNewDependency} />
-
-      <RightSection>
-        {isGlobal !== true && (
+    <RightSection>
+      {isGlobal !== true && (
         <>
           <small>Install:</small>
           &nbsp;
           <Button
             icon="data-transfer-download"
-            onClick={(): void => { onInstallAll(); }}
+            onClick={(): void => {
+              onInstallAll();
+            }}
             scale="small"
             variant="primary"
           >
             All
           </Button>
         </>
-        )}
-
-        {/* <Button
+      )}
+      {/* <Button
             variant="primary"
             scale="small"
             icon="data-transfer-download"
@@ -83,10 +83,10 @@ export function DependenciesHeader({
             disabled={true}
           >Dev
           </Button> */}
-        &nbsp;
-        <small>Update all to:</small>
-        &nbsp;
-        {isGlobal !== true && (
+      &nbsp;
+      <small>Update all to:</small>
+      &nbsp;
+      {isGlobal !== true && (
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToInstalled}
@@ -96,49 +96,54 @@ export function DependenciesHeader({
         >
           Installed
         </Button>
-        )}
-
-        <Button
-          icon="cloud-download"
-          onClick={onUpdateAllToWanted}
-          scale="small"
-          title="Install all compatible package version"
-          variant="success"
-        >
-          Compatible
-        </Button>
-
-        <Button
-          icon="cloud-download"
-          onClick={onUpdateAllToLatest}
-          scale="small"
-          title="Install all latest packages version"
-          variant="success"
-        >
-          Latest
-        </Button>
-
-        {isGlobal !== true && (
+      )}
+      <Button
+        icon="cloud-download"
+        onClick={onUpdateAllToWanted}
+        scale="small"
+        title="Install all compatible package version"
+        variant="success"
+      >
+        Compatible
+      </Button>
+      <Button
+        icon="cloud-download"
+        onClick={onUpdateAllToLatest}
+        scale="small"
+        title="Install all latest packages version"
+        variant="success"
+      >
+        Latest
+      </Button>
+      {isGlobal !== true && (
         <>
-          &nbsp;
-          &nbsp;
+          &nbsp; &nbsp;
           <Select
-            onChange={(e): void => { onForceReInstall(e.target.value as Dependency.Manager); }}
+            onBlur={(e): void => {
+              onForceReInstall(e.target.value as Manager);
+            }}
             style={{ display: 'inline-block' }}
             title="Remove and re-nstall all packages"
             value=""
           >
-            <option disabled selected value="">Re-Install</option>
+            <option disabled selected value="">
+              Re-Install
+            </option>
 
-            <option disabled={availableManagers?.npm === false} value="npm">npm</option>
+            <option disabled={availableManagers?.npm === false} value="npm">
+              npm
+            </option>
 
-            <option disabled={availableManagers?.yarn === false} value="yarn">yarn</option>
+            <option disabled={availableManagers?.yarn === false} value="yarn">
+              yarn
+            </option>
 
-            <option disabled={availableManagers?.pnpm === false} value="pnpm">pnpm</option>
+            <option disabled={availableManagers?.pnpm === false} value="pnpm">
+              pnpm
+            </option>
           </Select>
         </>
-        )}
-      </RightSection>
-    </header>
-  );
-}
+      )}
+    </RightSection>
+  </header>
+);

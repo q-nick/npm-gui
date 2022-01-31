@@ -1,9 +1,10 @@
+import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
-
 import styled from 'styled-components';
+
+import { StoreContext } from '../app/StoreContext';
 import { Dependencies } from './Dependencies/Dependencies';
 import { Header } from './Header/Header';
-import { StoreContext } from '../app/StoreContext';
 
 const Row = styled.div`
   flex: 1;
@@ -18,10 +19,9 @@ const RightColumn = styled.div`
   flex-direction: column;
 `;
 
-export function Global(): JSX.Element {
+export const Global: VFC = () => {
   const { projects, addProject } = useContext(StoreContext);
-  const scope = projects.global;
-
+  const scope = projects['global'];
   useEffect(() => {
     if (!scope) {
       addProject('global');
@@ -29,7 +29,8 @@ export function Global(): JSX.Element {
   }, [addProject, scope]);
 
   if (!scope) {
-    return <></>; // eslint-disable-line
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    return <></>;
   }
 
   return (
@@ -37,11 +38,10 @@ export function Global(): JSX.Element {
       <Header />
 
       <Row>
-
         <RightColumn>
           <Dependencies projectPath="global" />
         </RightColumn>
       </Row>
     </>
   );
-}
+};

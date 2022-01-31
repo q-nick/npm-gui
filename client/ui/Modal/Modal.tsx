@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import styled from 'styled-components';
 
 const Backdrop = styled.div`
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,10 +29,8 @@ interface Props {
   children: ReactNode;
 }
 
-export function Modal({ children, onClose }: Props): JSX.Element {
-  return (
-    <Backdrop onClick={onClose}>
-      <ModalBody>{children}</ModalBody>
-    </Backdrop>
-  );
-}
+export const Modal: React.FC<Props> = ({ children, onClose }) => (
+  <Backdrop onClick={onClose} role="button">
+    <ModalBody>{children}</ModalBody>
+  </Backdrop>
+);

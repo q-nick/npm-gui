@@ -1,24 +1,24 @@
-import type * as Dependency from '../types/Dependency';
+import type { Entire } from '../types/Dependency';
 import { ONE, ZERO } from './utils';
 
-type CacheValue = Dependency.Entire[] | undefined;
+type CacheValue = Entire[] | undefined;
 
 let cache: Record<string, CacheValue> = {};
 
-export function getFromCache(name: string): CacheValue {
+export const getFromCache = (name: string): CacheValue => {
   return cache[name];
-}
+};
 
-export function putToCache(name: string, data: CacheValue): void {
+export const putToCache = (name: string, data?: CacheValue): void => {
   cache[name] = data;
-}
+};
 
-export function updateInCache(
-  name: string, dependency: Dependency.Entire,
-): void {
+export const updateInCache = (name: string, dependency: Entire): void => {
   const myCache = cache[name];
   if (myCache) {
-    const indexToUpdate = myCache.findIndex((item) => dependency.name === item.name);
+    const indexToUpdate = myCache.findIndex(
+      (item) => dependency.name === item.name,
+    );
 
     if (indexToUpdate >= ZERO) {
       myCache[indexToUpdate] = dependency;
@@ -26,24 +26,26 @@ export function updateInCache(
       myCache.push(dependency);
     }
   }
-}
+};
 
-export function spliceFromCache(name: string, dependencyName: string): void {
+export const spliceFromCache = (name: string, dependencyName: string): void => {
   const myCache = cache[name];
 
   if (myCache) {
-    const indexToSplice = myCache
-      .findIndex((item) => dependencyName === item.name);
+    const indexToSplice = myCache.findIndex(
+      (item) => dependencyName === item.name,
+    );
 
     if (indexToSplice >= ZERO) {
       myCache.splice(indexToSplice, ONE);
     }
   }
-}
+};
 
-export function clearCache(name?: string): void {
+export const clearCache = (name?: string): void => {
   if (name === undefined) {
     cache = {};
+  } else {
+    putToCache(name);
   }
-  putToCache(name!, undefined);
-}
+};

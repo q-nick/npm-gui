@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import type { FilterProps } from './shared';
 import { preventEvent } from './shared';
 
@@ -10,15 +11,17 @@ const Input = styled.input`
   width: 4em;
 `;
 
-export function TextFilter<T extends string>({
-  value, onFilterChange,
-}: FilterProps<T>): JSX.Element {
-  return (
-    <Input
-      onChange={(event): void => { onFilterChange(event.target.value as T); }}
-      onClick={preventEvent}
-      type="text"
-      value={value}
-    />
-  );
-}
+export const TextFilter = <T extends string>({
+  value,
+  onFilterChange,
+}: // eslint-disable-next-line @typescript-eslint/ban-types
+FilterProps<T>): JSX.Element => (
+  <Input
+    onChange={(event): void => {
+      onFilterChange(event.target.value as T);
+    }}
+    onClick={preventEvent}
+    type="text"
+    value={value}
+  />
+);

@@ -29,7 +29,7 @@ select {
 table {
   border-collapse: collapse;
   color: #393a35;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
   font-size: 0.8em;
   width: 100%;
 }

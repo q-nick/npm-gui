@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+
 import type { CSSType } from '../../../Styled';
 
 export const Wrapper = styled.div`
@@ -23,13 +24,15 @@ export const ExplorerList = styled.ul`
   transition: max-width 300ms, max-height 300ms;
   width: 200px;
 
-  ${({ isOpen }: ExplorerListProps): CSSType => isOpen && css`
-    border-color: #dfd7ca;
-    max-height: 80vh;
-    max-width: 200px;
-    overflow-y: scroll;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-  `}
+  ${({ isOpen }: ExplorerListProps): CSSType =>
+    isOpen &&
+    css`
+      border-color: #dfd7ca;
+      max-height: 80vh;
+      max-width: 200px;
+      overflow-y: scroll;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    `}
 `;
 
 export const Description = styled.p`
@@ -61,18 +64,22 @@ export const ExplorerButton = styled.button<ExplorerButtonProps>`
     background: #8e8c84;
   }
 
-  ${({ isDirectory }: ExplorerButtonProps): CSSType => isDirectory && css`
-    max-height: 80vh;
-    max-width: 100%;
-  `}
+  ${({ isDirectory }: ExplorerButtonProps): CSSType =>
+    isDirectory &&
+    css`
+      max-height: 80vh;
+      max-width: 100%;
+    `}
 
-  ${({ isProject }: ExplorerButtonProps): CSSType => isProject === true && css`
-    color: #d9534f;
+  ${({ isProject }: ExplorerButtonProps): CSSType =>
+    isProject === true &&
+    css`
+      color: #d9534f;
 
-    :hover {
-      color: #000;
-    }
-  `}
+      :hover {
+        color: #000;
+      }
+    `}
 `;
 
 export const ExplorerFile = styled.span`

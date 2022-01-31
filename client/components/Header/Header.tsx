@@ -1,9 +1,11 @@
+import type { VFC } from 'react';
 import { useCallback, useContext } from 'react';
-import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { StoreContext } from '../../app/StoreContext';
 import { Button } from '../../ui/Button/Button';
 import { Explorer } from './components/Explorer';
-import { StoreContext } from '../../app/StoreContext';
 
 export interface HeaderButton {
   text: string;
@@ -42,7 +44,7 @@ interface Props {
   projectPathEncoded?: string;
 }
 
-export function Header({ projectPathEncoded }: Props): JSX.Element {
+export const Header: VFC<Props> = ({ projectPathEncoded }) => {
   const { projects } = useContext(StoreContext);
 
   const history = useHistory();
@@ -60,8 +62,8 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
         <Title>npm-gui</Title>
 
         <Button
-          key="global"
           icon="globe"
+          key="global"
           onClick={(): void => {
             history.push('/');
           }}
@@ -76,14 +78,18 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
           .filter((p) => p !== 'global')
           .map((oneOfProjectPathEncoded) => (
             <Button
-              key={oneOfProjectPathEncoded}
               icon="code"
+              key={oneOfProjectPathEncoded}
               lowercase
               onClick={(): void => {
-                history.push(`/project/${oneOfProjectPathEncoded}/dependencies`);
+                history.push(
+                  `/project/${oneOfProjectPathEncoded}/dependencies`,
+                );
               }}
               title={window.atob(oneOfProjectPathEncoded)}
-              variant={oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'}
+              variant={
+                oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'
+              }
             >
               {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
             </Button>
@@ -93,4 +99,4 @@ export function Header({ projectPathEncoded }: Props): JSX.Element {
       </RightSection>
     </Nav>
   );
-}
+};

@@ -20,9 +20,11 @@ interface InstalledBodyBase {
 //   extraneous?: boolean;
 // }
 
-export type InstalledBody = InstalledBodyBase;// | InstalledBodyExtra | InstalledBodyMissing;
+export type InstalledBody = InstalledBodyBase; // | InstalledBodyExtra | InstalledBodyMissing;
 
-export type Installed = [{ // eslint-disable-line
-  devDependencies?: Record<string, InstalledBody>;
-  dependencies?: Record<string, InstalledBody>;
-}];
+export type Installed = [
+  {
+    devDependencies?: Record<string, InstalledBody>;
+    dependencies?: Record<string, InstalledBody>;
+  },
+];

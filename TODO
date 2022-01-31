@@ -1,6 +1,6 @@
-WATCH FILE CHANGES IN NODE_MODULES / BOWER_COMPONENTS and update cache
+WATCH FILE CHANGES IN NODE_MODULES and update cache
 
-
+Updates history (in browser)
 
 
 new project initialization - later

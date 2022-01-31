@@ -1,4 +1,6 @@
+import type { VFC } from 'react';
 import { useCallback } from 'react';
+
 import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
@@ -6,9 +8,11 @@ import { useAvailableManagers } from './hooks/useAvailableManagers';
 import { useDependencies } from './hooks/useDependencies';
 import { useFilterDependencies } from './hooks/useFilterDependencies';
 
-interface Props { projectPath: string }
+interface Props {
+  projectPath: string;
+}
 
-export function Dependencies({ projectPath }: Props): JSX.Element {
+export const Dependencies: VFC<Props> = ({ projectPath }) => {
   const {
     dependencies,
     dependenciesProcessing,
@@ -19,23 +23,36 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
   } = useDependencies(projectPath);
 
   const {
-    dependenciesFiltered, isEmpty, isLoading,
-    filterNameValue, setFilterNameValue,
-    filterTypeValue, setFilterTypeValue,
+    dependenciesFiltered,
+    isEmpty,
+    isLoading,
+    filterNameValue,
+    setFilterNameValue,
+    filterTypeValue,
+    setFilterTypeValue,
   } = useFilterDependencies(dependencies);
 
-  const onUpdateFilteredDependencies = useCallback((versionType: 'installed' | 'latest' | 'wanted'): void => {
-    if (!dependenciesFiltered) { return; }
-    const dependenciesToUpdate = dependenciesFiltered
-      .filter((dependency) => typeof dependency[versionType] === 'string'
-        && dependency[versionType] !== getNormalizedRequiredVersion(dependency.required))
-      .map((dependency) => ({
-        name: dependency.name,
-        version: dependency[versionType]!, // eslint-disable-line
-        type: dependency.type,
-      }));
-    onUpdateDependencies(dependenciesToUpdate);
-  }, [dependenciesFiltered, onUpdateDependencies]);
+  const onUpdateFilteredDependencies = useCallback(
+    (versionType: 'installed' | 'latest' | 'wanted'): void => {
+      if (!dependenciesFiltered) {
+        return;
+      }
+      const dependenciesToUpdate = dependenciesFiltered
+        .filter(
+          (dependency) =>
+            typeof dependency[versionType] === 'string' &&
+            dependency[versionType] !==
+              getNormalizedRequiredVersion(dependency.required),
+        )
+        .map((dependency) => ({
+          name: dependency.name,
+          type: dependency.type,
+          version: dependency[versionType]!,
+        }));
+      onUpdateDependencies(dependenciesToUpdate);
+    },
+    [dependenciesFiltered, onUpdateDependencies],
+  );
 
   const { availableManagers } = useAvailableManagers();
 
@@ -47,9 +64,15 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
         onForceReInstall={onInstallAllDependencies}
         onInstallAll={onInstallAllDependencies}
         onInstallNewDependency={onInstallNewDependency}
-        onUpdateAllToInstalled={(): void => { onUpdateFilteredDependencies('installed'); }}
-        onUpdateAllToLatest={(): void => { onUpdateFilteredDependencies('latest'); }}
-        onUpdateAllToWanted={(): void => { onUpdateFilteredDependencies('wanted'); }}
+        onUpdateAllToInstalled={(): void => {
+          onUpdateFilteredDependencies('installed');
+        }}
+        onUpdateAllToLatest={(): void => {
+          onUpdateFilteredDependencies('latest');
+        }}
+        onUpdateAllToWanted={(): void => {
+          onUpdateFilteredDependencies('wanted');
+        }}
       />
 
       <DependenciesTable
@@ -67,4 +90,4 @@ export function Dependencies({ projectPath }: Props): JSX.Element {
       />
     </>
   );
-}
+};

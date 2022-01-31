@@ -19,19 +19,19 @@ export const availableManagers: ResponserFunction = async () => {
 
   try {
     await executeCommandSimple(undefined, 'npm --version');
-  } catch (e: unknown) {
+  } catch {
     npm = false;
   }
 
   try {
     await executeCommandSimple(undefined, 'yarn --version');
-  } catch (e: unknown) {
+  } catch {
     yarn = false;
   }
 
   try {
     await executeCommandSimple(undefined, 'pnpm --version');
-  } catch (e: unknown) {
+  } catch {
     pnpm = false;
   }
 

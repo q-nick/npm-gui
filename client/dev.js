@@ -19,4 +19,6 @@ const server = new ParcelProxyServer({
 });
 
 // start up the server
-server.listen(1234, () => { console.log('port 1234'); });
+server.listen(1234, () => {
+  console.log('port 1234');
+});

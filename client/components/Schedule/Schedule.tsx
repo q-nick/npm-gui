@@ -1,7 +1,9 @@
+import type { VFC } from 'react';
 import { useContext } from 'react';
 import styled from 'styled-components';
-import { ScheduleContext } from './ScheduleContext';
+
 import { TaskElement } from './components/Task';
+import { ScheduleContext } from './ScheduleContext';
 
 const ScheduleWrapper = styled.div`
   background: #3e3f3a;
@@ -10,7 +12,7 @@ const ScheduleWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export function Schedule(): JSX.Element {
+export const Schedule: VFC = () => {
   const { schedule, removeTask } = useContext(ScheduleContext);
 
   return (
@@ -26,4 +28,4 @@ export function Schedule(): JSX.Element {
       ))}
     </ScheduleWrapper>
   );
-}
+};

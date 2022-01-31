@@ -1,19 +1,22 @@
+/* eslint-disable max-lines */
 /* eslint-disable react/no-multi-comp */
-import styled, { css } from 'styled-components';
+import type { VFC } from 'react';
 import { useEffect, useState } from 'react';
-import { Button } from '../../../ui/Button/Button';
-import { Loader } from '../../Loader';
-import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
-import type * as Dependency from '../../../../server/types/Dependency';
+import styled, { css } from 'styled-components';
+
+import type { Basic, Entire, Type } from '../../../../server/types/Dependency';
 import type { CSSType } from '../../../Styled';
+import { Button } from '../../../ui/Button/Button';
+import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
 import { getNormalizedRequiredVersion } from '../../../utils';
+import { Loader } from '../../Loader';
 
 interface Props {
-  dependency: Dependency.Entire;
+  dependency: Entire;
   isProcessing: boolean;
   isGlobal: boolean;
-  onDeleteDependency: (dependency: Dependency.Entire) => void;
-  onInstallDependencyVersion: (dependency: Dependency.Basic, type: Dependency.Type) => void;
+  onDeleteDependency: (dependency: Entire) => void;
+  onInstallDependencyVersion: (dependency: Basic, type: Type) => void;
 }
 
 interface TrStyledProps {
@@ -38,11 +41,13 @@ const TrStyled = styled.tr`
     }
   }
 
-  ${({ isProcessing }: TrStyledProps): CSSType => isProcessing && css`
-    background: linear-gradient(-45deg, #dfd7ca, #fff);
-    background-size: 200% 200%;
-    animation: Gradient 2s ease infinite;
-  `}
+  ${({ isProcessing }: TrStyledProps): CSSType =>
+    isProcessing &&
+    css`
+      background: linear-gradient(-45deg, #dfd7ca, #fff);
+      background-size: 200% 200%;
+      animation: Gradient 2s ease infinite;
+    `}
 `;
 
 const ColumnName = styled.td`
@@ -84,12 +89,16 @@ const HealthBadge = styled.img`
 `;
 
 interface VersionProps {
-  dependency: Dependency.Entire;
+  dependency: Entire;
   isProcessing: boolean;
   onInstall: (version: string) => void;
 }
 
-function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps): JSX.Element {
+const InstalledVersion: VFC<VersionProps> = ({
+  dependency,
+  isProcessing,
+  onInstall,
+}) => {
   const dependencyInstalled = dependency.installed;
 
   if (dependencyInstalled === undefined) {
@@ -100,19 +109,20 @@ function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps)
     return <Missing>missing</Missing>;
   }
 
-  if (dependency.type === 'global' || getNormalizedRequiredVersion(dependency.required) === dependencyInstalled) {
-    return (
-      <span>
-        {dependencyInstalled}
-      </span>
-    );
+  if (
+    dependency.type === 'global' ||
+    getNormalizedRequiredVersion(dependency.required) === dependencyInstalled
+  ) {
+    return <span>{dependencyInstalled}</span>;
   }
 
   return (
     <Button
       disabled={isProcessing}
       icon="cloud-download"
-      onClick={(): void => { onInstall(dependencyInstalled); }}
+      onClick={(): void => {
+        onInstall(dependencyInstalled);
+      }}
       scale="small"
       title={`Install ${dependencyInstalled} version of ${dependency.name}`}
       variant="success"
@@ -120,9 +130,13 @@ function InstalledVersion({ dependency, isProcessing, onInstall }: VersionProps)
       {dependencyInstalled}
     </Button>
   );
-}
+};
 
-function WantedVersion({ dependency, isProcessing, onInstall }: VersionProps): JSX.Element {
+const WantedVersion: VFC<VersionProps> = ({
+  dependency,
+  isProcessing,
+  onInstall,
+}) => {
   const dependencyWanted = dependency.wanted;
 
   if (dependencyWanted === null) {
@@ -134,7 +148,9 @@ function WantedVersion({ dependency, isProcessing, onInstall }: VersionProps): J
       <Button
         disabled={isProcessing}
         icon="cloud-download"
-        onClick={(): void => { onInstall(dependencyWanted); }}
+        onClick={(): void => {
+          onInstall(dependencyWanted);
+        }}
         scale="small"
         title={`Install ${dependencyWanted} version of ${dependency.name}`}
         variant="success"
@@ -144,10 +160,14 @@ function WantedVersion({ dependency, isProcessing, onInstall }: VersionProps): J
     );
   }
 
-  return <></>; // eslint-disable-line
-}
+  return null;
+};
 
-function LatestVersion({ dependency, isProcessing, onInstall }: VersionProps): JSX.Element {
+const LatestVersion: VFC<VersionProps> = ({
+  dependency,
+  isProcessing,
+  onInstall,
+}) => {
   const dependencyLatest = dependency.latest;
 
   if (dependencyLatest === null) {
@@ -159,7 +179,9 @@ function LatestVersion({ dependency, isProcessing, onInstall }: VersionProps): J
       <Button
         disabled={isProcessing}
         icon="cloud-download"
-        onClick={(): void => { onInstall(dependencyLatest); }}
+        onClick={(): void => {
+          onInstall(dependencyLatest);
+        }}
         scale="small"
         title={`Install ${dependencyLatest} version of ${dependency.name}`}
         variant="success"
@@ -169,21 +191,27 @@ function LatestVersion({ dependency, isProcessing, onInstall }: VersionProps): J
     );
   }
 
-  return <></>; // eslint-disable-line
-}
+  return null;
+};
 
 interface BundleInfo {
   size: number;
 }
 
-export function DependencyRow({
-  dependency, isProcessing, onDeleteDependency, onInstallDependencyVersion, isGlobal,
-}: Props): JSX.Element {
-  const [bundleInfo, setBundleInfo] = useState<BundleInfo | undefined>(undefined);
+export const DependencyRow: VFC<Props> = ({
+  dependency,
+  isProcessing,
+  onDeleteDependency,
+  onInstallDependencyVersion,
+  isGlobal,
+}) => {
+  const [bundleInfo, setBundleInfo] = useState<BundleInfo | undefined>();
 
   useEffect(() => {
     if (typeof dependency.installed === 'string') {
-      void fetch(`https://bundlephobia.com/api/size?package=${dependency.name}@${dependency.installed}`)
+      void fetch(
+        `https://bundlephobia.com/api/size?package=${dependency.name}@${dependency.installed}`,
+      )
         .then(async (response) => response.json())
         .then(setBundleInfo);
     }
@@ -191,22 +219,28 @@ export function DependencyRow({
 
   return (
     <TrStyled
-      key={`${dependency.name}${dependency.manager}`}
       isProcessing={isProcessing}
+      key={`${dependency.name}${dependency.manager}`}
     >
-      {!isGlobal && (
-        <td>{dependency.type !== 'prod' && dependency.type}</td>
-      )}
+      {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
 
       <ColumnName>
         {dependency.name}
 
         <RepoName>{dependency.manager}</RepoName>
 
-        <HealthBadge alt="status" src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`} />
+        <HealthBadge
+          alt="status"
+          src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`}
+        />
       </ColumnName>
 
-      <ColumnSize>{bundleInfo && `${parseFloat(`${bundleInfo.size / ONE_KB}`).toFixed(DIGITS)}kB` }</ColumnSize>
+      <ColumnSize>
+        {bundleInfo &&
+          `${Number.parseFloat(`${bundleInfo.size / ONE_KB}`).toFixed(
+            DIGITS,
+          )}kB`}
+      </ColumnSize>
 
       {/* <td className={style.columnNsp}> ? </td> */}
 
@@ -214,7 +248,9 @@ export function DependencyRow({
         <ColumnVersion>
           {dependency.required}
 
-          {typeof dependency.required !== 'string' && <Missing>extraneous</Missing>}
+          {typeof dependency.required !== 'string' && (
+            <Missing>extraneous</Missing>
+          )}
         </ColumnVersion>
       )}
 
@@ -223,7 +259,10 @@ export function DependencyRow({
           dependency={dependency}
           isProcessing={isProcessing}
           onInstall={(version): void => {
-            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+            onInstallDependencyVersion(
+              { name: dependency.name, version },
+              dependency.type,
+            );
           }}
         />
       </ColumnVersion>
@@ -233,7 +272,10 @@ export function DependencyRow({
           dependency={dependency}
           isProcessing={isProcessing}
           onInstall={(version): void => {
-            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+            onInstallDependencyVersion(
+              { name: dependency.name, version },
+              dependency.type,
+            );
           }}
         />
       </ColumnVersion>
@@ -243,7 +285,10 @@ export function DependencyRow({
           dependency={dependency}
           isProcessing={isProcessing}
           onInstall={(version): void => {
-            onInstallDependencyVersion({ name: dependency.name, version }, dependency.type);
+            onInstallDependencyVersion(
+              { name: dependency.name, version },
+              dependency.type,
+            );
           }}
         />
       </ColumnVersion>
@@ -252,11 +297,13 @@ export function DependencyRow({
         <ConfirmButton
           disabled={isProcessing}
           icon="trash"
-          onClick={(): void => { onDeleteDependency(dependency); }}
+          onClick={(): void => {
+            onDeleteDependency(dependency);
+          }}
           scale="small"
           variant="danger"
         />
       </ColumnAction>
     </TrStyled>
   );
-}
+};

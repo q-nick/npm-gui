@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { Children } from 'react';
 import styled, { css } from 'styled-components';
+
 import type { CSSType } from '../../Styled';
 import type { Props as IconPropsOriginal } from '../Icon/Icon';
 import { Icon } from '../Icon/Icon';
@@ -13,15 +14,15 @@ export interface Props extends ComponentPropsWithoutRef<'button'> {
 }
 
 const variantToColor = {
-  primary: '#325d88',
-  dark: '#3e3f3a',
-  warning: '#ef5c0e',
   danger: '#d9534f',
-  success: '#79a736',
+  dark: '#3e3f3a',
   info: '#1b8dbb',
+  primary: '#325d88',
+  success: '#79a736',
+  warning: '#ef5c0e',
 };
 
-const ButtonStyled = styled.button<Props>`
+const ButtonStyled = styled.button`
   border: 0;
   border-radius: 2px;
   color: #fff;
@@ -60,10 +61,12 @@ const ButtonStyled = styled.button<Props>`
     background-color: ${variantToColor[variant]};
   `}
 
-  ${({ scale }: Readonly<Props>): CSSType => scale === 'small' && css`
-    font-size: 10px;
-    padding: 6px;
-  `}
+  ${({ scale }: Readonly<Props>): CSSType =>
+    scale === 'small' &&
+    css`
+      font-size: 10px;
+      padding: 6px;
+    `}
 
   ${({ lowercase }: Readonly<Props>): CSSType => css`
     text-transform: ${lowercase === true ? 'unset' : 'uppercase'};
@@ -78,26 +81,26 @@ const ButtonIcon = styled(Icon)<IconProps>`
   margin-right: 3px;
   vertical-align: middle;
 
-  ${({ isAlone }: Readonly<IconProps>): CSSType => isAlone && css`
-    margin-right: 0;
-  `}
+  ${({ isAlone }: Readonly<IconProps>): CSSType =>
+    isAlone &&
+    css`
+      margin-right: 0;
+    `}
 `;
 
-export function Button({
-  icon, children, ...props
-}: Readonly<Props>): JSX.Element {
-  return (
-    <ButtonStyled
-      {...props} // eslint-disable-line
-    >
-      {icon !== undefined && (
-        <ButtonIcon
-          glyph={icon}
-          isAlone={!Children.toArray(children).length}
-        />
-      )}
+export const Button: React.FC<Readonly<Props>> = ({
+  icon,
+  children,
+  ...props
+}) => (
+  <ButtonStyled {...props}>
+    {icon !== undefined && (
+      <ButtonIcon
+        glyph={icon}
+        isAlone={Children.toArray(children).length === 0}
+      />
+    )}
 
-      {children}
-    </ButtonStyled>
-  );
-}
+    {children}
+  </ButtonStyled>
+);

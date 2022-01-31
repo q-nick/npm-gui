@@ -1,7 +1,9 @@
+import { useCallback } from 'react';
 import styled from 'styled-components';
+
+import { useCountdown } from '../../hooks/useCountDown';
 import type { Props } from '../Button/Button';
 import { Button } from '../Button/Button';
-import { useCountdown } from '../../hooks/useCountDown';
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -18,24 +20,25 @@ const ConfirmButtonThe = styled(Button)`
   top: 0;
 `;
 
-export function ConfirmButton({ onClick, ...props }: Readonly<Props>): JSX.Element {
+export const ConfirmButton: React.FC<Props> = ({ onClick, ...props }) => {
   const { countLeft, onStartCountdown, onStopCountdown } = useCountdown();
+
+  const handleConfirmButtonClick = useCallback((e) => {
+    if (onClick) {
+      onClick(e);
+    }
+    onStopCountdown();
+  }, []);
 
   return (
     <Wrapper>
-      <StartButtonThe
-        {...props} // eslint-disable-line
-        onClick={onStartCountdown}
-      />
+      <StartButtonThe {...props} onClick={onStartCountdown} />
 
-      {countLeft !== undefined && countLeft > 0 && ( // eslint-disable-line
-        <ConfirmButtonThe
-          {...props} // eslint-disable-line
-          onClick={(e): void => { if (onClick) { onClick(e); } onStopCountdown(); }}
-        >
+      {countLeft !== undefined && countLeft > 0 && (
+        <ConfirmButtonThe {...props} onClick={handleConfirmButtonClick}>
           {`confirm (${countLeft})`}
         </ConfirmButtonThe>
       )}
     </Wrapper>
   );
-}
+};

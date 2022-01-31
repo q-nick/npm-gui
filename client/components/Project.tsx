@@ -1,11 +1,10 @@
+import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
-import {
-  Route, Switch, Redirect, useParams,
-} from 'react-router-dom';
-
+import { Redirect, Route, Switch, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Dependencies } from './Dependencies/Dependencies';
+
 import { StoreContext } from '../app/StoreContext';
+import { Dependencies } from './Dependencies/Dependencies';
 import { Header } from './Header/Header';
 
 const Row = styled.div`
@@ -21,7 +20,7 @@ const RightColumn = styled.div`
   flex-direction: column;
 `;
 
-export function Project(): JSX.Element {
+export const Project: VFC = () => {
   const { projectPathEncoded } = useParams<{ projectPathEncoded: string }>();
   const { projects, addProject } = useContext(StoreContext);
   const scope = projects[projectPathEncoded];
@@ -33,7 +32,7 @@ export function Project(): JSX.Element {
   }, [projectPathEncoded, addProject, scope]);
 
   if (!scope) {
-    return <></>; // eslint-disable-line
+    return null;
   }
 
   return (
@@ -56,4 +55,4 @@ export function Project(): JSX.Element {
       </Row>
     </>
   );
-}
+};

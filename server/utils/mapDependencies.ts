@@ -1,24 +1,28 @@
-import type * as Dependency from '../types/Dependency';
-import type * as Commands from '../Commands';
+import type { InstalledBody, OutdatedBody } from '../Commands';
+import type { Entire, Npm } from '../types/Dependency';
 
-export function uniqueOrNull(
-  value: string | undefined, comparision: (string|null|undefined)[],
-): string | null {
+export const uniqueOrNull = (
+  value: string | undefined,
+  comparision: (string | null | undefined)[],
+): string | null => {
   if (value === undefined) {
     return null;
   }
 
   return comparision.includes(value) ? null : value;
-}
+};
 
-export function mapNpmDependency2(
-  dependency: Dependency.Npm,
-  version: Commands.OutdatedBody,
+export const mapNpmDependency2 = (
+  dependency: Npm,
+  version: OutdatedBody,
   required: string | null,
-): Dependency.Entire {
-  const installed = dependency.version !== undefined ? dependency.version : null;
+): Entire => {
+  const installed =
+    dependency.version !== undefined ? dependency.version : null;
   let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
-  const latest = version ? uniqueOrNull(version.latest, [installed, wanted]) : null;
+  const latest = version
+    ? uniqueOrNull(version.latest, [installed, wanted])
+    : null;
 
   if (installed === null && wanted === null && required !== null) {
     const match = /\d.+/.exec(required);
@@ -33,7 +37,7 @@ export function mapNpmDependency2(
     latest: latest ?? undefined,
     manager: 'npm',
   };
-}
+};
 
 // export function mapYarnDependencyToDependency(
 //   yarnDependency: Yarn.ResultDependency, unused: boolean,
@@ -88,7 +92,9 @@ export function mapNpmDependency2(
 //   return dependencies;
 // }
 
-export function getInstalledVersion(installed?: Commands.InstalledBody): string | null {
+export const getInstalledVersion = (
+  installed?: InstalledBody,
+): string | null => {
   if (!installed) {
     return null;
   }
@@ -101,28 +107,29 @@ export function getInstalledVersion(installed?: Commands.InstalledBody): string 
     return null;
   }
 
-  return installed.required.version; // TODO peerMissing
-}
+  // TODO peerMissing
+  return installed.required.version;
+};
 
-export function getWantedVersion(
+export const getWantedVersion = (
   installed: string | null | undefined,
-  outdated?: { wanted?: string;latest?: string },
-): string | null {
+  outdated?: { wanted?: string; latest?: string },
+): string | null => {
   if (installed === null || !outdated) {
     return null;
   }
 
   return uniqueOrNull(outdated.wanted, [installed]);
-}
+};
 
-export function getLatestVersion(
+export const getLatestVersion = (
   installed: string | null | undefined,
   wanted: string | null | undefined,
-  outdated?: { wanted?: string;latest?: string },
-): string | null {
+  outdated?: { wanted?: string; latest?: string },
+): string | null => {
   if (installed === null || !outdated) {
     return null;
   }
 
   return uniqueOrNull(outdated.latest, [installed, wanted]);
-}
+};
