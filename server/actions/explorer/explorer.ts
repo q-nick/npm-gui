@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, readdirSync } from 'fs';
-import { normalize } from 'path';
+import path from 'path';
 
 import { decodePath } from '../../middlewares/projectPathAndManagerMiddleware';
 import type { ResponserFunction } from '../../newServerTypes';
@@ -22,7 +22,9 @@ export interface API {
 
 export const explorer: ResponserFunction = ({ params }) => {
   let normalizedPath =
-    params.path !== undefined ? normalize(decodePath(params.path)) : null;
+    params['path'] !== undefined
+      ? path.normalize(decodePath(params['path']))
+      : null;
 
   let changed = false;
 
@@ -33,7 +35,7 @@ export const explorer: ResponserFunction = ({ params }) => {
 
   const ls = readdirSync(normalizedPath).map((name) => ({
     name,
-    isDirectory: lstatSync(`${normalizedPath!}/${name}`).isDirectory(),
+    isDirectory: lstatSync(`${normalizedPath}/${name}`).isDirectory(),
     isProject: ['package.json', 'package-lock.json', 'yarn.lock'].includes(
       name,
     ),

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { test } from 'tap';
 
 import {
   getFull,
@@ -9,24 +9,32 @@ import {
 } from './tests-utils';
 
 nextManager((manager) => {
-  describe(`${manager} fetching`, () => {
-    it('nothing', async () => {
+  test(`${manager} fetching`, async (group) => {
+    await group.test('nothing', async (t) => {
       await prepareTestProject(manager);
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty fast dependencies');
+      t.has(fullResponse.body, [], 'empty full dependencies');
     });
 
-    it('uninstalled', async () => {
+    await group.test('uninstalled', async (t) => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([
-        TEST[manager].PKG_UNINSTALLED,
-      ]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG_UNINSTALLED],
+        'full dependencies',
+      );
     });
 
-    it('installed', async () => {
+    await group.test('installed', async (t) => {
       await prepareTestProject(
         manager,
         { 'npm-gui-tests': '^1.0.0' },
@@ -34,8 +42,15 @@ nextManager((manager) => {
         true,
       );
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG_INSTALLED],
+        'full dependencies',
+      );
     });
   });
 });

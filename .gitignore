@@ -12,3 +12,4 @@ tests/test-project/*
 tsconfig.tsbuildinfo
 .cache
 eslint-config*
+.nyc_output

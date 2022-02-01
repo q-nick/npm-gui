@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { expect } from 'chai';
+import { test } from 'tap';
 
 import {
   getFull,
@@ -11,26 +10,36 @@ import {
 } from './tests-utils';
 
 nextManager((manager) => {
-  describe(`${manager} install`, () => {
-    it('nothing', async () => {
+  test(`${manager} install`, async (group) => {
+    await group.test('nothing', async (t) => {
       await prepareTestProject(manager);
 
       await install();
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty dependencies');
+      t.has(fullResponse.body, [], 'empty dependencies');
     });
 
-    it('uninstalled', async () => {
+    await group.test('uninstalled', async (t) => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       await install();
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG_INSTALLED],
+        'full dependencies',
+      );
     });
 
-    it('installed', async () => {
+    await group.test('uninstalled', async (t) => {
       await prepareTestProject(
         manager,
         { 'npm-gui-tests': '^1.0.0' },
@@ -40,8 +49,15 @@ nextManager((manager) => {
 
       await install();
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG_INSTALLED],
+        'full dependencies',
+      );
     });
   });
 });
