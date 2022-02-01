@@ -1,4 +1,4 @@
-import type { Installed } from '../../../Commands';
+import type { Installed, Outdated } from '../../../Commands';
 import type { ResponserFunction } from '../../../newServerTypes';
 import type { Entire } from '../../../types/Dependency';
 import { updateInCache } from '../../../utils/cache';
@@ -32,7 +32,7 @@ const addGlobalNpmDependency = async ({
       `npm ls ${name} --depth=0 -g --json`,
     );
 
-  const outdatedInfo = await executeCommandJSONWithFallback<Commands.Outdated>(
+  const outdatedInfo = await executeCommandJSONWithFallback<Outdated>(
     undefined,
     `npm outdated ${name} -g --json`,
   );

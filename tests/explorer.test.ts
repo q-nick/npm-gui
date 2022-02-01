@@ -1,43 +1,65 @@
-import { expect } from 'chai';
 import path from 'path';
 import api from 'supertest';
+import { test } from 'tap';
 
 import { app } from '../server';
+import type { FileOrFolder } from '../server/actions/explorer/explorer';
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 import { encodePath, prepareTestProject } from './tests-utils';
 
-describe('Explorer', () => {
-  it('should return result of pwd when given path is undefined', async () => {
-    await prepareTestProject('npm');
-    const response = await api(app.server).get('/api/explorer/');
-    expect(response.status).to.equal(HTTP_STATUS_OK);
-    expect(response.body).to.have.property('path');
+test(`Explorer`, async (group) => {
+  await group.test(
+    'should return result of pwd when given path is undefined',
+    async (t) => {
+      await prepareTestProject('npm');
 
-    expect(response.body.ls).to.deep.include({
-      isDirectory: true,
-      isProject: false,
-      name: 'tests',
-    });
-  });
+      const response = await api(app.server).get('/api/explorer/');
+      t.same(response.status, HTTP_STATUS_OK, 'status');
+      t.notSame(response.body.path, undefined, 'path is defined');
 
-  it('should return result when path is defined', async () => {
+      t.same(
+        response.body.ls.find((entry: FileOrFolder) => entry.name === 'tests'),
+        {
+          isDirectory: true,
+          isProject: false,
+          name: 'tests',
+        },
+        'contain folder',
+      );
+    },
+  );
+
+  await group.test('should return result when path is defined', async (t) => {
     await prepareTestProject('yarn');
+
     const response = await api(app.server).get(
       `/api/explorer/${encodePath(path.join(__dirname, 'test-project'))}`,
     );
-    expect(response.status).to.equal(HTTP_STATUS_OK);
-    expect(response.body).to.have.property('path');
+    t.same(response.status, HTTP_STATUS_OK, 'status');
+    t.notSame(response.body.path, undefined, 'path is defined');
 
-    expect(response.body.ls).to.deep.include({
-      isDirectory: false,
-      isProject: true,
-      name: 'yarn.lock',
-    });
+    t.same(
+      response.body.ls.find(
+        (entry: FileOrFolder) => entry.name === 'yarn.lock',
+      ),
+      {
+        isDirectory: false,
+        isProject: true,
+        name: 'yarn.lock',
+      },
+      'contain yarn.lock',
+    );
 
-    expect(response.body.ls).to.deep.include({
-      isDirectory: false,
-      isProject: true,
-      name: 'package.json',
-    });
+    t.same(
+      response.body.ls.find(
+        (entry: FileOrFolder) => entry.name === 'package.json',
+      ),
+      {
+        isDirectory: false,
+        isProject: true,
+        name: 'package.json',
+      },
+      'contain package.json',
+    );
   });
 });

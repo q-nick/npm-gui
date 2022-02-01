@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable max-statements */
 import { writeFileSync } from 'fs';
-import { join } from 'path';
+import path from 'path';
 import rimraf from 'rimraf';
 import api from 'supertest';
 
@@ -19,12 +21,12 @@ export const prepareTestProject = async (
   devDependencies?: Record<string, string>,
   doInstall = false,
 ): Promise<void> => {
-  rimraf.sync(join(__dirname, 'test-project', 'node_modules'));
-  rimraf.sync(join(__dirname, 'test-project', 'package.json'));
-  rimraf.sync(join(__dirname, 'test-project', 'package-lock.json'));
-  rimraf.sync(join(__dirname, 'test-project', 'yarn.lock'));
-  rimraf.sync(join(__dirname, 'test-project', 'pnpm-lock.yaml'));
-  rimraf.sync(join(__dirname, 'test-project', 'yarn-error.lock'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'node_modules'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'package.json'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'package-lock.json'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'yarn.lock'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'pnpm-lock.yaml'));
+  rimraf.sync(path.join(__dirname, 'test-project', 'yarn-error.lock'));
 
   const packageJsonToWrite = {
     ...PACKAGE_JSON,
@@ -33,25 +35,34 @@ export const prepareTestProject = async (
   };
 
   writeFileSync(
-    join(__dirname, 'test-project', 'package.json'),
+    path.join(__dirname, 'test-project', 'package.json'),
     JSON.stringify(packageJsonToWrite, null, 2),
-  ); // eslint-disable-line
+  );
 
   if (manager === 'yarn') {
-    writeFileSync(join(__dirname, 'test-project', 'yarn.lock'), '');
+    writeFileSync(path.join(__dirname, 'test-project', 'yarn.lock'), '');
   }
   if (manager === 'pnpm') {
-    writeFileSync(join(__dirname, 'test-project', 'pnpm-lock.yaml'), '');
+    writeFileSync(path.join(__dirname, 'test-project', 'pnpm-lock.yaml'), '');
   }
 
   if (manager === 'npm' && doInstall) {
-    await executeCommandSimple(join(__dirname, 'test-project'), 'npm install');
+    await executeCommandSimple(
+      path.join(__dirname, 'test-project'),
+      'npm install',
+    );
   }
   if (manager === 'yarn' && doInstall) {
-    await executeCommandSimple(join(__dirname, 'test-project'), 'yarn install');
+    await executeCommandSimple(
+      path.join(__dirname, 'test-project'),
+      'yarn install',
+    );
   }
   if (manager === 'pnpm' && doInstall) {
-    await executeCommandSimple(join(__dirname, 'test-project'), 'pnpm install');
+    await executeCommandSimple(
+      path.join(__dirname, 'test-project'),
+      'pnpm install',
+    );
   }
   clearCache();
 };
@@ -59,7 +70,7 @@ export const prepareTestProject = async (
 export const getSimple = async (): Promise<api.Test> => {
   return api(app.server).get(
     `/api/project/${encodePath(
-      join(__dirname, 'test-project'),
+      path.join(__dirname, 'test-project'),
     )}/dependencies/simple`,
   );
 };
@@ -67,7 +78,7 @@ export const getSimple = async (): Promise<api.Test> => {
 export const getFull = async (): Promise<api.Test> => {
   return api(app.server).get(
     `/api/project/${encodePath(
-      join(__dirname, 'test-project'),
+      path.join(__dirname, 'test-project'),
     )}/dependencies/full`,
   );
 };
@@ -75,7 +86,7 @@ export const getFull = async (): Promise<api.Test> => {
 export const install = async (): Promise<api.Test> => {
   return api(app.server).post(
     `/api/project/${encodePath(
-      join(__dirname, 'test-project'),
+      path.join(__dirname, 'test-project'),
     )}/dependencies/install`,
   );
 };
@@ -83,7 +94,7 @@ export const install = async (): Promise<api.Test> => {
 export const installForce = async (): Promise<api.Test> => {
   return api(app.server).post(
     `/api/project/${encodePath(
-      join(__dirname, 'test-project'),
+      path.join(__dirname, 'test-project'),
     )}/dependencies/install/force`,
   );
 };
@@ -95,7 +106,7 @@ export const add = async (
   return api(app.server)
     .post(
       `/api/project/${encodePath(
-        join(__dirname, 'test-project'),
+        path.join(__dirname, 'test-project'),
       )}/dependencies/${type}`,
     )
     .send(dependencies);
@@ -107,16 +118,16 @@ export const del = async (
 ): Promise<api.Test> => {
   return api(app.server).delete(
     `/api/project/${encodePath(
-      join(__dirname, 'test-project'),
+      path.join(__dirname, 'test-project'),
     )}/dependencies/${type}/${name}`,
   );
 };
 
-export function nextManager(callback: (manager: Manager) => void): void {
+export const nextManager = (callback: (manager: Manager) => void): void => {
   callback('npm');
   callback('yarn');
   callback('pnpm');
-}
+};
 
 export const PKG = {
   name: 'npm-gui-tests',

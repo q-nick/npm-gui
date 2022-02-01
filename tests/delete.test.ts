@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { test } from 'tap';
 
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 import {
@@ -11,44 +11,56 @@ import {
 } from './tests-utils';
 
 nextManager((manager) => {
-  describe(`${manager} delete dependency`, () => {
-    it('uninstalled invalid name', async () => {
+  test(`${manager} delete dependency`, async (group) => {
+    await group.test('uninstalled invalid name', async (t) => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       const response = await del('prod', 'sdmvladbf3');
-      expect(response.status).to.equal(HTTP_STATUS_OK);
-      // we skip checking response status - it behaves different for npm and yarn
-      await del('prod', 'sdmvladbf3');
+      t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
+      const fastResponse = await getSimple();
+
+      t.has(fastResponse.body, [TEST[manager].PKG], 'dependencies');
     });
 
-    it('uninstalled valid name', async () => {
+    await group.test('uninstalled valid name', async (t) => {
       await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
 
       const response = await del('prod', 'npm-gui-tests');
-      expect(response.status).to.equal(HTTP_STATUS_OK);
+      t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty fast dependencies');
+      t.has(fullResponse.body, [], 'empty full dependencies');
     });
 
-    it('installed valid name', async () => {
+    await group.test('installed valid name', async (t) => {
       await prepareTestProject(
         manager,
         { 'npm-gui-tests': '^1.0.0' },
         undefined,
         true,
       );
+      const fastResponseBefore = await getSimple();
+      const fullResponseBefore = await getFull();
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG_INSTALLED]);
+      t.has(fastResponseBefore.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fullResponseBefore.body,
+        [TEST[manager].PKG_INSTALLED],
+        'full dependencies',
+      );
 
       const response = await del('prod', 'npm-gui-tests');
-      expect(response.status).to.equal(HTTP_STATUS_OK);
+      t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty fast dependencies');
+      t.has(fullResponse.body, [], 'empty full dependencies');
     });
   });
 });

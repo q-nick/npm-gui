@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { test } from 'tap';
 
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 import {
@@ -11,53 +11,75 @@ import {
 } from './tests-utils';
 
 nextManager((manager) => {
-  describe(`${manager} add dependency`, () => {
-    it('invalid name', async () => {
+  test(`${manager} add dependency`, async (group) => {
+    await group.test('invalid name', async (t) => {
       await prepareTestProject(manager);
 
       const response = await add('prod', [
         { name: 'sdmvladbf3', version: 'v1.0.0' },
       ]);
-      expect(response.status).not.to.equal(HTTP_STATUS_OK);
+      t.notSame(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty dependencies');
+      t.has(fullResponse.body, [], 'empty dependencies');
     });
 
-    it('invalid version', async () => {
+    await group.test('invalid version', async (t) => {
       await prepareTestProject(manager);
 
       const response = await add('prod', [
         { name: 'npm-gui-tests', version: 'v3.0.0' },
       ]);
-      expect(response.status).not.to.equal(HTTP_STATUS_OK);
+      t.notSame(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([]);
-      expect((await getFull()).body).deep.equal([]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [], 'empty dependencies');
+      t.has(fullResponse.body, [], 'empty dependencies');
     });
 
-    it('correct dependency, no version', async () => {
+    await group.test('correct dependency, no version', async (t) => {
       await prepareTestProject(manager);
 
       const response = await add('prod', [{ name: 'npm-gui-tests' }]);
-      expect(response.status).to.equal(HTTP_STATUS_OK);
+      t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([
-        { ...TEST[manager].PKG2, required: '^2.1.1' },
-      ]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG2_NEWEST]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(
+        fastResponse.body,
+        [{ ...TEST[manager].PKG2, required: '^2.1.1' }],
+        'fast dependencies',
+      );
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG2_NEWEST],
+        'full dependencies',
+      );
     });
 
-    it('correct dependency, with version', async () => {
+    await group.test('correct dependency, with version', async (t) => {
       await prepareTestProject(manager);
 
       const response = await add('prod', [
         { name: 'npm-gui-tests', version: '^1.0.0' },
       ]);
-      expect(response.status).to.equal(HTTP_STATUS_OK);
+      t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      expect((await getSimple()).body).deep.equal([TEST[manager].PKG2]);
-      expect((await getFull()).body).deep.equal([TEST[manager].PKG2_INSTALLED]);
+      const fastResponse = await getSimple();
+      const fullResponse = await getFull();
+
+      t.has(fastResponse.body, [TEST[manager].PKG2], 'fast dependencies');
+      t.has(
+        fullResponse.body,
+        [TEST[manager].PKG2_INSTALLED],
+        'full dependencies',
+      );
     });
   });
 });
