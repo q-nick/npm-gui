@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-import type { Basic, Manager, Type } from '../../../../server/types/Dependency';
+import type {
+  Basic,
+  Manager,
+  Type,
+} from '../../../../server/types/dependency.types';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
 
@@ -119,8 +123,8 @@ export const DependenciesHeader: React.FC<Props> = ({
         <>
           &nbsp; &nbsp;
           <Select
-            onBlur={(e): void => {
-              onForceReInstall(e.target.value as Manager);
+            onBlur={(event): void => {
+              onForceReInstall(event.target.value as Manager);
             }}
             style={{ display: 'inline-block' }}
             title="Remove and re-nstall all packages"

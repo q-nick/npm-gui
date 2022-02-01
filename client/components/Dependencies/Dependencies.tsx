@@ -4,9 +4,9 @@ import { useCallback } from 'react';
 import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
-import { useAvailableManagers } from './hooks/useAvailableManagers';
-import { useDependencies } from './hooks/useDependencies';
-import { useFilterDependencies } from './hooks/useFilterDependencies';
+import { useAvailableManagers } from './hooks/use-available-managers';
+import { useDependencies } from './hooks/use-dependencies';
+import { useFilterDependencies } from './hooks/use-filter-dependencies';
 
 interface Props {
   projectPath: string;

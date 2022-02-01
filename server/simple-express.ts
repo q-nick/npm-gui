@@ -4,7 +4,10 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import http from 'http';
 import path from 'path';
 
-import type { MiddlewareFunction, ResponserFunction } from './newServerTypes';
+import type {
+  MiddlewareFunction,
+  ResponserFunction,
+} from './types/new-server.types';
 import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK } from './utils/utils';
 
 const mimeTypes = {
@@ -98,7 +101,7 @@ export class Server {
     });
   }
 
-  public get(url: string, callback: ResponserFunction): void {
+  public get(url: string, callback: ResponserFunction<any, any>): void {
     this.responsers.push({
       url,
       method: 'GET',
@@ -106,7 +109,7 @@ export class Server {
     });
   }
 
-  public post(url: string, callback: ResponserFunction): void {
+  public post(url: string, callback: ResponserFunction<any, any>): void {
     this.responsers.push({
       url,
       method: 'POST',
@@ -114,7 +117,7 @@ export class Server {
     });
   }
 
-  public delete(url: string, callback: ResponserFunction): void {
+  public delete(url: string, callback: ResponserFunction<any, any>): void {
     this.responsers.push({
       url,
       method: 'DELETE',
@@ -122,7 +125,7 @@ export class Server {
     });
   }
 
-  public any(url: string, callback: ResponserFunction): void {
+  public any(url: string, callback: ResponserFunction<any, any>): void {
     this.responsers.push({
       url,
       callback,

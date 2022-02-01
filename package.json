@@ -32,8 +32,8 @@
     "lint:eslint": "eslint . --ignore-path=.gitignore",
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
-    "test": "env NODE_TEST=true tap --jobs=1 --bail --ts --files tests",
-    "test:dev": "env NODE_TEST=true tap --jobs=1 --bail --ts --files tests"
+    "test": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests",
+    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/log.test.ts"
   },
   "repository": {
     "type": "git",
@@ -49,23 +49,16 @@
   },
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.0",
     "@types/cross-spawn": "^6.0.2",
-    "@types/mocha": "^9.1.0",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.3.3",
-    "@types/request": "^2.48.8",
     "@types/rimraf": "^3.0.2",
     "@types/styled-components": "^5.1.21",
     "@types/supertest": "^2.0.11",
     "@types/tap": "^15.0.5",
-    "@types/ws": "^8.2.2",
-    "chai": "^4.3.6",
     "concurrently": "^7.0.0",
-    "depcheck": "^1.4.3",
     "eslint-config-turbocharge": "^0.1.8",
-    "mocha": "^9.2.0",
     "open-iconic": "^1.1.1",
     "parcel-bundler": "^1.12.5",
     "parcel-proxy-server": "^1.1.0",
@@ -75,13 +68,11 @@
     "styled-components": "^5.3.3",
     "supertest": "^6.2.2",
     "tap": "^15.1.6",
-    "ts-node-dev": "^1.1.8",
-    "ws": "^8.4.2"
+    "ts-node-dev": "^1.1.8"
   },
   "dependencies": {
     "cross-spawn": "^7.0.3",
     "open": "^8.4.0",
-    "request": "^2.88.2",
     "rimraf": "^3.0.2"
   },
   "engines": {

@@ -8,9 +8,9 @@ interface InstalledBase {
   };
 }
 
-export type Installed = InstalledBase;
+export type InstalledYarn = InstalledBase;
 
-export interface Outdated {
+export interface OutdatedYarn {
   data?: {
     head: string[];
     body: string[][];

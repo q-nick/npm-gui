@@ -2,7 +2,7 @@ import api from 'supertest';
 import { test } from 'tap';
 
 import { app } from '../server';
-import type { Basic } from '../server/types/Dependency';
+import type { Basic } from '../server/types/dependency.types';
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 
 test('Global Packages', async (group) => {

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { parseJSON } from './parseJSON';
+import { parseJSON } from './parse-json';
 
 interface PackageJSON {
   dependencies?: Record<string, string>;

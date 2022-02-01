@@ -1,10 +1,10 @@
-export interface OutdatedBody {
+export interface OutdatedBodyPNPM {
   current: string;
   wanted: string;
   latest: string;
 }
 
-export type Outdated = string;
+export type OutdatedPNPM = string;
 
 interface InstalledBodyBase {
   version: string;
@@ -20,9 +20,9 @@ interface InstalledBodyBase {
 //   extraneous?: boolean;
 // }
 
-export type InstalledBody = InstalledBodyBase; // | InstalledBodyExtra | InstalledBodyMissing;
+export type InstalledBodyPNPM = InstalledBodyBase; // | InstalledBodyExtra | InstalledBodyMissing;
 
-export type Installed = [
+export type InstalledPNPM = [
   {
     devDependencies?: Record<string, InstalledBody>;
     dependencies?: Record<string, InstalledBody>;

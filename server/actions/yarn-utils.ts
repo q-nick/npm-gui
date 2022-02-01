@@ -1,4 +1,4 @@
-import type { Outdated } from '../CommandsYarn';
+import type { OutdatedYarn } from '../types/yarn.types';
 
 export interface YarnDependenciesVersions {
   wanted?: string;
@@ -7,7 +7,7 @@ export interface YarnDependenciesVersions {
 }
 
 export const extractVersionFromYarnOutdated = (
-  outdatedInfo?: Outdated,
+  outdatedInfo?: OutdatedYarn,
 ): Record<string, YarnDependenciesVersions> => {
   if (!outdatedInfo || !outdatedInfo.data) {
     return {};

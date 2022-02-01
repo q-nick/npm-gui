@@ -1,4 +1,4 @@
-import { executeCommandSimple } from './executeCommand';
+import { executeCommandSimple } from './execute-command';
 
 const ansiRegex = (): RegExp => {
   const pattern = [
@@ -24,7 +24,7 @@ export const executePnpmOutdated = async (
       const rows = error.replace(ansiRegex(), '').split('\n');
       let name = '';
       for (const row of rows) {
-        const rowResult = /[=]>.([\d.]+)/.exec(row);
+        const rowResult = /=>.([\d.]+)/.exec(row);
         if (rowResult) {
           outdatedInfo[name] = {
             ...outdatedInfo[name],

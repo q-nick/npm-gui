@@ -1,9 +1,13 @@
 import styled, { css } from 'styled-components';
 
-import type { Basic, Entire, Type } from '../../../../server/types/Dependency';
+import type {
+  Basic,
+  Entire,
+  Type,
+} from '../../../../server/types/dependency.types';
 import { Loader } from '../../Loader';
 import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
-import { useSortDependencies } from '../hooks/useSortDependencies';
+import { useSortDependencies } from '../hooks/use-sort-dependencies';
 import { DependencyRow } from './DependencyRow';
 
 interface Props {

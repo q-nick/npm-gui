@@ -1,9 +1,9 @@
 import path from 'path';
 import { sync } from 'rimraf';
 
-import type { ResponserFunction } from '../../../newServerTypes';
+import type { ResponserFunction } from '../../../types/new-server.types';
 import { clearCache } from '../../../utils/cache';
-import { executeCommandSimple } from '../../executeCommand';
+import { executeCommandSimple } from '../../execute-command';
 
 const clearManagerFiles = (projectPath: string): void => {
   sync(`${path.normalize(projectPath)}/node_modules`);
@@ -19,7 +19,7 @@ const installNpmDependencies = async (
   if (force) {
     clearManagerFiles(projectPath);
   }
-  return executeCommandSimple(projectPath, 'npm install', true);
+  return executeCommandSimple(projectPath, 'npm install');
 };
 
 // installation
@@ -30,7 +30,7 @@ const installPnpmDependencies = async (
   if (force) {
     clearManagerFiles(projectPath);
   }
-  return executeCommandSimple(projectPath, 'pnpm install', true);
+  return executeCommandSimple(projectPath, 'pnpm install');
 };
 
 const installYarnDependencies = async (
@@ -41,10 +41,13 @@ const installYarnDependencies = async (
     clearManagerFiles(projectPath);
   }
 
-  await executeCommandSimple(projectPath, 'yarn install', true);
+  await executeCommandSimple(projectPath, 'yarn install');
 };
 
-export const installDependencies: ResponserFunction = async ({
+export const installDependencies: ResponserFunction<
+  unknown,
+  { forceManager: string }
+> = async ({
   params: { forceManager },
   extraParams: { projectPathDecoded, manager, xCacheId },
 }) => {

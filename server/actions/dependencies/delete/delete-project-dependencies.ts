@@ -1,7 +1,7 @@
-import type { ResponserFunction } from '../../../newServerTypes';
-import type * as Dependency from '../../../types/Dependency';
+import type { Type } from '../../../types/dependency.types';
+import type { ResponserFunction } from '../../../types/new-server.types';
 import { spliceFromCache } from '../../../utils/cache';
-import { executeCommandSimple } from '../../executeCommand';
+import { executeCommandSimple } from '../../execute-command';
 
 const commandTypeFlag = {
   prod: '-S',
@@ -10,50 +10,50 @@ const commandTypeFlag = {
   extraneous: '',
 };
 
-async function deleteNpmDependency(
+const deleteNpmDependency = async (
   projectPath: string | undefined,
   packageName: string,
-  type: Dependency.Type,
-): Promise<void> {
+  type: Type,
+): Promise<void> => {
   // delete
   await executeCommandSimple(
     projectPath,
     `npm uninstall ${packageName} ${commandTypeFlag[type]}`,
-    true,
   );
-}
+};
 
-async function deletePnpmDependency(
+const deletePnpmDependency = async (
   projectPath: string | undefined,
   packageName: string,
-): Promise<void> {
+): Promise<void> => {
   // delete
   try {
-    await executeCommandSimple(
-      projectPath,
-      `pnpm uninstall ${packageName}`,
-      true,
-    );
+    await executeCommandSimple(projectPath, `pnpm uninstall ${packageName}`);
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     console.log(error);
   }
-}
+};
 
-async function deleteYarnDependency(
+const deleteYarnDependency = async (
   projectPath: string | undefined,
   packageName: string,
-): Promise<void> {
+): Promise<void> => {
   // delete
   try {
-    await executeCommandSimple(projectPath, `yarn remove ${packageName}`, true);
+    await executeCommandSimple(projectPath, `yarn remove ${packageName}`);
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     console.log(error);
   }
+};
+
+interface Parameters {
+  type: string;
+  dependencyName: string;
 }
 
-export const deleteDependency: ResponserFunction = async ({
+export const deleteDependency: ResponserFunction<unknown, Parameters> = async ({
   params: { type = 'global', dependencyName = 'undefined' },
   extraParams: { projectPathDecoded, manager, xCacheId },
 }) => {

@@ -9,8 +9,8 @@ import {
   TEST,
 } from './tests-utils';
 
-nextManager((manager) => {
-  test(`${manager} install`, async (group) => {
+nextManager(async (manager) => {
+  await test(`${manager} install`, async (group) => {
     await group.test('nothing', async (t) => {
       await prepareTestProject(manager);
 

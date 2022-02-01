@@ -4,7 +4,11 @@ import type { VFC } from 'react';
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import type { Basic, Entire, Type } from '../../../../server/types/Dependency';
+import type {
+  Basic,
+  Entire,
+  Type,
+} from '../../../../server/types/dependency.types';
 import type { CSSType } from '../../../Styled';
 import { Button } from '../../../ui/Button/Button';
 import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';

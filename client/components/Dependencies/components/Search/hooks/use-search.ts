@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import type { SearchResult } from '../../../../../../server/types/Dependency';
+import type { SearchResult } from '../../../../../../server/types/dependency.types';
 
 interface Hook {
   searchResults?: SearchResult[];

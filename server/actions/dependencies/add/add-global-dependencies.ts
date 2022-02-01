@@ -1,15 +1,15 @@
-import type { Installed, Outdated } from '../../../Commands';
-import type { ResponserFunction } from '../../../newServerTypes';
-import type { Entire } from '../../../types/Dependency';
+import type { Installed, Outdated } from '../../../types/commands.types';
+import type { Entire } from '../../../types/dependency.types';
+import type { ResponserFunction } from '../../../types/new-server.types';
 import { updateInCache } from '../../../utils/cache';
 import {
   getInstalledVersion,
   getLatestVersion,
-} from '../../../utils/mapDependencies';
+} from '../../../utils/map-dependencies';
 import {
   executeCommand,
   executeCommandJSONWithFallback,
-} from '../../executeCommand';
+} from '../../execute-command';
 
 const addGlobalNpmDependency = async ({
   name,
@@ -19,11 +19,7 @@ const addGlobalNpmDependency = async ({
   version: string;
 }): Promise<Entire> => {
   // add
-  await executeCommand(
-    undefined,
-    `npm install ${name}@${version || ''} -g`,
-    true,
-  );
+  await executeCommand(undefined, `npm install ${name}@${version || ''} -g`);
 
   // get package info
   const { dependencies: installedInfo } =

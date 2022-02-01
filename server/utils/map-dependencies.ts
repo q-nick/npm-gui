@@ -1,5 +1,5 @@
-import type { InstalledBody, OutdatedBody } from '../Commands';
-import type { Entire, Npm } from '../types/Dependency';
+import type { InstalledBody, OutdatedBody } from '../types/commands.types';
+import type { Entire, Npm } from '../types/dependency.types';
 
 export const uniqueOrNull = (
   value: string | undefined,

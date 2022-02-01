@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import styled from 'styled-components';
 
-import { useCountdown } from '../../hooks/useCountDown';
+import { useCountdown } from '../../hooks/use-count-down';
 import type { Props } from '../Button/Button';
 import { Button } from '../Button/Button';
 

@@ -1,12 +1,12 @@
-import type { Installed, Outdated } from '../../../Commands';
-import type { ResponserFunction } from '../../../newServerTypes';
-import type { Entire } from '../../../types/Dependency';
+import type { Installed, Outdated } from '../../../types/commands.types';
+import type { Entire } from '../../../types/dependency.types';
+import type { ResponserFunction } from '../../../types/new-server.types';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import {
   getInstalledVersion,
   getLatestVersion,
-} from '../../../utils/mapDependencies';
-import { executeCommandJSONWithFallback } from '../../executeCommand';
+} from '../../../utils/map-dependencies';
+import { executeCommandJSONWithFallback } from '../../execute-command';
 
 const getGlobalNpmDependencies = async (): Promise<Entire[]> => {
   const { dependencies: installedInfo } =
