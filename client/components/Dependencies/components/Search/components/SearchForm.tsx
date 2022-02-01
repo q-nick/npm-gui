@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Button } from '../../../../../ui/Button/Button';
 import { Loader } from '../../../../Loader';
-import type { useSearch } from '../hooks/useSearch';
+import type { useSearch } from '../hooks/use-search';
 
 const Form = styled.form`
   margin-bottom: 6px;

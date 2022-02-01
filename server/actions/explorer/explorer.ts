@@ -1,8 +1,8 @@
 import { existsSync, lstatSync, readdirSync } from 'fs';
 import path from 'path';
 
-import { decodePath } from '../../middlewares/projectPathAndManagerMiddleware';
-import type { ResponserFunction } from '../../newServerTypes';
+import { decodePath } from '../../middlewares/project-path-and-manager.middleware';
+import type { ResponserFunction } from '../../types/new-server.types';
 
 export interface FileOrFolder {
   name: string;
@@ -20,11 +20,15 @@ export interface API {
   Response: Explorer;
 }
 
-export const explorer: ResponserFunction = ({ params }) => {
+interface Parameters {
+  path?: string;
+}
+
+export const explorer: ResponserFunction<unknown, Parameters> = ({
+  params,
+}) => {
   let normalizedPath =
-    params['path'] !== undefined
-      ? path.normalize(decodePath(params['path']))
-      : null;
+    params.path !== undefined ? path.normalize(decodePath(params.path)) : null;
 
   let changed = false;
 

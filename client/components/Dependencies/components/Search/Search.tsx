@@ -2,15 +2,15 @@ import type { VFC } from 'react';
 import { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import type { Basic, Type } from '../../../../../server/types/Dependency';
-import { useClickOutsideRef } from '../../../../hooks/useClickOutside';
+import type { Basic, Type } from '../../../../../server/types/dependency.types';
+import { useClickOutsideRef } from '../../../../hooks/use-click-outside';
 import type { CSSType } from '../../../../Styled';
 import { Button } from '../../../../ui/Button/Button';
 import { ZERO } from '../../../../utils';
 import { SearchForm } from './components/SearchForm';
 import type { Props as SearchResultsProps } from './components/SearchResults';
 import { SearchResults } from './components/SearchResults';
-import { useSearch } from './hooks/useSearch';
+import { useSearch } from './hooks/use-search';
 
 const Wrapper = styled.div`
   background: #fff;

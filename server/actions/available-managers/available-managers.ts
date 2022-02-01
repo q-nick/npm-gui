@@ -1,5 +1,5 @@
-import type { ResponserFunction } from '../../newServerTypes';
-import { executeCommandSimple } from '../executeCommand';
+import type { ResponserFunction } from '../../types/new-server.types';
+import { executeCommandSimple } from '../execute-command';
 
 export interface Response {
   npm: boolean;

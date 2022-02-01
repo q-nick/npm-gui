@@ -5,7 +5,7 @@ import type {
   API,
   FileOrFolder,
 } from '../../../../server/actions/explorer/explorer';
-import { useClickOutsideRef } from '../../../hooks/useClickOutside';
+import { useClickOutsideRef } from '../../../hooks/use-click-outside';
 import { Button } from '../../../ui/Button/Button';
 import {
   ExplorerButton,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { Entire, Type } from '../../../../server/types/Dependency';
+import type { Entire, Type } from '../../../../server/types/dependency.types';
 import { ZERO } from '../../../utils';
 
 interface Hook {

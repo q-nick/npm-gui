@@ -1,6 +1,6 @@
 import { createContext, useCallback, useState } from 'react';
 
-import type { Entire } from '../../server/types/Dependency';
+import type { Entire } from '../../server/types/dependency.types';
 
 interface ProjectScope {
   dependencies?: Entire[];

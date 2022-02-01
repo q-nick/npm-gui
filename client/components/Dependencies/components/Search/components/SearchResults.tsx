@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 
 import { Button } from '../../../../../ui/Button/Button';
-import type { useSearch } from '../hooks/useSearch';
+import type { useSearch } from '../hooks/use-search';
 
 type Hook = ReturnType<typeof useSearch>;
 

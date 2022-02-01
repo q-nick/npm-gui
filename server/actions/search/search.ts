@@ -1,6 +1,5 @@
-import request from 'request';
-
-import type { ResponserFunction } from '../../newServerTypes';
+import type { ResponserFunction } from '../../types/new-server.types';
+import { requestGET } from '../../utils/request-with-promise';
 
 interface Result {
   name: string;
@@ -27,20 +26,13 @@ interface NPMApiResult {
 }
 
 // eslint-disable-next-line func-style
-async function requestWithPromise<T>(url: string): Promise<T> {
-  return new Promise((resolve) => {
-    request(url, (_: unknown, __: unknown, body) => {
-      resolve(JSON.parse(body));
-    });
-  });
-}
-
-// eslint-disable-next-line func-style
 async function searchNPM(query: string): Promise<Result[]> {
-  const { results } = await requestWithPromise<NPMApiResult>(
-    `https://api.npms.io/v2/search?from=0&size=25&q=${query}`,
+  const response = await requestGET(
+    'api.npms.io',
+    `/v2/search?from=0&size=25&q=${query}`,
   );
-  return results.map((result) => ({
+  console.log('XXXXXXXXXXXXXXXXXXXXX', response);
+  return (JSON.parse(response) as NPMApiResult).results.map((result) => ({
     name: result.package.name,
     version: result.package.version,
     score: result.score.final,

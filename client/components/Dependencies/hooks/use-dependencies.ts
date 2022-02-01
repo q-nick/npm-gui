@@ -6,7 +6,7 @@ import type {
   Entire,
   Manager,
   Type,
-} from '../../../../server/types/Dependency';
+} from '../../../../server/types/dependency.types';
 import { StoreContext } from '../../../app/StoreContext';
 import { ZERO } from '../../../utils';
 import { xCacheId } from '../../../xcache';

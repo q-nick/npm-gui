@@ -1,4 +1,4 @@
-import type { Entire } from '../types/Dependency';
+import type { Entire } from '../types/dependency.types';
 import { ONE, ZERO } from './utils';
 
 type CacheValue = Entire[] | undefined;

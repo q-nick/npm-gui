@@ -6,8 +6,8 @@ import rimraf from 'rimraf';
 import api from 'supertest';
 
 import { app } from '../server';
-import { executeCommandSimple } from '../server/actions/executeCommand';
-import type { Manager } from '../server/types/Dependency';
+import { executeCommandSimple } from '../server/actions/execute-command';
+import type { Manager } from '../server/types/dependency.types';
 import { clearCache } from '../server/utils/cache';
 import PACKAGE_JSON from './test-package.json';
 
@@ -123,10 +123,12 @@ export const del = async (
   );
 };
 
-export const nextManager = (callback: (manager: Manager) => void): void => {
-  callback('npm');
-  callback('yarn');
-  callback('pnpm');
+export const nextManager = async (
+  callback: (manager: Manager) => Promise<void>,
+): Promise<void> => {
+  await callback('npm');
+  await callback('yarn');
+  await callback('pnpm');
 };
 
 export const PKG = {

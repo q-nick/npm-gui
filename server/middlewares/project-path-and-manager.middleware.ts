@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import path from 'path';
 
-import type { MiddlewareFunction } from '../newServerTypes';
+import type { MiddlewareFunction } from '../types/new-server.types';
 
 export const decodePath = (pathEncoded: string): string => {
   return path.normalize(Buffer.from(pathEncoded, 'base64').toString());

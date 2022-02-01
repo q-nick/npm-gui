@@ -10,8 +10,8 @@ import {
   TEST,
 } from './tests-utils';
 
-nextManager((manager) => {
-  test(`${manager} add dependency`, async (group) => {
+nextManager(async (manager) => {
+  await test(`${manager} add dependency`, async (group) => {
     await group.test('invalid name', async (t) => {
       await prepareTestProject(manager);
 

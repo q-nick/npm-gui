@@ -8,8 +8,8 @@ import {
   TEST,
 } from './tests-utils';
 
-nextManager((manager) => {
-  test(`${manager} fetching`, async (group) => {
+nextManager(async (manager) => {
+  await test(`${manager} fetching`, async (group) => {
     await group.test('nothing', async (t) => {
       await prepareTestProject(manager);
 

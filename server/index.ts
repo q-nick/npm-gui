@@ -1,24 +1,24 @@
 import open from 'open';
 
 import { availableManagers } from './actions/available-managers/available-managers';
-import { addGlobalDependencies } from './actions/dependencies/add/addGlobalDependencies';
-import { addDependencies } from './actions/dependencies/add/addProjectDependencies';
-import { deleteGlobalDependency } from './actions/dependencies/delete/deleteGlobalDependencies';
-import { deleteDependency } from './actions/dependencies/delete/deleteProjectDependencies';
+import { addGlobalDependencies } from './actions/dependencies/add/add-global-dependencies';
+import { addDependencies } from './actions/dependencies/add/add-project-dependencies';
+import { deleteGlobalDependency } from './actions/dependencies/delete/delete-global-dependencies';
+import { deleteDependency } from './actions/dependencies/delete/delete-project-dependencies';
 import {
   getGlobalDependencies,
   getGlobalDependenciesSimple,
-} from './actions/dependencies/get/getGlobalDependencies';
+} from './actions/dependencies/get/get-global-dependencies';
 import {
   getAllDependencies,
   getAllDependenciesSimple,
-} from './actions/dependencies/get/getProjectDependencies';
-import { installDependencies } from './actions/dependencies/install/installProjectDependencies';
+} from './actions/dependencies/get/get-project-dependencies';
+import { installDependencies } from './actions/dependencies/install/install-project-dependencies';
 import { explorer } from './actions/explorer/explorer';
 import { info } from './actions/info/info';
 import { log } from './actions/log/log';
 import { search } from './actions/search/search';
-import { projectPathAndManagerMiddleware } from './middlewares/projectPathAndManagerMiddleware';
+import { projectPathAndManagerMiddleware } from './middlewares/project-path-and-manager.middleware';
 import { Server } from './simple-express';
 
 const DEFAULT_PORT = 3000;
