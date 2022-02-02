@@ -54,7 +54,7 @@ interface Parameters {
 }
 
 export const deleteDependency: ResponserFunction<unknown, Parameters> = async ({
-  params: { type = 'global', dependencyName = 'undefined' },
+  params: { type, dependencyName },
   extraParams: { projectPathDecoded, manager, xCacheId },
 }) => {
   if (manager === 'yarn') {

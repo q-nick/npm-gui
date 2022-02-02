@@ -8,10 +8,12 @@ import { HTTP_STATUS_OK } from '../server/utils/utils';
 import { encodePath, prepareTestProject } from './tests-utils';
 
 test(`Explorer`, async (group) => {
+  const project = await prepareTestProject('explorer');
+
   await group.test(
     'should return result of pwd when given path is undefined',
     async (t) => {
-      await prepareTestProject('npm');
+      await project.prepareClear({ manager: 'npm' });
 
       const response = await api(app.server).get('/api/explorer/');
       t.same(response.status, HTTP_STATUS_OK, 'status');
@@ -30,10 +32,12 @@ test(`Explorer`, async (group) => {
   );
 
   await group.test('should return result when path is defined', async (t) => {
-    await prepareTestProject('yarn');
+    await project.prepareClear({ manager: 'yarn' });
 
     const response = await api(app.server).get(
-      `/api/explorer/${encodePath(path.join(__dirname, 'test-project'))}`,
+      `/api/explorer/${encodePath(
+        path.join(__dirname, 'test-project', 'explorer'),
+      )}`,
     );
     t.same(response.status, HTTP_STATUS_OK, 'status');
     t.notSame(response.body.path, undefined, 'path is defined');
