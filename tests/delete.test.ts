@@ -1,50 +1,50 @@
 import { test } from 'tap';
 
 import { HTTP_STATUS_OK } from '../server/utils/utils';
-import {
-  del,
-  getFull,
-  getSimple,
-  nextManager,
-  prepareTestProject,
-  TEST,
-} from './tests-utils';
+import { nextManager, prepareTestProject, TEST } from './tests-utils';
 
 nextManager(async (manager) => {
   await test(`${manager} delete dependency`, async (group) => {
-    await group.test('uninstalled invalid name', async (t) => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
+    const project = await prepareTestProject('delete');
 
-      const response = await del('prod', 'sdmvladbf3');
+    await group.test('uninstalled invalid name', async (t) => {
+      await project.prepareClear({
+        manager,
+        dependencies: { 'npm-gui-tests': '^1.0.0' },
+      });
+
+      const response = await project.requestDel('prod', 'sdmvladbf3');
       t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      const fastResponse = await getSimple();
+      const fastResponse = await project.requestGetFast();
 
       t.has(fastResponse.body, [TEST[manager].PKG], 'dependencies');
     });
 
     await group.test('uninstalled valid name', async (t) => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
+      await project.prepareClear({
+        manager,
+        dependencies: { 'npm-gui-tests': '^1.0.0' },
+      });
 
-      const response = await del('prod', 'npm-gui-tests');
+      const response = await project.requestDel('prod', 'npm-gui-tests');
       t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      const fastResponse = await getSimple();
-      const fullResponse = await getFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
       t.has(fastResponse.body, [], 'empty fast dependencies');
       t.has(fullResponse.body, [], 'empty full dependencies');
     });
 
     await group.test('installed valid name', async (t) => {
-      await prepareTestProject(
+      await project.prepareClear({
         manager,
-        { 'npm-gui-tests': '^1.0.0' },
-        undefined,
-        true,
-      );
-      const fastResponseBefore = await getSimple();
-      const fullResponseBefore = await getFull();
+        dependencies: { 'npm-gui-tests': '^1.0.0' },
+        install: true,
+      });
+      const fastResponseBefore = await project.requestGetFast();
+      const fullResponseBefore = await project.requestGetFull();
 
       t.has(fastResponseBefore.body, [TEST[manager].PKG], 'fast dependencies');
       t.has(
@@ -53,11 +53,11 @@ nextManager(async (manager) => {
         'full dependencies',
       );
 
-      const response = await del('prod', 'npm-gui-tests');
+      const response = await project.requestDel('prod', 'npm-gui-tests');
       t.same(response.status, HTTP_STATUS_OK, 'status');
 
-      const fastResponse = await getSimple();
-      const fullResponse = await getFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
       t.has(fastResponse.body, [], 'empty fast dependencies');
       t.has(fullResponse.body, [], 'empty full dependencies');

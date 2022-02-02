@@ -13,3 +13,4 @@ tsconfig.tsbuildinfo
 .cache
 eslint-config*
 .nyc_output
+.parcel-cache

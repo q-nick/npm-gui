@@ -11,10 +11,11 @@ const clearManagerFiles = (projectPath: string): void => {
   sync(`${path.normalize(projectPath)}/package-lock.json`);
   sync(`${path.normalize(projectPath)}/pnpm-lock.yaml`);
 };
+
 // installation
 const installNpmDependencies = async (
   projectPath: string,
-  force = false,
+  force: boolean,
 ): Promise<string> => {
   if (force) {
     clearManagerFiles(projectPath);
@@ -25,7 +26,7 @@ const installNpmDependencies = async (
 // installation
 const installPnpmDependencies = async (
   projectPath: string,
-  force = false,
+  force: boolean,
 ): Promise<string> => {
   if (force) {
     clearManagerFiles(projectPath);
@@ -35,7 +36,7 @@ const installPnpmDependencies = async (
 
 const installYarnDependencies = async (
   projectPath: string,
-  force = false,
+  force: boolean,
 ): Promise<void> => {
   if (force) {
     clearManagerFiles(projectPath);

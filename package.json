@@ -32,8 +32,8 @@
     "lint:eslint": "eslint . --ignore-path=.gitignore",
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
-    "test": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests",
-    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/log.test.ts"
+    "test": "env NODE_TEST=true tap --timeout=60 --bail --ts --files tests",
+    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/install-force.test.ts"
   },
   "repository": {
     "type": "git",
@@ -50,6 +50,7 @@
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.3.3",
@@ -59,6 +60,7 @@
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",
     "eslint-config-turbocharge": "^0.1.8",
+    "fs-extra": "^10.0.0",
     "open-iconic": "^1.1.1",
     "parcel": "^2.2.1",
     "react": "^17.0.2",

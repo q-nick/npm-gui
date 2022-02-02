@@ -1,35 +1,33 @@
 import { test } from 'tap';
 
-import {
-  getFull,
-  getSimple,
-  install,
-  nextManager,
-  prepareTestProject,
-  TEST,
-} from './tests-utils';
+import { nextManager, prepareTestProject, TEST } from './tests-utils';
 
 nextManager(async (manager) => {
+  const project = await prepareTestProject('install');
+
   await test(`${manager} install`, async (group) => {
     await group.test('nothing', async (t) => {
-      await prepareTestProject(manager);
+      await project.prepareClear({ manager });
 
-      await install();
+      await project.requestInstall();
 
-      const fastResponse = await getSimple();
-      const fullResponse = await getFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
       t.has(fastResponse.body, [], 'empty dependencies');
       t.has(fullResponse.body, [], 'empty dependencies');
     });
 
     await group.test('uninstalled', async (t) => {
-      await prepareTestProject(manager, { 'npm-gui-tests': '^1.0.0' });
+      await project.prepareClear({
+        manager,
+        dependencies: { 'npm-gui-tests': '^1.0.0' },
+      });
 
-      await install();
+      await project.requestInstall();
 
-      const fastResponse = await getSimple();
-      const fullResponse = await getFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
       t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
       t.has(
@@ -40,17 +38,16 @@ nextManager(async (manager) => {
     });
 
     await group.test('uninstalled', async (t) => {
-      await prepareTestProject(
+      await project.prepareClear({
         manager,
-        { 'npm-gui-tests': '^1.0.0' },
-        undefined,
-        true,
-      );
+        dependencies: { 'npm-gui-tests': '^1.0.0' },
+        install: true,
+      });
 
-      await install();
+      await project.requestInstall();
 
-      const fastResponse = await getSimple();
-      const fullResponse = await getFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
       t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
       t.has(
