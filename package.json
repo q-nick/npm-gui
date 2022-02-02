@@ -23,9 +23,9 @@
   "scripts": {
     "prepack": "npm run build",
     "dev:server": "ts-node-dev --files server/development.ts",
-    "dev:client": "parcel index.html",
+    "dev:client": "parcel client/index.html",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" ",
-    "build:server": "tsc --project tsconfig-build-server.json",
+    "build:server": "tsc --project server/tsconfig.json",
     "build:client": "parcel build client/index.html --no-source-maps",
     "build": "rm -rf dist && npm run build:server && npm run build:client",
     "lint:ts": "tsc",
@@ -33,6 +33,7 @@
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
     "test": "env NODE_TEST=true tap --timeout=60 --bail --ts --files tests",
+    "ci:test": "env NODE_TEST=true tap --branches=60 --functions=60 --lines=60 --statements=60 --timeout=160 --bail --ts --files tests",
     "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/install-force.test.ts"
   },
   "repository": {
@@ -62,18 +63,19 @@
     "eslint-config-turbocharge": "^0.1.8",
     "fs-extra": "^10.0.0",
     "open-iconic": "^1.1.1",
-    "parcel": "^2.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.3.0",
     "styled-components": "^5.3.3",
     "supertest": "^6.2.2",
     "tap": "^15.1.6",
-    "ts-node-dev": "^1.1.8"
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
   },
   "dependencies": {
     "cross-spawn": "^7.0.3",
     "open": "^8.4.0",
+    "parcel": "^2.2.1",
     "rimraf": "^3.0.2"
   },
   "engines": {

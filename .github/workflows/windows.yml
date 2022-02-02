@@ -1,0 +1,52 @@
+name: Continuous Integration Windows
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          [
+            10.13,
+            10.x,
+
+            11.0.0,
+            11.x,
+
+            12.0.0,
+            12.12.x,
+            12.x,
+
+            14.1.x,
+            14.14.x,
+            14.x,
+
+            15.0.0,
+            15.x,
+
+            16.0.0,
+            16.x,
+          ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: node install-correct-pnpm-version.js
+      - run: yarn -v
+      - run: pnpm -v
+      - run: rm package-lock.json # we have to remove parcel before install dependencies
+      - run: rm tests/global.test.ts # we have to remove global tests
+      - run: npm uninstall parcel
+      - run: npm install
+      - run: npm run ci:test
