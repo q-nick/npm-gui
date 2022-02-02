@@ -24,7 +24,7 @@ export type InstalledBodyPNPM = InstalledBodyBase; // | InstalledBodyExtra | Ins
 
 export type InstalledPNPM = [
   {
-    devDependencies?: Record<string, InstalledBody>;
-    dependencies?: Record<string, InstalledBody>;
+    devDependencies?: Record<string, InstalledBodyPNPM>;
+    dependencies?: Record<string, InstalledBodyPNPM>;
   },
 ];

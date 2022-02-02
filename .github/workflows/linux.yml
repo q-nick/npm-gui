@@ -1,0 +1,50 @@
+name: Continuous Integration Linux
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          [
+            10.13,
+            10.x,
+
+            11.0.0,
+            11.x,
+
+            12.0.0,
+            12.12.x,
+            12.x,
+
+            14.1.x,
+            14.14.x,
+            14.x,
+
+            15.0.0,
+            15.x,
+
+            16.0.0,
+            16.x,
+          ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i -g yarn
+      - run: node install-correct-pnpm-version.js
+      - run: yarn -v
+      - run: pnpm -v
+      - run: npm ci
+      - run: npm run ci:test
