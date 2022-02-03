@@ -94,7 +94,7 @@ export class Server {
     console.log('listening on:', host, port);
   }
 
-  public use(url: string, callback: MiddlewareFunction): void {
+  public use(url: string, callback: MiddlewareFunction<any>): void {
     this.middlewares.push({
       url,
       callback,
@@ -140,32 +140,31 @@ export class Server {
       xCacheId: request.headers['x-cache-id'] as string,
     };
     const bodyJSON: any = await Server.readBody(request);
+    try {
+      for (const middleware of this.middlewares) {
+        const pathRegex = new RegExp(middleware.url.replace(/:\w+/g, '.+'));
 
-    for (const middleware of this.middlewares) {
-      const pathRegex = new RegExp(middleware.url.replace(/:\w+/g, '.+'));
-
-      if (request.url !== undefined && pathRegex.test(request.url)) {
-        const parameters = Server.parseUrlParams(middleware.url, request.url);
-        const myExtraParameters = middleware.callback({
-          params: parameters,
-          extraParams: extraParameters,
-        });
-        extraParameters = { ...extraParameters, ...myExtraParameters };
+        if (request.url !== undefined && pathRegex.test(request.url)) {
+          const parameters = Server.parseUrlParams(middleware.url, request.url);
+          const myExtraParameters = middleware.callback({
+            params: parameters,
+            extraParams: extraParameters,
+          });
+          extraParameters = { ...extraParameters, ...myExtraParameters };
+        }
       }
-    }
 
-    for (const responser of this.responsers) {
-      const pathRegex = new RegExp(responser.url.replace(/:\w+/g, '.+'));
-      const isMethodOk =
-        responser.method === undefined || responser.method === request.method;
-      if (
-        !response.headersSent &&
-        request.url !== undefined &&
-        isMethodOk &&
-        pathRegex.test(request.url)
-      ) {
-        const parameters = Server.parseUrlParams(responser.url, request.url);
-        try {
+      for (const responser of this.responsers) {
+        const pathRegex = new RegExp(responser.url.replace(/:\w+/g, '.+'));
+        const isMethodOk =
+          responser.method === undefined || responser.method === request.method;
+        if (
+          !response.headersSent &&
+          request.url !== undefined &&
+          isMethodOk &&
+          pathRegex.test(request.url)
+        ) {
+          const parameters = Server.parseUrlParams(responser.url, request.url);
           // eslint-disable-next-line no-await-in-loop
           const data = await responser.callback({
             params: parameters,
@@ -181,14 +180,14 @@ export class Server {
             });
             response.write(JSON.stringify(data), 'utf-8');
           }
-        } catch (error: unknown) {
-          console.error('ERROR HANDLER', error);
-          response.writeHead(HTTP_STATUS_BAD_REQUEST, {
-            'Content-Type': 'application/json',
-          });
-          response.write(JSON.stringify(error), 'utf-8');
         }
       }
+    } catch (error: unknown) {
+      console.error('ERROR HANDLER', error);
+      response.writeHead(HTTP_STATUS_BAD_REQUEST, {
+        'Content-Type': 'application/json',
+      });
+      response.write(JSON.stringify(error), 'utf-8');
     }
 
     if (!response.headersSent && request.url !== undefined) {
