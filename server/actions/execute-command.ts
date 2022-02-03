@@ -2,12 +2,6 @@ import spawn from 'cross-spawn';
 
 import { ZERO } from '../utils/utils';
 
-// const Console = {
-//   send(...arguments_: any[]) {
-//     arguments_;
-//   },
-// };
-
 export const executeCommand = (
   cwd: string | undefined,
   wholeCommand: string,
@@ -24,32 +18,16 @@ export const executeCommand = (
         cwd,
         detached: false,
       });
-      // const commandId = Date.now().toString();
-      // console.log(`executing: "${wholeCommand}" in "${cwd}"\n`, commandId);
-      // if (pushToConsole) {
-      //   Console.send(
-      //     `executing: "${wholeCommand}" in "${cwd ?? 'global'}"\n`,
-      //     commandId,
-      //   );
-      // }
 
       // wait for stdout, stderr
       let stdout = '';
       spawned.stdout?.on('data', (data: Buffer) => {
         stdout += data.toString();
-        // send part data through socket if required
-        // if (pushToConsole) {
-        //   Console.send(data.toString(), commandId);
-        // }
       });
 
       let stderr = '';
       spawned.stderr?.on('data', (data: Buffer) => {
         stderr += data.toString();
-        // TODO send as stderr and show red color
-        // if (pushToConsole) {
-        //   Console.send(data.toString(), commandId);
-        // }
       });
 
       // wait for finish and resolve
@@ -63,20 +41,10 @@ export const executeCommand = (
         } else {
           reject(stdout + stderr);
         }
-        // if (pushToConsole) {
-        //   Console.send('', commandId, exitStatus === 0 ? 'CLOSE' : 'ERROR');
-        // }
-        // resolve({
-        //   stdout,
-        //   stderr,
-        // });
       });
 
       // if error
       spawned.on('error', () => {
-        // if (pushToConsole) {
-        //   Console.send('', commandId, 'ERROR');
-        // }
         reject(new Error(stderr));
       });
     }

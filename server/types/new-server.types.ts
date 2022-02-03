@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 import type { Manager } from './dependency.types';
 
-export type MiddlewareFunction = (requestData: {
-  params: Record<string, string>;
+export type MiddlewareFunction<P = unknown> = (requestData: {
+  params: P;
   extraParams: Record<string, boolean | string>;
 }) => Record<string, boolean | string>;
 

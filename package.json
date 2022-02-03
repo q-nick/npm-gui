@@ -34,7 +34,7 @@
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
     "test": "env NODE_TEST=true tap --timeout=60 --bail --ts --files tests",
     "ci:test": "env NODE_TEST=true tap --branches=60 --functions=60 --lines=60 --statements=60 --timeout=160 --bail --ts --files tests",
-    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/install-force.test.ts"
+    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/invalid-project.test.ts"
   },
   "repository": {
     "type": "git",
