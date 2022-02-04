@@ -29,10 +29,10 @@ nextManager(async (manager) => {
       const fastResponse = await project.requestGetFast();
       const fullResponse = await project.requestGetFull();
 
-      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(fastResponse.body, [TEST[manager].PKG_A], 'fast dependencies');
       t.has(
         fullResponse.body,
-        [TEST[manager].PKG_INSTALLED],
+        [TEST[manager].PKG_A_INSTALLED],
         'full dependencies',
       );
     });
@@ -48,10 +48,10 @@ nextManager(async (manager) => {
       const fastResponse = await project.requestGetFast();
       const fullResponse = await project.requestGetFull();
 
-      t.has(fastResponse.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(fastResponse.body, [TEST[manager].PKG_A], 'fast dependencies');
       t.has(
         fullResponse.body,
-        [TEST[manager].PKG_INSTALLED],
+        [TEST[manager].PKG_A_INSTALLED],
         'full dependencies',
       );
     });

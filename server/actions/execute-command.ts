@@ -66,7 +66,7 @@ export async function executeCommandJSONWithFallback<T>(
 ): Promise<T> {
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand);
-    console.log('OK:');
+    console.log('OK:', stdout);
     return stdout ? (JSON.parse(stdout) as T) : ({} as T);
   } catch (error: unknown) {
     console.log('ERROR:', error);

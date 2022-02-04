@@ -18,6 +18,7 @@ import {
 import {
   executeCommandJSONWithFallback,
   executeCommandJSONWithFallbackYarn,
+  executeCommandSimple,
 } from '../../execute-command';
 import { executePnpmOutdated } from '../../pnpm-utils';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
@@ -92,9 +93,7 @@ const getAllNpmDependencies = async (
         required: devDependencies[name],
       }),
     ),
-    ...Object.keys(extraneousInstalled).map(
-      (name): Npm => ({ name, type: 'extraneous' }),
-    ),
+    ...extraneousInstalled.map((name): Npm => ({ name, type: 'extraneous' })),
   ];
 
   return allDependencies.map((dependency): Entire => {
@@ -144,14 +143,11 @@ const getAllPnpmDependencies = async (
   const outdatedInfo: Outdated = {};
   await executePnpmOutdated(outdatedInfo, projectPath);
   await executePnpmOutdated(outdatedInfo, projectPath, true);
-  console.log(outdatedInfo);
-  // unused (only regular dependencies for now)
-  // TODO
 
   // extraneous
   const extraneousInstalled = Object.keys(installedInfo).filter((name) => {
-    const depInfo = installedInfo[name];
-    return depInfo && 'extraneous' in depInfo;
+    const depInfo = dependencies[name];
+    return !depInfo;
   });
 
   const allDependencies: Npm[] = [
@@ -169,9 +165,7 @@ const getAllPnpmDependencies = async (
         required: devDependencies[name],
       }),
     ),
-    ...Object.keys(extraneousInstalled).map(
-      (name): Npm => ({ name, type: 'extraneous' }),
-    ),
+    ...extraneousInstalled.map((name): Npm => ({ name, type: 'extraneous' })),
   ];
 
   return allDependencies.map((dependency): Entire => {
@@ -222,6 +216,8 @@ const getAllYarnDependencies = async (
     'yarn list --depth=0 --json',
   );
 
+  await executeCommandSimple(projectPath, 'yarn list --depth=0 --json');
+
   const outdatedInfo = await executeCommandJSONWithFallbackYarn<
     OutdatedYarn | undefined
   >(projectPath, 'yarn outdated --json');
@@ -242,7 +238,6 @@ const getAllYarnDependencies = async (
         required: devDependencies[name],
       }),
     ),
-    // ...Object.keys(extraneousInstalled).map((name): Npm => ({ name, type: 'extraneous' })), // TODO
   ];
 
   return allDependencies.map((dependency): Entire => {

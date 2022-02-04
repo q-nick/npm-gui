@@ -61,6 +61,7 @@ app.post('/api/search/:repoName', search);
 app.get('/api/info', info);
 app.post('/api/log', log);
 
+/* istanbul ignore next */
 export const start = (
   host = DEFAULT_HOST,
   port = DEFAULT_PORT,

@@ -32,9 +32,9 @@
     "lint:eslint": "eslint . --ignore-path=.gitignore",
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
-    "test": "env NODE_TEST=true tap --timeout=60 --bail --ts --files tests",
-    "ci:test": "env NODE_TEST=true tap --branches=60 --functions=60 --lines=60 --statements=60 --timeout=160 --bail --ts --files tests",
-    "test:dev": "env NODE_TEST=true tap --jobs=1 --timeout=60 --bail --ts --files tests/invalid-project.test.ts"
+    "test": "env NODE_TEST=true tap -Rspec --test-regex=\"test.ts\" --timeout=90 --bail --ts --files tests",
+    "ci:test": "env NODE_TEST=true tap --test-regex=\"test.ts\" --branches=78 --functions=78 --lines=78 --statements=78 --timeout=200 --bail --ts --files tests",
+    "test:dev": "env NODE_TEST=true tap -Rspec --test-regex=\"test.ts\" --jobs=1 --timeout=60 --bail --ts --files tests/fetching.test.ts"
   },
   "repository": {
     "type": "git",
@@ -76,7 +76,8 @@
     "cross-spawn": "^7.0.3",
     "open": "^8.4.0",
     "parcel": "^2.2.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "that-value": "^0.1.3"
   },
   "engines": {
     "node": ">= 10.0.0",
