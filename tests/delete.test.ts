@@ -18,7 +18,7 @@ nextManager(async (manager) => {
 
       const fastResponse = await project.requestGetFast();
 
-      t.has(fastResponse.body, [TEST[manager].PKG], 'dependencies');
+      t.has(fastResponse.body, [TEST[manager].PKG_A], 'dependencies');
     });
 
     await group.test('uninstalled valid name', async (t) => {
@@ -46,10 +46,14 @@ nextManager(async (manager) => {
       const fastResponseBefore = await project.requestGetFast();
       const fullResponseBefore = await project.requestGetFull();
 
-      t.has(fastResponseBefore.body, [TEST[manager].PKG], 'fast dependencies');
+      t.has(
+        fastResponseBefore.body,
+        [TEST[manager].PKG_A],
+        'fast dependencies',
+      );
       t.has(
         fullResponseBefore.body,
-        [TEST[manager].PKG_INSTALLED],
+        [TEST[manager].PKG_A_INSTALLED],
         'full dependencies',
       );
 

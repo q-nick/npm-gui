@@ -18,6 +18,7 @@ interface Parameters {
   manager: Manager;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  extraneous?: Record<string, string>;
   install?: true;
 }
 
@@ -54,6 +55,7 @@ export const prepareTestProject = async (
       devDependencies,
       manager,
       install,
+      extraneous,
     }: Parameters): ReturnType<TestProject['prepareClear']> => {
       await remove(path.join(testDirectoryPath, 'node_modules'));
       await remove(path.join(testDirectoryPath, 'package.json'));
@@ -94,6 +96,14 @@ export const prepareTestProject = async (
           path.join(testDirectoryPath),
           'pnpm install',
         );
+      }
+
+      // override dependencies with etraneous to emulate them
+      if (extraneous) {
+        await writeJson(path.join(testDirectoryPath, 'package.json'), {
+          ...packageJsonToWrite,
+          dependencies: extraneous,
+        });
       }
 
       clearCache();
@@ -153,71 +163,118 @@ export const nextManager = async (
   await callback('pnpm');
 };
 
-export const PKG = {
+export const nextDependenciesType = async (
+  callback: (dependenciesType: 'dev' | 'prod') => Promise<void>,
+): Promise<void> => {
+  await callback('prod');
+  await callback('dev');
+};
+
+export const PKG_A = {
   name: 'npm-gui-tests',
   required: '^1.0.0',
   manager: 'npm',
   type: 'prod',
 };
 
+export const PKG_B = {
+  name: 'npm-gui-tests-2',
+  required: '^1.0.0',
+  manager: 'npm',
+  type: 'prod',
+};
+
 export const NPM = {
-  PKG,
-  PKG_UNINSTALLED: {
-    ...PKG,
+  PKG_A,
+  PKG_B,
+  PKG_A_UNINSTALLED: {
+    ...PKG_A,
     installed: null,
     wanted: null,
     latest: null,
   },
-  PKG_INSTALLED: {
-    ...PKG,
+  PKG_A_INSTALLED: {
+    ...PKG_A,
     installed: '1.1.1',
     wanted: null,
     latest: '2.1.1',
   },
-  PKG2: {
-    ...PKG,
+  PKG_A_UP: {
+    ...PKG_A,
     required: '^1.1.1',
   },
-  PKG2_INSTALLED: {
-    ...PKG,
+  PKG_B_UP: {
+    ...PKG_B,
+    required: '^1.0.1',
+  },
+  PKG_A_UP_INSTALLED: {
+    ...PKG_A,
     required: '^1.1.1',
     installed: '1.1.1',
     wanted: null,
     latest: '2.1.1',
   },
-  PKG2_NEWEST: {
-    ...PKG,
+  PKG_B_UP_INSTALLED: {
+    ...PKG_B,
+    required: '^1.0.1',
+    installed: '1.0.1',
+    wanted: null,
+    latest: null,
+  },
+  PKG_A_UP_NEWEST: {
+    ...PKG_A,
     required: '^2.1.1',
     installed: '2.1.1',
+    wanted: null,
+    latest: null,
+  },
+  PKG_B_UP_NEWEST: {
+    ...PKG_B,
+    required: '^1.0.1',
+    installed: '1.0.1',
     wanted: null,
     latest: null,
   },
 };
 
 export const YARN = {
-  PKG: { ...NPM.PKG, manager: 'yarn' },
-  PKG_UNINSTALLED: { ...NPM.PKG_UNINSTALLED, manager: 'yarn' },
-  PKG_INSTALLED: { ...NPM.PKG_INSTALLED, manager: 'yarn' },
-  PKG2: { ...NPM.PKG2, required: '^1.0.0', manager: 'yarn' },
-  PKG2_INSTALLED: {
-    ...NPM.PKG2_INSTALLED,
+  PKG_A: { ...NPM.PKG_A, manager: 'yarn' },
+  PKG_B: { ...NPM.PKG_B, manager: 'yarn' },
+  PKG_A_UNINSTALLED: { ...NPM.PKG_A_UNINSTALLED, manager: 'yarn' },
+  PKG_A_INSTALLED: { ...NPM.PKG_A_INSTALLED, manager: 'yarn' },
+  PKG_A_UP: { ...NPM.PKG_A_UP, required: '^1.0.0', manager: 'yarn' },
+  PKG_B_UP: { ...NPM.PKG_B_UP, required: '^1.0.0', manager: 'yarn' },
+  PKG_A_UP_INSTALLED: {
+    ...NPM.PKG_A_UP_INSTALLED,
     required: '^1.0.0',
     manager: 'yarn',
   },
-  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, manager: 'yarn' },
+  PKG_B_UP_INSTALLED: {
+    ...NPM.PKG_B_UP_INSTALLED,
+    required: '^1.0.0',
+    manager: 'yarn',
+  },
+  PKG_A_UP_NEWEST: { ...NPM.PKG_A_UP_NEWEST, manager: 'yarn' },
+  PKG_B_UP_NEWEST: { ...NPM.PKG_B_UP_NEWEST, manager: 'yarn' },
 };
 
 export const PNPM = {
-  PKG: { ...NPM.PKG, manager: 'pnpm' },
-  PKG_UNINSTALLED: { ...NPM.PKG_UNINSTALLED, manager: 'pnpm' },
-  PKG_INSTALLED: { ...NPM.PKG_INSTALLED, manager: 'pnpm' },
-  PKG2: { ...NPM.PKG2, required: '^1.0.0', manager: 'pnpm' },
-  PKG2_INSTALLED: {
-    ...NPM.PKG2_INSTALLED,
-    required: '^1.0.0',
+  PKG_A: { ...NPM.PKG_A, manager: 'pnpm' },
+  PKG_B: { ...NPM.PKG_B, manager: 'pnpm' },
+  PKG_A_UNINSTALLED: { ...NPM.PKG_A_UNINSTALLED, manager: 'pnpm' },
+  PKG_A_INSTALLED: { ...NPM.PKG_A_INSTALLED, manager: 'pnpm' },
+  PKG_A_UP: { ...YARN.PKG_A_UP, manager: 'pnpm' },
+  PKG_B_UP: { ...YARN.PKG_B_UP, manager: 'pnpm' },
+  PKG_A_UP_INSTALLED: {
+    ...YARN.PKG_A_UP_INSTALLED,
     manager: 'pnpm',
   },
-  PKG2_NEWEST: { ...NPM.PKG2_NEWEST, manager: 'pnpm' },
+  PKG_B_UP_INSTALLED: {
+    ...YARN.PKG_B_UP_INSTALLED,
+    manager: 'pnpm',
+  },
+  PKG_A_UP_NEWEST: { ...NPM.PKG_A_UP_NEWEST, manager: 'pnpm' },
+  PKG_B_UP_NEWEST: { ...NPM.PKG_B_UP_NEWEST, manager: 'pnpm' },
 };
 
 export const TEST = {

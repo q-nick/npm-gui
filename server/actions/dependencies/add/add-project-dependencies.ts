@@ -221,7 +221,7 @@ const addPnpmDependencies = async (
   );
   const command = `pnpm install ${dependenciesToInstall.join(' ')} -${
     type === 'prod' ? 'P' : 'D'
-  } --json`;
+  }`;
   await executeCommandSimple(projectPath, command);
 };
 
@@ -267,9 +267,6 @@ export const addDependencies: ResponserFunction<
   extraParams: { projectPathDecoded, manager, xCacheId },
   body,
 }) => {
-  if (type === undefined) {
-    throw new Error(' no type');
-  }
   const dependenciesToInstall = body.filter((d) => d.name);
   const ONE = 1;
 
