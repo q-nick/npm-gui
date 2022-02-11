@@ -3,29 +3,32 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 
 import { TaskElement } from './components/Task';
-import { ScheduleContext } from './ScheduleContext';
+import { TaskQueueContext } from './TaskQueueContext';
 
-const ScheduleWrapper = styled.div`
+const TaskQueueWrapper = styled.div`
   background: #3e3f3a;
   padding: 5px 15px;
   display: flex;
   flex-wrap: wrap;
 `;
 
-export const Schedule: VFC = () => {
-  const { schedule, removeTask } = useContext(ScheduleContext);
+export const TaskQueue: VFC = () => {
+  const {
+    state: { queue },
+    dispatch,
+  } = useContext(TaskQueueContext);
 
   return (
-    <ScheduleWrapper>
-      {schedule.map((task) => (
+    <TaskQueueWrapper>
+      {queue.map((task) => (
         <TaskElement
           key={task.id}
           onClick={(): void => {
-            removeTask(task);
+            dispatch({ type: 'removeTask', task });
           }}
           task={task}
         />
       ))}
-    </ScheduleWrapper>
+    </TaskQueueWrapper>
   );
 };

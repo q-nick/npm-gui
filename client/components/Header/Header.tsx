@@ -1,9 +1,9 @@
 import type { VFC } from 'react';
 import { useCallback, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { StoreContext } from '../../app/StoreContext';
+import { ContextStore } from '../../app/ContextStore';
 import { Button } from '../../ui/Button/Button';
 import { Explorer } from './components/Explorer';
 
@@ -40,18 +40,24 @@ const Title = styled.h1`
   margin: 0 15px 0 0;
 `;
 
-interface Props {
-  projectPathEncoded?: string;
-}
+const CloseButton = styled(Button)`
+  margin-right: 15px;
+  margin-left: -3px;
+`;
 
-export const Header: VFC<Props> = ({ projectPathEncoded }) => {
-  const { projects } = useContext(StoreContext);
+export const Header: VFC = () => {
+  const { projectPathEncoded } = useParams<{ projectPathEncoded?: string }>();
+  const projectPathEncodedDefault = projectPathEncoded || 'global';
+
+  const {
+    state: { projects },
+  } = useContext(ContextStore);
 
   const history = useHistory();
 
   const onSelectPath = useCallback(
     (path: string) => {
-      history.push(`/project/${window.btoa(path)}/dependencies`);
+      history.push(`/${window.btoa(path)}`);
     },
     [history],
   );
@@ -67,7 +73,7 @@ export const Header: VFC<Props> = ({ projectPathEncoded }) => {
           onClick={(): void => {
             history.push('/');
           }}
-          variant={projectPathEncoded === undefined ? 'info' : 'dark'}
+          variant={projectPathEncodedDefault === 'global' ? 'info' : 'dark'}
         >
           Global
         </Button>
@@ -77,22 +83,32 @@ export const Header: VFC<Props> = ({ projectPathEncoded }) => {
         {Object.keys(projects)
           .filter((p) => p !== 'global')
           .map((oneOfProjectPathEncoded) => (
-            <Button
-              icon="code"
-              key={oneOfProjectPathEncoded}
-              lowercase
-              onClick={(): void => {
-                history.push(
-                  `/project/${oneOfProjectPathEncoded}/dependencies`,
-                );
-              }}
-              title={window.atob(oneOfProjectPathEncoded)}
-              variant={
-                oneOfProjectPathEncoded === projectPathEncoded ? 'info' : 'dark'
-              }
-            >
-              {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
-            </Button>
+            <>
+              <Button
+                icon="code"
+                key={oneOfProjectPathEncoded}
+                lowercase
+                onClick={(): void => {
+                  history.push(`/${oneOfProjectPathEncoded}`);
+                }}
+                title={window.atob(oneOfProjectPathEncoded)}
+                variant={
+                  oneOfProjectPathEncoded === projectPathEncodedDefault
+                    ? 'info'
+                    : 'dark'
+                }
+              >
+                {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
+              </Button>
+              <CloseButton
+                icon="x"
+                variant={
+                  oneOfProjectPathEncoded === projectPathEncodedDefault
+                    ? 'info'
+                    : 'dark'
+                }
+              />
+            </>
           ))}
 
         <Explorer onSelectPath={onSelectPath} />

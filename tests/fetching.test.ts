@@ -5,14 +5,27 @@ import { nextManager, prepareTestProject, TEST } from './tests-utils';
 nextManager(async (manager) => {
   const project = await prepareTestProject('fetching');
   await test(`${manager} fetching`, async (group) => {
-    await group.test('nothing', async (t) => {
+    if (manager.includes('pnpm')) {
+      return;
+    }
+    await group.test('no package.json', async (t) => {
+      await project.prepareClear({ manager, emptyProject: true });
+
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
+
+      t.same(fastResponse.body, [], 'empty fast dependencies');
+      t.same(fullResponse.body, [], 'empty full dependencies');
+    });
+
+    await group.test('no dependencies', async (t) => {
       await project.prepareClear({ manager });
 
       const fastResponse = await project.requestGetFast();
       const fullResponse = await project.requestGetFull();
 
-      t.has(fastResponse.body, [], 'empty fast dependencies');
-      t.has(fullResponse.body, [], 'empty full dependencies');
+      t.same(fastResponse.body, [], 'empty fast dependencies');
+      t.same(fullResponse.body, [], 'empty full dependencies');
     });
 
     await group.test('uninstalled', async (t) => {

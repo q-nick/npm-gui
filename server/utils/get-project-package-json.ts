@@ -31,7 +31,7 @@ export const getDependenciesFromPackageJson = (
   return packageJson.dependencies ?? {};
 };
 
-export const getDevDependenciesFromPackageJson = (
+export const getDevelopmentDependenciesFromPackageJson = (
   projectPath: string,
 ): Record<string, string> => {
   const packageJson = getProjectPackageJSON(projectPath);

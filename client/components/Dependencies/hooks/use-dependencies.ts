@@ -7,10 +7,10 @@ import type {
   Manager,
   Type,
 } from '../../../../server/types/dependency.types';
-import { StoreContext } from '../../../app/StoreContext';
+import { ContextStore } from '../../../app/ContextStore';
 import { ZERO } from '../../../utils';
 import { xCacheId } from '../../../xcache';
-import { ScheduleContext } from '../../Schedule/ScheduleContext';
+import { TaskQueueContext } from '../../TaskQueue/TaskQueueContext';
 
 const getBasePathFor = (projectPath: string): string => {
   if (projectPath !== 'global') {
@@ -30,9 +30,11 @@ export interface Hook {
 }
 
 export const useDependencies = (projectPath: string): Hook => {
-  const { addToApiSchedule } = useContext(ScheduleContext);
-  const { projects, setProjectDependencies, updateProjectDepsProcessing } =
-    useContext(StoreContext);
+  const { dispatch: taskQueueDispatch } = useContext(TaskQueueContext);
+  const {
+    state: { projects },
+    dispatch,
+  } = useContext(ContextStore);
 
   const project = projects[projectPath];
   const dependencies = useMemo(
@@ -45,102 +47,105 @@ export const useDependencies = (projectPath: string): Hook => {
   );
 
   // Fetch function
-  const fetchDependencies = useCallback(
-    (instantSchedule?: boolean) => {
-      addToApiSchedule({
-        instantSchedule,
+  const fetchDependencies = useCallback(() => {
+    taskQueueDispatch({
+      type: 'addTask',
+      task: {
         projectPath,
         description: 'fetching dependencies',
         executeMe: async () => {
-          const responseSimple = await fetch(
+          const responseFast = await fetch(
             `${getBasePathFor(projectPath)}/simple`,
             { headers: { 'x-cache-id': xCacheId } },
           );
-          const simpleData = (await responseSimple.json()) as Entire[];
-          setProjectDependencies(projectPath, simpleData);
+          const fastData = (await responseFast.json()) as Entire[];
 
-          updateProjectDepsProcessing(
+          dispatch({
+            type: 'setProjectDependencies',
             projectPath,
-            simpleData.map((d) => d.name),
-            true,
-          );
+            dependencies: fastData,
+          });
+
+          dispatch({
+            type: 'setProjectDependenciesProcessing',
+            projectPath,
+            dependenciesToUpdate: fastData.map((d) => d.name),
+            value: true,
+          });
 
           const responseFull = await fetch(
             `${getBasePathFor(projectPath)}/full`,
             { headers: { 'x-cache-id': xCacheId } },
           );
           const fullData = (await responseFull.json()) as Entire[];
+
           if (Array.isArray(fullData)) {
-            setProjectDependencies(projectPath, fullData);
+            dispatch({
+              type: 'setProjectDependencies',
+              projectPath,
+              dependencies: fullData,
+            });
           }
-          updateProjectDepsProcessing(
+
+          dispatch({
+            type: 'setProjectDependenciesProcessing',
             projectPath,
-            simpleData.map((d) => d.name),
-            false,
-          );
+            dependenciesToUpdate: fastData.map((d) => d.name),
+            value: false,
+          });
         },
-      });
-    },
-    [
-      setProjectDependencies,
-      updateProjectDepsProcessing,
-      addToApiSchedule,
-      projectPath,
-    ],
-  );
+      },
+    });
+  }, [dispatch, projectPath, taskQueueDispatch]);
 
   // Add new dependency
   const onInstallNewDependency = useCallback<Hook['onInstallNewDependency']>(
     (dependency, type) => {
-      updateProjectDepsProcessing(projectPath, [dependency.name], true);
-      addToApiSchedule({
-        projectPath,
-        description: `installing ${dependency.name} as ${type}`,
-        executeMe: async () => {
-          updateProjectDepsProcessing(projectPath, [dependency.name], true);
-          await fetch(`${getBasePathFor(projectPath)}/${type}`, {
-            method: 'POST',
-            body: JSON.stringify([dependency]),
-            headers: { 'x-cache-id': xCacheId },
-          });
-          fetchDependencies();
+      taskQueueDispatch({
+        type: 'addTask',
+        task: {
+          projectPath,
+          description: `installing ${dependency.name} as ${type}`,
+          dependencies: [dependency.name],
+          skipFinalDependencies: true,
+          executeMe: async () => {
+            await fetch(`${getBasePathFor(projectPath)}/${type}`, {
+              method: 'POST',
+              body: JSON.stringify([dependency]),
+              headers: { 'x-cache-id': xCacheId },
+            });
+
+            fetchDependencies();
+          },
         },
       });
     },
-    [
-      addToApiSchedule,
-      fetchDependencies,
-      updateProjectDepsProcessing,
-      projectPath,
-    ],
+    [fetchDependencies, projectPath, taskQueueDispatch],
   );
 
   // Delete dependency
   const onDeleteDependency = useCallback<Hook['onDeleteDependency']>(
     (dependency) => {
-      updateProjectDepsProcessing(projectPath, [dependency.name], true);
-      addToApiSchedule({
-        projectPath,
-        description: `deleting ${dependency.name} as ${dependency.type}`,
-        executeMe: async () => {
-          updateProjectDepsProcessing(projectPath, [dependency.name], true);
-
-          await fetch(
-            `${getBasePathFor(projectPath)}/${dependency.type}/${
-              dependency.name
-            }`,
-            { method: 'DELETE', headers: { 'x-cache-id': xCacheId } },
-          );
-          fetchDependencies();
+      taskQueueDispatch({
+        type: 'addTask',
+        task: {
+          projectPath,
+          description: `deleting ${dependency.name} as ${dependency.type}`,
+          dependencies: [dependency.name],
+          skipFinalDependencies: true,
+          executeMe: async () => {
+            await fetch(
+              `${getBasePathFor(projectPath)}/${dependency.type}/${
+                dependency.name
+              }`,
+              { method: 'DELETE', headers: { 'x-cache-id': xCacheId } },
+            );
+            fetchDependencies();
+          },
         },
       });
     },
-    [
-      addToApiSchedule,
-      projectPath,
-      fetchDependencies,
-      updateProjectDepsProcessing,
-    ],
+    [fetchDependencies, projectPath, taskQueueDispatch],
   );
 
   // Install all dependencies
@@ -151,37 +156,26 @@ export const useDependencies = (projectPath: string): Hook => {
       if (!dependencies) {
         return;
       }
-      updateProjectDepsProcessing(
-        projectPath,
-        dependencies.map((d) => d.name),
-        true,
-      );
-      addToApiSchedule({
-        projectPath,
-        description: `${manager ?? ''} installing all`,
-        executeMe: async () => {
-          updateProjectDepsProcessing(
-            projectPath,
-            dependencies.map((d) => d.name),
-            true,
-          );
-          await fetch(
-            `${getBasePathFor(projectPath)}/install${
-              manager ? `/${manager}` : ''
-            }`,
-            { method: 'POST', headers: { 'x-cache-id': xCacheId } },
-          );
-          fetchDependencies();
+
+      taskQueueDispatch({
+        type: 'addTask',
+        task: {
+          projectPath,
+          description: `${manager ?? ''} installing all`,
+          dependencies: dependencies.map((d) => d.name),
+          executeMe: async () => {
+            await fetch(
+              `${getBasePathFor(projectPath)}/install${
+                manager ? `/${manager}` : ''
+              }`,
+              { method: 'POST', headers: { 'x-cache-id': xCacheId } },
+            );
+            fetchDependencies();
+          },
         },
       });
     },
-    [
-      addToApiSchedule,
-      projectPath,
-      dependencies,
-      fetchDependencies,
-      updateProjectDepsProcessing,
-    ],
+    [dependencies, fetchDependencies, projectPath, taskQueueDispatch],
   );
 
   // Install specific dependencies versions
@@ -190,11 +184,6 @@ export const useDependencies = (projectPath: string): Hook => {
       if (dependenciesToUpdate.length === ZERO) {
         return;
       }
-      updateProjectDepsProcessing(
-        projectPath,
-        dependenciesToUpdate.map((d) => d.name),
-        true,
-      );
 
       const dependenciesToUpdateDevelopment = dependenciesToUpdate.filter(
         (d) => d.type === 'dev',
@@ -203,37 +192,31 @@ export const useDependencies = (projectPath: string): Hook => {
         (d) => d.type === 'prod',
       );
 
-      addToApiSchedule({
-        projectPath,
-        description: 'updating dependencies',
-        executeMe: async () => {
-          updateProjectDepsProcessing(
-            projectPath,
-            dependenciesToUpdate.map((d) => d.name),
-            true,
-          );
+      taskQueueDispatch({
+        type: 'addTask',
+        task: {
+          projectPath,
+          description: 'updating dependencies',
+          dependencies: dependenciesToUpdate.map((d) => d.name),
+          skipFinalDependencies: true,
+          executeMe: async () => {
+            await fetch(`${getBasePathFor(projectPath)}/dev`, {
+              method: 'POST',
+              body: JSON.stringify(dependenciesToUpdateDevelopment),
+              headers: { 'x-cache-id': xCacheId },
+            });
+            await fetch(`${getBasePathFor(projectPath)}/prod`, {
+              method: 'POST',
+              body: JSON.stringify(dependenciesToUpdateProduction),
+              headers: { 'x-cache-id': xCacheId },
+            });
 
-          await fetch(`${getBasePathFor(projectPath)}/dev`, {
-            method: 'POST',
-            body: JSON.stringify(dependenciesToUpdateDevelopment),
-            headers: { 'x-cache-id': xCacheId },
-          });
-          await fetch(`${getBasePathFor(projectPath)}/prod`, {
-            method: 'POST',
-            body: JSON.stringify(dependenciesToUpdateProduction),
-            headers: { 'x-cache-id': xCacheId },
-          });
-
-          fetchDependencies();
+            fetchDependencies();
+          },
         },
       });
     },
-    [
-      addToApiSchedule,
-      updateProjectDepsProcessing,
-      projectPath,
-      fetchDependencies,
-    ],
+    [fetchDependencies, projectPath, taskQueueDispatch],
   );
 
   // Inital fetch

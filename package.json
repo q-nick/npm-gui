@@ -34,7 +34,7 @@
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:ts",
     "test": "env NODE_TEST=true tap -Rspec --test-regex=\"test.ts\" --timeout=90 --bail --ts --files tests",
     "ci:test": "env NODE_TEST=true tap --test-regex=\"test.ts\" --branches=78 --functions=78 --lines=78 --statements=78 --timeout=200 --bail --ts --files tests",
-    "test:dev": "env NODE_TEST=true tap -Rspec --test-regex=\"test.ts\" --jobs=1 --timeout=60 --bail --ts --files tests/fetching.test.ts"
+    "test:dev": "env NODE_TEST=true tap -Rspec --test-regex=\"test.ts\" --jobs=1 --timeout=60 --bail --ts --files tests/units.test.ts"
   },
   "repository": {
     "type": "git",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^9.0.13",
-    "@types/react": "^17.0.38",
+    "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.3.3",
     "@types/rimraf": "^3.0.2",
@@ -75,7 +75,7 @@
   "dependencies": {
     "cross-spawn": "^7.0.3",
     "open": "^8.4.0",
-    "parcel": "^2.2.1",
+    "parcel": "^2.3.1",
     "rimraf": "^3.0.2",
     "that-value": "^0.1.3"
   },

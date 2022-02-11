@@ -1,47 +1,26 @@
 import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
-import styled from 'styled-components';
 
-import { StoreContext } from '../app/StoreContext';
+import { ContextStore } from '../app/ContextStore';
 import { Dependencies } from './Dependencies/Dependencies';
-import { Header } from './Header/Header';
-
-const Row = styled.div`
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-`;
-
-const RightColumn = styled.div`
-  display: flex;
-  flex: 1;
-  padding: 15px;
-  flex-direction: column;
-`;
 
 export const Global: VFC = () => {
-  const { projects, addProject } = useContext(StoreContext);
+  const {
+    state: { projects },
+    dispatch,
+  } = useContext(ContextStore);
+
   const scope = projects['global'];
+
   useEffect(() => {
     if (!scope) {
-      addProject('global');
+      dispatch({ type: 'addProject', projectPath: 'global' });
     }
-  }, [addProject, scope]);
+  }, [dispatch, scope]);
 
   if (!scope) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
 
-  return (
-    <>
-      <Header />
-
-      <Row>
-        <RightColumn>
-          <Dependencies projectPath="global" />
-        </RightColumn>
-      </Row>
-    </>
-  );
+  return <Dependencies projectPath="global" />;
 };
