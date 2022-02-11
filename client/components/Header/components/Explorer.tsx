@@ -12,7 +12,7 @@ import {
   ExplorerFile,
   ExplorerList,
   Wrapper,
-} from './ExplorerUI';
+} from './ExplorerUi';
 
 interface Props {
   onSelectPath: (path: string) => void;

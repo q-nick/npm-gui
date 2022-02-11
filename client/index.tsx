@@ -1,11 +1,18 @@
-// eslint-disable-next-line import/no-unassigned-import
+/* eslint-disable import/no-unassigned-import */
 import './base.css';
+import 'open-iconic/font/css/open-iconic.css';
 
+import React from 'react';
 import { render } from 'react-dom';
 
-import { App } from './app/App';
+import { App } from './components/App';
 
-render(<App />, document.querySelector('.npm-gui'));
+render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.querySelector('.npm-gui'),
+);
 
 if (window.localStorage.getItem('npm-gui-id') === null) {
   window.localStorage.setItem('npm-gui-id', Date.now().toString());

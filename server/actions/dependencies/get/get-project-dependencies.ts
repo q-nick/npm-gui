@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-// import util from 'util';
 import type { Installed, Outdated } from '../../../types/commands.types';
 import type { Entire, Manager, Npm } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
@@ -8,7 +7,7 @@ import type { InstalledYarn, OutdatedYarn } from '../../../types/yarn.types';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import {
   getDependenciesFromPackageJson,
-  getDevDependenciesFromPackageJson as getDevelopmentDependenciesFromPackageJson,
+  getDevelopmentDependenciesFromPackageJson,
 } from '../../../utils/get-project-package-json';
 import {
   getInstalledVersion,

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import type { Props as ButtonProps } from '../../../ui/Button/Button';
 import { Button } from '../../../ui/Button/Button';
 import { Modal } from '../../../ui/Modal/Modal';
-import type { Task } from '../ScheduleContext';
+import type { Task } from '../TaskQueueContext';
 
 const CloseButton = styled(Button)`
   margin-right: 15px;
@@ -25,7 +25,7 @@ const mapStatusToButtonVariant: Record<Task['status'], ButtonProps['variant']> =
     RUNNING: 'success',
     ERROR: 'danger',
     SUCCESS: 'dark',
-  };
+  } as const;
 
 export const TaskElement: VFC<Props> = ({ task, onClick }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);

@@ -101,7 +101,7 @@ const getPnpmPackageWithInfo = async (
   );
 
   return {
-    manager: 'npm',
+    manager: 'pnpm',
     required,
     name: dependencyName,
     type,

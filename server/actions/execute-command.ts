@@ -6,12 +6,13 @@ export const executeCommand = (
   cwd: string | undefined,
   wholeCommand: string,
 ): Promise<{ stdout: string; stderr: string }> => {
-  console.log(`Command: ${cwd ?? ''} ${wholeCommand}, started:`);
+  // console.log(`Command: ${cwd ?? ''} ${wholeCommand}, started:`);
   return new Promise((resolve, reject) => {
     // spawn process
     const commandArguments = wholeCommand.split(' ');
     const command = commandArguments.shift();
-    if (command === undefined) {
+
+    if (!command) {
       reject(new Error('command not passed'));
     } else {
       const spawned = spawn(command, commandArguments, {

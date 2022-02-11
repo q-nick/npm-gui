@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-statements */
 import { ensureDir, remove, writeFile, writeJson } from 'fs-extra';
@@ -20,18 +21,27 @@ interface Parameters {
   devDependencies?: Record<string, string>;
   extraneous?: Record<string, string>;
   install?: true;
+  emptyProject?: true;
 }
 
 interface TestProject {
-  requestGetFast: () => Promise<api.Test>;
-  requestGetFull: () => Promise<api.Test>;
-  requestInstall: () => Promise<api.Test>;
-  requestInstallForce: (manager: string) => Promise<api.Test>;
+  requestGetFast: (xCacheId?: string) => Promise<api.Test>;
+  requestGetFull: (xCacheId?: string) => Promise<api.Test>;
+  requestInstall: (xCacheId?: string) => Promise<api.Test>;
+  requestInstallForce: (
+    manager: string,
+    xCacheId?: string,
+  ) => Promise<api.Test>;
   requestAdd: (
     type: 'dev' | 'prod',
     dependencies: { name: string; version?: string }[],
+    xCacheId?: string,
   ) => Promise<api.Test>;
-  requestDel: (type: 'dev' | 'prod', name: string) => Promise<api.Test>;
+  requestDel: (
+    type: 'dev' | 'prod',
+    name: string,
+    xCacheId?: string,
+  ) => Promise<api.Test>;
 
   prepareClear: (p: Parameters) => Promise<void>;
 }
@@ -56,13 +66,20 @@ export const prepareTestProject = async (
       manager,
       install,
       extraneous,
+      emptyProject,
     }: Parameters): ReturnType<TestProject['prepareClear']> => {
+      clearCache();
+
       await remove(path.join(testDirectoryPath, 'node_modules'));
       await remove(path.join(testDirectoryPath, 'package.json'));
       await remove(path.join(testDirectoryPath, 'package-lock.json'));
       await remove(path.join(testDirectoryPath, 'yarn.lock'));
       await remove(path.join(testDirectoryPath, 'pnpm-lock.yaml'));
       await remove(path.join(testDirectoryPath, 'yarn-error.lock'));
+
+      if (emptyProject) {
+        return;
+      }
 
       const packageJsonToWrite = {
         ...PACKAGE_JSON,
@@ -109,48 +126,62 @@ export const prepareTestProject = async (
       clearCache();
     },
 
-    requestInstall: async (): ReturnType<TestProject['requestInstall']> => {
-      return api(app.server).post(
-        `/api/project/${encodedTestDirectoryPath}/dependencies/install`,
-      );
+    requestInstall: async (
+      xCacheId,
+    ): ReturnType<TestProject['requestInstall']> => {
+      return api(app.server)
+        .post(`/api/project/${encodedTestDirectoryPath}/dependencies/install`)
+        .set({ 'x-cache-id': xCacheId || directoryId });
     },
 
     requestInstallForce: async (
       manager: string,
+      xCacheId,
     ): ReturnType<TestProject['requestInstallForce']> => {
-      return api(app.server).post(
-        `/api/project/${encodedTestDirectoryPath}/dependencies/install/${manager}`,
-      );
+      return api(app.server)
+        .post(
+          `/api/project/${encodedTestDirectoryPath}/dependencies/install/${manager}`,
+        )
+        .set({ 'x-cache-id': xCacheId || directoryId });
     },
 
-    requestGetFast: async (): ReturnType<TestProject['requestGetFast']> => {
-      return api(app.server).get(
-        `/api/project/${encodedTestDirectoryPath}/dependencies/simple`,
-      );
+    requestGetFast: async (
+      xCacheId,
+    ): ReturnType<TestProject['requestGetFast']> => {
+      return api(app.server)
+        .get(`/api/project/${encodedTestDirectoryPath}/dependencies/simple`)
+        .set({ 'x-cache-id': xCacheId || directoryId });
     },
 
-    requestGetFull: async (): ReturnType<TestProject['requestGetFull']> => {
-      return api(app.server).get(
-        `/api/project/${encodedTestDirectoryPath}/dependencies/full`,
-      );
+    requestGetFull: async (
+      xCacheId,
+    ): ReturnType<TestProject['requestGetFull']> => {
+      return api(app.server)
+        .get(`/api/project/${encodedTestDirectoryPath}/dependencies/full`)
+        .set({ 'x-cache-id': xCacheId || directoryId });
     },
 
     requestAdd: async (
-      type: 'dev' | 'prod',
-      dependencies: { name: string; version?: string }[],
+      type,
+      dependencies,
+      xCacheId,
     ): ReturnType<TestProject['requestAdd']> => {
       return api(app.server)
         .post(`/api/project/${encodedTestDirectoryPath}/dependencies/${type}`)
+        .set({ 'x-cache-id': xCacheId || directoryId })
         .send(dependencies);
     },
 
     requestDel: async (
-      type: 'dev' | 'prod',
-      name: string,
+      type,
+      name,
+      xCacheId,
     ): ReturnType<TestProject['requestDel']> => {
-      return api(app.server).delete(
-        `/api/project/${encodedTestDirectoryPath}/dependencies/${type}/${name}`,
-      );
+      return api(app.server)
+        .delete(
+          `/api/project/${encodedTestDirectoryPath}/dependencies/${type}/${name}`,
+        )
+        .set({ 'x-cache-id': xCacheId || directoryId });
     },
   };
 };
