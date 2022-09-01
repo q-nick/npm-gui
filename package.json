@@ -33,7 +33,7 @@
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm-run-all lint:* -p",
     "test": "jest --runInBand",
-    "ci:test": "env NODE_TEST=true jest"
+    "ci:test": "npm run test"
   },
   "repository": {
     "type": "git",
