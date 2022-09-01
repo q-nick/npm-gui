@@ -33,7 +33,9 @@ export const executeCommand = (
 
       // wait for finish and resolve
       spawned.on('close', (exitStatus: number) => {
-        console.log(exitStatus);
+        if (!process.env['NODE_TEST']) {
+          console.log(exitStatus);
+        }
         if (exitStatus === ZERO) {
           resolve({
             stdout,
@@ -67,10 +69,14 @@ export async function executeCommandJSONWithFallback<T>(
 ): Promise<T> {
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand);
-    console.log('OK:', stdout);
+    if (!process.env['NODE_TEST']) {
+      console.log('OK:', stdout);
+    }
     return stdout ? (JSON.parse(stdout) as T) : ({} as T);
   } catch (error: unknown) {
-    console.log('ERROR:', error);
+    if (!process.env['NODE_TEST']) {
+      console.log('ERROR:', error);
+    }
     return JSON.parse(
       (error as string).replace(/(\n{[\S\s]+)?npm ERR[\S\s]+/gm, ''),
     ) as T;
@@ -84,7 +90,9 @@ export async function executeCommandJSONWithFallbackYarn<T>(
 ): Promise<T | undefined> {
   try {
     const { stdout, stderr } = await executeCommand(cwd, wholeCommand);
-    console.log('OK:');
+    if (!process.env['NODE_TEST']) {
+      console.log('OK:');
+    }
     const JSONs = (stdout + stderr)
       .trim()
       .split('\n')
@@ -104,22 +112,24 @@ export async function executeCommandJSONWithFallbackYarn<T>(
       return anyError;
     }
   } catch (error: unknown) {
-    console.log('ERROR:');
+    if (!process.env['NODE_TEST']) {
+      console.log('ERROR:');
+    }
 
     if (typeof error === 'string') {
-      const JSONs = error
+      const JSONS = error
         .trim()
         .split('\n')
         .filter((x) => x)
         .map((r) => JSON.parse(r));
-      const table = JSONs.find((x) => 'type' in x && x.type === 'table') as
+      const table = JSONS.find((x) => 'type' in x && x.type === 'table') as
         | T
         | undefined;
       if (table) {
         return table;
       }
 
-      const anyError = JSONs.find((x) => 'type' in x && x.type === 'error') as
+      const anyError = JSONS.find((x) => 'type' in x && x.type === 'error') as
         | T
         | undefined;
       if (anyError) {
