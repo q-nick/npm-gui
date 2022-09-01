@@ -1,37 +1,34 @@
 import path from 'path';
 import api from 'supertest';
-import { test } from 'tap';
 
 import { app } from '../server';
-import type { FileOrFolder } from '../server/actions/explorer/explorer';
 import { HTTP_STATUS_OK } from '../server/utils/utils';
+import type { TestProject } from './tests-utils';
 import { encodePath, prepareTestProject } from './tests-utils';
 
-test(`Explorer`, async (group) => {
-  const project = await prepareTestProject('explorer');
+describe(`Explorer`, () => {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let project: TestProject;
 
-  await group.test(
-    'should return result of pwd when given path is undefined',
-    async (t) => {
-      await project.prepareClear({ manager: 'npm' });
+  beforeAll(async () => {
+    project = await prepareTestProject('explorer');
+  });
 
-      const response = await api(app.server).get('/api/explorer/');
-      t.same(response.status, HTTP_STATUS_OK, 'status');
-      t.notSame(response.body.path, undefined, 'path is defined');
+  test('should return result of pwd when given path is undefined', async () => {
+    await project.prepareClear({ manager: 'npm' });
 
-      t.same(
-        response.body.ls.find((entry: FileOrFolder) => entry.name === 'tests'),
-        {
-          isDirectory: true,
-          isProject: false,
-          name: 'tests',
-        },
-        'contain folder',
-      );
-    },
-  );
+    const response = await api(app.server).get('/api/explorer/');
+    expect(response.status).toBe(HTTP_STATUS_OK);
+    expect(response.body.path).not.toBe(undefined);
 
-  await group.test('should return result when path is defined', async (t) => {
+    expect(response.body.ls).toPartiallyContain({
+      isDirectory: true,
+      isProject: false,
+      name: 'tests',
+    });
+  });
+
+  test('should return result when path is defined', async () => {
     await project.prepareClear({ manager: 'yarn' });
 
     const response = await api(app.server).get(
@@ -39,31 +36,19 @@ test(`Explorer`, async (group) => {
         path.join(__dirname, 'test-project', 'explorer'),
       )}`,
     );
-    t.same(response.status, HTTP_STATUS_OK, 'status');
-    t.notSame(response.body.path, undefined, 'path is defined');
+    expect(response.status).toBe(HTTP_STATUS_OK);
+    expect(response.body.path).not.toBe(undefined);
 
-    t.same(
-      response.body.ls.find(
-        (entry: FileOrFolder) => entry.name === 'yarn.lock',
-      ),
-      {
-        isDirectory: false,
-        isProject: true,
-        name: 'yarn.lock',
-      },
-      'contain yarn.lock',
-    );
+    expect(response.body.ls).toPartiallyContain({
+      isDirectory: false,
+      isProject: true,
+      name: 'yarn.lock',
+    });
 
-    t.same(
-      response.body.ls.find(
-        (entry: FileOrFolder) => entry.name === 'package.json',
-      ),
-      {
-        isDirectory: false,
-        isProject: true,
-        name: 'package.json',
-      },
-      'contain package.json',
-    );
+    expect(response.body.ls).toPartiallyContain({
+      isDirectory: false,
+      isProject: true,
+      name: 'package.json',
+    });
   });
 });

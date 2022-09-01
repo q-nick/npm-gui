@@ -35,6 +35,7 @@ export const TaskElement: VFC<Props> = ({ task, onClick }) => {
         onClick={(): void => {
           setDetailsOpen(true);
         }}
+        scale="small"
         variant={mapStatusToButtonVariant[task.status]}
       >
         {task.description}
@@ -46,6 +47,7 @@ export const TaskElement: VFC<Props> = ({ task, onClick }) => {
         disabled={task.status === 'RUNNING'}
         icon="x"
         onClick={onClick}
+        scale="small"
         variant={mapStatusToButtonVariant[task.status]}
       />
 

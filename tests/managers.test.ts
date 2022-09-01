@@ -1,22 +1,17 @@
 import api from 'supertest';
-import { test } from 'tap';
 
 import { app } from '../server';
 import { HTTP_STATUS_OK } from '../server/utils/utils';
 
-test(`Package Managers`, async (group) => {
-  await group.test('should return available package managers', async (t) => {
+describe(`Package Managers`, () => {
+  test('should return available package managers', async () => {
     const response = await api(app.server).get('/api/available-managers/');
-    t.same(response.status, HTTP_STATUS_OK, 'status');
+    expect(response.status).toBe(HTTP_STATUS_OK);
 
-    t.same(
-      response.body,
-      {
-        npm: true,
-        pnpm: true,
-        yarn: true,
-      },
-      'all package managers should be available',
-    );
+    expect(response.body).toEqual({
+      npm: true,
+      pnpm: true,
+      yarn: true,
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { test } from 'tap';
+import { describe, expect, test } from '@jest/globals';
 
 import { executeCommand } from '../server/actions/execute-command';
 import {
@@ -8,56 +8,30 @@ import {
   getTypeFromPackageJson,
 } from '../server/utils/get-project-package-json';
 
-test(`get package.json exceptions`, async (group) => {
-  await group.test('getDependenciesFromPackageJson', async (t) => {
-    t.same(getDependenciesFromPackageJson('anything'), {}, 'should return {}');
+describe(`get package.json exceptions`, () => {
+  test('getDependenciesFromPackageJson', () => {
+    expect(getDependenciesFromPackageJson('anything')).toEqual({});
   });
 
-  await group.test('getDevDependenciesFromPackageJson', async (t) => {
-    t.same(
-      getDevelopmentDependenciesFromPackageJson('anything'),
-      {},
-      'should return {}',
-    );
+  test('getDevDependenciesFromPackageJson', () => {
+    expect(getDevelopmentDependenciesFromPackageJson('anything')).toEqual({});
   });
 
-  await group.test('getTypeFromPackageJson', async (t) => {
-    t.same(
-      getTypeFromPackageJson('anything', 'anything'),
-      'extraneous',
-      'should return extraneous',
-    );
+  test('getTypeFromPackageJson', () => {
+    expect(getTypeFromPackageJson('anything', 'anything')).toBe('extraneous');
 
-    t.same(
-      getTypeFromPackageJson('./', 'anything'),
-      'extraneous',
-      'should return extraneous',
-    );
+    expect(getTypeFromPackageJson('./', 'anything')).toBe('extraneous');
   });
 
-  await group.test('getRequiredFromPackageJson', async (t) => {
-    t.same(
-      getRequiredFromPackageJson('anything', 'anything'),
-      undefined,
-      'should return undefined',
-    );
+  test('getRequiredFromPackageJson', () => {
+    expect(getRequiredFromPackageJson('anything', 'anything')).toBe(undefined);
 
-    t.same(
-      getRequiredFromPackageJson('./', 'anything'),
-      undefined,
-      'should return undefined',
-    );
+    expect(getRequiredFromPackageJson('./', 'anything')).toBe(undefined);
   });
-});
 
-test(`execute command exceptions`, async (group) => {
-  await group.test('empty string', async (t) => {
-    try {
-      await executeCommand('', '');
-      // should not be called
-      t.same(1, 2);
-    } catch (error) {
-      t.ok(error);
-    }
+  describe(`execute command exceptions`, () => {
+    test('empty string', async () => {
+      await expect(executeCommand('', '')).rejects.toThrowError();
+    });
   });
 });

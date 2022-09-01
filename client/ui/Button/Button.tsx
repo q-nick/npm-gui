@@ -27,10 +27,10 @@ const ButtonStyled = styled.button`
   border-radius: 2px;
   color: #fff;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   outline: none;
-  padding: 8px;
+  padding: 4px 6px;
   transition: background-color 200ms;
   vertical-align: middle;
   margin-right: 5px;
@@ -61,12 +61,12 @@ const ButtonStyled = styled.button`
     background-color: ${variantToColor[variant]};
   `}
 
-  ${({ scale }: Readonly<Props>): CSSType =>
+  /* ${({ scale }: Readonly<Props>): CSSType =>
     scale === 'small' &&
     css`
       font-size: 10px;
-      padding: 6px;
-    `}
+      padding: 4px 6px;
+    `} */
 
   ${({ lowercase }: Readonly<Props>): CSSType => css`
     text-transform: ${lowercase === true ? 'unset' : 'uppercase'};
