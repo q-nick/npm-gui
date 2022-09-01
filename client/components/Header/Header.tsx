@@ -15,8 +15,8 @@ export interface HeaderButton {
 
 const Nav = styled.nav`
   background: #3e3f3a;
-  min-height: 45px;
-  max-height: 45px;
+  min-height: 35px;
+  max-height: 35px;
   padding-left: 15px;
   padding-right: 15px;
   display: flex;
@@ -73,6 +73,7 @@ export const Header: VFC = () => {
           onClick={(): void => {
             history.push('/');
           }}
+          scale="small"
           variant={projectPathEncodedDefault === 'global' ? 'info' : 'dark'}
         >
           Global
@@ -91,6 +92,7 @@ export const Header: VFC = () => {
                 onClick={(): void => {
                   history.push(`/${oneOfProjectPathEncoded}`);
                 }}
+                scale="small"
                 title={window.atob(oneOfProjectPathEncoded)}
                 variant={
                   oneOfProjectPathEncoded === projectPathEncodedDefault
@@ -102,6 +104,7 @@ export const Header: VFC = () => {
               </Button>
               <CloseButton
                 icon="x"
+                scale="small"
                 variant={
                   oneOfProjectPathEncoded === projectPathEncodedDefault
                     ? 'info'

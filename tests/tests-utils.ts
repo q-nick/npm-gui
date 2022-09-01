@@ -24,7 +24,7 @@ interface Parameters {
   emptyProject?: true;
 }
 
-interface TestProject {
+export interface TestProject {
   requestGetFast: (xCacheId?: string) => Promise<api.Test>;
   requestGetFull: (xCacheId?: string) => Promise<api.Test>;
   requestInstall: (xCacheId?: string) => Promise<api.Test>;
@@ -186,20 +186,8 @@ export const prepareTestProject = async (
   };
 };
 
-export const nextManager = async (
-  callback: (manager: Manager) => Promise<void>,
-): Promise<void> => {
-  await callback('npm');
-  await callback('yarn');
-  await callback('pnpm');
-};
-
-export const nextDependenciesType = async (
-  callback: (dependenciesType: 'dev' | 'prod') => Promise<void>,
-): Promise<void> => {
-  await callback('prod');
-  await callback('dev');
-};
+export const managers: Manager[] = ['npm', 'pnpm', 'yarn'];
+export const dependencyTypes: ('dev' | 'prod')[] = ['prod', 'dev'];
 
 export const PKG_A = {
   name: 'npm-gui-tests',

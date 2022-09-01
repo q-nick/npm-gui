@@ -1,59 +1,54 @@
-import { test } from 'tap';
+import type { TestProject } from './tests-utils';
+import { managers, prepareTestProject, TEST } from './tests-utils';
 
-import { nextManager, prepareTestProject, TEST } from './tests-utils';
+describe.each(managers)('%s install', (manager) => {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let project: TestProject;
 
-nextManager(async (manager) => {
-  const project = await prepareTestProject('install-force');
+  beforeAll(async () => {
+    project = await prepareTestProject('install');
+  });
 
-  await test(`${manager} force reinstall`, async (group) => {
-    await group.test('nothing', async (t) => {
-      await project.prepareClear({ manager });
+  test('nothing', async () => {
+    await project.prepareClear({ manager });
 
-      await project.requestInstallForce(manager);
+    await project.requestInstallForce(manager);
 
-      const fastResponse = await project.requestGetFast();
-      const fullResponse = await project.requestGetFull();
+    const fastResponse = await project.requestGetFast();
+    const fullResponse = await project.requestGetFull();
 
-      t.has(fastResponse.body, [], 'empty dependencies');
-      t.has(fullResponse.body, [], 'empty dependencies');
+    expect(fastResponse.body).toEqual([]);
+    expect(fullResponse.body).toEqual([]);
+  });
+
+  test('uninstalled', async () => {
+    await project.prepareClear({
+      manager,
+      dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
-    await group.test('uninstalled', async (t) => {
-      await project.prepareClear({
-        manager,
-        dependencies: { 'npm-gui-tests': '^1.0.0' },
-      });
+    await project.requestInstallForce(manager);
 
-      await project.requestInstallForce(manager);
+    const fastResponse = await project.requestGetFast();
+    const fullResponse = await project.requestGetFull();
 
-      const fastResponse = await project.requestGetFast();
-      const fullResponse = await project.requestGetFull();
+    expect(fastResponse.body).toEqual([TEST[manager].PKG_A]);
+    expect(fullResponse.body).toEqual([TEST[manager].PKG_A_INSTALLED]);
+  });
 
-      t.has(fastResponse.body, [TEST[manager].PKG_A], 'fast dependencies');
-      t.has(
-        fullResponse.body,
-        [TEST[manager].PKG_A_INSTALLED],
-        'full dependencies',
-      );
+  test('uninstalled', async () => {
+    await project.prepareClear({
+      manager,
+      dependencies: { 'npm-gui-tests': '^1.0.0' },
+      install: true,
     });
 
-    await group.test('uninstalled', async (t) => {
-      await project.prepareClear({
-        manager,
-        dependencies: { 'npm-gui-tests': '^1.0.0' },
-      });
+    await project.requestInstallForce(manager);
 
-      await project.requestInstallForce(manager);
+    const fastResponse = await project.requestGetFast();
+    const fullResponse = await project.requestGetFull();
 
-      const fastResponse = await project.requestGetFast();
-      const fullResponse = await project.requestGetFull();
-
-      t.has(fastResponse.body, [TEST[manager].PKG_A], 'fast dependencies');
-      t.has(
-        fullResponse.body,
-        [TEST[manager].PKG_A_INSTALLED],
-        'full dependencies',
-      );
-    });
+    expect(fastResponse.body).toEqual([TEST[manager].PKG_A]);
+    expect(fullResponse.body).toEqual([TEST[manager].PKG_A_INSTALLED]);
   });
 });

@@ -4,5 +4,6 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+  },
+  "jest.autoRun": { "watch": false, "onSave": "test-file" }
 }

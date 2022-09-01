@@ -1,98 +1,91 @@
-import { test } from 'tap';
-
 import { HTTP_STATUS_OK } from '../server/utils/utils';
+import type { TestProject } from './tests-utils';
 import {
-  nextDependenciesType,
-  nextManager,
+  dependencyTypes,
+  managers,
   prepareTestProject,
   TEST,
 } from './tests-utils';
 
-nextDependenciesType(async (dependencyType) => {
-  nextManager(async (manager) => {
-    const project = await prepareTestProject('add-single');
+describe.each(dependencyTypes)('add single %s depednency', (dependencyType) => {
+  describe.each(managers)('as %s', (manager) => {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let project: TestProject;
 
-    await test(`${manager} add single ${dependencyType} dependency`, async (group) => {
-      await group.test('invalid name', async (t) => {
-        await project.prepareClear({ manager });
+    beforeAll(async () => {
+      project = await prepareTestProject('add-single');
+    });
 
-        const response = await project.requestAdd(dependencyType, [
-          { name: 'sdmvladbf3', version: 'v1.0.0' },
-        ]);
-        t.notSame(response.status, HTTP_STATUS_OK, 'status');
+    test('invalid name', async () => {
+      await project.prepareClear({ manager });
 
-        const fastResponse = await project.requestGetFast();
-        const fullResponse = await project.requestGetFull();
+      const response = await project.requestAdd(dependencyType, [
+        { name: 'sdmvladbf3', version: 'v1.0.0' },
+      ]);
+      expect(response.status).not.toBe(HTTP_STATUS_OK);
 
-        t.has(fastResponse.body, [], 'empty dependencies');
-        t.has(fullResponse.body, [], 'empty dependencies');
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
+
+      expect(fastResponse.body).toEqual([]);
+      expect(fullResponse.body).toEqual([]);
+    });
+
+    test('invalid version', async () => {
+      await project.prepareClear({ manager });
+
+      const response = await project.requestAdd(dependencyType, [
+        { name: 'npm-gui-tests', version: 'v3.0.0' },
+      ]);
+      expect(response.status).not.toBe(HTTP_STATUS_OK);
+
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
+
+      expect(fastResponse.body).toEqual([]);
+      expect(fullResponse.body).toEqual([]);
+    });
+
+    test('correct dependency, no version', async () => {
+      await project.prepareClear({ manager });
+
+      const response = await project.requestAdd(dependencyType, [
+        { name: 'npm-gui-tests' },
+      ]);
+      expect(response.status).toBe(HTTP_STATUS_OK);
+
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
+
+      expect(fastResponse.body).toPartiallyContain({
+        ...TEST[manager].PKG_A,
+        required: '^2.1.1',
+        type: dependencyType,
       });
-
-      await group.test('invalid version', async (t) => {
-        await project.prepareClear({ manager });
-
-        const response = await project.requestAdd(dependencyType, [
-          { name: 'npm-gui-tests', version: 'v3.0.0' },
-        ]);
-        t.notSame(response.status, HTTP_STATUS_OK, 'status');
-
-        const fastResponse = await project.requestGetFast();
-        const fullResponse = await project.requestGetFull();
-
-        t.has(fastResponse.body, [], 'empty dependencies');
-        t.has(fullResponse.body, [], 'empty dependencies');
+      expect(fullResponse.body).toPartiallyContain({
+        ...TEST[manager].PKG_A_UP_NEWEST,
+        type: dependencyType,
       });
+    });
 
-      await group.test('correct dependency, no version', async (t) => {
-        await project.prepareClear({ manager });
+    test('correct dependency, with version', async () => {
+      await project.prepareClear({ manager });
 
-        const response = await project.requestAdd(dependencyType, [
-          { name: 'npm-gui-tests' },
-        ]);
-        t.same(response.status, HTTP_STATUS_OK, 'status');
+      const response = await project.requestAdd(dependencyType, [
+        { name: 'npm-gui-tests', version: '^1.0.0' },
+      ]);
+      expect(response.status).toBe(HTTP_STATUS_OK);
 
-        const fastResponse = await project.requestGetFast();
-        const fullResponse = await project.requestGetFull();
+      const fastResponse = await project.requestGetFast();
+      const fullResponse = await project.requestGetFull();
 
-        t.has(
-          fastResponse.body,
-          [
-            {
-              ...TEST[manager].PKG_A,
-              required: '^2.1.1',
-              type: dependencyType,
-            },
-          ],
-          'fast dependencies',
-        );
-        t.has(
-          fullResponse.body,
-          [{ ...TEST[manager].PKG_A_UP_NEWEST, type: dependencyType }],
-          'full dependencies',
-        );
+      expect(fastResponse.body).toPartiallyContain({
+        ...TEST[manager].PKG_A_UP,
+        type: dependencyType,
       });
-
-      await group.test('correct dependency, with version', async (t) => {
-        await project.prepareClear({ manager });
-
-        const response = await project.requestAdd(dependencyType, [
-          { name: 'npm-gui-tests', version: '^1.0.0' },
-        ]);
-        t.same(response.status, HTTP_STATUS_OK, 'status');
-
-        const fastResponse = await project.requestGetFast();
-        const fullResponse = await project.requestGetFull();
-
-        t.has(
-          fastResponse.body,
-          [{ ...TEST[manager].PKG_A_UP, type: dependencyType }],
-          'fast dependencies',
-        );
-        t.has(
-          fullResponse.body,
-          [{ ...TEST[manager].PKG_A_UP_INSTALLED, type: dependencyType }],
-          'full dependencies',
-        );
+      expect(fullResponse.body).toPartiallyContain({
+        ...TEST[manager].PKG_A_UP_INSTALLED,
+        type: dependencyType,
       });
     });
   });
