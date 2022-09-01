@@ -31,7 +31,9 @@ const deletePnpmDependency = async (
     await executeCommandSimple(projectPath, `pnpm uninstall ${packageName}`);
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
-    console.log(error);
+    if (!process.env['NODE_TEST']) {
+      console.log(error);
+    }
   }
 };
 
@@ -44,7 +46,9 @@ const deleteYarnDependency = async (
     await executeCommandSimple(projectPath, `yarn remove ${packageName}`);
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
-    console.log(error);
+    if (!process.env['NODE_TEST']) {
+      console.log(error);
+    }
   }
 };
 

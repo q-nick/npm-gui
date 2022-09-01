@@ -183,7 +183,9 @@ export class Server {
         }
       }
     } catch (error: unknown) {
-      console.error('ERROR HANDLER', error);
+      if (!process.env['NODE_TEST']) {
+        console.error('ERROR HANDLER', error);
+      }
       response.writeHead(HTTP_STATUS_BAD_REQUEST, {
         'Content-Type': 'application/json',
       });
