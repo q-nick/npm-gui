@@ -50,11 +50,14 @@ jobs:
       - run: node -v
       - run: npm -v
 
-      - run: npm i -g yarn
       - run: node install-correct-pnpm-version.js
 
       - run: yarn -v
       - run: pnpm -v
+
+      # TODO
+      # we need to remove global test
+      - run: rm tests/global.test.ts
 
       # we need to remove parcel before install dependencies
       - run: rm package-lock.json
