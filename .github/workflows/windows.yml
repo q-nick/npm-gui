@@ -56,6 +56,10 @@ jobs:
       - run: yarn -v
       - run: pnpm -v
 
-      - run: rm package-lock.json # every node will install their own version of depdnencies
+      # we need to remove parcel before install dependencies
+      - run: rm package-lock.json
+      - run: npm uninstall parcel
+
+      # install dependencies without parcel
       - run: npm install
       - run: npm run ci:test
