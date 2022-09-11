@@ -1,7 +1,7 @@
 {
   "name": "npm-gui",
   "version": "3.1.1",
-  "description": "Graphical tool for managing javascript project dependencies - in a friendly way.",
+  "description": "A graphical tool for managing javascript project dependencies.",
   "keywords": [
     "gui",
     "npm",

@@ -36,17 +36,17 @@ describe.each(managers)('%s cache fetching', (manager) => {
     const [executionTime1] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime1).toBeGreaterThan(20);
+    expect(executionTime1).toBeGreaterThan(40);
 
     const [executionTime2] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime2).toBeLessThan(20);
+    expect(executionTime2).toBeLessThan(40);
 
     const [executionTime3] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime3).toBeLessThan(20);
+    expect(executionTime3).toBeLessThan(40);
 
     expect(executionTime2).toBeLessThan(executionTime1);
     expect(executionTime3).toBeLessThan(executionTime1);
@@ -76,7 +76,7 @@ describe.each(managers)('%s cache fetching', (manager) => {
     const [executionTime1, full1] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime1).toBeLessThan(20);
+    expect(executionTime1).toBeLessThan(40);
     expect(full1.body).toIncludeAllMembers([
       TEST[manager].PKG_A_INSTALLED,
       TEST[manager].PKG_B_UP_INSTALLED,
@@ -92,7 +92,7 @@ describe.each(managers)('%s cache fetching', (manager) => {
     const [executionTime2, full2] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime2).toBeLessThan(20);
+    expect(executionTime2).toBeLessThan(40);
     expect(full2.body).toIncludeAllMembers([
       TEST[manager].PKG_A_UP_NEWEST,
       TEST[manager].PKG_B_UP_INSTALLED,
@@ -106,7 +106,7 @@ describe.each(managers)('%s cache fetching', (manager) => {
     const [executionTime3, full3] = await withTimeExecution<api.Response>(
       async () => await project.requestGetFull(),
     );
-    expect(executionTime3).toBeLessThan(20);
+    expect(executionTime3).toBeLessThan(40);
     expect(full3.body).toIncludeAllMembers([TEST[manager].PKG_B_UP_INSTALLED]);
     expect(full3.body).toHaveLength(1);
 
