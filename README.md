@@ -10,7 +10,7 @@
 
 ## About
 
-`npm-gui` is a convenient tool for managing javascript project dependencies listed in `package.json`. Under the hood it will transparently use `npm`, `pnpm` or `yarn` commands to install, remove or update dependencies
+`npm-gui` is a convenient tool for managing javascript project dependencies listed in `package.json`. Under the hood, it will transparently use `npm`, `pnpm`, or `yarn` commands to install, remove or update dependencies
 (_to use **yarn** it requires the **yarn.lock** file to be present in project folder._)
 
 ### **npm-gui** key features:
@@ -47,7 +47,7 @@ npm install npm-gui
 
 ### How to use
 
-`npm-gui` app will be accessible in the browser at the address http://localhost:1337/. Remember to first use a command below:
+`npm-gui` app will be accessible in the browser at the address http://localhost:1337/. Remember to first use the command below:
 
 When installed as a global dependency you could run `npm-gui` with the command line:
 
@@ -96,7 +96,7 @@ To remove dependency from your project simply press the **trash icon** on the ri
 
 #### Updating all dependencies as...
 
-To do a batch dependencies update and save new versions to package.json, for example _wanted_, press one of the green buttons above the list of project dependencies.
+To do a batch dependencies update and save new versions to package.json, for example, _wanted_, press one of the green buttons above the list of project dependencies.
 
 ![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/batch-update.gif)
 
