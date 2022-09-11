@@ -13,10 +13,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-          [
-            10.13,
-            10.x,
+        node-version: [
+            # 10.13,
+            # 10.x,
 
             11.0.0,
             11.x,
@@ -34,6 +33,12 @@ jobs:
 
             16.0.0,
             16.x,
+
+            17.0.0,
+            17.x,
+
+            18.0.0,
+            18.x,
           ]
 
     steps:
@@ -43,11 +48,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: node -v
+      - run: npm -v
+
+      - run: npm i -g yarn
       - run: node install-correct-pnpm-version.js
+
       - run: yarn -v
       - run: pnpm -v
-      - run: rm package-lock.json # we have to remove parcel before install dependencies
-      - run: rm tests/global.test.ts # we have to remove global tests
-      - run: npm uninstall parcel
+
+      - run: rm package-lock.json # every node will install their own version of depdnencies
       - run: npm install
       - run: npm run ci:test
