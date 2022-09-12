@@ -93,6 +93,7 @@ export const Button: React.FC<Readonly<Props>> = ({
   children,
   ...props
 }) => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
   <ButtonStyled {...props}>
     {icon !== undefined && (
       <ButtonIcon
