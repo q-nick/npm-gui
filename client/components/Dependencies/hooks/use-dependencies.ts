@@ -223,7 +223,7 @@ export const useDependencies = (projectPath: string): Hook => {
   useEffect(() => {
     fetchDependencies();
   }, [fetchDependencies]);
-
+  console.log(projects);
   return {
     dependencies,
     dependenciesProcessing,

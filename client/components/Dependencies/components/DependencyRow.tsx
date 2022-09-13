@@ -73,7 +73,7 @@ const ColumnAction = styled.td`
   width: 30px;
 `;
 
-const RepoName = styled.span`
+const RepoName = styled.a`
   border-radius: 2px;
   color: #fff;
   float: right;
@@ -81,6 +81,7 @@ const RepoName = styled.span`
   font-weight: bold;
   padding: 0.2em 0.4em;
   background: #ef5c0e;
+  text-decoration: none;
 `;
 
 const Missing = styled.span`
@@ -231,7 +232,12 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnName>
         {dependency.name}
 
-        <RepoName>{dependency.manager}</RepoName>
+        <RepoName
+          href={`https://www.npmjs.com/package/${dependency.name}`}
+          target="_blank"
+        >
+          {dependency.manager}
+        </RepoName>
 
         <HealthBadge
           alt="status"

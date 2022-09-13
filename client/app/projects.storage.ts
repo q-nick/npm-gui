@@ -13,7 +13,12 @@ export const syncProjectsStorage = (
   localStorage.setItem(
     'projects',
     JSON.stringify(
-      Object.fromEntries(Object.keys(projects).map((current) => [current, {}])),
+      Object.fromEntries(
+        Object.keys(projects).map((current) => [
+          current,
+          { dependenciesProcessing: [] },
+        ]),
+      ),
     ),
   );
 };
