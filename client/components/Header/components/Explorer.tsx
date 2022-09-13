@@ -65,7 +65,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
         </li>
         <li>
           <ExplorerSearch
-            onChange={(e): void => setFilter(e.target.value)}
+            onChange={(event): void => setFilter(event.target.value)}
             placeholder="filter results"
             value={filter}
           />

@@ -54,9 +54,11 @@ const TrStyled = styled.tr`
     `}
 `;
 
-const ColumnName = styled.td`
+const ColumnName = styled.td<{ prod: boolean }>`
   text-align: left;
   padding-left: 5px;
+
+  font-weight: ${(props): CSSType => (props.prod ? 'bold' : '')};
 `;
 
 const ColumnVersion = styled.td`
@@ -229,7 +231,7 @@ export const DependencyRow: VFC<Props> = ({
     >
       {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
 
-      <ColumnName>
+      <ColumnName prod={dependency.type === 'prod'}>
         {dependency.name}
 
         <RepoName
