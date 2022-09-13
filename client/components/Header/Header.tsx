@@ -51,6 +51,7 @@ export const Header: VFC = () => {
 
   const {
     state: { projects },
+    dispatch,
   } = useContext(ContextStore);
 
   const history = useHistory();
@@ -104,6 +105,12 @@ export const Header: VFC = () => {
               </Button>
               <CloseButton
                 icon="x"
+                onClick={() =>
+                  dispatch({
+                    type: 'removeProject',
+                    path: oneOfProjectPathEncoded,
+                  })
+                }
                 scale="small"
                 variant={
                   oneOfProjectPathEncoded === projectPathEncodedDefault

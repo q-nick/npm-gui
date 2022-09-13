@@ -1,5 +1,9 @@
 {
   "extends": "eslint-config-turbocharge/node/tsconfig.json",
-  "references": [{ "path": "./server" }, { "path": "./client" }],
+  "references": [
+    { "path": "./server" },
+    { "path": "./client" },
+    { "path": "./tests" }
+  ],
   "files": []
 }

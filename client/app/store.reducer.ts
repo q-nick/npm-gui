@@ -16,7 +16,8 @@ export type Action =
       value: boolean;
       dependenciesToUpdate: string[];
     }
-  | { type: 'addProject'; projectPath: string };
+  | { type: 'addProject'; projectPath: string }
+  | { type: 'removeProject'; projectPath: string };
 
 export interface ProjectScope {
   dependencies?: Entire[];
