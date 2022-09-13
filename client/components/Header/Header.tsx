@@ -63,6 +63,14 @@ export const Header: VFC = () => {
     [history],
   );
 
+  const handleRemoveProject = (projectPath: string): void => {
+    history.push(`/`);
+    dispatch({
+      type: 'removeProject',
+      projectPath,
+    });
+  };
+
   return (
     <Nav>
       <LeftSection>
@@ -105,11 +113,8 @@ export const Header: VFC = () => {
               </Button>
               <CloseButton
                 icon="x"
-                onClick={() =>
-                  dispatch({
-                    type: 'removeProject',
-                    path: oneOfProjectPathEncoded,
-                  })
+                onClick={(): void =>
+                  handleRemoveProject(oneOfProjectPathEncoded)
                 }
                 scale="small"
                 variant={

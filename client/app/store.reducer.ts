@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/no-type-alias */
 import type { Reducer } from 'react';
 
@@ -48,13 +49,18 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
     }
 
     case 'setProjectDependencies': {
+      const project = state.projects[action.projectPath];
+
+      if (!project) {
+        return state;
+      }
+
       return {
         ...state,
         projects: {
           ...state.projects,
           [action.projectPath]: {
-            dependenciesProcessing:
-              state.projects[action.projectPath]?.dependenciesProcessing ?? [],
+            dependenciesProcessing: project.dependenciesProcessing,
             dependencies: action.dependencies,
           },
         },
@@ -62,9 +68,11 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
     }
 
     case 'setProjectDependenciesProcessing': {
-      const project = state.projects[action.projectPath] ?? {
-        dependenciesProcessing: [],
-      };
+      const project = state.projects[action.projectPath];
+
+      if (!project) {
+        return state;
+      }
 
       const dependenciesProcessing = action.value
         ? [...project.dependenciesProcessing, ...action.dependenciesToUpdate]
@@ -79,6 +87,18 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
           dependenciesProcessing,
         },
       };
+    }
+
+    case 'removeProject': {
+      const newState = {
+        ...state,
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete newState.projects[action.projectPath];
+      syncProjectsStorage(newState.projects);
+
+      return newState;
     }
     default:
       return state;

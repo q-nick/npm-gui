@@ -22,14 +22,14 @@ export const ExplorerList = styled.ul`
   margin: 0;
   padding: 0;
   transition: max-width 300ms, max-height 300ms;
-  width: 200px;
+  width: 250px;
 
   ${({ isOpen }: ExplorerListProps): CSSType =>
     isOpen &&
     css`
       border-color: #dfd7ca;
       max-height: 80vh;
-      max-width: 200px;
+      max-width: 250px;
       overflow-y: scroll;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     `}
@@ -80,6 +80,13 @@ export const ExplorerButton = styled.button<ExplorerButtonProps>`
         color: #000;
       }
     `}
+
+  &:disabled {
+    color: #8e8c84;
+    background: none;
+    text-decoration: none;
+    cursor: not-allowed;
+  }
 `;
 
 export const ExplorerFile = styled.span`
@@ -87,4 +94,28 @@ export const ExplorerFile = styled.span`
   font-size: 12px;
   font-weight: 500;
   padding: 0 8px;
+`;
+
+export const ExplorerCurrentLocation = styled.span`
+  color: #8e8c84;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 3px;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  direction: rtl;
+  display: block;
+`;
+
+export const ExplorerSearch = styled.input`
+  display: block;
+  background: transparent;
+  border: 1px solid black;
+  margin: 3px 3px 0 3px;
+  width: calc(100% - 6px);
+  color: white;
+  border-radius: 0;
 `;
