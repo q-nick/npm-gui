@@ -1,5 +1,8 @@
 import type { Installed, Outdated } from '../../../types/commands.types';
-import type { Entire } from '../../../types/dependency.types';
+import type {
+  DependencyBase,
+  DependencyInstalled,
+} from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import {
@@ -8,7 +11,7 @@ import {
 } from '../../../utils/map-dependencies';
 import { executeCommandJSONWithFallback } from '../../execute-command';
 
-const getGlobalNpmDependencies = async (): Promise<Entire[]> => {
+const getGlobalNpmDependencies = async (): Promise<DependencyInstalled[]> => {
   const { dependencies: installedInfo } =
     await executeCommandJSONWithFallback<Installed>(
       undefined,
@@ -24,7 +27,7 @@ const getGlobalNpmDependencies = async (): Promise<Entire[]> => {
   );
 
   return Object.keys(installedInfo).map(
-    (name): Entire => ({
+    (name): DependencyInstalled => ({
       manager: 'npm',
       name,
       type: 'global',
@@ -38,7 +41,7 @@ const getGlobalNpmDependencies = async (): Promise<Entire[]> => {
   );
 };
 
-const getGlobalNpmDependenciesSimple = async (): Promise<Entire[]> => {
+const getGlobalNpmDependenciesSimple = async (): Promise<DependencyBase[]> => {
   const { dependencies: installedInfo } =
     await executeCommandJSONWithFallback<Installed>(
       undefined,
@@ -48,14 +51,12 @@ const getGlobalNpmDependenciesSimple = async (): Promise<Entire[]> => {
     return [];
   }
 
-  return Object.keys(installedInfo).map(
-    (name): Entire => ({
-      manager: 'npm',
-      name,
-      type: 'global',
-      installed: getInstalledVersion(installedInfo[name]),
-    }),
-  );
+  return Object.keys(installedInfo).map((name) => ({
+    manager: 'npm',
+    name,
+    type: 'global',
+    installed: getInstalledVersion(installedInfo[name]),
+  }));
 };
 
 export const getGlobalDependencies: ResponserFunction = async ({

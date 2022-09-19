@@ -1,3 +1,4 @@
+/* eslint-disable import/max-dependencies */
 import open from 'open';
 
 import { availableManagers } from './actions/available-managers/available-managers';
@@ -5,6 +6,8 @@ import { addGlobalDependencies } from './actions/dependencies/add/add-global-dep
 import { addDependencies } from './actions/dependencies/add/add-project-dependencies';
 import { deleteGlobalDependency } from './actions/dependencies/delete/delete-global-dependencies';
 import { deleteDependency } from './actions/dependencies/delete/delete-project-dependencies';
+import { getDependencyScore } from './actions/dependencies/extras/dependency-score';
+import { getDependencySize } from './actions/dependencies/extras/dependency-size';
 import {
   getGlobalDependencies,
   getGlobalDependenciesSimple,
@@ -13,7 +16,10 @@ import {
   getAllDependencies,
   getAllDependenciesSimple,
 } from './actions/dependencies/get/get-project-dependencies';
-import { installDependencies } from './actions/dependencies/install/install-project-dependencies';
+import {
+  installDependencies,
+  installDependenciesForceManager,
+} from './actions/dependencies/install/install-project-dependencies';
 import { explorer } from './actions/explorer/explorer';
 import { info } from './actions/info/info';
 import { log } from './actions/log/log';
@@ -35,7 +41,7 @@ app.get(
 app.get('/api/project/:projectPath/dependencies/full', getAllDependencies);
 app.post(
   '/api/project/:projectPath/dependencies/install/:forceManager',
-  installDependencies,
+  installDependenciesForceManager,
 );
 app.post('/api/project/:projectPath/dependencies/install', installDependencies);
 app.post('/api/project/:projectPath/dependencies/:type', addDependencies);
@@ -52,6 +58,10 @@ app.delete(
   '/api/global/dependencies/global/:dependencyName',
   deleteGlobalDependency,
 );
+
+// dependencies extra apis
+app.get('/api/score/:dependencyName', getDependencyScore);
+app.get('/api/bundle-size/:dependencyName/:version', getDependencySize);
 
 // other apis
 app.get('/api/explorer/:path', explorer);

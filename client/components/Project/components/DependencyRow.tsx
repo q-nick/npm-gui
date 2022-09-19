@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/no-multi-comp */
+import { useIsFetching } from '@tanstack/react-query';
 import type { VFC } from 'react';
-import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import type {
   Basic,
-  Entire,
+  DependencyInstalledExtras,
   Type,
 } from '../../../../server/types/dependency.types';
 import type { CSSType } from '../../../Styled';
@@ -14,23 +14,26 @@ import { Button } from '../../../ui/Button/Button';
 import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
 import { getNormalizedRequiredVersion } from '../../../utils';
 import { Loader } from '../../Loader';
+import { useProjectPath } from '../../use-project-path';
 
 interface Props {
-  dependency: Entire;
+  dependency: DependencyInstalledExtras;
   isProcessing: boolean;
+  hasTypesBelow: boolean;
   isGlobal: boolean;
-  onDeleteDependency: (dependency: Entire) => void;
+  onDeleteDependency: (dependency: DependencyInstalledExtras) => void;
   onInstallDependencyVersion: (dependency: Basic, type: Type) => void;
 }
 
 interface TrStyledProps {
   isProcessing: boolean;
+  hasTypesBelow: boolean;
 }
 
 const ONE_KB = 1024;
 const DIGITS = 2;
 
-const TrStyled = styled.tr`
+const TrStyled = styled.tr<TrStyledProps>`
   @keyframes Gradient {
     0% {
       background-position: 0% 50%;
@@ -45,12 +48,20 @@ const TrStyled = styled.tr`
     }
   }
 
-  ${({ isProcessing }: TrStyledProps): CSSType =>
+  ${({ isProcessing }): CSSType =>
     isProcessing &&
     css`
       background: linear-gradient(-45deg, #dfd7ca, #fff);
       background-size: 200% 200%;
       animation: Gradient 2s ease infinite;
+    `}
+
+  ${({ hasTypesBelow }): CSSType =>
+    hasTypesBelow &&
+    css`
+      td {
+        border-bottom: 0px;
+      }
     `}
 `;
 
@@ -67,6 +78,11 @@ const ColumnVersion = styled.td`
 `;
 
 const ColumnSize = styled.td`
+  width: 10%;
+  min-width: 80px;
+`;
+
+const ColumnScore = styled.td`
   width: 10%;
   min-width: 80px;
 `;
@@ -90,13 +106,25 @@ const Missing = styled.span`
   color: #d9534f;
 `;
 
-const HealthBadge = styled.img`
-  float: right;
-  margin-right: 50px;
+const ScoreBadge = styled.a<{ score?: number }>`
+  color: white;
+  text-decoration: none;
+  font-weight: 100;
+  padding: 3px 5px;
+  border-radius: 2px;
+
+  ${({ score }): CSSType => score && score >= 85 && 'color: #4c1;'}
+  ${({ score }): CSSType => score && score < 85 && 'background: #dbab09;'}
+  ${({ score }): CSSType => score && score < 70 && 'background: #e05d44;'}
+`;
+
+const BundleSizeLink = styled.a`
+  text-decoration: none;
+  color: black;
 `;
 
 interface VersionProps {
-  dependency: Entire;
+  dependency: DependencyInstalledExtras;
   isProcessing: boolean;
   onInstall: (version: string) => void;
 }
@@ -201,32 +229,22 @@ const LatestVersion: VFC<VersionProps> = ({
   return null;
 };
 
-interface BundleInfo {
-  size: number;
-}
-
 export const DependencyRow: VFC<Props> = ({
   dependency,
-  isProcessing,
+  hasTypesBelow,
   onDeleteDependency,
   onInstallDependencyVersion,
   isGlobal,
 }) => {
-  const [bundleInfo, setBundleInfo] = useState<BundleInfo | undefined>();
+  const projectPath = useProjectPath();
 
-  useEffect(() => {
-    if (typeof dependency.installed === 'string') {
-      void fetch(
-        `https://bundlephobia.com/api/size?package=${dependency.name}@${dependency.installed}`,
-      )
-        .then(async (response) => response.json())
-        .then(setBundleInfo);
-    }
-  }, [dependency.name, dependency.installed]);
+  const isFetching =
+    useIsFetching(['get-project-dependencies-full', projectPath]) > 0;
 
   return (
     <TrStyled
-      isProcessing={isProcessing}
+      hasTypesBelow={hasTypesBelow}
+      isProcessing={isFetching}
       key={`${dependency.name}${dependency.manager}`}
     >
       {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
@@ -240,18 +258,31 @@ export const DependencyRow: VFC<Props> = ({
         >
           {dependency.manager}
         </RepoName>
-
-        <HealthBadge
-          alt="status"
-          src={`https://snyk.io/advisor/npm-package/${dependency.name}/badge.svg`}
-        />
       </ColumnName>
 
+      <ColumnScore>
+        {typeof dependency.score === 'number' && (
+          <ScoreBadge
+            href={`https://snyk.io/advisor/npm-package/${dependency.name}`}
+            score={dependency.score}
+            target="_blank"
+          >
+            {dependency.score}%
+          </ScoreBadge>
+        )}
+      </ColumnScore>
+
       <ColumnSize>
-        {bundleInfo &&
-          `${Number.parseFloat(`${bundleInfo.size / ONE_KB}`).toFixed(
-            DIGITS,
-          )}kB`}
+        {typeof dependency.size === 'number' && (
+          <BundleSizeLink
+            href={`https://bundlephobia.com/package/${dependency.name}@${dependency.installed}`}
+            target="_blank"
+          >
+            {`${Number.parseFloat(`${dependency.size / ONE_KB}`).toFixed(
+              DIGITS,
+            )}kB`}
+          </BundleSizeLink>
+        )}
       </ColumnSize>
 
       {/* <td className={style.columnNsp}> ? </td> */}
@@ -269,7 +300,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <InstalledVersion
           dependency={dependency}
-          isProcessing={isProcessing}
+          isProcessing={isFetching}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -282,7 +313,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <WantedVersion
           dependency={dependency}
-          isProcessing={isProcessing}
+          isProcessing={isFetching}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -295,7 +326,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <LatestVersion
           dependency={dependency}
-          isProcessing={isProcessing}
+          isProcessing={isFetching}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -307,7 +338,7 @@ export const DependencyRow: VFC<Props> = ({
 
       <ColumnAction>
         <ConfirmButton
-          disabled={isProcessing}
+          disabled={isFetching}
           icon="trash"
           onClick={(): void => {
             onDeleteDependency(dependency);

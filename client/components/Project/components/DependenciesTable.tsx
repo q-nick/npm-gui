@@ -2,18 +2,18 @@ import styled, { css } from 'styled-components';
 
 import type {
   Basic,
-  Entire,
+  DependencyInstalledExtras,
   Type,
 } from '../../../../server/types/dependency.types';
 import { Loader } from '../../Loader';
-import { ThSortable, ThStyled } from '../../ThSortable/ThSortable';
 import { useSortDependencies } from '../hooks/use-sort-dependencies';
 import { DependencyRow } from './DependencyRow';
+import { ThSortable, ThStyled } from './ThSortable/ThSortable';
 
 interface Props {
-  dependencies?: Entire[];
+  dependencies?: DependencyInstalledExtras[];
   dependenciesProcessing: string[];
-  onDeleteDependency: (dependency: Entire) => void;
+  onDeleteDependency: (dependency: Basic) => void;
   onInstallDependencyVersion: (dependency: Basic, type: Type) => void;
   isGlobal: boolean;
   isEmpty: boolean;
@@ -61,6 +61,16 @@ const headerNameAppearance = css`
   text-align: left;
   padding-left: 5px;
 `;
+
+const hasTypesNext = (
+  dependencies: DependencyInstalledExtras[],
+  index: number,
+  name: string,
+): boolean => {
+  const nextDep = dependencies[index + 1];
+
+  return !!(nextDep && nextDep.name === `@types/${name}`);
+};
 
 export const DependenciesTable: React.FC<Props> = ({
   dependencies,
@@ -120,12 +130,32 @@ export const DependenciesTable: React.FC<Props> = ({
               }}
               onFilterChange={setFilterNameValue}
               sortActive={sort === 'name'}
-              sortReversed={sortReversed}
+              sortReversed={!sortReversed}
             >
               Name
             </ThSortable>
 
-            <ThStyled appearance={columnVersionAppearance}>Size</ThStyled>
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => {
+                onSortChange('score');
+              }}
+              sortActive={sort === 'score'}
+              sortReversed={!sortReversed}
+            >
+              Score
+            </ThSortable>
+
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => {
+                onSortChange('size');
+              }}
+              sortActive={sort === 'size'}
+              sortReversed={!sortReversed}
+            >
+              Size
+            </ThSortable>
 
             {!isGlobal && (
               <ThSortable
@@ -178,9 +208,14 @@ export const DependenciesTable: React.FC<Props> = ({
         </thead>
 
         <tbody>
-          {dependenciesSorted?.map((dependency) => (
+          {dependenciesSorted?.map((dependency, index) => (
             <DependencyRow
               dependency={dependency}
+              hasTypesBelow={hasTypesNext(
+                dependenciesSorted,
+                index,
+                dependency.name,
+              )}
               isGlobal={isGlobal}
               isProcessing={dependenciesProcessing.includes(dependency.name)}
               key={dependency.name}

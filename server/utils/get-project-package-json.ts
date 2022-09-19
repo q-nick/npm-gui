@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
+import type { DependencyBase, Manager } from '../types/dependency.types';
 import { parseJSON } from './parse-json';
 
 interface PackageJSON {
@@ -39,6 +40,34 @@ export const getDevelopmentDependenciesFromPackageJson = (
     return {};
   }
   return packageJson.devDependencies ?? {};
+};
+
+export const getAllDependenciesFromPackageJsonAsArray = (
+  projectPath: string,
+  manager: Manager,
+): DependencyBase[] => {
+  const dependencies = getDependenciesFromPackageJson(projectPath);
+  const devDependencies =
+    getDevelopmentDependenciesFromPackageJson(projectPath);
+
+  return [
+    ...Object.entries(dependencies).map(
+      ([name, required]): DependencyBase => ({
+        manager,
+        name,
+        type: 'prod',
+        required,
+      }),
+    ),
+    ...Object.entries(devDependencies).map(
+      ([name, required]): DependencyBase => ({
+        manager,
+        name,
+        type: 'dev',
+        required,
+      }),
+    ),
+  ];
 };
 
 export const getTypeFromPackageJson = (

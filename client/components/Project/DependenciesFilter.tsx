@@ -1,31 +1,25 @@
 import type { VFC } from 'react';
 import { useCallback } from 'react';
 
+import type { DependencyInstalledExtras } from '../../../server/types/dependency.types';
 import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
 import { useAvailableManagers } from './hooks/use-available-managers';
+import { useBundleSize } from './hooks/use-bundle-size';
 import { useDependencies } from './hooks/use-dependencies';
 import { useFilterDependencies } from './hooks/use-filter-dependencies';
+import { useScoring } from './hooks/use-scoring';
 
 interface Props {
   projectPath: string;
+  dependencies?: DependencyInstalledExtras[];
 }
 
-export const Dependencies: VFC<Props> = ({ projectPath }) => {
-  const {
-    dependencies,
-    dependenciesProcessing,
-    onInstallAllDependencies,
-    onInstallNewDependency,
-    onDeleteDependency,
-    onUpdateDependencies,
-  } = useDependencies(projectPath);
-
+export const Dependencies: VFC<Props> = ({ projectPath, dependencies }) => {
   const {
     dependenciesFiltered,
     isEmpty,
-    isLoading,
     filterNameValue,
     setFilterNameValue,
     filterTypeValue,
@@ -47,19 +41,16 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
         .map((dependency) => ({
           name: dependency.name,
           type: dependency.type,
-          version: dependency[versionType]!,
+          version: dependency[versionType] ?? undefined,
         }));
       onUpdateDependencies(dependenciesToUpdate);
     },
     [dependenciesFiltered, onUpdateDependencies],
   );
 
-  const { availableManagers } = useAvailableManagers();
-
   return (
     <>
       <DependenciesHeader
-        availableManagers={availableManagers}
         isGlobal={projectPath === 'global'}
         onForceReInstall={onInstallAllDependencies}
         onInstallAll={onInstallAllDependencies}
@@ -82,7 +73,7 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
         filterTypeValue={filterTypeValue}
         isEmpty={isEmpty}
         isGlobal={projectPath === 'global'}
-        isLoading={isLoading}
+        isLoading={dependencies === undefined}
         onDeleteDependency={onDeleteDependency}
         onInstallDependencyVersion={onInstallNewDependency}
         setFilterNameValue={setFilterNameValue}

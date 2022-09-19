@@ -65,10 +65,7 @@ export const Header: VFC = () => {
 
   const handleRemoveProject = (projectPath: string): void => {
     history.push(`/`);
-    dispatch({
-      type: 'removeProject',
-      projectPath,
-    });
+    dispatch({ type: 'removeProject', projectPath });
   };
 
   return (
@@ -90,7 +87,7 @@ export const Header: VFC = () => {
       </LeftSection>
 
       <RightSection>
-        {Object.keys(projects)
+        {projects
           .filter((p) => p !== 'global')
           .map((oneOfProjectPathEncoded) => (
             <>

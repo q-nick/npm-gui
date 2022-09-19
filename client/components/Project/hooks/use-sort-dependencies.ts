@@ -8,6 +8,8 @@ type SortType =
   | 'latest'
   | 'name'
   | 'required'
+  | 'score'
+  | 'size'
   | 'type'
   | 'wanted'
   | undefined;
@@ -43,14 +45,17 @@ export const useSortDependencies = (dependencies?: Entire[]): Hook => {
     [sort, sortReversed],
   );
 
-  const dependenciesSorted = dependencies && [...dependencies];
+  let dependenciesSorted = dependencies && [...dependencies];
 
   if (sort !== undefined && dependenciesSorted) {
     // Mutated
     dependenciesSorted.sort((depA, depB): number => {
       const valueA = depA[sort] ?? undefined;
       const valueB = depB[sort] ?? undefined;
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
+      if (
+        (typeof valueA === 'string' && typeof valueB === 'string') ||
+        (typeof valueA === 'number' && typeof valueB === 'number')
+      ) {
         if (valueA > valueB) {
           return sortReversed ? LOWER : GREATER;
         }
@@ -68,6 +73,30 @@ export const useSortDependencies = (dependencies?: Entire[]): Hook => {
 
       return EQUAL;
     });
+  } else if (dependenciesSorted) {
+    // Mutated
+    const regular = dependenciesSorted.filter(
+      (dep) => !dep.name.startsWith('@types'),
+    );
+
+    const types = dependenciesSorted.filter((dep) =>
+      dep.name.startsWith('@types'),
+    );
+
+    // eslint-disable-next-line unicorn/no-array-reduce
+    const typesNotAssigned = types.reduce((notAssigned, typeDep) => {
+      const index = regular.findIndex(
+        (dep) => dep.name === typeDep.name.split('@types/')[1],
+      );
+      if (index !== -1) {
+        regular.splice(index + 1, 0, typeDep);
+      } else {
+        notAssigned.push(typeDep);
+      }
+      return notAssigned;
+    }, [] as Entire[]);
+
+    dependenciesSorted = [...regular, ...typesNotAssigned];
   }
 
   return {

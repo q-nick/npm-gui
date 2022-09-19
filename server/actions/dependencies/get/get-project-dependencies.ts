@@ -1,13 +1,17 @@
 /* eslint-disable max-lines */
 import type { Installed, Outdated } from '../../../types/commands.types';
-import type { Entire, Manager, Npm } from '../../../types/dependency.types';
+import type {
+  DependencyBase,
+  DependencyInstalled,
+  Manager,
+} from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import type { InstalledPNPM } from '../../../types/pnpm.types';
 import type { InstalledYarn, OutdatedYarn } from '../../../types/yarn.types';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import {
+  getAllDependenciesFromPackageJsonAsArray,
   getDependenciesFromPackageJson,
-  getDevelopmentDependenciesFromPackageJson,
 } from '../../../utils/get-project-package-json';
 import {
   getInstalledVersion,
@@ -25,39 +29,13 @@ import { extractVersionFromYarnOutdated } from '../../yarn-utils';
 const getAllDependenciesSimpleJSON = (
   projectPath: string,
   manager: Manager,
-): Entire[] => {
-  const dependencies = getDependenciesFromPackageJson(projectPath);
-  const devDependencies =
-    getDevelopmentDependenciesFromPackageJson(projectPath);
-
-  return [
-    ...Object.keys(dependencies).map(
-      (name): Entire => ({
-        manager,
-        name,
-        type: 'prod',
-        required: dependencies[name],
-      }),
-    ),
-    ...Object.keys(devDependencies).map(
-      (name): Entire => ({
-        manager,
-        name,
-        type: 'dev',
-        required: devDependencies[name],
-      }),
-    ),
-  ];
+): DependencyBase[] => {
+  return getAllDependenciesFromPackageJsonAsArray(projectPath, manager);
 };
 
 const getAllNpmDependencies = async (
   projectPath: string,
-): Promise<Entire[]> => {
-  // type
-  const dependencies = getDependenciesFromPackageJson(projectPath);
-  const devDependencies =
-    getDevelopmentDependenciesFromPackageJson(projectPath);
-
+): Promise<DependencyInstalled[]> => {
   const { dependencies: installedInfo } =
     await executeCommandJSONWithFallback<Installed>(
       projectPath,
@@ -77,25 +55,19 @@ const getAllNpmDependencies = async (
       })
     : [];
 
-  const allDependencies: Npm[] = [
-    ...Object.keys(dependencies).map(
-      (name): Npm => ({
+  const allDependencies: DependencyBase[] = [
+    ...getAllDependenciesFromPackageJsonAsArray(projectPath, 'npm'),
+    ...extraneousInstalled.map(
+      (name): DependencyBase => ({
         name,
-        type: 'prod',
-        required: dependencies[name],
+        type: 'extraneous',
+        required: undefined,
+        manager: 'npm',
       }),
     ),
-    ...Object.keys(devDependencies).map(
-      (name): Npm => ({
-        name,
-        type: 'dev',
-        required: devDependencies[name],
-      }),
-    ),
-    ...extraneousInstalled.map((name): Npm => ({ name, type: 'extraneous' })),
   ];
 
-  return allDependencies.map((dependency): Entire => {
+  return allDependencies.map((dependency): DependencyInstalled => {
     const installed = getInstalledVersion(
       installedInfo ? installedInfo[dependency.name] : undefined,
     );
@@ -107,7 +79,6 @@ const getAllNpmDependencies = async (
     );
 
     return {
-      manager: 'npm',
       ...dependency,
       installed,
       wanted,
@@ -118,11 +89,9 @@ const getAllNpmDependencies = async (
 
 const getAllPnpmDependencies = async (
   projectPath: string,
-): Promise<Entire[]> => {
+): Promise<DependencyInstalled[]> => {
   // type
   const dependencies = getDependenciesFromPackageJson(projectPath);
-  const devDependencies =
-    getDevelopmentDependenciesFromPackageJson(projectPath);
 
   const [
     {
@@ -149,25 +118,19 @@ const getAllPnpmDependencies = async (
     return !depInfo;
   });
 
-  const allDependencies: Npm[] = [
-    ...Object.keys(dependencies).map(
-      (name): Npm => ({
+  const allDependencies: DependencyBase[] = [
+    ...getAllDependenciesFromPackageJsonAsArray(projectPath, 'pnpm'),
+    ...extraneousInstalled.map(
+      (name): DependencyBase => ({
         name,
-        type: 'prod',
-        required: dependencies[name],
+        type: 'extraneous',
+        manager: 'pnpm',
+        required: undefined,
       }),
     ),
-    ...Object.keys(devDependencies).map(
-      (name): Npm => ({
-        name,
-        type: 'dev',
-        required: devDependencies[name],
-      }),
-    ),
-    ...extraneousInstalled.map((name): Npm => ({ name, type: 'extraneous' })),
   ];
 
-  return allDependencies.map((dependency): Entire => {
+  return allDependencies.map((dependency) => {
     const installed = getInstalledVersion(installedInfo[dependency.name]);
     const wanted = getWantedVersion(installed, outdatedInfo[dependency.name]);
     const latest = getLatestVersion(
@@ -177,7 +140,6 @@ const getAllPnpmDependencies = async (
     );
 
     return {
-      manager: 'pnpm',
       ...dependency,
       installed,
       wanted,
@@ -188,12 +150,8 @@ const getAllPnpmDependencies = async (
 
 const getAllYarnDependencies = async (
   projectPath: string,
-): Promise<Entire[]> => {
+): Promise<DependencyInstalled[]> => {
   // type
-  const dependencies = getDependenciesFromPackageJson(projectPath);
-  const devDependencies =
-    getDevelopmentDependenciesFromPackageJson(projectPath);
-
   const anyError = await executeCommandJSONWithFallbackYarn<string | undefined>(
     projectPath,
     'yarn check --json',
@@ -222,24 +180,12 @@ const getAllYarnDependencies = async (
   >(projectPath, 'yarn outdated --json');
   const outdatedInfoExtracted = extractVersionFromYarnOutdated(outdatedInfo);
 
-  const allDependencies: Npm[] = [
-    ...Object.keys(dependencies).map(
-      (name): Npm => ({
-        name,
-        type: 'prod',
-        required: dependencies[name],
-      }),
-    ),
-    ...Object.keys(devDependencies).map(
-      (name): Npm => ({
-        name,
-        type: 'dev',
-        required: devDependencies[name],
-      }),
-    ),
-  ];
+  const allDependencies = getAllDependenciesFromPackageJsonAsArray(
+    projectPath,
+    'npm',
+  );
 
-  return allDependencies.map((dependency): Entire => {
+  return allDependencies.map((dependency) => {
     const info = installedInfo.find(
       (x) => x.name.split('@')[0] === dependency.name,
     );
@@ -256,7 +202,6 @@ const getAllYarnDependencies = async (
     );
 
     return {
-      manager: 'yarn',
       ...dependency,
       installed,
       wanted,
@@ -265,9 +210,11 @@ const getAllYarnDependencies = async (
   });
 };
 
-export const getAllDependenciesSimple: ResponserFunction<unknown, unknown> = ({
-  extraParams: { projectPathDecoded, manager },
-}) => {
+export const getAllDependenciesSimple: ResponserFunction<
+  unknown,
+  unknown,
+  DependencyBase[]
+> = ({ extraParams: { projectPathDecoded, manager } }) => {
   const dependencies = getAllDependenciesSimpleJSON(
     projectPathDecoded,
     manager,
@@ -276,15 +223,17 @@ export const getAllDependenciesSimple: ResponserFunction<unknown, unknown> = ({
   return dependencies;
 };
 
-export const getAllDependencies: ResponserFunction<unknown, unknown> = async ({
-  extraParams: { projectPathDecoded, manager, xCacheId },
-}) => {
+export const getAllDependencies: ResponserFunction<
+  unknown,
+  unknown,
+  DependencyInstalled[]
+> = async ({ extraParams: { projectPathDecoded, manager, xCacheId } }) => {
   const cache = getFromCache(xCacheId + projectPathDecoded);
   if (cache) {
     return cache;
   }
 
-  let dependencies = [];
+  let dependencies: DependencyInstalled[] = [];
 
   if (manager === 'yarn') {
     dependencies = await getAllYarnDependencies(projectPathDecoded);
@@ -293,6 +242,7 @@ export const getAllDependencies: ResponserFunction<unknown, unknown> = async ({
   } else {
     dependencies = await getAllNpmDependencies(projectPathDecoded);
   }
+
   putToCache(xCacheId + projectPathDecoded, dependencies);
 
   return dependencies;
