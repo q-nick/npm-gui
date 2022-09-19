@@ -71,7 +71,7 @@ export const deleteDependency: ResponserFunction<unknown, Parameters> = async ({
     await deleteNpmDependency(projectPathDecoded, dependencyName, type);
   }
 
-  spliceFromCache(xCacheId + projectPathDecoded, dependencyName);
+  spliceFromCache(xCacheId + manager + projectPathDecoded, dependencyName);
 
   return {};
 };

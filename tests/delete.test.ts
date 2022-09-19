@@ -7,12 +7,11 @@ describe.each(managers)('%s install', (manager) => {
   let project: TestProject;
 
   beforeAll(async () => {
-    project = await prepareTestProject('install');
+    project = await prepareTestProject('delete', manager);
   });
 
   test('uninstalled invalid name', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
@@ -26,7 +25,6 @@ describe.each(managers)('%s install', (manager) => {
 
   test('uninstalled valid name', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
@@ -42,7 +40,6 @@ describe.each(managers)('%s install', (manager) => {
 
   test('installed valid name', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
       install: true,
     });

@@ -7,8 +7,7 @@ npm-gui*
 electron
 report.*
 .cache
-tests/test-project/*
-!tests/test-project/.gitkeep
+tests/test-projec*
 tsconfig.tsbuildinfo
 .cache
 eslint-config*

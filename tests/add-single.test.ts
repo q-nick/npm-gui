@@ -13,11 +13,11 @@ describe.each(dependencyTypes)('add single %s depednency', (dependencyType) => {
     let project: TestProject;
 
     beforeAll(async () => {
-      project = await prepareTestProject('add-single');
+      project = await prepareTestProject('add-single', manager);
     });
 
     test('invalid name', async () => {
-      await project.prepareClear({ manager });
+      await project.prepareClear({});
 
       const response = await project.requestAdd(dependencyType, [
         { name: 'sdmvladbf3', version: 'v1.0.0' },
@@ -32,7 +32,7 @@ describe.each(dependencyTypes)('add single %s depednency', (dependencyType) => {
     });
 
     test('invalid version', async () => {
-      await project.prepareClear({ manager });
+      await project.prepareClear({});
 
       const response = await project.requestAdd(dependencyType, [
         { name: 'npm-gui-tests', version: 'v3.0.0' },
@@ -47,7 +47,7 @@ describe.each(dependencyTypes)('add single %s depednency', (dependencyType) => {
     });
 
     test('correct dependency, no version', async () => {
-      await project.prepareClear({ manager });
+      await project.prepareClear({});
 
       const response = await project.requestAdd(dependencyType, [
         { name: 'npm-gui-tests' },
@@ -69,7 +69,7 @@ describe.each(dependencyTypes)('add single %s depednency', (dependencyType) => {
     });
 
     test('correct dependency, with version', async () => {
-      await project.prepareClear({ manager });
+      await project.prepareClear({});
 
       const response = await project.requestAdd(dependencyType, [
         { name: 'npm-gui-tests', version: '^1.0.0' },
