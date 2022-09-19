@@ -20,12 +20,11 @@ describe.each(managers)('%s cache fetching', (manager) => {
   let project: TestProject;
 
   beforeAll(async () => {
-    project = await prepareTestProject('install');
+    project = await prepareTestProject('cache', manager);
   });
 
   test('next full response calls should be faster than first', async () => {
     await project.prepareClear({
-      manager,
       dependencies: {
         'npm-gui-tests': '^1.0.0',
         'npm-gui-tests-2': '^1.0.0',
@@ -54,7 +53,6 @@ describe.each(managers)('%s cache fetching', (manager) => {
 
   test('cache update on add/delete dependency', async () => {
     await project.prepareClear({
-      manager,
       dependencies: {
         'npm-gui-tests': '^1.0.0',
       },

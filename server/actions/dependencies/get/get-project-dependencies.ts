@@ -182,7 +182,7 @@ const getAllYarnDependencies = async (
 
   const allDependencies = getAllDependenciesFromPackageJsonAsArray(
     projectPath,
-    'npm',
+    'yarn',
   );
 
   return allDependencies.map((dependency) => {
@@ -228,7 +228,8 @@ export const getAllDependencies: ResponserFunction<
   unknown,
   DependencyInstalled[]
 > = async ({ extraParams: { projectPathDecoded, manager, xCacheId } }) => {
-  const cache = getFromCache(xCacheId + projectPathDecoded);
+  const cache = getFromCache(xCacheId + manager + projectPathDecoded);
+
   if (cache) {
     return cache;
   }
@@ -243,7 +244,7 @@ export const getAllDependencies: ResponserFunction<
     dependencies = await getAllNpmDependencies(projectPathDecoded);
   }
 
-  putToCache(xCacheId + projectPathDecoded, dependencies);
+  putToCache(xCacheId + manager + projectPathDecoded, dependencies);
 
   return dependencies;
 };

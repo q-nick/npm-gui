@@ -1,6 +1,5 @@
 {
   "extends": "eslint-config-turbocharge/node/tsconfig.json",
-  "files": ["global.d.ts"],
   "compilerOptions": {
     "target": "es2015",
     "lib": ["es2015"]

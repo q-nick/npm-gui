@@ -10,11 +10,11 @@ describe.each(managers)('%s fetching', (manager) => {
   let project: TestProject;
 
   beforeAll(async () => {
-    project = await prepareTestProject('install');
+    project = await prepareTestProject('fetching', manager);
   });
 
   test('no package.json', async () => {
-    await project.prepareClear({ manager, emptyProject: true });
+    await project.prepareClear({ emptyProject: true });
 
     const fastResponse = await project.requestGetFast();
     const fullResponse = await project.requestGetFull();
@@ -25,7 +25,7 @@ describe.each(managers)('%s fetching', (manager) => {
   });
 
   test('no dependencies', async () => {
-    await project.prepareClear({ manager });
+    await project.prepareClear({});
 
     const fastResponse = await project.requestGetFast();
     const fullResponse = await project.requestGetFull();
@@ -36,7 +36,6 @@ describe.each(managers)('%s fetching', (manager) => {
 
   test('uninstalled', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
@@ -51,7 +50,6 @@ describe.each(managers)('%s fetching', (manager) => {
 
   test('installed', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
       install: true,
     });
@@ -71,7 +69,6 @@ describe.each(managers)('%s fetching', (manager) => {
 
   test.skip('extraneous', async () => {
     await project.prepareClear({
-      manager,
       dependencies: {
         'npm-gui-tests': '^1.0.0',
         'npm-gui-tests-2': '^1.0.0',

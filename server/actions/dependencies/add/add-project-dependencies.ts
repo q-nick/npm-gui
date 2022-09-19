@@ -283,21 +283,21 @@ export const addDependencies: ResponserFunction<
         singleDepedency,
         type,
       );
-      updateInCache(xCacheId + projectPathDecoded, result);
+      updateInCache(xCacheId + manager + projectPathDecoded, result);
     } else if (manager === 'pnpm') {
       const result = await addPnpmDependency(
         projectPathDecoded,
         singleDepedency,
         type,
       );
-      updateInCache(xCacheId + projectPathDecoded, result);
+      updateInCache(xCacheId + manager + projectPathDecoded, result);
     } else {
       const result = await addNpmDependency(
         projectPathDecoded,
         singleDepedency,
         type,
       );
-      updateInCache(xCacheId + projectPathDecoded, result);
+      updateInCache(xCacheId + manager + projectPathDecoded, result);
     }
   } else if (dependenciesToInstall.length > 1) {
     if (manager === 'yarn') {
@@ -315,7 +315,7 @@ export const addDependencies: ResponserFunction<
     } else {
       await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type);
     }
-    clearCache(xCacheId + projectPathDecoded);
+    clearCache(xCacheId + manager + projectPathDecoded);
   }
 
   return {};
