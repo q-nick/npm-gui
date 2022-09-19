@@ -53,39 +53,33 @@ export const installDependenciesForceManager: ResponserFunction<
   params: { forceManager },
   extraParams: { projectPathDecoded, xCacheId },
 }) => {
+  console.log('forceManager ################################', forceManager);
   if (forceManager === 'yarn') {
     await installYarnDependencies(projectPathDecoded, true);
-  }
-
-  if (forceManager === 'pnpm') {
+  } else if (forceManager === 'pnpm') {
     await installPnpmDependencies(projectPathDecoded, true);
-  }
-
-  if (forceManager === 'npm') {
+  } else {
     await installNpmDependencies(projectPathDecoded, true);
   }
 
-  clearCache(xCacheId + projectPathDecoded);
+  clearCache(xCacheId + forceManager + projectPathDecoded);
 
   return {};
 };
 
 export const installDependencies: ResponserFunction = async ({
-  extraParams: { projectPathDecoded, manager, xCacheId },
+  extraParams: { projectPathDecoded, manager = 'npm', xCacheId },
 }) => {
+  console.log('manager ################################', manager);
   if (manager === 'yarn') {
-    await installYarnDependencies(projectPathDecoded, true);
+    await installYarnDependencies(projectPathDecoded, false);
+  } else if (manager === 'pnpm') {
+    await installPnpmDependencies(projectPathDecoded, false);
+  } else {
+    await installNpmDependencies(projectPathDecoded, false);
   }
 
-  if (manager === 'pnpm') {
-    await installPnpmDependencies(projectPathDecoded, true);
-  }
-
-  if (manager === 'npm') {
-    await installNpmDependencies(projectPathDecoded, true);
-  }
-
-  clearCache(xCacheId + projectPathDecoded);
+  clearCache(xCacheId + manager + projectPathDecoded);
 
   return {};
 };

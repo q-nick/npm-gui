@@ -32,7 +32,7 @@
     "lint:eslint": "eslint . --ignore-path=.gitignore",
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
     "lint": "npm-run-all lint:* -p",
-    "test": "jest --runInBand",
+    "test": "jest",
     "ci:test": "env NODE_TEST=true npm run test"
   },
   "repository": {

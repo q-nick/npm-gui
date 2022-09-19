@@ -6,11 +6,11 @@ describe.each(managers)('%s install', (manager) => {
   let project: TestProject;
 
   beforeAll(async () => {
-    project = await prepareTestProject('install');
+    project = await prepareTestProject('install', manager);
   });
 
   test('nothing', async () => {
-    await project.prepareClear({ manager });
+    await project.prepareClear({});
 
     await project.requestInstall();
 
@@ -23,7 +23,6 @@ describe.each(managers)('%s install', (manager) => {
 
   test('uninstalled', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
@@ -38,7 +37,6 @@ describe.each(managers)('%s install', (manager) => {
 
   test('uninstalled', async () => {
     await project.prepareClear({
-      manager,
       dependencies: { 'npm-gui-tests': '^1.0.0' },
       install: true,
     });

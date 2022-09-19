@@ -15,11 +15,11 @@ describe.each(dependencyTypes)(
       let project: TestProject;
 
       beforeAll(async () => {
-        project = await prepareTestProject('install');
+        project = await prepareTestProject('add-multiple', manager);
       });
 
       test('invalid name', async () => {
-        await project.prepareClear({ manager });
+        await project.prepareClear({});
 
         const response = await project.requestAdd(dependencyType, [
           { name: 'sdmvladbf3', version: 'v1.0.0' },
@@ -35,7 +35,7 @@ describe.each(dependencyTypes)(
       });
 
       test('invalid version', async () => {
-        await project.prepareClear({ manager });
+        await project.prepareClear({});
 
         const response = await project.requestAdd(dependencyType, [
           { name: 'npm-gui-tests', version: 'v3.0.0' },
@@ -51,7 +51,7 @@ describe.each(dependencyTypes)(
       });
 
       test('correct dependency, no version', async () => {
-        await project.prepareClear({ manager });
+        await project.prepareClear({});
 
         const response = await project.requestAdd(dependencyType, [
           { name: 'npm-gui-tests' },
@@ -82,7 +82,7 @@ describe.each(dependencyTypes)(
       });
 
       test('correct dependency, with version', async () => {
-        await project.prepareClear({ manager });
+        await project.prepareClear({});
 
         const response = await project.requestAdd(dependencyType, [
           { name: 'npm-gui-tests', version: '^1.0.0' },
