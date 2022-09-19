@@ -1,24 +1,13 @@
-import type { ProjectScope } from './store.reducer';
-
 const projectsFromStorage = localStorage.getItem('projects');
 
 export const initialProjects =
   projectsFromStorage !== null
-    ? (JSON.parse(projectsFromStorage) as Record<string, ProjectScope>)
-    : {};
+    ? Object.keys(JSON.parse(projectsFromStorage) as Record<string, unknown>)
+    : [];
 
-export const syncProjectsStorage = (
-  projects: Record<string, ProjectScope>,
-): void => {
+export const syncProjectsStorage = (projects: string[]): void => {
   localStorage.setItem(
     'projects',
-    JSON.stringify(
-      Object.fromEntries(
-        Object.keys(projects).map((current) => [
-          current,
-          { dependenciesProcessing: [] },
-        ]),
-      ),
-    ),
+    JSON.stringify(Object.fromEntries(projects.map((current) => [current]))),
   );
 };

@@ -112,10 +112,11 @@ export const ExplorerCurrentLocation = styled.span`
 
 export const ExplorerSearch = styled.input`
   display: block;
-  background: transparent;
+  background: black;
   border: 1px solid black;
   margin: 3px 3px 0 3px;
   width: calc(100% - 6px);
   color: white;
-  border-radius: 0;
+  padding: 0 5px;
+  border-radius: 10px;
 `;

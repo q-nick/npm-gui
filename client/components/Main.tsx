@@ -1,12 +1,13 @@
 import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ContextStore } from '../app/ContextStore';
-import { Dependencies } from './Dependencies/Dependencies';
+import { Project } from './Project/Project';
+import { TaskQueue } from './TaskQueue/TaskQueue';
+import { useProjectPath } from './use-project-path';
 
-const Content = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex: 1;
   padding: 15px;
@@ -15,31 +16,31 @@ const Content = styled.div`
 `;
 
 export const Main: VFC = () => {
-  const { projectPathEncoded } = useParams<{ projectPathEncoded?: string }>();
-  const projectPathEncodedDefault = projectPathEncoded || 'global';
+  const projectPath = useProjectPath();
+
   const {
     state: { projects },
     dispatch,
   } = useContext(ContextStore);
 
-  const scope = projects[projectPathEncodedDefault];
+  const projectExists = projects.includes(projectPath);
 
   useEffect(() => {
-    if (!scope) {
-      dispatch({
-        type: 'addProject',
-        projectPath: projectPathEncodedDefault,
-      });
+    if (!projectExists) {
+      dispatch({ type: 'addProject', projectPath });
     }
-  }, [dispatch, projectPathEncodedDefault, scope]);
+  }, [projectPath, projectExists, dispatch]);
 
-  if (!scope) {
+  if (!projectExists) {
     return null;
   }
 
   return (
-    <Content>
-      <Dependencies projectPath={projectPathEncodedDefault} />
-    </Content>
+    <>
+      <Wrapper>
+        <Project projectPath={projectPath} />
+      </Wrapper>
+      <TaskQueue queueId={projectPath} />
+    </>
   );
 };

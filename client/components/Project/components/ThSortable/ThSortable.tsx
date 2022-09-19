@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { CSSProp } from 'styled-components';
 import styled, { css } from 'styled-components';
 
-import { Icon } from '../../ui/Icon/Icon';
+import { Icon } from '../../../../ui/Icon/Icon';
 import { SelectFilter } from './components/SelectFilter';
 import { TextFilter } from './components/TextFilter';
 

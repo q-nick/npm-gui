@@ -1,5 +1,5 @@
 import type { Installed, Outdated } from '../../../types/commands.types';
-import type { Entire } from '../../../types/dependency.types';
+import type { DependencyInstalled } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import { updateInCache } from '../../../utils/cache';
 import {
@@ -17,7 +17,7 @@ const addGlobalNpmDependency = async ({
 }: {
   name: string;
   version: string;
-}): Promise<Entire> => {
+}): Promise<DependencyInstalled> => {
   // add
   await executeCommand(undefined, `npm install ${name}@${version || ''} -g`);
 
@@ -46,6 +46,7 @@ const addGlobalNpmDependency = async ({
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-type-alias
 type RequestBody = [{ name: string; version: string }];
 
 export const addGlobalDependencies: ResponserFunction<RequestBody> = async ({

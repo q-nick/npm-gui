@@ -32,6 +32,7 @@ const deletePnpmDependency = async (
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     if (!process.env['NODE_TEST']) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
@@ -47,13 +48,14 @@ const deleteYarnDependency = async (
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     if (!process.env['NODE_TEST']) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
 };
 
 interface Parameters {
-  type: string;
+  type: Type;
   dependencyName: string;
 }
 
@@ -66,7 +68,7 @@ export const deleteDependency: ResponserFunction<unknown, Parameters> = async ({
   } else if (manager === 'pnpm') {
     await deletePnpmDependency(projectPathDecoded, dependencyName);
   } else {
-    await deleteNpmDependency(projectPathDecoded, dependencyName, type as any);
+    await deleteNpmDependency(projectPathDecoded, dependencyName, type);
   }
 
   spliceFromCache(xCacheId + projectPathDecoded, dependencyName);

@@ -1,3 +1,4 @@
+/* eslint-disable styled-components-a11y/no-onchange */
 /* eslint-disable @typescript-eslint/ban-types */
 import styled from 'styled-components';
 
@@ -16,7 +17,7 @@ export const SelectFilter = <T extends string>({
   onFilterChange,
 }: FilterProps<T>): JSX.Element => (
   <Select
-    onBlur={(event): void => {
+    onChange={(event): void => {
       onFilterChange(event.target.value as T);
     }}
     onClick={preventEvent}
