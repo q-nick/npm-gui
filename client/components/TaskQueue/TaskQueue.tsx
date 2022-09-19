@@ -12,7 +12,11 @@ const TaskQueueWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export const TaskQueue: VFC = () => {
+interface Props {
+  queueId: string;
+}
+
+export const TaskQueue: VFC<Props> = ({ queueId }) => {
   const {
     state: { queue },
     dispatch,
@@ -20,11 +24,11 @@ export const TaskQueue: VFC = () => {
 
   return (
     <TaskQueueWrapper>
-      {queue.map((task) => (
+      {queue[queueId]?.map((task) => (
         <TaskElement
           key={task.id}
           onClick={(): void => {
-            dispatch({ type: 'removeTask', task });
+            dispatch({ type: 'removeTask', task, queueId });
           }}
           task={task}
         />

@@ -25,7 +25,7 @@ export const Info: VFC = () => {
   };
 
   useEffect(() => {
-    void load();
+    load();
   }, []);
 
   return (

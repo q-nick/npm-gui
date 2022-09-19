@@ -1,6 +1,10 @@
 /* eslint-disable max-lines */
 import type { Installed, Outdated } from '../../../types/commands.types';
-import type { Basic, Entire, Type } from '../../../types/dependency.types';
+import type {
+  Basic,
+  DependencyInstalled,
+  Type,
+} from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import type { InstalledPNPM } from '../../../types/pnpm.types';
 import type { InstalledYarn, OutdatedYarn } from '../../../types/yarn.types';
@@ -25,7 +29,7 @@ import { extractVersionFromYarnOutdated } from '../../yarn-utils';
 const getNpmPackageWithInfo = async (
   projectPath: string,
   dependencyName: string,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // installed or not
   const { dependencies: installedInfo } =
     await executeCommandJSONWithFallback<Installed>(
@@ -67,7 +71,7 @@ const getNpmPackageWithInfo = async (
 const getPnpmPackageWithInfo = async (
   projectPath: string,
   dependencyName: string,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // installed or not
   const [
     {
@@ -114,7 +118,7 @@ const getPnpmPackageWithInfo = async (
 const getYarnPackageWithInfo = async (
   projectPath: string,
   dependencyName: string,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // installed or not
   const {
     data: { trees: installedInfo },
@@ -163,7 +167,7 @@ const addNpmDependency = async (
   projectPath: string,
   dependency: Basic,
   type: Type,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // add
   await executeCommandSimple(
     projectPath,
@@ -196,7 +200,7 @@ const addPnpmDependency = async (
   projectPath: string,
   dependency: Basic,
   type: Type,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // add
   await executeCommandSimple(
     projectPath,
@@ -229,7 +233,7 @@ const addYarnDependency = async (
   projectPath: string,
   dependency: Basic,
   type: Type,
-): Promise<Entire> => {
+): Promise<DependencyInstalled> => {
   // add
   await executeCommandSimple(
     projectPath,
@@ -260,7 +264,7 @@ const addYarnDependencies = async (
 
 export const addDependencies: ResponserFunction<
   { name: string }[],
-  { type: string }
+  { type: Type }
   // eslint-disable-next-line max-statements
 > = async ({
   params: { type },
@@ -268,50 +272,48 @@ export const addDependencies: ResponserFunction<
   body,
 }) => {
   const dependenciesToInstall = body.filter((d) => d.name);
-  const ONE = 1;
 
-  if (dependenciesToInstall.length === ONE) {
-    let result: Entire;
+  const singleDepedency =
+    dependenciesToInstall.length === 1 && dependenciesToInstall[0];
 
+  if (singleDepedency) {
     if (manager === 'yarn') {
-      result = await addYarnDependency(
+      const result = await addYarnDependency(
         projectPathDecoded,
-        dependenciesToInstall[0]!,
-        type as Type,
+        singleDepedency,
+        type,
       );
+      updateInCache(xCacheId + projectPathDecoded, result);
     } else if (manager === 'pnpm') {
-      result = await addPnpmDependency(
+      const result = await addPnpmDependency(
         projectPathDecoded,
-        dependenciesToInstall[0]!,
-        type as Type,
+        singleDepedency,
+        type,
       );
+      updateInCache(xCacheId + projectPathDecoded, result);
     } else {
-      result = await addNpmDependency(
+      const result = await addNpmDependency(
         projectPathDecoded,
-        dependenciesToInstall[0]!,
-        type as Type,
+        singleDepedency,
+        type,
       );
+      updateInCache(xCacheId + projectPathDecoded, result);
     }
-    updateInCache(xCacheId + projectPathDecoded, result);
-  } else if (dependenciesToInstall.length > ONE) {
+  } else if (dependenciesToInstall.length > 1) {
     if (manager === 'yarn') {
       await addYarnDependencies(
         projectPathDecoded,
         dependenciesToInstall,
-        type as Type,
+        type,
       );
     } else if (manager === 'pnpm') {
       await addPnpmDependencies(
         projectPathDecoded,
         dependenciesToInstall,
-        type as Type,
+        type,
       );
     } else {
-      await addNpmDependencies(
-        projectPathDecoded,
-        dependenciesToInstall,
-        type as Type,
-      );
+      await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type);
     }
     clearCache(xCacheId + projectPathDecoded);
   }

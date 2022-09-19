@@ -1,7 +1,7 @@
-import type { Entire } from '../types/dependency.types';
+import type { DependencyInstalled } from '../types/dependency.types';
 import { ONE, ZERO } from './utils';
 
-type CacheValue = Entire[] | undefined;
+type CacheValue = DependencyInstalled[] | undefined;
 
 let cache: Record<string, CacheValue> = {};
 
@@ -13,7 +13,10 @@ export const putToCache = (name: string, data?: CacheValue): void => {
   cache[name] = data;
 };
 
-export const updateInCache = (name: string, dependency: Entire): void => {
+export const updateInCache = (
+  name: string,
+  dependency: DependencyInstalled,
+): void => {
   const myCache = cache[name];
   if (myCache) {
     const indexToUpdate = myCache.findIndex(

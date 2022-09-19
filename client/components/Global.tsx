@@ -2,7 +2,7 @@ import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
 
 import { ContextStore } from '../app/ContextStore';
-import { Dependencies } from './Dependencies/Dependencies';
+import { Project } from './Project/Project';
 
 export const Global: VFC = () => {
   const {
@@ -22,5 +22,5 @@ export const Global: VFC = () => {
     return null;
   }
 
-  return <Dependencies projectPath="global" />;
+  return <Project projectPath="global" />;
 };

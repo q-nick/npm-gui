@@ -1,5 +1,5 @@
 import type { InstalledBody, OutdatedBody } from '../types/commands.types';
-import type { Entire, Npm } from '../types/dependency.types';
+import type { DependencyInstalled, Npm } from '../types/dependency.types';
 
 export const uniqueOrNull = (
   value: string | undefined,
@@ -15,8 +15,8 @@ export const uniqueOrNull = (
 export const mapNpmDependency2 = (
   dependency: Npm,
   version: OutdatedBody,
-  required: string | null,
-): Entire => {
+  required?: string,
+): DependencyInstalled => {
   const installed =
     dependency.version !== undefined ? dependency.version : null;
   let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
@@ -24,7 +24,7 @@ export const mapNpmDependency2 = (
     ? uniqueOrNull(version.latest, [installed, wanted])
     : null;
 
-  if (installed === null && wanted === null && required !== null) {
+  if (installed === null && wanted === null && required !== undefined) {
     const match = /\d.+/.exec(required);
     [wanted] = match ?? [null];
   }
@@ -38,59 +38,6 @@ export const mapNpmDependency2 = (
     manager: 'npm',
   };
 };
-
-// export function mapYarnDependencyToDependency(
-//   yarnDependency: Yarn.ResultDependency, unused: boolean,
-// ): Dependency.Entire {
-//   return {
-//     unused,
-//     name: yarnDependency[0],
-//     required: undefined,
-//     installed: yarnDependency[1],
-//     wanted: yarnDependency[2],
-//     latest: yarnDependency[3],
-//     type: 'prod',
-//     repo: 'yarn',
-//   };
-// }
-
-// export function mapYarnResultTreeToBasic(
-//   yarnResults: Yarn.Result[],
-// ): Record<string, Dependency.Basic> {
-//   const dependencies: Record<string, Dependency.Basic> = {};
-
-//   yarnResults
-//     .filter((r: any): r is Yarn.ResultTree => r.type === 'tree')
-//     .forEach((yarnTree) => {
-//       yarnTree.data.trees.forEach((yarnDependency) => {
-//         dependencies[yarnDependency.name.substr(0, yarnDependency.name.lastIndexOf('@'))] = {
-//           name: yarnDependency.name.substr(0, yarnDependency.name.lastIndexOf('@')),
-//           version: yarnDependency.name.substr(yarnDependency.name.lastIndexOf('@') + 1),
-//         };
-//       });
-//     });
-
-//   return dependencies;
-// }
-
-// export function mapYarnResultTableToVersion(
-//   yarnResults: Yarn.Result[],
-// ): Record<string, Dependency.Version> {
-//   const dependencies: Record<string, Dependency.Version> = {};
-
-//   yarnResults
-//     .filter((r: any): r is Yarn.ResultTable => r.type === 'table')
-//     .forEach((yarnTable) => {
-//       yarnTable.data.body.forEach((yarnDependency) => {
-//         dependencies[yarnDependency[0]] = {
-//           wanted: yarnDependency[2],
-//           latest: yarnDependency[3],
-//         };
-//       });
-//     });
-
-//   return dependencies;
-// }
 
 export const getInstalledVersion = (
   installed?: InstalledBody,

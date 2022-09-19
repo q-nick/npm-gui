@@ -1,6 +1,7 @@
 import path from 'path';
 import { sync } from 'rimraf';
 
+import type { Manager } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import { clearCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
@@ -45,37 +46,43 @@ const installYarnDependencies = async (
   await executeCommandSimple(projectPath, 'yarn install');
 };
 
-export const installDependencies: ResponserFunction<
+export const installDependenciesForceManager: ResponserFunction<
   unknown,
-  { forceManager: string }
+  { forceManager: Manager }
 > = async ({
   params: { forceManager },
+  extraParams: { projectPathDecoded, xCacheId },
+}) => {
+  if (forceManager === 'yarn') {
+    await installYarnDependencies(projectPathDecoded, true);
+  }
+
+  if (forceManager === 'pnpm') {
+    await installPnpmDependencies(projectPathDecoded, true);
+  }
+
+  if (forceManager === 'npm') {
+    await installNpmDependencies(projectPathDecoded, true);
+  }
+
+  clearCache(xCacheId + projectPathDecoded);
+
+  return {};
+};
+
+export const installDependencies: ResponserFunction = async ({
   extraParams: { projectPathDecoded, manager, xCacheId },
 }) => {
-  switch (forceManager) {
-    case 'yarn': {
-      await installYarnDependencies(projectPathDecoded, true);
+  if (manager === 'yarn') {
+    await installYarnDependencies(projectPathDecoded, true);
+  }
 
-      break;
-    }
-    case 'pnpm': {
-      await installPnpmDependencies(projectPathDecoded, true);
+  if (manager === 'pnpm') {
+    await installPnpmDependencies(projectPathDecoded, true);
+  }
 
-      break;
-    }
-    case 'npm': {
-      await installNpmDependencies(projectPathDecoded, true);
-
-      break;
-    }
-    default:
-      if (manager === 'yarn') {
-        await installYarnDependencies(projectPathDecoded, false);
-      } else if (manager === 'pnpm') {
-        await installPnpmDependencies(projectPathDecoded, false);
-      } else {
-        await installNpmDependencies(projectPathDecoded, false);
-      }
+  if (manager === 'npm') {
+    await installNpmDependencies(projectPathDecoded, true);
   }
 
   clearCache(xCacheId + projectPathDecoded);

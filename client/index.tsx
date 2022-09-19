@@ -2,14 +2,19 @@
 import './base.css';
 import 'open-iconic/font/css/open-iconic.css';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { render } from 'react-dom';
 
 import { App } from './components/App';
 
+const queryClient = new QueryClient();
+
 render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </React.StrictMode>,
   document.querySelector('.npm-gui'),
 );

@@ -31,7 +31,7 @@ async function searchNPM(query: string): Promise<Result[]> {
     'api.npms.io',
     `/v2/search?from=0&size=25&q=${query}`,
   );
-  console.log('XXXXXXXXXXXXXXXXXXXXX', response);
+
   return (JSON.parse(response) as NPMApiResult).results.map((result) => ({
     name: result.package.name,
     version: result.package.version,

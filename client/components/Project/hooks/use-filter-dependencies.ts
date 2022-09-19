@@ -1,19 +1,21 @@
 import { useState } from 'react';
 
-import type { Entire, Type } from '../../../../server/types/dependency.types';
-import { ZERO } from '../../../utils';
+import type {
+  DependencyInstalledExtras,
+  Type,
+} from '../../../../server/types/dependency.types';
 
 interface Hook {
-  dependenciesFiltered?: Entire[];
-  isEmpty: boolean;
-  isLoading: boolean;
+  dependenciesFiltered?: DependencyInstalledExtras[];
   filterTypeValue: Type | 'any';
   filterNameValue: string;
   setFilterTypeValue: (value: Type | 'any') => void;
   setFilterNameValue: (value: string) => void;
 }
 
-export const useFilterDependencies = (dependencies?: Entire[]): Hook => {
+export const useFilterDependencies = (
+  dependencies?: DependencyInstalledExtras[],
+): Hook => {
   const [filterTypeValue, setFilterTypeValue] =
     useState<Hook['filterTypeValue']>('any');
   const [filterNameValue, setFilterNameValue] = useState<string>('');
@@ -30,8 +32,6 @@ export const useFilterDependencies = (dependencies?: Entire[]): Hook => {
 
   return {
     dependenciesFiltered,
-    isEmpty: Boolean(dependencies) && dependencies?.length === ZERO,
-    isLoading: !dependencies,
     setFilterNameValue,
     setFilterTypeValue,
     filterTypeValue,

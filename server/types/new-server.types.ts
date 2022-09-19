@@ -6,7 +6,11 @@ export type MiddlewareFunction<P = unknown> = (requestData: {
   extraParams: Record<string, boolean | string>;
 }) => Record<string, boolean | string>;
 
-export type ResponserFunction<B = unknown, P = unknown> = (requestData: {
+export type ResponserFunction<
+  B = unknown,
+  P = unknown,
+  R = unknown,
+> = (requestData: {
   params: P;
   extraParams: {
     projectPathDecoded: string;
@@ -14,4 +18,4 @@ export type ResponserFunction<B = unknown, P = unknown> = (requestData: {
     xCacheId: string;
   };
   body: B;
-}) => Promise<unknown> | unknown;
+}) => Promise<R> | R;

@@ -19,16 +19,44 @@ export interface Version {
   latest: string;
 }
 
-export interface Entire {
+export interface DependencyBase {
   name: string;
   type: Type;
-  required?: string | null;
+  manager: Manager;
+  required?: string;
+}
+
+export interface BundleScore {
+  score: number | null;
+  name: string;
+}
+
+export interface BundleSize {
+  size: number;
+  version: string;
+  gzip: number;
+  name: string;
+}
+
+// export interface Entire
+//   extends DependencyBase,
+//     Partial<Omit<BundleSize, 'name'>>,
+//     Partial<Omit<BundleScore, 'name'>> {
+//   installed?: string | null;
+//   wanted?: string | null;
+//   latest?: string | null;
+// }
+
+export interface DependencyInstalled extends DependencyBase {
   installed?: string | null;
   wanted?: string | null;
   latest?: string | null;
-  manager: Manager;
-  // unused?: boolean;
 }
+
+export interface DependencyInstalledExtras
+  extends DependencyInstalled,
+    Partial<Omit<BundleSize, 'name'>>,
+    Partial<Omit<BundleScore, 'name'>> {}
 
 export interface SearchResult {
   description: string;
