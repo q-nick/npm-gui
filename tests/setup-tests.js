@@ -1,2 +1,2 @@
 // eslint-disable-next-line no-undef
-jest.setTimeout(30000);
+jest.setTimeout(60000);
