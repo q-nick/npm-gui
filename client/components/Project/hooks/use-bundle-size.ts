@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-import { getDependencySize } from '../../../service';
+import { getDependencySize } from '../../../service/dependencies.service';
 
 export const useBundleSize = (
   dependencies?: DependencyInstalledExtras[],

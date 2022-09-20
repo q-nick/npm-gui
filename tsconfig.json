@@ -5,5 +5,8 @@
     { "path": "./client" },
     { "path": "./tests" }
   ],
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
   "files": []
 }

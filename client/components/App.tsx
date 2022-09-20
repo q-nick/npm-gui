@@ -5,7 +5,7 @@ import { ContextStoreProvider } from '../app/ContextStore';
 import { Header } from './Header/Header';
 import { Info } from './Info';
 import { Main } from './Main';
-import { ProjectTaskQueueMonitor } from './Project/ProjectTaskQueueMonitor';
+import { ProjectTaskQueueMonitor } from './ProjectTaskQueue/ProjectTaskQueueMonitor';
 import { TaskQueueContextProvider } from './TaskQueue/TaskQueueContext';
 
 export const App: VFC = () => {

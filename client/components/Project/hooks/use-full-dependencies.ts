@@ -1,7 +1,7 @@
 import { useIsMutating, useQuery } from '@tanstack/react-query';
 
 import type { DependencyInstalled } from '../../../../server/types/dependency.types';
-import { getProjectDependenciesFull } from '../../../service';
+import { getProjectDependenciesFull } from '../../../service/dependencies.service';
 
 export const useFullDependencies = (
   projectPath: string,
