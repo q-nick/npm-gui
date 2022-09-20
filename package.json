@@ -85,8 +85,7 @@
   },
   "dependencies": {
     "cross-spawn": "^7.0.3",
-    "open": "^8.4.0",
-    "rimraf": "^3.0.2"
+    "open": "^8.4.0"
   },
   "engines": {
     "node": ">= 11.0.0",
