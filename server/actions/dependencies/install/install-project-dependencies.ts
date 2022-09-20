@@ -1,4 +1,4 @@
-import { existsSync, rmdirSync, rmSync } from 'fs';
+import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from 'fs';
 import path from 'path';
 
 import type { Manager } from '../../../types/dependency.types';
@@ -6,16 +6,32 @@ import type { ResponserFunction } from '../../../types/new-server.types';
 import { clearCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
 
+const deleteFolderRecursive = (rmPath: string): void => {
+  let files = [];
+  if (existsSync(rmPath)) {
+    files = readdirSync(rmPath);
+    for (const [, file] of files.entries()) {
+      const currentPath = `${rmPath}/${file}`;
+      if (lstatSync(currentPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(currentPath);
+      } else {
+        // delete file
+        unlinkSync(currentPath);
+      }
+    }
+    rmdirSync(rmPath);
+  }
+};
+
 const clearManagerFiles = (projectPath: string): void => {
   if (existsSync(`${path.normalize(projectPath)}/node_modules`)) {
-    rmdirSync(`${path.normalize(projectPath)}/node_modules`, {
-      recursive: true,
-    });
+    deleteFolderRecursive(`${path.normalize(projectPath)}/node_modules`);
   }
 
   for (const fileName of ['yarn.lock', 'package-lock.json', 'pnpm-lock.yaml']) {
     if (existsSync(`${path.normalize(projectPath)}/${fileName}`)) {
-      rmSync(`${path.normalize(projectPath)}/${fileName}`);
+      unlinkSync(`${path.normalize(projectPath)}/${fileName}`);
     }
   }
 };
