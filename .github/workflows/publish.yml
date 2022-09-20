@@ -25,6 +25,9 @@ jobs:
           registry-url: https://registry.npmjs.org/
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: npm ci
+      # run tests just in case
+      - run: npm lint
+      # - run: npm test TODO
       # set up git since we will later push to the repo
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "pawel@devnullapps.com"
@@ -32,8 +35,6 @@ jobs:
       - run: npm version ${{ github.event.release.tag_name }}
       # build the project
       - run: npm run build
-      # run tests just in case
-      - run: npm test
       # publish to NPM -> there is one caveat, continue reading for the fix
       - run: npm publish --tag ${{ github.event.release.target_commitish }}
         env:
