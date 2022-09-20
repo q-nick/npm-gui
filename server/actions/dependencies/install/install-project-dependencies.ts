@@ -1,5 +1,5 @@
+import { rmdirSync, rmSync } from 'fs';
 import path from 'path';
-import { sync } from 'rimraf';
 
 import type { Manager } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
@@ -7,10 +7,10 @@ import { clearCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
 
 const clearManagerFiles = (projectPath: string): void => {
-  sync(`${path.normalize(projectPath)}/node_modules`);
-  sync(`${path.normalize(projectPath)}/yarn.lock`);
-  sync(`${path.normalize(projectPath)}/package-lock.json`);
-  sync(`${path.normalize(projectPath)}/pnpm-lock.yaml`);
+  rmdirSync(`${path.normalize(projectPath)}/node_modules`, { recursive: true });
+  rmSync(`${path.normalize(projectPath)}/yarn.lock`);
+  rmSync(`${path.normalize(projectPath)}/package-lock.json`);
+  rmSync(`${path.normalize(projectPath)}/pnpm-lock.yaml`);
 };
 
 // installation
