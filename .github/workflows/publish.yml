@@ -1,0 +1,46 @@
+name: NPM publish CD workflow
+
+on:
+  release:
+    # This specifies that the build will be triggered when we publish a release
+    types: [published]
+
+jobs:
+  build:
+    # Run on latest version of ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # "ref" specifies the branch to check out.
+          # "github.event.release.target_commitish" is a global variable and specifies the branch the release targeted
+          ref: ${{ github.event.release.target_commitish }}
+      # install Node.js
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          # Specifies the registry, this field is required!
+          registry-url: https://registry.npmjs.org/
+      # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
+      - run: npm ci
+      # set up git since we will later push to the repo
+      - run: git config --global user.name "GitHub CD bot"
+      - run: git config --global user.email "pawel@devnullapps.com"
+      # upgrade npm version in package.json to the tag used in the release.
+      - run: npm version ${{ github.event.release.tag_name }}
+      # build the project
+      - run: npm run build
+      # run tests just in case
+      - run: npm test
+      # publish to NPM -> there is one caveat, continue reading for the fix
+      - run: npm publish --tag ${{ github.event.release.target_commitish }}
+        env:
+          # Use a token to publish to NPM. See below for how to set it up
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # push the version changes to GitHub
+      - run: git push
+        env:
+          # The secret is passed automatically. Nothing to configure.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
