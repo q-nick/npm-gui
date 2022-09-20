@@ -3,10 +3,10 @@ import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import type { Props as ButtonProps } from '../../../ui/Button/Button';
-import { Button } from '../../../ui/Button/Button';
-import { Modal } from '../../../ui/Modal/Modal';
-import type { Task } from '../task-queue.reducer';
+import type { Props as ButtonProps } from '../../ui/Button/Button';
+import { Button } from '../../ui/Button/Button';
+import { Modal } from '../../ui/Modal/Modal';
+import type { Task } from './task-queue.reducer';
 
 const CloseButton = styled(Button)`
   margin-right: 15px;

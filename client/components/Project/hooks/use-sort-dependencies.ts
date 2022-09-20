@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import type { Entire } from '../../../../server/types/dependency.types';
+import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
 
 type SortType =
   | 'installed'
@@ -15,7 +15,7 @@ type SortType =
   | undefined;
 
 interface Hook {
-  dependenciesSorted?: Entire[];
+  dependenciesSorted?: DependencyInstalledExtras[];
   onSortChange: (sortName: SortType) => void;
   sortReversed: boolean;
   sort: SortType;
@@ -25,7 +25,9 @@ const GREATER = -1;
 const LOWER = 1;
 const EQUAL = 0;
 
-export const useSortDependencies = (dependencies?: Entire[]): Hook => {
+export const useSortDependencies = (
+  dependencies?: DependencyInstalledExtras[],
+): Hook => {
   const [sort, setSort] = useState<SortType>();
   const [sortReversed, setSortReversed] = useState(false);
 
@@ -94,7 +96,7 @@ export const useSortDependencies = (dependencies?: Entire[]): Hook => {
         notAssigned.push(typeDep);
       }
       return notAssigned;
-    }, [] as Entire[]);
+    }, [] as DependencyInstalledExtras[]);
 
     dependenciesSorted = [...regular, ...typesNotAssigned];
   }

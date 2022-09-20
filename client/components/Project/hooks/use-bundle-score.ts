@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-import { getDependencyScore } from '../../../service';
+import { getDependencyScore } from '../../../service/dependencies.service';
 
 export const useBundleScore = (
   dependencies?: DependencyInstalledExtras[],

@@ -1,7 +1,7 @@
 import { useIsMutating, useQuery } from '@tanstack/react-query';
 
 import type { DependencyInstalled } from '../../../../server/types/dependency.types';
-import { getProjectDependenciesFast } from '../../../service';
+import { getProjectDependenciesFast } from '../../../service/dependencies.service';
 
 export const useFastDependencies = (
   projectPath: string,

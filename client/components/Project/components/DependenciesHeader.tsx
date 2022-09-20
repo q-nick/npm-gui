@@ -7,7 +7,7 @@ import type {
   Manager,
   Type,
 } from '../../../../server/types/dependency.types';
-import { getAvailableManagers } from '../../../service';
+import { getAvailableManagers } from '../../../service/others.service';
 import { Button } from '../../../ui/Button/Button';
 import { Search } from './Search/Search';
 

@@ -2,7 +2,7 @@ import type { VFC } from 'react';
 import { useContext } from 'react';
 import styled from 'styled-components';
 
-import { TaskElement } from './components/Task';
+import { TaskElement } from './Task';
 import { TaskQueueContext } from './TaskQueueContext';
 
 const TaskQueueWrapper = styled.div`
