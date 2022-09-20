@@ -26,7 +26,7 @@ jobs:
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: npm ci
       # run tests just in case
-      - run: npm run lint
+      # - run: npm run lint
       # - run: npm run test TODO
       # set up git since we will later push to the repo
       - run: git config --global user.name "GitHub CD bot"
