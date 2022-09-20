@@ -1,4 +1,4 @@
-import { rmdirSync, rmSync } from 'fs';
+import { existsSync, rmdirSync, rmSync } from 'fs';
 import path from 'path';
 
 import type { Manager } from '../../../types/dependency.types';
@@ -7,10 +7,17 @@ import { clearCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
 
 const clearManagerFiles = (projectPath: string): void => {
-  rmdirSync(`${path.normalize(projectPath)}/node_modules`, { recursive: true });
-  rmSync(`${path.normalize(projectPath)}/yarn.lock`);
-  rmSync(`${path.normalize(projectPath)}/package-lock.json`);
-  rmSync(`${path.normalize(projectPath)}/pnpm-lock.yaml`);
+  if (existsSync(`${path.normalize(projectPath)}/node_modules`)) {
+    rmdirSync(`${path.normalize(projectPath)}/node_modules`, {
+      recursive: true,
+    });
+  }
+
+  for (const fileName of ['yarn.lock', 'package-lock.json', 'pnpm-lock.yaml']) {
+    if (existsSync(`${path.normalize(projectPath)}/${fileName}`)) {
+      rmSync(`${path.normalize(projectPath)}/${fileName}`);
+    }
+  }
 };
 
 // installation
@@ -53,7 +60,6 @@ export const installDependenciesForceManager: ResponserFunction<
   params: { forceManager },
   extraParams: { projectPathDecoded, xCacheId },
 }) => {
-  console.log('forceManager ################################', forceManager);
   if (forceManager === 'yarn') {
     await installYarnDependencies(projectPathDecoded, true);
   } else if (forceManager === 'pnpm') {
@@ -70,7 +76,6 @@ export const installDependenciesForceManager: ResponserFunction<
 export const installDependencies: ResponserFunction = async ({
   extraParams: { projectPathDecoded, manager = 'npm', xCacheId },
 }) => {
-  console.log('manager ################################', manager);
   if (manager === 'yarn') {
     await installYarnDependencies(projectPathDecoded, false);
   } else if (manager === 'pnpm') {
