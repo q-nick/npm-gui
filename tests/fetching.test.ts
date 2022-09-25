@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { executeCommandSimple } from '../server/actions/execute-command';
 import type { Manager } from '../server/types/dependency.types';
 import type { TestProject } from './tests-utils';
 import { prepareTestProject } from './tests-utils';
@@ -279,7 +280,22 @@ describe.each(testCases)(
       const fullResponse = await project.requestGetFull();
 
       expect(fastResponse.body).toIncludeSameMembers(extraneousFast);
-      expect(fullResponse.body).toIncludeSameMembers(extraneousFull);
+
+      // npm v7 doesnt show extraneous, v6 and v8 looks good
+      // also yarn doesnt show any info about extraneous packages
+      if (manager === 'npm') {
+        const npmVersion = await executeCommandSimple(__dirname, 'npm -v');
+        const npmVersionMajor = /^(?<major>\d+)/.exec(npmVersion);
+        if (npmVersionMajor?.groups?.['major'] === '7') {
+          expect(fullResponse.body).toIncludeSameMembers(
+            extraneousFull.filter((d) => d.name === 'npm-gui-tests'),
+          );
+        } else {
+          expect(fullResponse.body).toIncludeSameMembers(extraneousFull);
+        }
+      } else {
+        expect(fullResponse.body).toIncludeSameMembers(extraneousFull);
+      }
     });
 
     test('extra uninstalled', async () => {
