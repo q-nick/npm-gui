@@ -9,7 +9,7 @@ export const useFastDependencies = (
   const isProjectMutating = useIsMutating([projectPath]) > 0;
 
   const query = useQuery(
-    [projectPath, 'get-project-dependencies-fast'],
+    [projectPath, 'get-project-dependencies', 'fast'],
     () => getProjectDependenciesFast(projectPath),
     {
       refetchOnWindowFocus: false,

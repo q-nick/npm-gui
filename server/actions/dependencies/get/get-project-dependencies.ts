@@ -244,7 +244,9 @@ export const getAllDependencies: ResponserFunction<
     } else {
       dependencies = await getAllNpmDependencies(projectPathDecoded);
     }
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
     return [];
   }
 

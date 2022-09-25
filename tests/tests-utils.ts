@@ -18,7 +18,7 @@ export const encodePath = (b64Encoded: string): string => {
 interface Parameters {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  extraneous?: Record<string, string>;
+  overrideDepedendencies?: Record<string, string>;
   install?: true;
   emptyProject?: true;
 }
@@ -64,7 +64,7 @@ export const prepareTestProject = async (
       dependencies,
       devDependencies,
       install,
-      extraneous,
+      overrideDepedendencies,
       emptyProject,
     }: Parameters): ReturnType<TestProject['prepareClear']> => {
       clearCache(manager + testDirectoryPath);
@@ -124,10 +124,10 @@ export const prepareTestProject = async (
       }
 
       // override dependencies with etraneous to emulate them
-      if (extraneous) {
+      if (overrideDepedendencies) {
         await writeJson(path.join(testDirectoryPath, 'package.json'), {
           ...packageJsonToWrite,
-          dependencies: extraneous,
+          dependencies: overrideDepedendencies,
         });
       }
 

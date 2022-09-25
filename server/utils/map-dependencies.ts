@@ -50,6 +50,18 @@ export const getInstalledVersion = (
     return installed.version;
   }
 
+  if ('invalid' in installed) {
+    return null;
+  }
+
+  if ('missing' in installed) {
+    return null;
+  }
+
+  if ('extraneous' in installed) {
+    return null;
+  }
+
   if (typeof installed.required === 'string') {
     return null;
   }
