@@ -9,7 +9,7 @@ export const useFullDependencies = (
   const isProjectMutating = useIsMutating([projectPath]) > 0;
 
   const query = useQuery(
-    [projectPath, 'get-project-dependencies-full'],
+    [projectPath, 'get-project-dependencies', 'full'],
     () => getProjectDependenciesFull(projectPath),
     {
       refetchOnWindowFocus: false,

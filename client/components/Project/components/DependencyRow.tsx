@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/no-multi-comp */
-import { useIsFetching } from '@tanstack/react-query';
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import type { VFC } from 'react';
 import styled, { css } from 'styled-components';
 
@@ -241,12 +241,16 @@ export const DependencyRow: VFC<Props> = ({
   const projectPath = useProjectPath();
 
   const isFetching =
-    useIsFetching(['get-project-dependencies-full', projectPath]) > 0;
+    useIsFetching([projectPath, 'get-project-dependencies']) > 0;
+
+  const isMutating = useIsMutating([projectPath]) > 0;
+
+  const isProcessing = isFetching || isMutating;
 
   return (
     <TrStyled
       hasTypesBelow={hasTypesBelow}
-      isProcessing={isFetching}
+      isProcessing={isProcessing}
       key={`${dependency.name}${dependency.manager}`}
     >
       {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
@@ -303,7 +307,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <InstalledVersion
           dependency={dependency}
-          isProcessing={isFetching}
+          isProcessing={isProcessing}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -316,7 +320,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <WantedVersion
           dependency={dependency}
-          isProcessing={isFetching}
+          isProcessing={isProcessing}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -329,7 +333,7 @@ export const DependencyRow: VFC<Props> = ({
       <ColumnVersion>
         <LatestVersion
           dependency={dependency}
-          isProcessing={isFetching}
+          isProcessing={isProcessing}
           onInstall={(version): void => {
             onInstallDependencyVersion(
               { name: dependency.name, version },
@@ -341,7 +345,7 @@ export const DependencyRow: VFC<Props> = ({
 
       <ColumnAction>
         <ConfirmButton
-          disabled={isFetching}
+          disabled={isProcessing}
           icon="trash"
           onClick={(): void => {
             onDeleteDependency(dependency);

@@ -23,9 +23,15 @@ interface InstalledBodyExtra {
   extraneous?: boolean;
 }
 
+interface InstalledBodyInvalid {
+  invalid: string;
+  prbolems: string[];
+}
+
 export type InstalledBody =
   | InstalledBodyBase
   | InstalledBodyExtra
+  | InstalledBodyInvalid
   | InstalledBodyMissing;
 
 export interface Installed {
