@@ -33,7 +33,7 @@ export const getDependencySize = async (
   dependencyName: string,
   installedVersion?: string | null,
 ): Promise<BundleSize> => {
-  return fetchJSON(`api/bundle-size/${dependencyName}/${installedVersion}`);
+  return fetchJSON(`api/bundle-size/${dependencyName}@${installedVersion}`);
 };
 
 export const installDependencies = async (

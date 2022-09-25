@@ -61,7 +61,7 @@ app.delete(
 
 // dependencies extra apis
 app.get('/api/score/:dependencyName', getDependencyScore);
-app.get('/api/bundle-size/:dependencyName/:version', getDependencySize);
+app.get('/api/bundle-size/:dependencyNameVersion', getDependencySize);
 
 // other apis
 app.get('/api/explorer/:path', explorer);

@@ -99,20 +99,28 @@ export const prepareTestProject = async (
         await writeFile(path.join(testDirectoryPath, 'pnpm-lock.yaml'), '');
       }
 
-      if (install && manager === 'npm') {
-        await executeCommandSimple(path.join(testDirectoryPath), 'npm install');
-      }
-      if (install && manager === 'yarn') {
-        await executeCommandSimple(
-          path.join(testDirectoryPath),
-          'yarn install',
-        );
-      }
-      if (install && manager === 'pnpm') {
-        await executeCommandSimple(
-          path.join(testDirectoryPath),
-          'pnpm install',
-        );
+      try {
+        if (install && manager === 'npm') {
+          await executeCommandSimple(
+            path.join(testDirectoryPath),
+            'npm install',
+          );
+        }
+        if (install && manager === 'yarn') {
+          await executeCommandSimple(
+            path.join(testDirectoryPath),
+            'yarn install',
+          );
+        }
+        if (install && manager === 'pnpm') {
+          await executeCommandSimple(
+            path.join(testDirectoryPath),
+            'pnpm install',
+          );
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`install error: ${manager}:`, error);
       }
 
       // override dependencies with etraneous to emulate them

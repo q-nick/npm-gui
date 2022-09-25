@@ -21,7 +21,8 @@ export const useBundleSize = (
               getDependencySize(dependency.name, dependency.installed),
             refetchOnWindowFocus: false,
             refetchOnMount: false,
-            retry: false,
+            refetchOnReconnect: false,
+            cacheTime: Number.POSITIVE_INFINITY,
           };
         }) || [],
   });

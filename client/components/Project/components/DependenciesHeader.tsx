@@ -136,7 +136,6 @@ export const DependenciesHeader: React.FC<Props> = ({
               }}
               style={{ display: 'inline-block' }}
               title="Remove and re-nstall all packages"
-              value=""
             >
               <option disabled selected value="">
                 Re-Install

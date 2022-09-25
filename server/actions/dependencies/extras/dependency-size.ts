@@ -6,16 +6,15 @@ import { requestGET } from '../../../utils/request-with-promise';
 const cache: Record<string, BundleSize> = {};
 
 interface Parameters {
-  dependencyName: string;
-  version: string;
+  dependencyNameVersion: string;
 }
 
 export const getDependencySize: ResponserFunction<
   unknown,
   Parameters,
   BundleSize | undefined
-> = async ({ params: { dependencyName, version } }) => {
-  const bundleInfoCached = cache[`${dependencyName}@${version}`];
+> = async ({ params: { dependencyNameVersion } }) => {
+  const bundleInfoCached = cache[`${dependencyNameVersion}`];
 
   if (bundleInfoCached) {
     return bundleInfoCached;
@@ -24,18 +23,23 @@ export const getDependencySize: ResponserFunction<
   try {
     const response = await requestGET(
       'bundlephobia.com',
-      `/api/size?package=${dependencyName}@${version}`,
+      `/api/size?package=${dependencyNameVersion}`,
     );
     const json = parseJSON<BundleSize>(response);
     if (json) {
       // eslint-disable-next-line require-atomic-updates
-      cache[`${dependencyName}@${version}`] = json;
-      return {
-        size: json.size,
-        gzip: json.gzip,
-        name: dependencyName,
-        version,
-      };
+      cache[`${dependencyNameVersion}`] = json;
+      const [version] = dependencyNameVersion.match(/[\d+.]+$/) || [];
+      const name = dependencyNameVersion.replace(`@${version}`, '');
+
+      return version
+        ? {
+            size: json.size,
+            gzip: json.gzip,
+            name,
+            version,
+          }
+        : undefined;
     }
     return undefined;
   } catch {

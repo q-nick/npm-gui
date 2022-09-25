@@ -48,7 +48,7 @@ export const executeCommand = (
 
       // if error
       spawned.on('error', () => {
-        reject(new Error(stderr));
+        reject(stderr);
       });
     }
   });

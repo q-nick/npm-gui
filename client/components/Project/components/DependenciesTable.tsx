@@ -69,7 +69,16 @@ const hasTypesNext = (
 ): boolean => {
   const nextDep = dependencies[index + 1];
 
-  return !!(nextDep && nextDep.name === `@types/${name}`);
+  return !!(nextDep && nextDep.name.replace('@types/', '') === name);
+};
+
+const isTypesNext = (
+  dependencies: DependencyInstalledExtras[],
+  index: number,
+  name: string,
+): boolean => {
+  const previousDep = dependencies[index - 1];
+  return !!(previousDep && previousDep.name === name.replace('@types/', ''));
 };
 
 export const DependenciesTable: React.FC<Props> = ({
@@ -218,6 +227,11 @@ export const DependenciesTable: React.FC<Props> = ({
               )}
               isGlobal={isGlobal}
               isProcessing={dependenciesProcessing.includes(dependency.name)}
+              isTypesBelow={isTypesNext(
+                dependenciesSorted,
+                index,
+                dependency.name,
+              )}
               key={dependency.name}
               onDeleteDependency={onDeleteDependency}
               onInstallDependencyVersion={onInstallDependencyVersion}
