@@ -236,12 +236,16 @@ export const getAllDependencies: ResponserFunction<
 
   let dependencies: DependencyInstalled[] = [];
 
-  if (manager === 'yarn') {
-    dependencies = await getAllYarnDependencies(projectPathDecoded);
-  } else if (manager === 'pnpm') {
-    dependencies = await getAllPnpmDependencies(projectPathDecoded);
-  } else {
-    dependencies = await getAllNpmDependencies(projectPathDecoded);
+  try {
+    if (manager === 'yarn') {
+      dependencies = await getAllYarnDependencies(projectPathDecoded);
+    } else if (manager === 'pnpm') {
+      dependencies = await getAllPnpmDependencies(projectPathDecoded);
+    } else {
+      dependencies = await getAllNpmDependencies(projectPathDecoded);
+    }
+  } catch {
+    return [];
   }
 
   putToCache(xCacheId + manager + projectPathDecoded, dependencies);

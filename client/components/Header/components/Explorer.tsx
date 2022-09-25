@@ -95,6 +95,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
                     );
                   }}
                 >
+                  ├─ &nbsp;
                   <span className="oi" data-glyph="folder" />
                   &nbsp;
                   {folderOrFile.name}/
@@ -107,6 +108,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
                   isProject
                   onClick={onClickProject}
                 >
+                  ├─ &nbsp;
                   <span className="oi" data-glyph="arrow-thick-right" />
                   &nbsp;
                   {folderOrFile.name}
@@ -115,6 +117,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
 
               {!folderOrFile.isDirectory && !folderOrFile.isProject && (
                 <ExplorerFile>
+                  ├─ &nbsp;
                   <span className="oi" data-glyph="file" />
                   &nbsp;
                   {folderOrFile.name}

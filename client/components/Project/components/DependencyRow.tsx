@@ -20,6 +20,7 @@ interface Props {
   dependency: DependencyInstalledExtras;
   isProcessing: boolean;
   hasTypesBelow: boolean;
+  isTypesBelow: boolean;
   isGlobal: boolean;
   onDeleteDependency: (dependency: DependencyInstalledExtras) => void;
   onInstallDependencyVersion: (dependency: Basic, type: Type) => void;
@@ -232,6 +233,7 @@ const LatestVersion: VFC<VersionProps> = ({
 export const DependencyRow: VFC<Props> = ({
   dependency,
   hasTypesBelow,
+  isTypesBelow,
   onDeleteDependency,
   onInstallDependencyVersion,
   isGlobal,
@@ -250,6 +252,7 @@ export const DependencyRow: VFC<Props> = ({
       {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
 
       <ColumnName prod={dependency.type === 'prod'}>
+        {isTypesBelow && <>&nbsp;└─ </>}
         {dependency.name}
 
         <RepoName

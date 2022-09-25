@@ -54,7 +54,7 @@ export const getInstalledVersion = (
     return null;
   }
 
-  // TODO peerMissing
+  // TODO peerMissing ERROR HERE
   return installed.required.version;
 };
 

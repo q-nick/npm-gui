@@ -60,7 +60,6 @@ export const ExplorerButton = styled.button<ExplorerButtonProps>`
   padding: 0 8px;
 
   &:hover {
-    text-decoration: underline;
     background: #8e8c84;
   }
 
@@ -74,7 +73,7 @@ export const ExplorerButton = styled.button<ExplorerButtonProps>`
   ${({ isProject }: ExplorerButtonProps): CSSType =>
     isProject === true &&
     css`
-      color: #d9534f;
+      color: green;
 
       :hover {
         color: #000;
@@ -94,6 +93,7 @@ export const ExplorerFile = styled.span`
   font-size: 12px;
   font-weight: 500;
   padding: 0 8px;
+  white-space: nowrap;
 `;
 
 export const ExplorerCurrentLocation = styled.span`

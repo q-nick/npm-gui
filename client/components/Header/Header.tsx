@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import { useCallback, useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -75,7 +75,6 @@ export const Header: VFC = () => {
 
         <Button
           icon="globe"
-          key="global"
           onClick={(): void => {
             history.push('/');
           }}
@@ -90,10 +89,9 @@ export const Header: VFC = () => {
         {projects
           .filter((p) => p !== 'global')
           .map((oneOfProjectPathEncoded) => (
-            <>
+            <React.Fragment key={oneOfProjectPathEncoded}>
               <Button
                 icon="code"
-                key={oneOfProjectPathEncoded}
                 lowercase
                 onClick={(): void => {
                   history.push(`/${oneOfProjectPathEncoded}`);
@@ -120,7 +118,7 @@ export const Header: VFC = () => {
                     : 'dark'
                 }
               />
-            </>
+            </React.Fragment>
           ))}
 
         <Explorer onSelectPath={onSelectPath} />

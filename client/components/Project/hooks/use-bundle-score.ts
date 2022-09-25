@@ -15,7 +15,8 @@ export const useBundleScore = (
             getDependencyScore(dependency.name),
           refetchOnWindowFocus: false,
           refetchOnMount: false,
-          retry: false,
+          refetchOnReconnect: false,
+          cacheTime: Number.POSITIVE_INFINITY,
         };
       }) || [],
   });
