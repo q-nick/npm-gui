@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  useIsFetching,
-  useIsMutating,
-  useMutation,
-} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import {
   deleteDependency,
@@ -20,10 +16,6 @@ import type {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useDependenciesMutations = (projectPath: string) => {
-  const isProjectMutating = useIsMutating([projectPath]) > 0;
-  const isProjectFetching = useIsFetching([projectPath]) > 0;
-  const isProjectBusy = isProjectMutating || isProjectFetching;
-
   const installAllDependenciesMutation = useMutation(
     [projectPath, 'install-all-dependencies'],
     async (task: InstallAllDependenciesTask) => {
@@ -48,7 +40,7 @@ export const useDependenciesMutations = (projectPath: string) => {
   const updateDependenciesMutation = useMutation(
     [projectPath, 'update-dependenceis'],
     async (task: UpdateDependenciesTask) => {
-      updateDependencies(
+      await updateDependencies(
         projectPath,
         task.dependenciesToUpdateDevelopment,
         task.dependenciesToUpdateProduction,
@@ -64,7 +56,6 @@ export const useDependenciesMutations = (projectPath: string) => {
   } as const;
 
   return {
-    isProjectBusy,
     mutationActions,
   };
 };

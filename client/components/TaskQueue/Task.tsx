@@ -39,7 +39,7 @@ export const TaskElement: VFC<Props> = ({ task, onClick }) => {
         scale="small"
         variant={mapStatusToButtonVariant[task.status]}
       >
-        {task.action.name}
+        {task.description}
         {/* {task.description} */}
         &nbsp;
         {task.status}

@@ -36,6 +36,7 @@ export interface BundleSize {
   version: string;
   gzip: number;
   name: string;
+  repository: string;
 }
 
 // export interface Entire

@@ -103,6 +103,18 @@ const RepoName = styled.a`
   text-decoration: none;
 `;
 
+const RepoLink = styled.a`
+  border-radius: 2px;
+  color: #fff;
+  float: right;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0.2em 0.4em;
+  background: black;
+  text-decoration: none;
+  margin-right: 1em;
+`;
+
 const Missing = styled.span`
   color: #d9534f;
 `;
@@ -265,6 +277,12 @@ export const DependencyRow: VFC<Props> = ({
         >
           {dependency.manager}
         </RepoName>
+
+        {dependency.repository && (
+          <RepoLink href={dependency.repository} target="_blank">
+            repo
+          </RepoLink>
+        )}
       </ColumnName>
 
       <ColumnScore>
