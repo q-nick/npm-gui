@@ -31,5 +31,7 @@ export const useBundleSize = (
     ...dependency,
     size: sizeQueries.find((x) => x.data?.name === dependency.name)?.data?.size,
     gzip: sizeQueries.find((x) => x.data?.name === dependency.name)?.data?.gzip,
+    repository: sizeQueries.find((x) => x.data?.name === dependency.name)?.data
+      ?.repository,
   }));
 };

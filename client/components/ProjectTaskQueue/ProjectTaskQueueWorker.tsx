@@ -15,8 +15,7 @@ export const ProjectTaskQueueWorker: FC<Props> = ({
   children,
   projectPath,
 }) => {
-  const { isProjectBusy, mutationActions } =
-    useDependenciesMutations(projectPath);
+  const { mutationActions } = useDependenciesMutations(projectPath);
 
   const {
     state: { queue },
@@ -24,7 +23,11 @@ export const ProjectTaskQueueWorker: FC<Props> = ({
   } = useContext(TaskQueueContext);
 
   const checkTaskQueue = async (queueId: string): Promise<void> => {
-    if (!isProjectBusy) {
+    const activeTask = queue[queueId]?.find(
+      (task) => task.status === 'RUNNING',
+    );
+
+    if (!activeTask) {
       const currentTask = queue[queueId]?.find(
         (task) => task.status === 'WAITING',
       );
@@ -44,8 +47,7 @@ export const ProjectTaskQueueWorker: FC<Props> = ({
 
           // TODO
           const mutation = mutationActions[currentTask.action.name];
-          mutation.mutateAsync(currentTask.action as never);
-
+          await mutation.mutateAsync(currentTask.action as never);
           const executionTime = Date.now() - startTime.getTime();
 
           taskQueueDispatch({
@@ -53,7 +55,9 @@ export const ProjectTaskQueueWorker: FC<Props> = ({
             queueId,
             task: {
               ...currentTask,
-              description: `${currentTask.description} (took: ${executionTime} s)`,
+              description: `${currentTask.description} (took: ${
+                executionTime / 1000
+              } s)`,
               status: 'SUCCESS',
             },
           });

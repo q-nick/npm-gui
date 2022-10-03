@@ -38,6 +38,7 @@ export const getDependencySize: ResponserFunction<
             gzip: json.gzip,
             name,
             version,
+            repository: json.repository,
           }
         : undefined;
     }

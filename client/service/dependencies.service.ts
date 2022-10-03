@@ -7,7 +7,7 @@ import type {
   Type,
 } from '../../server/types/dependency.types';
 import { xCacheId } from '../xcache';
-import { fetchJSON, getBasePathFor } from './utils';
+import { fetchJSON, fetchQueuedJSON, getBasePathFor } from './utils';
 
 export const getProjectDependenciesFast = async (
   projectPath: string,
@@ -26,14 +26,16 @@ export const getProjectDependenciesFull = async (
 export const getDependencyScore = async (
   dependencyName: string,
 ): Promise<BundleScore> => {
-  return fetchJSON(`api/score/${dependencyName}`);
+  return fetchQueuedJSON(`api/score/${dependencyName}`);
 };
 
 export const getDependencySize = async (
   dependencyName: string,
   installedVersion?: string | null,
 ): Promise<BundleSize> => {
-  return fetchJSON(`api/bundle-size/${dependencyName}@${installedVersion}`);
+  return fetchQueuedJSON(
+    `api/bundle-size/${dependencyName}@${installedVersion}`,
+  );
 };
 
 export const installDependencies = async (
