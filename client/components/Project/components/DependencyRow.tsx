@@ -12,6 +12,7 @@ import type {
 import type { CSSType } from '../../../Styled';
 import { Button } from '../../../ui/Button/Button';
 import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
+import { Icon } from '../../../ui/Icon/Icon';
 import { getNormalizedRequiredVersion } from '../../../utils';
 import { Loader } from '../../Loader';
 import { useProjectPath } from '../../use-project-path';
@@ -104,13 +105,9 @@ const RepoName = styled.a`
 `;
 
 const RepoLink = styled.a`
-  border-radius: 2px;
-  color: #fff;
+  color: gray;
   float: right;
-  font-size: 0.8em;
-  font-weight: bold;
-  padding: 0.2em 0.4em;
-  background: black;
+  font-size: 1em;
   text-decoration: none;
   margin-right: 1em;
 `;
@@ -242,6 +239,34 @@ const LatestVersion: VFC<VersionProps> = ({
   return null;
 };
 
+// eslint-disable-next-line max-statements
+const timeSince = (date: number): string => {
+  const seconds = Math.floor((Date.now() - date) / 1000);
+
+  let interval = seconds / 31_536_000;
+
+  if (interval > 1) {
+    return `${Math.floor(interval)} years`;
+  }
+  interval = seconds / 2_592_000;
+  if (interval > 1) {
+    return `${Math.floor(interval)} months`;
+  }
+  interval = seconds / 86_400;
+  if (interval > 1) {
+    return `${Math.floor(interval)} days`;
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return `${Math.floor(interval)} hours`;
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return `${Math.floor(interval)} minutes`;
+  }
+  return `${Math.floor(seconds)} seconds`;
+};
+
 export const DependencyRow: VFC<Props> = ({
   dependency,
   hasTypesBelow,
@@ -279,8 +304,21 @@ export const DependencyRow: VFC<Props> = ({
         </RepoName>
 
         {dependency.repository && (
-          <RepoLink href={dependency.repository} target="_blank">
-            repo
+          <RepoLink
+            href={dependency.repository
+              .replace('git+', '')
+              .replace('git://', 'https://')
+              .replace('ssh://', 'https://')
+              .replace('.git', '')}
+            target="_blank"
+          >
+            <Icon glyph="fork" />
+          </RepoLink>
+        )}
+
+        {dependency.homepage && (
+          <RepoLink href={dependency.homepage} target="_blank">
+            <Icon glyph="home" />
           </RepoLink>
         )}
       </ColumnName>
@@ -308,6 +346,11 @@ export const DependencyRow: VFC<Props> = ({
             )}kB`}
           </BundleSizeLink>
         )}
+      </ColumnSize>
+
+      <ColumnSize>
+        {dependency.updated &&
+          timeSince(new Date(dependency.updated).getTime())}
       </ColumnSize>
 
       {/* <td className={style.columnNsp}> ? </td> */}

@@ -11,6 +11,7 @@ type SortType =
   | 'score'
   | 'size'
   | 'type'
+  | 'updated'
   | 'wanted'
   | undefined;
 

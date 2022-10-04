@@ -4,8 +4,8 @@ import { useCallback } from 'react';
 import { getNormalizedRequiredVersion } from '../../utils';
 import { DependenciesHeader } from './components/DependenciesHeader';
 import { DependenciesTable } from './components/DependenciesTable';
+import { useBundleDetails } from './hooks/use-bundle-details';
 import { useBundleScore } from './hooks/use-bundle-score';
-import { useBundleSize } from './hooks/use-bundle-size';
 import { useFastDependencies } from './hooks/use-fast-dependencies';
 import { useFilterDependencies } from './hooks/use-filter-dependencies';
 import { useFullDependencies } from './hooks/use-full-dependencies';
@@ -29,7 +29,7 @@ export const Project: VFC<Props> = ({ projectPath }) => {
   const dependenciesRaw = dependenciesFull || dependenciesFast;
 
   const dependenciesScored = useBundleScore(dependenciesRaw);
-  const dependencies = useBundleSize(dependenciesScored);
+  const dependencies = useBundleDetails(dependenciesScored);
 
   const {
     dependenciesFiltered,

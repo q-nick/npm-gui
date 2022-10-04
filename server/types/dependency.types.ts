@@ -39,6 +39,16 @@ export interface BundleSize {
   repository: string;
 }
 
+export interface BundleDetails {
+  name: string;
+  size: number;
+  homepage: string;
+  repository: string;
+  updated: string;
+  created: string;
+  versions: string[];
+  time: Record<string, string>;
+}
 // export interface Entire
 //   extends DependencyBase,
 //     Partial<Omit<BundleSize, 'name'>>,
@@ -54,9 +64,13 @@ export interface DependencyInstalled extends DependencyBase {
   latest?: string | null;
 }
 
+// export interface DependencyInstalledExtras
+//   extends DependencyInstalled,
+//     Partial<Omit<BundleSize, 'name'>>,
+//     Partial<Omit<BundleScore, 'name'>> {}
 export interface DependencyInstalledExtras
   extends DependencyInstalled,
-    Partial<Omit<BundleSize, 'name'>>,
+    Partial<Omit<BundleDetails, 'name'>>,
     Partial<Omit<BundleScore, 'name'>> {}
 
 export interface SearchResult {

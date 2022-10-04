@@ -21,7 +21,6 @@ import {
 import {
   executeCommandJSONWithFallback,
   executeCommandJSONWithFallbackYarn,
-  executeCommandSimple,
 } from '../../execute-command';
 import { executePnpmOutdated } from '../../pnpm-utils';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
@@ -172,8 +171,6 @@ const getAllYarnDependencies = async (
     projectPath,
     'yarn list --depth=0 --json',
   );
-
-  await executeCommandSimple(projectPath, 'yarn list --depth=0 --json');
 
   const outdatedInfo = await executeCommandJSONWithFallbackYarn<
     OutdatedYarn | undefined
