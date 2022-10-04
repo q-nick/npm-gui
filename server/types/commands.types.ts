@@ -37,3 +37,21 @@ export type InstalledBody =
 export interface Installed {
   dependencies?: Record<string, InstalledBody>;
 }
+
+export interface Details {
+  repository: {
+    type: string;
+    url: string;
+    directory: string;
+  };
+  homepage: string;
+  versions: string[];
+  time: {
+    [key: string]: string;
+    modified: string;
+    created: string;
+  };
+  dist: {
+    unpackedSize: string;
+  };
+}

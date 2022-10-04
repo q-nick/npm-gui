@@ -1,5 +1,6 @@
 import type {
   Basic,
+  BundleDetails,
   BundleScore,
   BundleSize,
   DependencyInstalled,
@@ -35,6 +36,16 @@ export const getDependencySize = async (
 ): Promise<BundleSize> => {
   return fetchQueuedJSON(
     `api/bundle-size/${dependencyName}@${installedVersion}`,
+  );
+};
+
+export const getDependencyDetails = async (
+  manager: Manager,
+  dependencyName: string,
+  installedVersion?: string | null,
+): Promise<BundleDetails> => {
+  return fetchQueuedJSON(
+    `api/extras/${manager}/${dependencyName}@${installedVersion}`,
   );
 };
 

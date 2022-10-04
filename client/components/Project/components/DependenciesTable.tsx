@@ -166,6 +166,17 @@ export const DependenciesTable: React.FC<Props> = ({
               Size
             </ThSortable>
 
+            <ThSortable
+              appearance={columnVersionAppearance}
+              onClick={(): void => {
+                onSortChange('updated');
+              }}
+              sortActive={sort === 'updated'}
+              sortReversed={!sortReversed}
+            >
+              Updated
+            </ThSortable>
+
             {!isGlobal && (
               <ThSortable
                 appearance={columnVersionAppearance}

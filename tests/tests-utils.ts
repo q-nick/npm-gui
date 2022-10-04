@@ -41,6 +41,10 @@ export interface TestProject {
     name: string,
     xCacheId?: string,
   ) => Promise<api.Test>;
+  requestGetExtras: (
+    manager: Manager,
+    dependencyNameVersion: string,
+  ) => Promise<api.Test>;
 
   prepareClear: (p: Parameters) => Promise<void>;
 }
@@ -190,6 +194,13 @@ export const prepareTestProject = async (
           `/api/project/${encodedTestDirectoryPath}/dependencies/${type}/${name}`,
         )
         .set({ 'x-cache-id': xCacheId });
+    },
+
+    requestGetExtras: async (
+      mng: Manager,
+      dependencyNameVersion: string,
+    ): ReturnType<TestProject['requestGetExtras']> => {
+      return api(app.server).get(`/api/extras/${mng}/${dependencyNameVersion}`);
     },
   };
 };
