@@ -1,11 +1,5 @@
 import type { VFC } from 'react';
-import { useCallback, useEffect, useState } from 'react';
 
-import type {
-  API,
-  FileOrFolder,
-} from '../../../../server/actions/explorer/explorer';
-import { useClickOutsideRef } from '../../../hooks/use-click-outside';
 import { Button } from '../../../ui/Button/Button';
 import {
   ExplorerButton,
@@ -15,43 +9,20 @@ import {
   ExplorerSearch,
   Wrapper,
 } from './ExplorerUi';
+import { useExplorer } from './use-explorer';
 
-interface Props {
-  onSelectPath: (path: string) => void;
-}
-
-export const Explorer: VFC<Props> = ({ onSelectPath }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [filter, setFilter] = useState('');
-  const [list, setList] = useState<FileOrFolder[] | undefined>();
-  const [currentPath, setCurrentPath] = useState<string>('');
-
-  const onToggleIsOpen = useCallback(() => {
-    setIsOpen((previousIsOpen) => !previousIsOpen);
-  }, []);
-  const onClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  const ref = useClickOutsideRef(onClose);
-
-  const onClickProject = useCallback((): void => {
-    setIsOpen(false);
-    onSelectPath(currentPath);
-  }, [currentPath, onSelectPath]);
-
-  const loadPath = useCallback(async (encodedPath: string): Promise<void> => {
-    const response = await fetch(`/api/explorer/${encodedPath || ''}`);
-    const data = (await response.json()) as API['Response'];
-
-    setList(data.ls);
-    setCurrentPath(data.path);
-    setFilter('');
-  }, []);
-
-  useEffect(() => {
-    void loadPath('');
-  }, [loadPath]);
+export const Explorer: VFC = () => {
+  const {
+    ref,
+    onToggleIsOpen,
+    isOpen,
+    path,
+    list,
+    filter,
+    setFilter,
+    onClickProject,
+    setCurrentPath,
+  } = useExplorer();
 
   return (
     <Wrapper ref={ref}>
@@ -61,7 +32,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
 
       <ExplorerList isOpen={isOpen}>
         <li>
-          <ExplorerCurrentLocation>{currentPath}</ExplorerCurrentLocation>
+          <ExplorerCurrentLocation>{path}</ExplorerCurrentLocation>
         </li>
         <li>
           <ExplorerSearch
@@ -74,7 +45,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
           <ExplorerButton
             isDirectory
             onClick={(): void => {
-              loadPath(window.btoa(`${currentPath}/../`));
+              setCurrentPath(window.btoa(`${path}/../`));
             }}
           >
             ../
@@ -90,9 +61,7 @@ export const Explorer: VFC<Props> = ({ onSelectPath }) => {
                   disabled={folderOrFile.name === 'node_modules'}
                   isDirectory
                   onClick={(): void => {
-                    loadPath(
-                      window.btoa(`${currentPath}/${folderOrFile.name}`),
-                    );
+                    setCurrentPath(window.btoa(`${path}/${folderOrFile.name}`));
                   }}
                 >
                   ├─ &nbsp;

@@ -28,7 +28,7 @@ const getExtrasCross = async (
   // yarn has different structure
   const detailsData = 'type' in details ? details.data : details;
   const name = extractNameFromDependencyString(dependencyNameVersion);
-  console.log(name);
+
   return {
     name,
     versions: detailsData.versions,
