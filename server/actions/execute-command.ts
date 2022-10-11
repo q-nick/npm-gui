@@ -6,7 +6,7 @@ export const executeCommand = (
   cwd: string | undefined,
   wholeCommand: string,
 ): Promise<{ stdout: string; stderr: string }> => {
-  // console.log(`Command: ${cwd ?? ''} ${wholeCommand}, started:`);
+  console.log(`Command: ${wholeCommand}, started`);
   return new Promise((resolve, reject) => {
     // spawn process
     const commandArguments = wholeCommand.split(' ');
@@ -34,7 +34,7 @@ export const executeCommand = (
       // wait for finish and resolve
       spawned.on('close', (exitStatus: number) => {
         if (!process.env['NODE_TEST']) {
-          console.log(exitStatus);
+          // console.log(exitStatus);
         }
         if (exitStatus === ZERO) {
           resolve({
@@ -70,12 +70,12 @@ export async function executeCommandJSONWithFallback<T>(
   try {
     const { stdout } = await executeCommand(cwd, wholeCommand);
     if (!process.env['NODE_TEST']) {
-      console.log('OK:', stdout);
+      console.log('OK:', wholeCommand);
     }
     return stdout ? (JSON.parse(stdout) as T) : ({} as T);
   } catch (error: unknown) {
     if (!process.env['NODE_TEST']) {
-      console.log('ERROR:', error);
+      console.log('ERROR:', wholeCommand, '\n', error);
     }
     return JSON.parse(
       (error as string).replace(/(\n{[\S\s]+)?npm ERR[\S\s]+/gm, ''),
@@ -91,7 +91,7 @@ export async function executeCommandJSONWithFallbackYarn<T>(
   try {
     const { stdout, stderr } = await executeCommand(cwd, wholeCommand);
     if (!process.env['NODE_TEST']) {
-      console.log('OK:');
+      console.log('OK:', wholeCommand);
     }
     const JSONs = (stdout + stderr)
       .trim()
@@ -113,7 +113,7 @@ export async function executeCommandJSONWithFallbackYarn<T>(
     }
   } catch (error: unknown) {
     if (!process.env['NODE_TEST']) {
-      console.log('ERROR:');
+      console.log('ERROR:', wholeCommand, '\n', error);
     }
 
     if (typeof error === 'string') {

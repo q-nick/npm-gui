@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -55,13 +55,6 @@ export const Header: VFC = () => {
   } = useContext(ContextStore);
 
   const history = useHistory();
-
-  const onSelectPath = useCallback(
-    (path: string) => {
-      history.push(`/${window.btoa(path)}`);
-    },
-    [history],
-  );
 
   const handleRemoveProject = (projectPath: string): void => {
     history.push(`/`);
@@ -121,7 +114,7 @@ export const Header: VFC = () => {
             </React.Fragment>
           ))}
 
-        <Explorer onSelectPath={onSelectPath} />
+        <Explorer />
       </RightSection>
     </Nav>
   );
