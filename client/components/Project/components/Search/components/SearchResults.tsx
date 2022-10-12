@@ -54,7 +54,7 @@ export const SearchResults: VFC<Props> = ({ searchResults, onInstall }) => {
                   onClick={(): void => {
                     onInstall(result.name, result.version, type);
                   }}
-                  scale="small"
+                  title={`Install ${result.name}@${result.version} as ${type}`}
                   variant="info"
                 >
                   {type}

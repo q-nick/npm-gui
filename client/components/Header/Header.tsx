@@ -1,11 +1,10 @@
 import type { VFC } from 'react';
-import React, { useContext } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
 
-import { ContextStore } from '../../app/ContextStore';
 import { Button } from '../../ui/Button/Button';
 import { Explorer } from './components/Explorer';
+import { useHeader } from './use-header';
 
 export interface HeaderButton {
   text: string;
@@ -46,20 +45,7 @@ const CloseButton = styled(Button)`
 `;
 
 export const Header: VFC = () => {
-  const { projectPathEncoded } = useParams<{ projectPathEncoded?: string }>();
-  const projectPathEncodedDefault = projectPathEncoded || 'global';
-
-  const {
-    state: { projects },
-    dispatch,
-  } = useContext(ContextStore);
-
-  const history = useHistory();
-
-  const handleRemoveProject = (projectPath: string): void => {
-    history.push(`/`);
-    dispatch({ type: 'removeProject', projectPath });
-  };
+  const { projectPathEncoded, projects, handleRemoveProject } = useHeader();
 
   return (
     <Nav>
@@ -68,11 +54,9 @@ export const Header: VFC = () => {
 
         <Button
           icon="globe"
-          onClick={(): void => {
-            history.push('/');
-          }}
-          scale="small"
-          variant={projectPathEncodedDefault === 'global' ? 'info' : 'dark'}
+          navigate="/"
+          title="Show global packages"
+          variant={projectPathEncoded === 'global' ? 'info' : 'dark'}
         >
           Global
         </Button>
@@ -85,14 +69,10 @@ export const Header: VFC = () => {
             <React.Fragment key={oneOfProjectPathEncoded}>
               <Button
                 icon="code"
-                lowercase
-                onClick={(): void => {
-                  history.push(`/${oneOfProjectPathEncoded}`);
-                }}
-                scale="small"
+                navigate={`/${oneOfProjectPathEncoded}`}
                 title={window.atob(oneOfProjectPathEncoded)}
                 variant={
-                  oneOfProjectPathEncoded === projectPathEncodedDefault
+                  oneOfProjectPathEncoded === projectPathEncoded
                     ? 'info'
                     : 'dark'
                 }
@@ -104,9 +84,9 @@ export const Header: VFC = () => {
                 onClick={(): void =>
                   handleRemoveProject(oneOfProjectPathEncoded)
                 }
-                scale="small"
+                title="Remove"
                 variant={
-                  oneOfProjectPathEncoded === projectPathEncodedDefault
+                  oneOfProjectPathEncoded === projectPathEncoded
                     ? 'info'
                     : 'dark'
                 }

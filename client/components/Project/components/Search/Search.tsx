@@ -72,7 +72,7 @@ export const Search: VFC<Props> = ({ onInstallNewDependency }) => {
       <Button
         icon="plus"
         onClick={onToggleOpen}
-        scale="small"
+        title="Search for a new package to install in this project"
         variant="primary"
       >
         Search / Add

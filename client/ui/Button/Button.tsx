@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { Children } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 import type { CSSType } from '../../Styled';
@@ -9,8 +10,8 @@ import { Icon } from '../Icon/Icon';
 export interface Props extends ComponentPropsWithoutRef<'button'> {
   variant: 'danger' | 'dark' | 'info' | 'primary' | 'success' | 'warning';
   icon?: string;
-  scale?: 'small';
-  lowercase?: boolean;
+  navigate?: string;
+  title: string;
 }
 
 const variantToColor = {
@@ -60,17 +61,6 @@ const ButtonStyled = styled.button`
   ${({ variant }: Readonly<Props>): CSSType => css`
     background-color: ${variantToColor[variant]};
   `}
-
-  /* ${({ scale }: Readonly<Props>): CSSType =>
-    scale === 'small' &&
-    css`
-      font-size: 10px;
-      padding: 4px 6px;
-    `} */
-
-  ${({ lowercase }: Readonly<Props>): CSSType => css`
-    text-transform: ${lowercase === true ? 'unset' : 'uppercase'};
-  `}
 `;
 
 interface IconProps extends IconPropsOriginal {
@@ -88,20 +78,29 @@ const ButtonIcon = styled(Icon)<IconProps>`
     `}
 `;
 
-export const Button: React.FC<Readonly<Props>> = ({
+export const Button: React.FC<Props> = ({
   icon,
   children,
+  navigate,
   ...props
-}) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <ButtonStyled {...props}>
-    {icon !== undefined && (
-      <ButtonIcon
-        glyph={icon}
-        isAlone={Children.toArray(children).length === 0}
-      />
-    )}
+}) => {
+  const history = useHistory();
 
-    {children}
-  </ButtonStyled>
-);
+  if (navigate) {
+    props.onClick = (): void => history.push(navigate);
+  }
+
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <ButtonStyled {...props}>
+      {icon !== undefined && (
+        <ButtonIcon
+          glyph={icon}
+          isAlone={Children.toArray(children).length === 0}
+        />
+      )}
+
+      {children}
+    </ButtonStyled>
+  );
+};

@@ -2,9 +2,9 @@ import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
+import type { SearchResult } from '../../../../../../server/types/dependency.types';
 import { Button } from '../../../../../ui/Button/Button';
 import { Loader } from '../../../../Loader';
-import type { useSearch } from '../hooks/use-search';
 
 const Form = styled.form`
   margin-bottom: 6px;
@@ -24,11 +24,9 @@ const Form = styled.form`
   }
 `;
 
-type Hook = ReturnType<typeof useSearch>;
-
 export interface Props {
   onSubmit: (query: string) => void;
-  searchResults: Hook['searchResults'];
+  searchResults: SearchResult[];
 }
 
 export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
@@ -57,7 +55,7 @@ export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
       &nbsp;
       <Button
         disabled={searchResults === undefined}
-        scale="small"
+        title="Do search please"
         type="submit"
         variant="success"
       >

@@ -2,15 +2,11 @@ import { useCallback, useState } from 'react';
 
 import type { SearchResult } from '../../../../../../server/types/dependency.types';
 
-interface Hook {
-  searchResults?: SearchResult[];
-  onSearch: (query: string) => Promise<void>;
-}
-
-export const useSearch = (): Hook => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useSearch = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  const onSearch = useCallback<Hook['onSearch']>(async (query) => {
+  const onSearch = useCallback(async (query) => {
     const response = await fetch('/api/search/npm', {
       method: 'POST',
       body: JSON.stringify({ query }),

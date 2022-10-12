@@ -64,13 +64,16 @@ Props<T>): JSX.Element => (
     {onFilterChange && filterValue !== undefined && (
       <>
         {filterType === 'text' && (
-          <TextFilter<T> onFilterChange={onFilterChange} value={filterValue} />
+          <TextFilter<T>
+            onFilterChange={onFilterChange}
+            selectedValue={filterValue}
+          />
         )}
 
         {filterType === 'select' && (
           <SelectFilter<T>
             onFilterChange={onFilterChange}
-            value={filterValue}
+            selectedValue={filterValue}
           />
         )}
       </>

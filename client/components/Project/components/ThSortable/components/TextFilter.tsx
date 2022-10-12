@@ -12,7 +12,7 @@ const Input = styled.input`
 `;
 
 export const TextFilter = <T extends string>({
-  value,
+  selectedValue,
   onFilterChange,
 }: // eslint-disable-next-line @typescript-eslint/ban-types
 FilterProps<T>): JSX.Element => (
@@ -22,6 +22,6 @@ FilterProps<T>): JSX.Element => (
     }}
     onClick={preventEvent}
     type="text"
-    value={value}
+    value={selectedValue}
   />
 );

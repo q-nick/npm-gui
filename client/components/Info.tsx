@@ -14,9 +14,8 @@ export const Info: VFC = () => {
 
   const load = async (): Promise<void> => {
     const response = await fetch('/api/info');
-    const data = await response.text();
+    setContent(await response.text());
     // Tricky one
-    setContent(data);
     setTimeout(() => {
       const script = document.createElement('script');
       script.src = 'https://buttons.github.io/buttons.js';

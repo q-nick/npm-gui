@@ -42,7 +42,6 @@ const Select = styled.select`
   background-color: #d9534f;
   font-size: 10px;
   padding: 6px;
-  text-transform: uppercase;
 `;
 
 export const DependenciesHeader: React.FC<Props> = ({
@@ -74,27 +73,13 @@ export const DependenciesHeader: React.FC<Props> = ({
               onClick={(): void => {
                 onInstallAll();
               }}
-              scale="small"
+              title="Run install command"
               variant="primary"
             >
               All
             </Button>
           </>
         )}
-        {/* <Button
-            variant="primary"
-            scale="small"
-            icon="data-transfer-download"
-            disabled={true}
-          >Prod
-          </Button>
-          <Button
-            variant="dark"
-            scale="small"
-            icon="data-transfer-download"
-            disabled={true}
-          >Dev
-          </Button> */}
         &nbsp;
         <small>Update all to:</small>
         &nbsp;
@@ -102,7 +87,6 @@ export const DependenciesHeader: React.FC<Props> = ({
           <Button
             icon="cloud-download"
             onClick={onUpdateAllToInstalled}
-            scale="small"
             title="Reinstall all packages without changing package.json"
             variant="success"
           >
@@ -112,7 +96,6 @@ export const DependenciesHeader: React.FC<Props> = ({
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToWanted}
-          scale="small"
           title="Install all compatible package version"
           variant="success"
         >
@@ -121,7 +104,6 @@ export const DependenciesHeader: React.FC<Props> = ({
         <Button
           icon="cloud-download"
           onClick={onUpdateAllToLatest}
-          scale="small"
           title="Install all latest packages version"
           variant="success"
         >
@@ -135,7 +117,7 @@ export const DependenciesHeader: React.FC<Props> = ({
                 onForceReInstall(event.target.value as Manager);
               }}
               style={{ display: 'inline-block' }}
-              title="Remove and re-nstall all packages"
+              title="Remove and re-install all packages"
             >
               <option disabled selected value="">
                 Re-Install
