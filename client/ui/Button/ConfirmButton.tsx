@@ -1,9 +1,10 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useCountdown } from '../../hooks/use-count-down';
-import type { Props } from '../Button/Button';
-import { Button } from '../Button/Button';
+import type { Props } from './Button';
+import { Button } from './Button';
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -23,12 +24,15 @@ const ConfirmButtonThe = styled(Button)`
 export const ConfirmButton: React.FC<Props> = ({ onClick, ...props }) => {
   const { countLeft, onStartCountdown, onStopCountdown } = useCountdown();
 
-  const handleConfirmButtonClick = useCallback((e) => {
-    if (onClick) {
-      onClick(e);
-    }
-    onStopCountdown();
-  }, []);
+  const handleConfirmButtonClick = useCallback(
+    (event) => {
+      if (onClick) {
+        onClick(event);
+      }
+      onStopCountdown();
+    },
+    [onClick, onStopCountdown],
+  );
 
   return (
     <Wrapper>

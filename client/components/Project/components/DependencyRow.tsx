@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-/* eslint-disable react/no-multi-comp */
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import type { VFC } from 'react';
 import styled, { css } from 'styled-components';
@@ -10,12 +9,12 @@ import type {
   Type,
 } from '../../../../server/types/dependency.types';
 import type { CSSType } from '../../../Styled';
-import { Button } from '../../../ui/Button/Button';
-import { ConfirmButton } from '../../../ui/ConfirmButton/ConfirmButton';
-import { Icon } from '../../../ui/Icon/Icon';
-import { getNormalizedRequiredVersion } from '../../../utils';
-import { Loader } from '../../Loader';
+import { ConfirmButton } from '../../../ui/Button/ConfirmButton';
+import { Link } from '../../../ui/Button/Link';
+import { ScoreBadge } from '../../../ui/ScoreBadge/ScoreBadge';
 import { useProjectPath } from '../../use-project-path';
+import { normalizeRepositoryLink, timeSince } from './utils';
+import { Missing, Version } from './Version';
 
 interface Props {
   dependency: DependencyInstalledExtras;
@@ -67,205 +66,26 @@ const TrStyled = styled.tr<TrStyledProps>`
     `}
 `;
 
-const ColumnName = styled.td<{ prod: boolean }>`
+const CellName = styled.td<{ prod: boolean }>`
   text-align: left;
   padding-left: 5px;
 
   font-weight: ${(props): CSSType => (props.prod ? 'bold' : '')};
 `;
 
-const ColumnVersion = styled.td`
+const Name = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Cell = styled.td`
   width: 10%;
   min-width: 80px;
 `;
 
-const ColumnSize = styled.td`
-  width: 10%;
-  min-width: 80px;
-`;
-
-const ColumnScore = styled.td`
-  width: 10%;
-  min-width: 80px;
-`;
-
-const ColumnAction = styled.td`
+const CellAction = styled.td`
   width: 30px;
 `;
-
-const RepoName = styled.a`
-  border-radius: 2px;
-  color: #fff;
-  float: right;
-  font-size: 0.8em;
-  font-weight: bold;
-  padding: 0.2em 0.4em;
-  background: #ef5c0e;
-  text-decoration: none;
-`;
-
-const RepoLink = styled.a`
-  color: gray;
-  float: right;
-  font-size: 1em;
-  text-decoration: none;
-  margin-right: 1em;
-`;
-
-const Missing = styled.span`
-  color: #d9534f;
-`;
-
-const ScoreBadge = styled.a<{ score?: number }>`
-  color: white;
-  text-decoration: none;
-  font-weight: 100;
-  padding: 3px 5px;
-  border-radius: 2px;
-
-  ${({ score }): CSSType => score && score >= 85 && 'color: #4c1;'}
-  ${({ score }): CSSType => score && score < 85 && 'background: #dbab09;'}
-  ${({ score }): CSSType => score && score < 70 && 'background: #e05d44;'}
-`;
-
-const BundleSizeLink = styled.a`
-  text-decoration: none;
-  color: black;
-`;
-
-interface VersionProps {
-  dependency: DependencyInstalledExtras;
-  isProcessing: boolean;
-  onInstall: (version: string) => void;
-}
-
-const InstalledVersion: VFC<VersionProps> = ({
-  dependency,
-  isProcessing,
-  onInstall,
-}) => {
-  const dependencyInstalled = dependency.installed;
-
-  if (dependencyInstalled === undefined) {
-    return <Loader />;
-  }
-
-  if (dependencyInstalled === null) {
-    return <Missing>missing</Missing>;
-  }
-
-  if (
-    dependency.type === 'global' ||
-    getNormalizedRequiredVersion(dependency.required) === dependencyInstalled
-  ) {
-    return <span>{dependencyInstalled}</span>;
-  }
-
-  return (
-    <Button
-      disabled={isProcessing}
-      icon="cloud-download"
-      onClick={(): void => {
-        onInstall(dependencyInstalled);
-      }}
-      scale="small"
-      title={`Install ${dependencyInstalled} version of ${dependency.name}`}
-      variant="success"
-    >
-      {dependencyInstalled}
-    </Button>
-  );
-};
-
-const WantedVersion: VFC<VersionProps> = ({
-  dependency,
-  isProcessing,
-  onInstall,
-}) => {
-  const dependencyWanted = dependency.wanted;
-
-  if (dependencyWanted === null) {
-    return <>-</>;
-  }
-
-  if (typeof dependencyWanted === 'string') {
-    return (
-      <Button
-        disabled={isProcessing}
-        icon="cloud-download"
-        onClick={(): void => {
-          onInstall(dependencyWanted);
-        }}
-        scale="small"
-        title={`Install ${dependencyWanted} version of ${dependency.name}`}
-        variant="success"
-      >
-        {dependencyWanted}
-      </Button>
-    );
-  }
-
-  return null;
-};
-
-const LatestVersion: VFC<VersionProps> = ({
-  dependency,
-  isProcessing,
-  onInstall,
-}) => {
-  const dependencyLatest = dependency.latest;
-
-  if (dependencyLatest === null) {
-    return <>-</>;
-  }
-
-  if (typeof dependencyLatest === 'string') {
-    return (
-      <Button
-        disabled={isProcessing}
-        icon="cloud-download"
-        onClick={(): void => {
-          onInstall(dependencyLatest);
-        }}
-        scale="small"
-        title={`Install ${dependencyLatest} version of ${dependency.name}`}
-        variant="success"
-      >
-        {dependencyLatest}
-      </Button>
-    );
-  }
-
-  return null;
-};
-
-// eslint-disable-next-line max-statements
-const timeSince = (date: number): string => {
-  const seconds = Math.floor((Date.now() - date) / 1000);
-
-  let interval = seconds / 31_536_000;
-
-  if (interval > 1) {
-    return `${Math.floor(interval)} years`;
-  }
-  interval = seconds / 2_592_000;
-  if (interval > 1) {
-    return `${Math.floor(interval)} months`;
-  }
-  interval = seconds / 86_400;
-  if (interval > 1) {
-    return `${Math.floor(interval)} days`;
-  }
-  interval = seconds / 3600;
-  if (interval > 1) {
-    return `${Math.floor(interval)} hours`;
-  }
-  interval = seconds / 60;
-  if (interval > 1) {
-    return `${Math.floor(interval)} minutes`;
-  }
-  return `${Math.floor(seconds)} seconds`;
-};
 
 export const DependencyRow: VFC<Props> = ({
   dependency,
@@ -292,38 +112,46 @@ export const DependencyRow: VFC<Props> = ({
     >
       {!isGlobal && <td>{dependency.type !== 'prod' && dependency.type}</td>}
 
-      <ColumnName prod={dependency.type === 'prod'}>
-        {isTypesBelow && <>&nbsp;└─ </>}
-        {dependency.name}
+      <CellName prod={dependency.type === 'prod'}>
+        <Name>
+          <span>
+            {isTypesBelow && <>&nbsp;└─ </>}
+            {dependency.name}
+          </span>
+          <span>
+            {dependency.homepage &&
+              dependency.homepage !==
+                normalizeRepositoryLink(dependency.repository) && (
+                <Link
+                  href={dependency.homepage}
+                  icon="home"
+                  target="_blank"
+                  title="Go to package home page"
+                />
+              )}
 
-        <RepoName
-          href={`https://www.npmjs.com/package/${dependency.name}`}
-          target="_blank"
-        >
-          {dependency.manager}
-        </RepoName>
+            {dependency.repository && (
+              <Link
+                href={normalizeRepositoryLink(dependency.repository)}
+                icon="fork"
+                target="_blank"
+                title="Go to code repository"
+              />
+            )}
 
-        {dependency.repository && (
-          <RepoLink
-            href={dependency.repository
-              .replace('git+', '')
-              .replace('git://', 'https://')
-              .replace('ssh://', 'https://')
-              .replace('.git', '')}
-            target="_blank"
-          >
-            <Icon glyph="fork" />
-          </RepoLink>
-        )}
+            <Link
+              href={`https://www.npmjs.com/package/${dependency.name}`}
+              target="_blank"
+              title="Open NPM site with package details"
+              variant="danger"
+            >
+              {dependency.manager}
+            </Link>
+          </span>
+        </Name>
+      </CellName>
 
-        {dependency.homepage && (
-          <RepoLink href={dependency.homepage} target="_blank">
-            <Icon glyph="home" />
-          </RepoLink>
-        )}
-      </ColumnName>
-
-      <ColumnScore>
+      <Cell>
         {typeof dependency.score === 'number' && (
           <ScoreBadge
             href={`https://snyk.io/advisor/npm-package/${dependency.name}`}
@@ -333,40 +161,54 @@ export const DependencyRow: VFC<Props> = ({
             {dependency.score}%
           </ScoreBadge>
         )}
-      </ColumnScore>
+      </Cell>
 
-      <ColumnSize>
+      <Cell>
         {typeof dependency.size === 'number' && (
-          <BundleSizeLink
+          <Link
             href={`https://bundlephobia.com/package/${dependency.name}@${dependency.installed}`}
             target="_blank"
+            title="Visit bundlephobia package details"
           >
             {`${Number.parseFloat(`${dependency.size / ONE_KB}`).toFixed(
               DIGITS,
             )}kB`}
-          </BundleSizeLink>
+          </Link>
         )}
-      </ColumnSize>
+      </Cell>
 
-      <ColumnSize>
+      <Cell>
         {dependency.updated &&
           timeSince(new Date(dependency.updated).getTime())}
-      </ColumnSize>
-
-      {/* <td className={style.columnNsp}> ? </td> */}
+      </Cell>
 
       {!isGlobal && (
-        <ColumnVersion>
+        <Cell>
           {dependency.required}
 
           {typeof dependency.required !== 'string' && (
             <Missing>extraneous</Missing>
           )}
-        </ColumnVersion>
+        </Cell>
       )}
 
-      <ColumnVersion>
-        <InstalledVersion
+      <Cell>
+        <Version
+          dependency={dependency}
+          isInstalled
+          isProcessing={isProcessing}
+          onInstall={(version): void => {
+            onInstallDependencyVersion(
+              { name: dependency.name, version },
+              dependency.type,
+            );
+          }}
+          version={dependency.installed}
+        />
+      </Cell>
+
+      <Cell>
+        <Version
           dependency={dependency}
           isProcessing={isProcessing}
           onInstall={(version): void => {
@@ -375,11 +217,12 @@ export const DependencyRow: VFC<Props> = ({
               dependency.type,
             );
           }}
+          version={dependency.wanted}
         />
-      </ColumnVersion>
+      </Cell>
 
-      <ColumnVersion>
-        <WantedVersion
+      <Cell>
+        <Version
           dependency={dependency}
           isProcessing={isProcessing}
           onInstall={(version): void => {
@@ -388,33 +231,21 @@ export const DependencyRow: VFC<Props> = ({
               dependency.type,
             );
           }}
+          version={dependency.wanted}
         />
-      </ColumnVersion>
+      </Cell>
 
-      <ColumnVersion>
-        <LatestVersion
-          dependency={dependency}
-          isProcessing={isProcessing}
-          onInstall={(version): void => {
-            onInstallDependencyVersion(
-              { name: dependency.name, version },
-              dependency.type,
-            );
-          }}
-        />
-      </ColumnVersion>
-
-      <ColumnAction>
+      <CellAction>
         <ConfirmButton
           disabled={isProcessing}
           icon="trash"
           onClick={(): void => {
             onDeleteDependency(dependency);
           }}
-          scale="small"
+          title="Remove package from project"
           variant="danger"
         />
-      </ColumnAction>
+      </CellAction>
     </TrStyled>
   );
 };

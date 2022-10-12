@@ -1,5 +1,5 @@
 export interface FilterProps<T extends string> {
-  value: T;
+  selectedValue: T;
   onFilterChange: (newValue: T) => void;
 }
 

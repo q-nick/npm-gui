@@ -24,7 +24,7 @@ if (window.localStorage.getItem('npm-gui-id') === null) {
 }
 
 if (window.localStorage.getItem('npm-gui-id') !== 'developer') {
-  void fetch('/api/log', {
+  fetch('/api/log', {
     method: 'POST',
     body: JSON.stringify({ id: window.localStorage.getItem('npm-gui-id') }),
   });

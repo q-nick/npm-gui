@@ -32,7 +32,7 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
     case 'removeProject': {
       const newState = {
         ...state,
-        projects: state.projects.filter((p) => p === action.projectPath),
+        projects: state.projects.filter((p) => p !== action.projectPath),
       };
 
       syncProjectsStorage(newState.projects);

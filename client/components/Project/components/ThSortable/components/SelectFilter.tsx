@@ -13,7 +13,7 @@ const Select = styled.select`
 `;
 
 export const SelectFilter = <T extends string>({
-  value,
+  selectedValue,
   onFilterChange,
 }: FilterProps<T>): JSX.Element => (
   <Select
@@ -22,15 +22,15 @@ export const SelectFilter = <T extends string>({
     }}
     onClick={preventEvent}
   >
-    <option selected={value === 'any'} value="any">
+    <option selected={selectedValue === 'any'} value="any">
       any
     </option>
 
-    <option selected={value === 'dev'} value="dev">
+    <option selected={selectedValue === 'dev'} value="dev">
       dev
     </option>
 
-    <option selected={value === 'prod'} value="prod">
+    <option selected={selectedValue === 'prod'} value="prod">
       prod
     </option>
   </Select>

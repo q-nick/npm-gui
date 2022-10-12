@@ -26,7 +26,12 @@ export const Explorer: VFC = () => {
 
   return (
     <Wrapper ref={ref}>
-      <Button icon="folder" onClick={onToggleIsOpen} variant="dark">
+      <Button
+        icon="folder"
+        onClick={onToggleIsOpen}
+        title="Find project on disk"
+        variant="dark"
+      >
         Open
       </Button>
 
