@@ -26,13 +26,25 @@ export const fetchQueuedJSON = async <T>(
 ): Promise<T> => {
   return new Promise((resolve, reject) => {
     const job = async (): Promise<void> => {
-      const response = await fetch(...parameters);
+      try {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 10_000);
 
-      if (!response.ok) {
-        reject(new Error('Request Error'));
+        const response = await fetch(parameters[0], {
+          ...parameters[1],
+          signal: controller.signal,
+        });
+
+        clearTimeout(id);
+
+        if (!response.ok) {
+          reject(new Error('Request Error'));
+        }
+
+        resolve(response.json());
+      } catch (error) {
+        reject(error);
       }
-
-      resolve(response.json());
     };
 
     fetchQueue.push(job);
