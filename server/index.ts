@@ -7,7 +7,6 @@ import { addDependencies } from './actions/dependencies/add/add-project-dependen
 import { deleteGlobalDependency } from './actions/dependencies/delete/delete-global-dependencies';
 import { deleteDependency } from './actions/dependencies/delete/delete-project-dependencies';
 import { getDependencyScore } from './actions/dependencies/extras/dependency-score';
-import { getDependencySize } from './actions/dependencies/extras/dependency-size';
 import { getExtras } from './actions/dependencies/extras/get-extras';
 import {
   getGlobalDependencies,
@@ -62,7 +61,6 @@ app.delete(
 
 // dependencies extra apis
 app.get('/api/score/:dependencyName', getDependencyScore);
-app.get('/api/bundle-size/:dependencyNameVersion', getDependencySize);
 app.get('/api/extras/:manager/:dependencyNameVersion', getExtras);
 
 // other apis

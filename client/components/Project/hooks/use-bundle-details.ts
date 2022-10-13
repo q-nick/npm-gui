@@ -27,6 +27,7 @@ export const useBundleDetails = (
             refetchOnMount: false,
             refetchOnReconnect: false,
             cacheTime: Number.POSITIVE_INFINITY,
+            retry: 3,
           };
         }) || [],
   });

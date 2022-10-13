@@ -22,11 +22,12 @@ const getExtrasCross = async (
   manager: Manager,
 ): Promise<BundleDetails> => {
   const details = await executeCommandJSONWithFallback<
-    Details | { data: Details; type: 'inspect' }
+    Details | { data: Details }
   >(undefined, `${manager} info ${dependencyNameVersion} --json`);
 
   // yarn has different structure
-  const detailsData = 'type' in details ? details.data : details;
+  const detailsData: Details =
+    manager === 'yarn' ? (details as any).data : details;
   const name = extractNameFromDependencyString(dependencyNameVersion);
 
   return {
