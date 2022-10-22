@@ -1,18 +1,12 @@
+import type { AvailableManagerResponse } from '../../types/global.types';
 import type { ResponserFunction } from '../../types/new-server.types';
 import { executeCommandSimple } from '../execute-command';
 
-export interface Response {
-  npm: boolean;
-  yarn: boolean;
-  pnpm: boolean;
-}
-
-export interface API {
-  Request: { path?: string };
-  Response: Response;
-}
-
-export const availableManagers: ResponserFunction = async () => {
+export const availableManagers: ResponserFunction<
+  { path?: string },
+  unknown,
+  AvailableManagerResponse
+> = async () => {
   let npm = true;
   let yarn = true;
   let pnpm = true;

@@ -2,31 +2,17 @@ import { existsSync, lstatSync, readdirSync } from 'fs';
 import path from 'path';
 
 import { decodePath } from '../../middlewares/project-path-and-manager.middleware';
+import type {
+  ExplorerRequest,
+  ExplorerResponse,
+} from '../../types/global.types';
 import type { ResponserFunction } from '../../types/new-server.types';
 
-export interface FileOrFolder {
-  name: string;
-  isDirectory: boolean;
-  isProject: boolean;
-}
-export interface Explorer {
-  ls: FileOrFolder[];
-  path: string;
-  changed: boolean;
-}
-
-export interface API {
-  Request: { path?: string };
-  Response: Explorer;
-}
-
-interface Parameters {
-  path?: string;
-}
-
-export const explorer: ResponserFunction<unknown, Parameters> = ({
-  params,
-}) => {
+export const explorer: ResponserFunction<
+  unknown,
+  ExplorerRequest,
+  ExplorerResponse
+> = ({ params }) => {
   let normalizedPath =
     params.path !== undefined ? path.normalize(decodePath(params.path)) : null;
 

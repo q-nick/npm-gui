@@ -20,6 +20,7 @@ export interface Version {
 }
 
 export interface DependencyBase {
+  [key: string]: unknown;
   name: string;
   type: Type;
   manager: Manager;
@@ -49,14 +50,6 @@ export interface BundleDetails {
   versions: string[];
   time: Record<string, string>;
 }
-// export interface Entire
-//   extends DependencyBase,
-//     Partial<Omit<BundleSize, 'name'>>,
-//     Partial<Omit<BundleScore, 'name'>> {
-//   installed?: string | null;
-//   wanted?: string | null;
-//   latest?: string | null;
-// }
 
 export interface DependencyInstalled extends DependencyBase {
   installed?: string | null;
@@ -64,10 +57,6 @@ export interface DependencyInstalled extends DependencyBase {
   latest?: string | null;
 }
 
-// export interface DependencyInstalledExtras
-//   extends DependencyInstalled,
-//     Partial<Omit<BundleSize, 'name'>>,
-//     Partial<Omit<BundleScore, 'name'>> {}
 export interface DependencyInstalledExtras
   extends DependencyInstalled,
     Partial<Omit<BundleDetails, 'name'>>,

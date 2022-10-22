@@ -1,28 +1,11 @@
-import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import path from 'path';
 
 import type { Manager } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import { clearCache } from '../../../utils/cache';
+import { deleteFolderRecursive } from '../../../utils/delete-folder-resursive';
 import { executeCommandSimple } from '../../execute-command';
-
-const deleteFolderRecursive = (rmPath: string): void => {
-  let files = [];
-  if (existsSync(rmPath)) {
-    files = readdirSync(rmPath);
-    for (const [, file] of files.entries()) {
-      const currentPath = `${rmPath}/${file}`;
-      if (lstatSync(currentPath).isDirectory()) {
-        // recurse
-        deleteFolderRecursive(currentPath);
-      } else {
-        // delete file
-        unlinkSync(currentPath);
-      }
-    }
-    rmdirSync(rmPath);
-  }
-};
 
 const clearManagerFiles = (projectPath: string): void => {
   if (existsSync(`${path.normalize(projectPath)}/node_modules`)) {
@@ -36,39 +19,6 @@ const clearManagerFiles = (projectPath: string): void => {
   }
 };
 
-// installation
-const installNpmDependencies = async (
-  projectPath: string,
-  force: boolean,
-): Promise<string> => {
-  if (force) {
-    clearManagerFiles(projectPath);
-  }
-  return executeCommandSimple(projectPath, 'npm install');
-};
-
-// installation
-const installPnpmDependencies = async (
-  projectPath: string,
-  force: boolean,
-): Promise<string> => {
-  if (force) {
-    clearManagerFiles(projectPath);
-  }
-  return executeCommandSimple(projectPath, 'pnpm install');
-};
-
-const installYarnDependencies = async (
-  projectPath: string,
-  force: boolean,
-): Promise<void> => {
-  if (force) {
-    clearManagerFiles(projectPath);
-  }
-
-  await executeCommandSimple(projectPath, 'yarn install');
-};
-
 export const installDependenciesForceManager: ResponserFunction<
   unknown,
   { forceManager: Manager }
@@ -76,13 +26,9 @@ export const installDependenciesForceManager: ResponserFunction<
   params: { forceManager },
   extraParams: { projectPathDecoded, xCacheId },
 }) => {
-  if (forceManager === 'yarn') {
-    await installYarnDependencies(projectPathDecoded, true);
-  } else if (forceManager === 'pnpm') {
-    await installPnpmDependencies(projectPathDecoded, true);
-  } else {
-    await installNpmDependencies(projectPathDecoded, true);
-  }
+  clearManagerFiles(projectPathDecoded);
+
+  await executeCommandSimple(projectPathDecoded, `${forceManager} install`);
 
   clearCache(xCacheId + forceManager + projectPathDecoded);
 
@@ -92,13 +38,7 @@ export const installDependenciesForceManager: ResponserFunction<
 export const installDependencies: ResponserFunction = async ({
   extraParams: { projectPathDecoded, manager = 'npm', xCacheId },
 }) => {
-  if (manager === 'yarn') {
-    await installYarnDependencies(projectPathDecoded, false);
-  } else if (manager === 'pnpm') {
-    await installPnpmDependencies(projectPathDecoded, false);
-  } else {
-    await installNpmDependencies(projectPathDecoded, false);
-  }
+  await executeCommandSimple(projectPathDecoded, `${manager} install`);
 
   clearCache(xCacheId + manager + projectPathDecoded);
 

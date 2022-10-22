@@ -1,39 +1,19 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useCallback, useState } from 'react';
 
-import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-
-type SortType =
-  | 'installed'
-  | 'latest'
-  | 'latest'
-  | 'name'
-  | 'required'
-  | 'score'
-  | 'size'
-  | 'type'
-  | 'updated'
-  | 'wanted'
-  | undefined;
-
-interface Hook {
-  dependenciesSorted?: DependencyInstalledExtras[];
-  onSortChange: (sortName: SortType) => void;
-  sortReversed: boolean;
-  sort: SortType;
-}
+import type { TableRowAbstract } from './Table';
 
 const GREATER = -1;
 const LOWER = 1;
 const EQUAL = 0;
 
-export const useSortDependencies = (
-  dependencies?: DependencyInstalledExtras[],
-): Hook => {
-  const [sort, setSort] = useState<SortType>();
+export const useTableSort = <T extends TableRowAbstract>(tableData?: T[]) => {
+  const [sort, setSort] = useState<string>();
   const [sortReversed, setSortReversed] = useState(false);
 
-  const onSortChange = useCallback<Hook['onSortChange']>(
-    (sortName) => {
+  const onSortChange = useCallback(
+    (sortName: string) => {
       if (sort === sortName) {
         if (sortReversed) {
           setSort(undefined);
@@ -48,11 +28,11 @@ export const useSortDependencies = (
     [sort, sortReversed],
   );
 
-  let dependenciesSorted = dependencies && [...dependencies];
+  let tableDataSorted = tableData && [...tableData];
 
-  if (sort !== undefined && dependenciesSorted) {
+  if (sort !== undefined && tableDataSorted) {
     // Mutated
-    dependenciesSorted.sort((depA, depB): number => {
+    tableDataSorted.sort((depA, depB): number => {
       const valueA = depA[sort] ?? undefined;
       const valueB = depB[sort] ?? undefined;
       if (
@@ -76,13 +56,13 @@ export const useSortDependencies = (
 
       return EQUAL;
     });
-  } else if (dependenciesSorted) {
+  } else if (tableDataSorted) {
     // Mutated
-    const regular = dependenciesSorted.filter(
+    const regular = tableDataSorted.filter(
       (dep) => !dep.name.startsWith('@types'),
     );
 
-    const types = dependenciesSorted.filter((dep) =>
+    const types = tableDataSorted.filter((dep) =>
       dep.name.startsWith('@types'),
     );
 
@@ -91,21 +71,23 @@ export const useSortDependencies = (
       const index = regular.findIndex(
         (dep) => dep.name === typeDep.name.split('@types/')[1],
       );
-      if (index !== -1) {
-        regular.splice(index + 1, 0, typeDep);
+      const rgl = regular[index];
+      if (rgl) {
+        rgl.hideBottomBorder = true;
+        regular.splice(index + 1, 0, { ...typeDep, drawFolder: true });
       } else {
         notAssigned.push(typeDep);
       }
       return notAssigned;
-    }, [] as DependencyInstalledExtras[]);
+    }, [] as T[]);
 
-    dependenciesSorted = [...regular, ...typesNotAssigned];
+    tableDataSorted = [...regular, ...typesNotAssigned];
   }
 
   return {
     onSortChange,
     sort,
     sortReversed,
-    dependenciesSorted,
+    tableDataSorted,
   };
 };

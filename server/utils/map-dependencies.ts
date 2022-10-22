@@ -1,5 +1,4 @@
-import type { InstalledBody, OutdatedBody } from '../types/commands.types';
-import type { DependencyInstalled, Npm } from '../types/dependency.types';
+import type { InstalledBody } from '../types/commands.types';
 
 export const uniqueOrNull = (
   value: string | undefined,
@@ -10,33 +9,6 @@ export const uniqueOrNull = (
   }
 
   return comparision.includes(value) ? null : value;
-};
-
-export const mapNpmDependency2 = (
-  dependency: Npm,
-  version: OutdatedBody,
-  required?: string,
-): DependencyInstalled => {
-  const installed =
-    dependency.version !== undefined ? dependency.version : null;
-  let wanted = version ? uniqueOrNull(version.wanted, [installed]) : null;
-  const latest = version
-    ? uniqueOrNull(version.latest, [installed, wanted])
-    : null;
-
-  if (installed === null && wanted === null && required !== undefined) {
-    const match = /\d.+/.exec(required);
-    [wanted] = match ?? [null];
-  }
-
-  return {
-    ...dependency,
-    required,
-    installed: installed ?? undefined,
-    wanted: wanted ?? undefined,
-    latest: latest ?? undefined,
-    manager: 'npm',
-  };
 };
 
 export const getInstalledVersion = (

@@ -4,6 +4,5 @@ import { requestGET } from '../../utils/request-with-promise';
 export const log: ResponserFunction<{ id: string }> = async ({
   body: { id },
 }) => {
-  const result = await requestGET('npm-gui-stats.herokuapp.com', `log/${id}`);
-  return result;
+  return requestGET('npm-gui-stats.herokuapp.com', `log/${id}`);
 };

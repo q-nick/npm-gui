@@ -5,7 +5,7 @@ import { availableManagers } from './actions/available-managers/available-manage
 import { addGlobalDependencies } from './actions/dependencies/add/add-global-dependencies';
 import { addDependencies } from './actions/dependencies/add/add-project-dependencies';
 import { deleteGlobalDependency } from './actions/dependencies/delete/delete-global-dependencies';
-import { deleteDependency } from './actions/dependencies/delete/delete-project-dependencies';
+import { deleteDependencies } from './actions/dependencies/delete/delete-project-dependencies';
 import { getDependencyScore } from './actions/dependencies/extras/dependency-score';
 import { getExtras } from './actions/dependencies/extras/get-extras';
 import {
@@ -45,10 +45,7 @@ app.post(
 );
 app.post('/api/project/:projectPath/dependencies/install', installDependencies);
 app.post('/api/project/:projectPath/dependencies/:type', addDependencies);
-app.delete(
-  '/api/project/:projectPath/dependencies/:type/:dependencyName',
-  deleteDependency,
-);
+app.delete('/api/project/:projectPath/dependencies', deleteDependencies);
 
 // global routes
 app.get('/api/global/dependencies/simple', getGlobalDependenciesSimple);

@@ -2,29 +2,54 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 import type { Reducer } from 'react';
 
+import type { Type } from '../../server/types/dependency.types';
 import { initialProjects, syncProjectsStorage } from './projects.storage';
 
 export type Action =
-  | { type: 'addProject'; projectPath: string }
-  | { type: 'removeProject'; projectPath: string };
+  | {
+      action: 'mutateProjectDependency';
+      projectPath: string;
+      name: string;
+      required?: string;
+      type: Type;
+      delete?: true;
+    }
+  | { action: 'addProject'; projectPath: string }
+  | { action: 'removeProject'; projectPath: string };
+
+interface DependencyMutation {
+  required?: string;
+  type: Type;
+  delete?: true;
+}
+interface Project {
+  path: string;
+  dependenciesMutate: Record<string, DependencyMutation>;
+}
 
 export interface State {
-  projects: string[];
+  projects: Project[];
 }
 
 export const initialState: State = {
-  projects: initialProjects,
+  projects: initialProjects.map((path) => ({
+    path,
+    dependenciesMutate: {},
+  })),
 };
 
 export const storeReducer: Reducer<State, Action> = (state, action): State => {
-  switch (action.type) {
+  switch (action.action) {
     case 'addProject': {
       const newState = {
         ...state,
-        projects: [...state.projects, action.projectPath],
+        projects: [
+          ...state.projects,
+          { path: action.projectPath, dependenciesMutate: {} },
+        ],
       };
 
-      syncProjectsStorage(newState.projects);
+      syncProjectsStorage(newState.projects.map((project) => project.path));
 
       return newState;
     }
@@ -32,12 +57,37 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
     case 'removeProject': {
       const newState = {
         ...state,
-        projects: state.projects.filter((p) => p !== action.projectPath),
+        projects: state.projects.filter(
+          (project) => project.path !== action.projectPath,
+        ),
       };
 
-      syncProjectsStorage(newState.projects);
+      syncProjectsStorage(newState.projects.map((project) => project.path));
 
       return newState;
+    }
+
+    case 'mutateProjectDependency': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              dependenciesMutate: {
+                ...project.dependenciesMutate,
+                [action.name]: {
+                  required: action.required,
+                  type: action.type,
+                  delete: action.delete,
+                },
+              },
+            };
+          }
+
+          return project;
+        }),
+      };
     }
 
     default:

@@ -26,9 +26,10 @@ export const timeSince = (date: number): string => {
   return `${Math.floor(seconds)} seconds`;
 };
 
-export const normalizeRepositoryLink = (link?: string): string | undefined =>
+export const normalizeRepositoryLink = (link: string): string | undefined =>
   link
-    ?.replace('git+', '')
+    .replace('git+', '')
     .replace('git://', 'https://')
     .replace('ssh://', 'https://')
-    .replace('.git', '');
+    .replace('.git', '')
+    .replace(/#.+/, '');

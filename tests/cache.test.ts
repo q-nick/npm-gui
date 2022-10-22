@@ -97,7 +97,9 @@ describe.each(managers)('%s cache fetching', (manager) => {
     ]);
 
     // update cache request (remove installed dependency)
-    const response2 = await project.requestDel('prod', 'npm-gui-tests');
+    const response2 = await project.requestDel('prod', [
+      { name: 'npm-gui-tests' },
+    ]);
     expect(response2.status).toBe(HTTP_STATUS_OK);
 
     // listing
@@ -109,7 +111,9 @@ describe.each(managers)('%s cache fetching', (manager) => {
     expect(full3.body).toHaveLength(1);
 
     // update cache request (remove unknown dependency)
-    const response4 = await project.requestDel('prod', 'asdfasdfasdf');
+    const response4 = await project.requestDel('prod', [
+      { name: 'asdfasdfasdf' },
+    ]);
     expect(response4.status).toBe(HTTP_STATUS_OK);
   });
 });

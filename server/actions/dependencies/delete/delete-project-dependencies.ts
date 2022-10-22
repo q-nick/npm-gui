@@ -1,4 +1,4 @@
-import type { Type } from '../../../types/dependency.types';
+import type { Basic, Type } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
 import { spliceFromCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
@@ -10,25 +10,30 @@ const commandTypeFlag = {
   extraneous: '',
 };
 
-const deleteNpmDependency = async (
+const deleteNpmDependencies = async (
   projectPath: string | undefined,
-  packageName: string,
+  dependencies: Basic[],
   type: Type,
 ): Promise<void> => {
   // delete
   await executeCommandSimple(
     projectPath,
-    `npm uninstall ${packageName} ${commandTypeFlag[type]}`,
+    `npm uninstall ${dependencies.map((d) => d.name).join(' ')} ${
+      commandTypeFlag[type]
+    }`,
   );
 };
 
-const deletePnpmDependency = async (
+const deletePnpmDependencies = async (
   projectPath: string | undefined,
-  packageName: string,
+  dependencies: Basic[],
 ): Promise<void> => {
   // delete
   try {
-    await executeCommandSimple(projectPath, `pnpm uninstall ${packageName}`);
+    await executeCommandSimple(
+      projectPath,
+      `pnpm uninstall ${dependencies.map((d) => d.name).join(' ')}`,
+    );
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     if (!process.env['NODE_TEST']) {
@@ -38,13 +43,16 @@ const deletePnpmDependency = async (
   }
 };
 
-const deleteYarnDependency = async (
+const deleteYarnDependencies = async (
   projectPath: string | undefined,
-  packageName: string,
+  dependencies: Basic[],
 ): Promise<void> => {
   // delete
   try {
-    await executeCommandSimple(projectPath, `yarn remove ${packageName}`);
+    await executeCommandSimple(
+      projectPath,
+      `yarn remove ${dependencies.map((d) => d.name).join(' ')}`,
+    );
   } catch (error: unknown) {
     // we are caching error it's unimportant in yarn
     if (!process.env['NODE_TEST']) {
@@ -59,19 +67,25 @@ interface Parameters {
   dependencyName: string;
 }
 
-export const deleteDependency: ResponserFunction<unknown, Parameters> = async ({
-  params: { type, dependencyName },
+export const deleteDependencies: ResponserFunction<
+  { name: string }[],
+  Parameters
+> = async ({
+  params: { type },
   extraParams: { projectPathDecoded, manager, xCacheId },
+  body,
 }) => {
   if (manager === 'yarn') {
-    await deleteYarnDependency(projectPathDecoded, dependencyName);
+    await deleteYarnDependencies(projectPathDecoded, body);
   } else if (manager === 'pnpm') {
-    await deletePnpmDependency(projectPathDecoded, dependencyName);
+    await deletePnpmDependencies(projectPathDecoded, body);
   } else {
-    await deleteNpmDependency(projectPathDecoded, dependencyName, type);
+    await deleteNpmDependencies(projectPathDecoded, body, type);
   }
 
-  spliceFromCache(xCacheId + manager + projectPathDecoded, dependencyName);
+  for (const dependency of body) {
+    spliceFromCache(xCacheId + manager + projectPathDecoded, dependency.name);
+  }
 
   return {};
 };

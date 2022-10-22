@@ -38,7 +38,7 @@ export interface TestProject {
   ) => Promise<api.Test>;
   requestDel: (
     type: 'dev' | 'prod',
-    name: string,
+    dependencies: { name: string }[],
     xCacheId?: string,
   ) => Promise<api.Test>;
   requestGetExtras: (
@@ -186,14 +186,13 @@ export const prepareTestProject = async (
 
     requestDel: async (
       type,
-      name,
+      dependencies,
       xCacheId = '',
     ): ReturnType<TestProject['requestDel']> => {
       return api(app.server)
-        .delete(
-          `/api/project/${encodedTestDirectoryPath}/dependencies/${type}/${name}`,
-        )
-        .set({ 'x-cache-id': xCacheId });
+        .delete(`/api/project/${encodedTestDirectoryPath}/dependencies/${type}`)
+        .set({ 'x-cache-id': xCacheId })
+        .send(dependencies);
     },
 
     requestGetExtras: async (

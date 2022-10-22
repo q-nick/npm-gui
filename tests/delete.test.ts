@@ -15,7 +15,7 @@ describe.each(managers)('%s install', (manager) => {
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
-    const response = await project.requestDel('prod', 'sdmvladbf3');
+    const response = await project.requestDel('prod', [{ name: 'sdmvladbf3' }]);
     expect(response.status).toBe(HTTP_STATUS_OK);
 
     const fastResponse = await project.requestGetFast();
@@ -28,7 +28,9 @@ describe.each(managers)('%s install', (manager) => {
       dependencies: { 'npm-gui-tests': '^1.0.0' },
     });
 
-    const response = await project.requestDel('prod', 'npm-gui-tests');
+    const response = await project.requestDel('prod', [
+      { name: 'npm-gui-tests' },
+    ]);
     expect(response.status).toBe(HTTP_STATUS_OK);
 
     const fastResponse = await project.requestGetFast();
@@ -51,7 +53,9 @@ describe.each(managers)('%s install', (manager) => {
       TEST[manager].PKG_A_INSTALLED,
     );
 
-    const response = await project.requestDel('prod', 'npm-gui-tests');
+    const response = await project.requestDel('prod', [
+      { name: 'npm-gui-tests' },
+    ]);
     expect(response.status).toBe(HTTP_STATUS_OK);
 
     const fastResponse = await project.requestGetFast();

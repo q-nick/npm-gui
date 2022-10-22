@@ -29,7 +29,7 @@ const SortableIcon = styled(Icon)`
 `;
 
 export interface Props<T extends string> {
-  children: ReactNode;
+  children?: ReactNode;
   appearance?: CSSProp;
 
   sortActive: boolean;
@@ -60,7 +60,7 @@ Props<T>): JSX.Element => (
       />
     )}
     {children}
-    &nbsp;
+    {children && <>&nbsp;</>}
     {onFilterChange && filterValue !== undefined && (
       <>
         {filterType === 'text' && (

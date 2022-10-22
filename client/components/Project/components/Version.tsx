@@ -2,9 +2,11 @@ import type { VFC } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
+import { useProjectStore } from '../../../app/ContextStore';
 import { Button } from '../../../ui/Button/Button';
+import { Loader } from '../../../ui/Loader';
 import { getNormalizedRequiredVersion } from '../../../utils';
-import { Loader } from '../../Loader';
+import { useProjectPath } from '../../use-project-path';
 
 export const Missing = styled.span`
   color: #d9534f;
@@ -12,19 +14,14 @@ export const Missing = styled.span`
 
 interface Props {
   dependency: DependencyInstalledExtras;
-  isProcessing: boolean;
-  onInstall: (version: string) => void;
   version: string | null | undefined;
   isInstalled?: true;
 }
 
-export const Version: VFC<Props> = ({
-  dependency,
-  isProcessing,
-  version,
-  onInstall,
-  isInstalled,
-}) => {
+export const Version: VFC<Props> = ({ dependency, version, isInstalled }) => {
+  const projectPath = useProjectPath();
+  const { dispatch, project } = useProjectStore(projectPath);
+
   if (isInstalled) {
     if (version === undefined) {
       return <Loader />;
@@ -50,10 +47,18 @@ export const Version: VFC<Props> = ({
 
   return (
     <Button
-      disabled={isProcessing}
+      disabled={
+        project?.dependenciesMutate[dependency.name]?.required === version
+      }
       icon="cloud-download"
       onClick={(): void => {
-        onInstall(version);
+        dispatch({
+          action: 'mutateProjectDependency',
+          projectPath,
+          name: dependency.name,
+          required: version,
+          type: dependency.type,
+        });
       }}
       title={`Install ${version} version of ${dependency.name}`}
       variant="success"

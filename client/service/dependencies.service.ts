@@ -71,14 +71,16 @@ export const installAllDependencies = async (
   );
 };
 
-export const deleteDependency = async (
+export const deleteDependencies = async (
   projectPath: string,
-  dependency: Basic,
+  type: Type,
+  dependencies: Basic[],
 ): Promise<void> => {
-  return fetchJSON(
-    `${getBasePathFor(projectPath)}/${dependency.type}/${dependency.name}`,
-    { method: 'DELETE', headers: { 'x-cache-id': xCacheId } },
-  );
+  return fetchJSON(`${getBasePathFor(projectPath)}/${type}`, {
+    method: 'DELETE',
+    body: JSON.stringify(dependencies),
+    headers: { 'x-cache-id': xCacheId },
+  });
 };
 
 export const updateDependencies = async (

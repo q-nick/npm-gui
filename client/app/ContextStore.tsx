@@ -1,6 +1,7 @@
 import type { FC } from 'react';
-import { createContext, useMemo, useReducer } from 'react';
+import { createContext, useContext, useMemo, useReducer } from 'react';
 
+import { useProjectPath } from '../components/use-project-path';
 import type { Action, State } from './store.reducer';
 import { initialState, storeReducer } from './store.reducer';
 
@@ -29,4 +30,35 @@ export const ContextStoreProvider: FC = ({ children }) => {
       {children}
     </ContextStore.Provider>
   );
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useProjectsStore = () => {
+  const {
+    state: { projects },
+    dispatch,
+  } = useContext(ContextStore);
+
+  return {
+    projects,
+    dispatch,
+  };
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useProjectStore = (projectPath: string) => {
+  const { projects, dispatch } = useProjectsStore();
+
+  return {
+    project: projects.find((project) => project.path === projectPath),
+    dispatch,
+  };
+};
+
+// TODO mvoe to other location
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useCurrentProjectStore = () => {
+  const projectPath = useProjectPath();
+
+  return useProjectStore(projectPath);
 };
