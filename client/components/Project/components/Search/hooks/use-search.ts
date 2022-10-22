@@ -1,19 +1,19 @@
 import { useCallback, useState } from 'react';
 
-import type { SearchResult } from '../../../../../../server/types/dependency.types';
+import type { SearchResponse } from '../../../../../../server/types/global.types';
+import { fetchJSON } from '../../../../../service/utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useSearch = () => {
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResponse>([]);
 
   const onSearch = useCallback(async (query) => {
-    const response = await fetch('/api/search/npm', {
+    const result = await fetchJSON<SearchResponse>('/api/search/npm', {
       method: 'POST',
       body: JSON.stringify({ query }),
     });
-    const data = (await response.json()) as SearchResult[];
 
-    setSearchResults(data);
+    setSearchResults(result);
   }, []);
 
   return { searchResults, onSearch };

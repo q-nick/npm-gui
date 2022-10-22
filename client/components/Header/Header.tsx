@@ -64,32 +64,22 @@ export const Header: VFC = () => {
 
       <RightSection>
         {projects
-          .filter((p) => p !== 'global')
-          .map((oneOfProjectPathEncoded) => (
-            <React.Fragment key={oneOfProjectPathEncoded}>
+          .filter(({ path }) => path !== 'global')
+          .map(({ path }) => (
+            <React.Fragment key={path}>
               <Button
                 icon="code"
-                navigate={`/${oneOfProjectPathEncoded}`}
-                title={window.atob(oneOfProjectPathEncoded)}
-                variant={
-                  oneOfProjectPathEncoded === projectPathEncoded
-                    ? 'info'
-                    : 'dark'
-                }
+                navigate={`/${path}`}
+                title={window.atob(path)}
+                variant={path === projectPathEncoded ? 'info' : 'dark'}
               >
-                {window.atob(oneOfProjectPathEncoded).split('/').reverse()[0]}
+                {window.atob(path).split('/').reverse()[0]}
               </Button>
               <CloseButton
                 icon="x"
-                onClick={(): void =>
-                  handleRemoveProject(oneOfProjectPathEncoded)
-                }
+                onClick={(): void => handleRemoveProject(path)}
                 title="Remove"
-                variant={
-                  oneOfProjectPathEncoded === projectPathEncoded
-                    ? 'info'
-                    : 'dark'
-                }
+                variant={path === projectPathEncoded ? 'info' : 'dark'}
               />
             </React.Fragment>
           ))}

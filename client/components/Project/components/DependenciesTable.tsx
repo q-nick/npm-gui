@@ -5,7 +5,7 @@ import type {
   DependencyInstalledExtras,
   Type,
 } from '../../../../server/types/dependency.types';
-import { Loader } from '../../Loader';
+import { Loader } from '../../../ui/Loader';
 import { useSortDependencies } from '../hooks/use-sort-dependencies';
 import { DependencyRow } from './DependencyRow';
 import { ThSortable, ThStyled } from './ThSortable/ThSortable';
@@ -111,7 +111,14 @@ export const DependenciesTable: React.FC<Props> = ({
       </Info>
 
       <table>
-        <thead>
+        <thead
+          style={{
+            position: 'sticky',
+            top: 0,
+            background: 'white',
+            boxShadow: 'inset 0 -2px 0 #dfd7ca',
+          }}
+        >
           <tr>
             {!isGlobal && (
               <ThSortable<Type | 'any'>
@@ -125,9 +132,7 @@ export const DependenciesTable: React.FC<Props> = ({
                 onFilterChange={setFilterTypeValue}
                 sortActive={sort === 'type'}
                 sortReversed={sortReversed}
-              >
-                Env
-              </ThSortable>
+              />
             )}
 
             <ThSortable<string>

@@ -1,13 +1,7 @@
+import type { SearchResponse } from '../../types/global.types';
 import type { ResponserFunction } from '../../types/new-server.types';
+import { parseJSON } from '../../utils/parse-json';
 import { requestGET } from '../../utils/request-with-promise';
-
-interface Result {
-  name: string;
-  version: string;
-  score: string;
-  url: string;
-  description: string;
-}
 
 interface NPMApiResult {
   results: {
@@ -25,25 +19,26 @@ interface NPMApiResult {
   }[];
 }
 
-// eslint-disable-next-line func-style
-async function searchNPM(query: string): Promise<Result[]> {
+export const search: ResponserFunction<
+  { query: string },
+  unknown,
+  SearchResponse
+> = async ({ body: { query } }) => {
   const response = await requestGET(
     'api.npms.io',
     `/v2/search?from=0&size=25&q=${query}`,
   );
 
-  return (JSON.parse(response) as NPMApiResult).results.map((result) => ({
+  const parsed = parseJSON<NPMApiResult>(response);
+  if (!parsed) {
+    throw new Error('Unable to get pacakege info');
+  }
+
+  return parsed.results.map((result) => ({
     name: result.package.name,
     version: result.package.version,
     score: result.score.final,
     url: result.package.links.repository,
     description: result.package.description,
   }));
-}
-
-export const search: ResponserFunction<{ query: string }> = async ({
-  body: { query },
-}) => {
-  const results = await searchNPM(query);
-  return results;
 };

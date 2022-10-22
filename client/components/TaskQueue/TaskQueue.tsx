@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VFC } from 'react';
-import { useContext } from 'react';
 import styled from 'styled-components';
 
 import { TaskElement } from './Task';
-import { TaskQueueContext } from './TaskQueueContext';
 
 const TaskQueueWrapper = styled.div`
   background: #3e3f3a;
@@ -17,18 +16,15 @@ interface Props {
 }
 
 export const TaskQueue: VFC<Props> = ({ queueId }) => {
-  const {
-    state: { queue },
-    dispatch,
-  } = useContext(TaskQueueContext);
+  const queue: Record<string, any> = {};
 
   return (
     <TaskQueueWrapper>
-      {queue[queueId]?.map((task) => (
+      {queue[queueId]?.map((task: any) => (
         <TaskElement
           key={task.id}
           onClick={(): void => {
-            dispatch({ type: 'removeTask', task, queueId });
+            // dispatch({ type: 'removeTask', task, queueId });
           }}
           task={task}
         />

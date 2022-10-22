@@ -80,7 +80,7 @@ const getPnpmPackageWithInfo = async (
     },
   ] = await executeCommandJSONWithFallback<InstalledPNPM>(
     projectPath,
-    `pnpm ls ${dependencyName} --depth=0 --json=`,
+    `pnpm ls ${dependencyName} --depth=0 --json`,
   );
   const installedInfo = {
     ...installedInfoDevelopment,
@@ -163,103 +163,67 @@ const getYarnPackageWithInfo = async (
   };
 };
 
-const addNpmDependency = async (
-  projectPath: string,
-  dependency: Basic,
-  type: Type,
-): Promise<DependencyInstalled> => {
-  // add
-  await executeCommandSimple(
-    projectPath,
-    `npm install ${dependency.name}@${dependency.version ?? ''} -${
-      type === 'prod' ? 'P' : 'D'
-    }`,
-  );
-  // here is a change, we change param -S
-  // to -P in case to move dependency from dev to regular(prod?)?
-
-  return getNpmPackageWithInfo(projectPath, dependency.name);
-};
-
 const addNpmDependencies = async (
   projectPath: string,
   dependencies: Basic[],
   type: Type,
-): Promise<void> => {
+): Promise<DependencyInstalled | undefined> => {
   // add list
   const dependenciesToInstall = dependencies.map(
-    (d) => `${d.name}@${d.version ?? ''}`,
+    (d) => `${d.name}${d.version ? `@${d.version}` : ''}`,
   );
   const command = `npm install ${dependenciesToInstall.join(' ')} -${
     type === 'prod' ? 'P' : 'D'
   } --json`;
   await executeCommandSimple(projectPath, command);
-};
 
-const addPnpmDependency = async (
-  projectPath: string,
-  dependency: Basic,
-  type: Type,
-): Promise<DependencyInstalled> => {
-  // add
-  await executeCommandSimple(
-    projectPath,
-    `pnpm install ${dependency.name}@${dependency.version ?? ''} -${
-      type === 'prod' ? 'P' : 'D'
-    }`,
-  );
-  // here is a change, we change param -S
-  // to -P in case to move dependency from dev to regular(prod?)?
+  if (dependencies.length === 1 && dependencies[0]) {
+    return getNpmPackageWithInfo(projectPath, dependencies[0].name);
+  }
 
-  return getPnpmPackageWithInfo(projectPath, dependency.name);
+  return undefined;
 };
 
 const addPnpmDependencies = async (
   projectPath: string,
   dependencies: Basic[],
   type: Type,
-): Promise<void> => {
+): Promise<DependencyInstalled | undefined> => {
   // add list
   const dependenciesToInstall = dependencies.map(
-    (d) => `${d.name}@${d.version ?? ''}`,
+    (d) => `${d.name}${d.version ? `@${d.version}` : ''}`,
   );
   const command = `pnpm install ${dependenciesToInstall.join(' ')} -${
     type === 'prod' ? 'P' : 'D'
   }`;
   await executeCommandSimple(projectPath, command);
-};
 
-const addYarnDependency = async (
-  projectPath: string,
-  dependency: Basic,
-  type: Type,
-): Promise<DependencyInstalled> => {
-  // add
-  await executeCommandSimple(
-    projectPath,
-    `yarn add ${dependency.name}@${dependency.version ?? ''}${
-      type === 'prod' ? '' : ' -D'
-    }`,
-  );
-  // here is a change, we change param -S
-  // to -P in case to move dependency from dev to regular(prod?)?
+  if (dependencies.length === 1 && dependencies[0]) {
+    return getPnpmPackageWithInfo(projectPath, dependencies[0].name);
+  }
 
-  return getYarnPackageWithInfo(projectPath, dependency.name);
+  return undefined;
 };
 
 const addYarnDependencies = async (
   projectPath: string,
   dependencies: Basic[],
   type: Type,
-): Promise<void> => {
+): Promise<DependencyInstalled | undefined> => {
   // add list
   const dependenciesToInstall = dependencies.map(
-    (d) => `${d.name}@${d.version ?? ''}`,
+    (d) => `${d.name}${d.version ? `@${d.version}` : ''}`,
   );
   const command = `yarn add ${dependenciesToInstall.join(' ')}${
     type === 'prod' ? '' : ' -D'
   }`;
   await executeCommandSimple(projectPath, command);
+
+  if (dependencies.length === 1 && dependencies[0]) {
+    return getYarnPackageWithInfo(projectPath, dependencies[0].name);
+  }
+
+  return undefined;
 };
 
 export const addDependencies: ResponserFunction<
@@ -271,50 +235,19 @@ export const addDependencies: ResponserFunction<
   extraParams: { projectPathDecoded, manager, xCacheId },
   body,
 }) => {
-  const dependenciesToInstall = body.filter((d) => d.name);
+  let singleAddUpdate: DependencyInstalled | undefined = undefined;
 
-  const singleDepedency =
-    dependenciesToInstall.length === 1 && dependenciesToInstall[0];
+  if (manager === 'yarn') {
+    singleAddUpdate = await addYarnDependencies(projectPathDecoded, body, type);
+  } else if (manager === 'pnpm') {
+    singleAddUpdate = await addPnpmDependencies(projectPathDecoded, body, type);
+  } else {
+    singleAddUpdate = await addNpmDependencies(projectPathDecoded, body, type);
+  }
 
-  if (singleDepedency) {
-    if (manager === 'yarn') {
-      const result = await addYarnDependency(
-        projectPathDecoded,
-        singleDepedency,
-        type,
-      );
-      updateInCache(xCacheId + manager + projectPathDecoded, result);
-    } else if (manager === 'pnpm') {
-      const result = await addPnpmDependency(
-        projectPathDecoded,
-        singleDepedency,
-        type,
-      );
-      updateInCache(xCacheId + manager + projectPathDecoded, result);
-    } else {
-      const result = await addNpmDependency(
-        projectPathDecoded,
-        singleDepedency,
-        type,
-      );
-      updateInCache(xCacheId + manager + projectPathDecoded, result);
-    }
-  } else if (dependenciesToInstall.length > 1) {
-    if (manager === 'yarn') {
-      await addYarnDependencies(
-        projectPathDecoded,
-        dependenciesToInstall,
-        type,
-      );
-    } else if (manager === 'pnpm') {
-      await addPnpmDependencies(
-        projectPathDecoded,
-        dependenciesToInstall,
-        type,
-      );
-    } else {
-      await addNpmDependencies(projectPathDecoded, dependenciesToInstall, type);
-    }
+  if (singleAddUpdate) {
+    updateInCache(xCacheId + manager + projectPathDecoded, singleAddUpdate);
+  } else {
     clearCache(xCacheId + manager + projectPathDecoded);
   }
 

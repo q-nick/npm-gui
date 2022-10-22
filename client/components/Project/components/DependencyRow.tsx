@@ -13,6 +13,7 @@ import { ConfirmButton } from '../../../ui/Button/ConfirmButton';
 import { Link } from '../../../ui/Button/Link';
 import { ScoreBadge } from '../../../ui/ScoreBadge/ScoreBadge';
 import { useProjectPath } from '../../use-project-path';
+import { Required } from './Required';
 import { normalizeRepositoryLink, timeSince } from './utils';
 import { Missing, Version } from './Version';
 
@@ -66,18 +67,6 @@ const TrStyled = styled.tr<TrStyledProps>`
     `}
 `;
 
-const CellName = styled.td<{ prod: boolean }>`
-  text-align: left;
-  padding-left: 5px;
-
-  font-weight: ${(props): CSSType => (props.prod ? 'bold' : '')};
-`;
-
-const Name = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const Cell = styled.td`
   width: 10%;
   min-width: 80px;
@@ -120,7 +109,7 @@ export const DependencyRow: VFC<Props> = ({
           </span>
           <span>
             {dependency.homepage &&
-              dependency.homepage !==
+              normalizeRepositoryLink(dependency.homepage) !==
                 normalizeRepositoryLink(dependency.repository) && (
                 <Link
                   href={dependency.homepage}
@@ -129,16 +118,18 @@ export const DependencyRow: VFC<Props> = ({
                   title="Go to package home page"
                 />
               )}
-
             {dependency.repository && (
-              <Link
-                href={normalizeRepositoryLink(dependency.repository)}
-                icon="fork"
-                target="_blank"
-                title="Go to code repository"
-              />
+              <>
+                &nbsp;
+                <Link
+                  href={normalizeRepositoryLink(dependency.repository)}
+                  icon="fork"
+                  target="_blank"
+                  title="Go to code repository"
+                />
+              </>
             )}
-
+            &nbsp;
             <Link
               href={`https://www.npmjs.com/package/${dependency.name}`}
               target="_blank"
@@ -184,7 +175,7 @@ export const DependencyRow: VFC<Props> = ({
 
       {!isGlobal && (
         <Cell>
-          {dependency.required}
+          <Required dependency={dependency}>{dependency.required}</Required>
 
           {typeof dependency.required !== 'string' && (
             <Missing>extraneous</Missing>
@@ -231,7 +222,7 @@ export const DependencyRow: VFC<Props> = ({
               dependency.type,
             );
           }}
-          version={dependency.wanted}
+          version={dependency.latest}
         />
       </Cell>
 

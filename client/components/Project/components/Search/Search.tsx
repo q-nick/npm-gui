@@ -6,7 +6,9 @@ import type { Basic, Type } from '../../../../../server/types/dependency.types';
 import { useClickOutsideRef } from '../../../../hooks/use-click-outside';
 import type { CSSType } from '../../../../Styled';
 import { Button } from '../../../../ui/Button/Button';
+import { Table } from '../../../../ui/Table/Table';
 import { ZERO } from '../../../../utils';
+import { RepoCell } from '../../table-cells/RepoCell';
 import { SearchForm } from './components/SearchForm';
 import type { Props as SearchResultsProps } from './components/SearchResults';
 import { SearchResults } from './components/SearchResults';
@@ -83,6 +85,19 @@ export const Search: VFC<Props> = ({ onInstallNewDependency }) => {
           void onSearch(query);
         }}
         searchResults={searchResults}
+      />
+
+      <Table
+        columns={[
+          { name: 'score' },
+          { name: 'name' },
+          { name: 'version', label: 'lastest' },
+          { name: 'url' },
+        ]}
+        filters={{}}
+        isEmpty={false}
+        onFilterChange={console.log}
+        tableData={searchResults}
       />
 
       <TableContainer>

@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-type-alias */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import type { Props as ButtonProps } from '../../ui/Button/Button';
 import { Button } from '../../ui/Button/Button';
 import { Modal } from '../../ui/Modal/Modal';
-import type { Task } from './task-queue.reducer';
+
+type Task = any;
 
 const CloseButton = styled(Button)`
   margin-right: 15px;
@@ -20,14 +22,6 @@ interface Props {
   onClick: () => void;
 }
 
-const mapStatusToButtonVariant: Record<Task['status'], ButtonProps['variant']> =
-  {
-    WAITING: 'info',
-    RUNNING: 'success',
-    ERROR: 'danger',
-    SUCCESS: 'dark',
-  } as const;
-
 export const TaskElement: VFC<Props> = ({ task, onClick }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
@@ -37,7 +31,7 @@ export const TaskElement: VFC<Props> = ({ task, onClick }) => {
           setDetailsOpen(true);
         }}
         title="Show details"
-        variant={mapStatusToButtonVariant[task.status]}
+        variant="primary"
       >
         {task.description}
         {/* {task.description} */}
@@ -50,7 +44,7 @@ export const TaskElement: VFC<Props> = ({ task, onClick }) => {
         icon="x"
         onClick={onClick}
         title="Remove"
-        variant={mapStatusToButtonVariant[task.status]}
+        variant="primary"
       />
 
       {detailsOpen && (

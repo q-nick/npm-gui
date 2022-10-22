@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import useSWR from 'swr';
 
-import type { API } from '../../../../server/actions/explorer/explorer';
+import type { ExplorerResponse } from '../../../../server/types/global.types';
 import { swrKeepPreviousData } from '../../../hooks/swr-keep-previous-data';
 import { useClickOutsideRef } from '../../../hooks/use-click-outside';
 import { useToggle } from '../../../hooks/use-toggle';
@@ -17,7 +17,7 @@ export const useExplorer = () => {
 
   const ref = useClickOutsideRef(onClose);
 
-  const { data } = useSWR<API['Response']>(
+  const { data } = useSWR<ExplorerResponse>(
     `/api/explorer/${currentPath}`,
     fetcher,
     { use: [swrKeepPreviousData] },
