@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import type { DependencyInstalledExtras } from '../../../../../server/types/dependency.types';
 
-const parseSemVersion = (
+export const parseSemVersion = (
   version: string,
 ): { major?: string; minor?: string; patch?: string; alfa?: string } => {
   const match = version.match(

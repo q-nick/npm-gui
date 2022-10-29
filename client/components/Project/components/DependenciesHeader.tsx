@@ -45,7 +45,6 @@ const Select = styled.select`
 `;
 
 export const DependenciesHeader: React.FC<Props> = ({
-  onInstallNewDependency,
   onInstallAll,
   onUpdateAllToInstalled,
   onUpdateAllToWanted,
@@ -61,7 +60,7 @@ export const DependenciesHeader: React.FC<Props> = ({
 
   return (
     <header>
-      <Search onInstallNewDependency={onInstallNewDependency} />
+      <Search />
 
       <RightSection>
         {isGlobal !== true && (
