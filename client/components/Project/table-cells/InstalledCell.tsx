@@ -2,13 +2,13 @@
 import type { ReactNode } from 'react';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-import { Version } from '../components/Version';
+import { TableVersion } from '../components/TableVersion';
 
 export const InstalledCell = (
   dependency: DependencyInstalledExtras,
 ): ReactNode => {
   return (
-    <Version
+    <TableVersion
       dependency={dependency}
       isInstalled
       version={dependency.installed}

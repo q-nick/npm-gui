@@ -14,7 +14,7 @@ describe(`Package Managers`, () => {
     expect(response.body).toPartiallyContain({
       name: 'npm-gui-tests',
       version: '2.1.1',
-      url: 'https://github.com/q-nick/npm-gui-tests',
+      repository: 'https://github.com/q-nick/npm-gui-tests',
     });
   });
 });

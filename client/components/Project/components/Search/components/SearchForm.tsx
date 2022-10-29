@@ -2,18 +2,24 @@ import type { VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import type { SearchResult } from '../../../../../../server/types/dependency.types';
+import type { SearchResponse } from '../../../../../../server/types/global.types';
 import { Button } from '../../../../../ui/Button/Button';
+import { Link } from '../../../../../ui/Button/Link';
 import { Loader } from '../../../../../ui/Loader';
 
 const Form = styled.form`
   margin-bottom: 6px;
   margin-top: 6px;
 
-  & > input,
   & > select {
     display: inline-block;
-    width: 7em;
+    width: 5em;
+    vertical-align: top;
+  }
+
+  & > input {
+    display: inline-block;
+    width: 11em;
     vertical-align: top;
   }
 
@@ -26,7 +32,7 @@ const Form = styled.form`
 
 export interface Props {
   onSubmit: (query: string) => void;
-  searchResults: SearchResult[];
+  searchResults: SearchResponse;
 }
 
 export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
@@ -34,8 +40,8 @@ export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
 
   return (
     <Form
-      onSubmit={(e): void => {
-        e.preventDefault();
+      onSubmit={(event): void => {
+        event.preventDefault();
         onSubmit(query);
       }}
     >
@@ -48,7 +54,7 @@ export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
         onChange={(event): void => {
           setQuery(event.currentTarget.value);
         }}
-        placeholder="type name"
+        placeholder="find a new package"
         type="text"
         value={query}
       />
@@ -61,6 +67,15 @@ export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
       >
         {searchResults === undefined ? <Loader /> : 'search'}
       </Button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <Link
+        href="https://npms.io/"
+        style={{ fontWeight: 'normal' }}
+        target="_blank"
+        title="Visit npms.io website"
+      >
+        source: npms.io
+      </Link>
     </Form>
   );
 };

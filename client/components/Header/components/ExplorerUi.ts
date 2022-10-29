@@ -35,14 +35,6 @@ export const ExplorerList = styled.ul`
     `}
 `;
 
-export const Description = styled.p`
-  color: #dfd7ca;
-  display: inline-block;
-  font-size: 0.9em;
-  font-weight: 400;
-  margin: 0;
-`;
-
 interface ExplorerButtonProps {
   isDirectory: boolean;
   isProject?: boolean;

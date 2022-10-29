@@ -2,9 +2,9 @@ import type { FC, ReactNode } from 'react';
 import type { CSSProp } from 'styled-components';
 import styled, { css } from 'styled-components';
 
-import { SelectFilter } from '../../../components/Project/components/ThSortable/components/SelectFilter';
-import { TextFilter } from '../../../components/Project/components/ThSortable/components/TextFilter';
 import { Icon } from '../../Icon/Icon';
+import { SelectFilter } from './SelectFilter';
+import { TextFilter } from './TextFilter';
 
 interface WrapperProps {
   onClick?: unknown;

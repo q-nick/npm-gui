@@ -6,10 +6,11 @@ import { normalizeRepositoryLink } from '../components/utils';
 
 export const RepoCell = ({
   repository,
-}: DependencyInstalledExtras): ReactNode => {
+}: Pick<DependencyInstalledExtras, 'repository'>): ReactNode => {
   if (!repository) {
     return null;
   }
+
   return (
     <Link
       href={normalizeRepositoryLink(repository)}

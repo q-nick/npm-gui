@@ -7,7 +7,7 @@ import { normalizeRepositoryLink } from '../components/utils';
 export const HomePageCell = ({
   homepage,
   repository,
-}: DependencyInstalledExtras): ReactNode => {
+}: Pick<DependencyInstalledExtras, 'homepage' | 'repository'>): ReactNode => {
   if (
     !homepage ||
     (repository &&

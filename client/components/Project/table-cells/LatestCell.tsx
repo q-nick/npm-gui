@@ -2,10 +2,10 @@
 import type { ReactNode } from 'react';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-import { Version } from '../components/Version';
+import { TableVersion } from '../components/TableVersion';
 
 export const LatestCell = (
   dependency: DependencyInstalledExtras,
 ): ReactNode => {
-  return <Version dependency={dependency} version={dependency.latest} />;
+  return <TableVersion dependency={dependency} version={dependency.latest} />;
 };

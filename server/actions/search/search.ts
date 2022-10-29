@@ -9,12 +9,16 @@ interface NPMApiResult {
       name: string;
       description: string;
       version: string;
+      date: string;
       links: {
+        npm: string;
+        homepage: string;
         repository: string;
+        bugs: string;
       };
     };
     score: {
-      final: string;
+      final: number;
     };
   }[];
 }
@@ -31,14 +35,17 @@ export const search: ResponserFunction<
 
   const parsed = parseJSON<NPMApiResult>(response);
   if (!parsed) {
-    throw new Error('Unable to get pacakege info');
+    throw new Error('Unable to get package info');
   }
 
   return parsed.results.map((result) => ({
     name: result.package.name,
     version: result.package.version,
     score: result.score.final,
-    url: result.package.links.repository,
+    updated: result.package.date,
+    npm: result.package.links.npm,
+    repository: result.package.links.repository,
+    homepage: result.package.links.homepage,
     description: result.package.description,
   }));
 };
