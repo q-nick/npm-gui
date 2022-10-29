@@ -35,14 +35,14 @@ export const useMutateDependencies = () => {
     // dev
     const devDependencies = Object.entries(dependenciesMutate || {})
       .filter(([_, value]) => value.type === 'dev' && value.required !== null)
-      .map(([name, value]) => ({ name, version: value.required }));
+      .map(([name, value]) => ({ name, version: value.required || undefined }));
 
     await installDependencies(projectPath, 'dev', devDependencies);
 
     // prod
     const dependencies = Object.entries(dependenciesMutate || {})
       .filter(([_, value]) => value.type === 'prod' && value.required)
-      .map(([name, value]) => ({ name, version: value.required }));
+      .map(([name, value]) => ({ name, version: value.required || undefined }));
 
     await installDependencies(projectPath, 'prod', dependencies);
   });

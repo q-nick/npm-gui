@@ -25,7 +25,6 @@ import { NameCell } from './table-cells/NameCell';
 import { NpmCell } from './table-cells/NpmCell';
 import { OtherVersionCell } from './table-cells/OtherVersionCell';
 import { RepoCell } from './table-cells/RepoCell';
-import { RequiredCell } from './table-cells/RequiredCell';
 import { ScoreCell } from './table-cells/ScoreCell';
 import { SizeCell } from './table-cells/SizeCell';
 import { TimeCell } from './table-cells/TimeCell';
@@ -66,7 +65,7 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
     sortable: true,
     render: TimeCell,
   },
-  { name: 'required', sortable: true, render: RequiredCell },
+  { name: 'required', sortable: true },
   {
     name: 'to',
     label: '',

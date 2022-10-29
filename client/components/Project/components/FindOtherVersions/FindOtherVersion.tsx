@@ -32,7 +32,7 @@ export const FindOtherVersion: FC<Props> = ({ dependency }) => {
       {(onToggleOpen): ReactNode => (
         <Button
           disabled={!dependency.versions}
-          onClick={onToggleOpen}
+          onClick={(): void => onToggleOpen(true)}
           title={`Choose specific version of ${dependency.name}`}
           variant="dark"
         >

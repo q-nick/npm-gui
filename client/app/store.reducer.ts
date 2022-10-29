@@ -23,9 +23,9 @@ export type Action =
   | { action: 'removeProject'; projectPath: string };
 
 interface DependencyMutation {
-  required: string | undefined;
+  required: string | null;
   type: Type;
-  delete: true | undefined;
+  delete: true | null;
 }
 interface Project {
   path: string;
@@ -100,6 +100,7 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
         ...state,
         projects: state.projects.map((project) => {
           if (project.path === action.projectPath) {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete project.dependenciesMutate[action.name];
             return {
               ...project,
