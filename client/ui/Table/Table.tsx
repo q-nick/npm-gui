@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
+import type { CSSType } from '../../Styled';
 import { Loader } from '../Loader';
 import { Th } from './components/Th';
 import { useTableSort } from './use-table-sort';
@@ -18,23 +19,32 @@ interface Props<T extends TableRowAbstract> {
     label?: ReactNode;
     sortable?: true;
     filterable?: string[] | true;
-    render?: (row: T, abs: T) => ReactNode;
+    render?: (row: T, abs: unknown) => ReactNode;
   }[];
   // data
   tableData?: T[];
   isEmpty: boolean;
   // filter
   filters: Record<string, string>;
-  onFilterChange: (columnName: string, newFilterValue: string) => void;
+  onFilterChange?: (columnName: string, newFilterValue: string) => void;
+  // other
+  maxHeight?: string;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ maxHeight?: string }>`
   border: 1px solid #dfd7ca;
   border-radius: 2px;
   margin-top: 15px;
   flex: 1;
   position: relative;
   overflow-y: scroll;
+
+  ${({ maxHeight }): CSSType =>
+    maxHeight
+      ? css`
+          max-height: ${maxHeight};
+        `
+      : ''}
 `;
 
 const Info = styled.div`
@@ -57,7 +67,7 @@ const Thead = styled.thead`
 
 const Tbody = styled.tbody`
   td {
-    padding: 0;
+    padding: 3px;
   }
 `;
 
@@ -67,13 +77,14 @@ export const Table = <T extends TableRowAbstract>({
   onFilterChange,
   isEmpty,
   tableData,
+  maxHeight,
 }: // eslint-disable-next-line @typescript-eslint/ban-types
 Props<T>): JSX.Element => {
   const { sort, sortReversed, onSortChange, tableDataSorted } =
     useTableSort(tableData);
 
   return (
-    <Wrapper>
+    <Wrapper maxHeight={maxHeight}>
       <Info>
         {isEmpty && <>empty...</>}
 
@@ -95,7 +106,7 @@ Props<T>): JSX.Element => {
                   filterable={column.filterable}
                   key={`head-column-${column.name}`}
                   onFilterChange={
-                    column.filterable
+                    column.filterable && onFilterChange
                       ? (newFilterValue): void =>
                           onFilterChange(column.name, newFilterValue)
                       : undefined
@@ -121,7 +132,9 @@ Props<T>): JSX.Element => {
               {columns.map((column) => {
                 return (
                   <td key={`row-${row.name}-column-${column.name}`}>
-                    {column.render ? column.render(row, row) : row[column.name]}
+                    {column.render
+                      ? column.render(row, row[column.name])
+                      : row[column.name]}
                   </td>
                 );
               })}

@@ -16,6 +16,7 @@ const deleteNpmDependencies = async (
   type: Type,
 ): Promise<void> => {
   // delete
+  console.log(dependencies);
   await executeCommandSimple(
     projectPath,
     `npm uninstall ${dependencies.map((d) => d.name).join(' ')} ${

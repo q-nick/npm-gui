@@ -99,8 +99,7 @@ export const Button: React.FC<Props> = ({
           isAlone={Children.toArray(children).length === 0}
         />
       )}
-
-      {children}
+      {icon && children ? ` ${children}` : children}
     </ButtonStyled>
   );
 };

@@ -1,113 +1,86 @@
-import type { VFC } from 'react';
-import { useCallback, useState } from 'react';
-import styled, { css } from 'styled-components';
+/* eslint-disable react/jsx-no-useless-fragment */
+import type { ComponentProps, ReactNode, VFC } from 'react';
 
-import type { Basic, Type } from '../../../../../server/types/dependency.types';
-import { useClickOutsideRef } from '../../../../hooks/use-click-outside';
-import type { CSSType } from '../../../../Styled';
-import { Button } from '../../../../ui/Button/Button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SearchResponse } from '../../../../../server/types/global.types';
+import { Dropdown } from '../../../../ui/Dropdown/Drodpown';
 import { Table } from '../../../../ui/Table/Table';
 import { ZERO } from '../../../../utils';
+import { HomePageCell } from '../../table-cells/HomePageCell';
+import { NpmCell } from '../../table-cells/NpmCell';
 import { RepoCell } from '../../table-cells/RepoCell';
+import { TimeCell } from '../../table-cells/TimeCell';
 import { SearchForm } from './components/SearchForm';
-import type { Props as SearchResultsProps } from './components/SearchResults';
-import { SearchResults } from './components/SearchResults';
+import { SearchInstall } from './components/SearchInstall';
 import { useSearch } from './hooks/use-search';
 
-const Wrapper = styled.div`
-  background: #fff;
-  border: 1px solid #fff;
-  border-radius: 2px;
-  margin-left: -7.5px;
-  margin-top: -7.5px;
-  max-height: 34px;
-  max-width: 120px;
-  overflow: hidden;
-  padding: 7.5px;
-  position: absolute;
-  transition: max-width 300ms, max-height 300ms;
-  z-index: 1;
+// eslint-disable-next-line @typescript-eslint/no-type-alias
+const columns: ComponentProps<typeof Table<SearchResponse[number]>>['columns']  = [
+  {
+    name: 'name',
+    sortable: true,
+    render: (result): ReactNode => <b>{result.name}</b>,
+  },
+  {
+    name: 'version',
+    label: 'latest',
+    sortable: true,
+    render: (searchItem): ReactNode => (
+      <SearchInstall searchItem={searchItem} />
+    ),
+  },
+  {
+    name: 'score',
+    sortable: true,
+    render: (result): ReactNode => `${(result.score * 100).toFixed(2)}%`,
+  },
+  { name: 'updated',sortable: true, render: TimeCell },
+  {
+    name: 'homepage',
+    label: '',
+    render: HomePageCell,
+  },
+  {
+    name: 'repository',
+    label: '',
+    render: RepoCell,
+  },
+  {
+    name: 'npm',
+    label: '',
+    render: NpmCell,
+  },
+];
 
-  ${({ isOpen }: { isOpen: boolean }): CSSType =>
-    isOpen &&
-    css`
-      border-color: #dfd7ca;
-      max-height: 100%;
-      max-width: 100%;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-    `}
-`;
-
-const TableContainer = styled.div`
-  max-height: 50vh;
-  overflow-y: scroll;
-`;
-
-interface Props {
-  onInstallNewDependency: (dependency: Basic, type: Type) => void;
-}
-
-export const Search: VFC<Props> = ({ onInstallNewDependency }) => {
+export const Search: VFC = () => {
   const { searchResults, onSearch } = useSearch();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const onToggleOpen = useCallback(() => {
-    setIsOpen((previousIsOpen) => !previousIsOpen);
-  }, []);
-
-  const onClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  const ref = useClickOutsideRef(onClose);
-
-  const onInstallAndClose = useCallback<SearchResultsProps['onInstall']>(
-    (name, version, type) => {
-      onInstallNewDependency({ name, version }, type);
-      setIsOpen(false);
-    },
-    [onInstallNewDependency],
-  );
 
   return (
-    <Wrapper isOpen={isOpen} ref={ref}>
-      <Button
-        icon="plus"
-        onClick={onToggleOpen}
-        title="Search for a new package to install in this project"
-        variant="primary"
-      >
-        Search / Add
-      </Button>
-
-      <SearchForm
-        onSubmit={(query): void => {
-          void onSearch(query);
-        }}
-        searchResults={searchResults}
-      />
-
-      <Table
-        columns={[
-          { name: 'score' },
-          { name: 'name' },
-          { name: 'version', label: 'lastest' },
-          { name: 'url' },
-        ]}
-        filters={{}}
-        isEmpty={false}
-        onFilterChange={console.log}
-        tableData={searchResults}
-      />
-
-      <TableContainer>
-        {!!searchResults && searchResults.length > ZERO && (
-          <SearchResults
-            onInstall={onInstallAndClose}
+    <Dropdown>
+      {(onToggleOpen): ReactNode => (
+        <>
+          <SearchForm
+            onSubmit={(query): void => {
+              onSearch(query);
+              onToggleOpen(true);
+            }}
             searchResults={searchResults}
           />
-        )}
-      </TableContainer>
-    </Wrapper>
+        </>
+      )}
+      {(): ReactNode => (
+        <>
+          {searchResults.length > ZERO && (
+            <Table
+              columns={columns}
+              filters={{}}
+              isEmpty={false}
+              maxHeight="calc(100vh - 175px)"
+              tableData={searchResults}
+            />
+          )}
+        </>
+      )}
+    </Dropdown>
   );
 };

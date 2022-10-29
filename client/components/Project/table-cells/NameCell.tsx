@@ -13,12 +13,12 @@ const Wrapper = styled.div<{ prod: boolean }>`
 `;
 
 export const NameCell = (
-  { type, name }: DependencyInstalledExtras,
-  { drawFolder }: TableRowAbstract,
+  { type, name }: Pick<DependencyInstalledExtras, 'name' | 'type'>,
+  row: unknown,
 ): ReactNode => {
   return (
     <Wrapper prod={type === 'prod'}>
-      {drawFolder && <>&nbsp;└─ </>}
+      {(row as TableRowAbstract).drawFolder && <>&nbsp;└─ </>}
       {name}
     </Wrapper>
   );

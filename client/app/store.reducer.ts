@@ -10,17 +10,22 @@ export type Action =
       action: 'mutateProjectDependency';
       projectPath: string;
       name: string;
-      required?: string;
+      required: string | null;
       type: Type;
-      delete?: true;
+      delete: true | null;
+    }
+  | {
+      action: 'mutateProjectDependencyCancel';
+      projectPath: string;
+      name: string;
     }
   | { action: 'addProject'; projectPath: string }
   | { action: 'removeProject'; projectPath: string };
 
 interface DependencyMutation {
-  required?: string;
+  required: string | undefined;
   type: Type;
-  delete?: true;
+  delete: true | undefined;
 }
 interface Project {
   path: string;
@@ -81,6 +86,25 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
                   type: action.type,
                   delete: action.delete,
                 },
+              },
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'mutateProjectDependencyCancel': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            delete project.dependenciesMutate[action.name];
+            return {
+              ...project,
+              dependenciesMutate: {
+                ...project.dependenciesMutate,
               },
             };
           }

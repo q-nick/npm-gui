@@ -8,7 +8,7 @@ import { Loader } from '../../../ui/Loader';
 import { getNormalizedRequiredVersion } from '../../../utils';
 import { useProjectPath } from '../../use-project-path';
 
-export const Missing = styled.span`
+const Missing = styled.span`
   color: #d9534f;
 `;
 
@@ -18,7 +18,11 @@ interface Props {
   isInstalled?: true;
 }
 
-export const Version: VFC<Props> = ({ dependency, version, isInstalled }) => {
+export const TableVersion: VFC<Props> = ({
+  dependency,
+  version,
+  isInstalled,
+}) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 
@@ -58,6 +62,7 @@ export const Version: VFC<Props> = ({ dependency, version, isInstalled }) => {
           name: dependency.name,
           required: version,
           type: dependency.type,
+          delete: null,
         });
       }}
       title={`Install ${version} version of ${dependency.name}`}

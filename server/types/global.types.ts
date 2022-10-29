@@ -3,8 +3,11 @@
 export type SearchResponse = {
   name: string;
   version: string;
-  score: string;
-  url: string;
+  score: number;
+  updated: string;
+  repository?: string;
+  homepage?: string;
+  npm?: string;
   description: string;
 }[];
 
