@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { useClickOutsideRef } from '../../hooks/use-click-outside';
+import { useClickOutsideRef } from '../hooks/use-click-outside';
 import type { CSSType } from '../../Styled';
 
 const Wrapper = styled.div`

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-unassigned-import */
 import './base.css';
 import 'open-iconic/font/css/open-iconic.css';

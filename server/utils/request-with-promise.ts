@@ -5,7 +5,7 @@ export const requestGET = (hostname: string, path: string): Promise<string> => {
     const options = {
       hostname,
       port: 443,
-      path,
+      path: encodeURI(path),
       method: 'GET',
     };
 

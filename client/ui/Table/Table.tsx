@@ -63,6 +63,7 @@ const Thead = styled.thead`
   top: 0;
   background: white;
   box-shadow: inset 0 -2px 0 #dfd7ca;
+  z-index: 1;
 `;
 
 const Tbody = styled.tbody`
