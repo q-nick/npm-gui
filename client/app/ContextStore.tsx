@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { createContext, useContext, useMemo, useReducer } from 'react';
 
-import { useProjectPath } from '../components/use-project-path';
+import { useProjectPath } from '../hooks/use-project-path';
 import type { Action, State } from './store.reducer';
 import { initialState, storeReducer } from './store.reducer';
 
@@ -55,7 +55,7 @@ export const useProjectStore = (projectPath: string) => {
   };
 };
 
-// TODO mvoe to other location
+// TODO move to other location
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useCurrentProjectStore = () => {
   const projectPath = useProjectPath();

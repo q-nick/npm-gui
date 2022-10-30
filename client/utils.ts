@@ -11,3 +11,11 @@ export const getNormalizedRequiredVersion = (
 
   return normalized ? normalized[ZERO] : undefined;
 };
+
+export const normalizeRepositoryLink = (link: string): string | undefined =>
+  link
+    .replace('git+', '')
+    .replace('git://', 'https://')
+    .replace('ssh://', 'https://')
+    .replace('.git', '')
+    .replace(/#.+/, '');

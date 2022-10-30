@@ -61,8 +61,4 @@ setInterval(async () => {
       job().finally(() => (fetchQueueActive -= 1));
     }
   }
-}, 100);
-
-export const fetcher = <T>(
-  ...parameters: Parameters<typeof fetch>
-): Promise<T> => fetch(...parameters).then((response) => response.json());
+}, 200);

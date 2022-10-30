@@ -1,12 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import useSWR from 'swr';
 
 import type { ExplorerResponse } from '../../../../server/types/global.types';
-import { swrKeepPreviousData } from '../../../hooks/swr-keep-previous-data';
-import { useClickOutsideRef } from '../../../hooks/use-click-outside';
-import { useToggle } from '../../../hooks/use-toggle';
-import { fetcher } from '../../../service/utils';
+import { fetchJSON } from '../../../service/utils';
+import { useClickOutsideRef } from '../../../ui/hooks/use-click-outside';
+import { useToggle } from '../../../ui/hooks/use-toggle';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export const useExplorer = () => {
@@ -17,10 +16,14 @@ export const useExplorer = () => {
 
   const ref = useClickOutsideRef(onClose);
 
-  const { data } = useSWR<ExplorerResponse>(
-    `/api/explorer/${currentPath}`,
-    fetcher,
-    { use: [swrKeepPreviousData] },
+  const { data } = useQuery(
+    [currentPath],
+    () => fetchJSON<ExplorerResponse>(`/api/explorer/${currentPath}`),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: false,
+    },
   );
 
   const onClickProject = useCallback((): void => {

@@ -3,8 +3,9 @@ import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ContextStore } from '../../app/ContextStore';
-import { useProjectPath } from '../use-project-path';
-import { Dependencies } from './Dependencies';
+import { useProjectPath } from '../../hooks/use-project-path';
+import { Dependencies } from './Dependencies/Dependencies';
+import { ProjectJobs } from './ProjectJobs/ProjectJobs';
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +43,7 @@ export const Project: VFC = () => {
         <Dependencies projectPath={projectPath} />
       </Wrapper>
       {/* TODO we need to show pending jobs and their execution time */}
-      {/* <TaskQueue queueId={projectPath} /> */}
+      <ProjectJobs projectPath={projectPath} />
     </>
   );
 };
