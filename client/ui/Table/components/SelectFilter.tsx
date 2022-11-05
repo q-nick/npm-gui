@@ -22,7 +22,7 @@ export const SelectFilter = <T extends string>({
     }}
     onClick={preventEvent}
   >
-    <option selected={selectedValue === 'any'} value="any">
+    <option selected={selectedValue === ''} value="">
       any
     </option>
 

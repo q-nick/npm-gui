@@ -45,7 +45,7 @@ app.post(
 );
 app.post('/api/project/:projectPath/dependencies/install', installDependencies);
 app.post('/api/project/:projectPath/dependencies/:type', addDependencies);
-app.delete('/api/project/:projectPath/dependencies', deleteDependencies);
+app.delete('/api/project/:projectPath/dependencies/:type', deleteDependencies);
 
 // global routes
 app.get('/api/global/dependencies/simple', getGlobalDependenciesSimple);

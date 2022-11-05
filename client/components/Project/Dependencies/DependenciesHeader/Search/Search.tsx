@@ -1,9 +1,11 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import type { ComponentProps, ReactNode, VFC } from 'react';
+import type { ReactNode, VFC } from 'react';
+import styled from 'styled-components';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { SearchResponse } from '../../../../../../server/types/global.types';
+import type { SearchResponse } from '../../../../../../server/types/global.types';
 import { Dropdown } from '../../../../../ui/Dropdown/Drodpown';
+import type { Props as TableProps } from '../../../../../ui/Table/Table';
 import { Table } from '../../../../../ui/Table/Table';
 import { ZERO } from '../../../../../utils';
 import { HomePageCell } from '../../table-cells/HomePageCell';
@@ -14,8 +16,14 @@ import { SearchForm } from './SearchForm';
 import { SearchInstall } from './SearchInstall';
 import { useSearch } from './use-search';
 
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  z-index: 5;
+`;
+
 // eslint-disable-next-line @typescript-eslint/no-type-alias
-const columns: ComponentProps<typeof Table<SearchResponse[number]>>['columns']  = [
+const columns: TableProps<SearchResponse[number]>['columns'] = [
   {
     name: 'name',
     sortable: true,
@@ -34,7 +42,7 @@ const columns: ComponentProps<typeof Table<SearchResponse[number]>>['columns']  
     sortable: true,
     render: (result): ReactNode => `${(result.score * 100).toFixed(2)}%`,
   },
-  { name: 'updated',sortable: true, render: TimeCell },
+  { name: 'updated', sortable: true, render: TimeCell },
   {
     name: 'homepage',
     label: '',
@@ -56,31 +64,33 @@ export const Search: VFC = () => {
   const { searchResults, onSearch } = useSearch();
 
   return (
-    <Dropdown>
-      {(onToggleOpen): ReactNode => (
-        <>
-          <SearchForm
-            onSubmit={(query): void => {
-              onSearch(query);
-              onToggleOpen(true);
-            }}
-            searchResults={searchResults}
-          />
-        </>
-      )}
-      {(): ReactNode => (
-        <>
-          {searchResults.length > ZERO && (
-            <Table
-              columns={columns}
-              filters={{}}
-              isEmpty={false}
-              maxHeight="calc(100vh - 175px)"
-              tableData={searchResults}
+    <Wrapper>
+      <Dropdown>
+        {(onToggleOpen): ReactNode => (
+          <>
+            <SearchForm
+              onSubmit={(query): void => {
+                onSearch(query);
+                onToggleOpen(true);
+              }}
+              searchResults={searchResults}
             />
-          )}
-        </>
-      )}
-    </Dropdown>
+          </>
+        )}
+        {(): ReactNode => (
+          <>
+            {searchResults.length > ZERO && (
+              <Table
+                columns={columns}
+                filters={{}}
+                isEmpty={false}
+                maxHeight="calc(100vh - 175px)"
+                tableData={searchResults}
+              />
+            )}
+          </>
+        )}
+      </Dropdown>
+    </Wrapper>
   );
 };

@@ -23,6 +23,7 @@ export const useExplorer = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       retry: false,
+      keepPreviousData: true,
     },
   );
 

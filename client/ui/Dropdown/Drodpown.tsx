@@ -2,8 +2,8 @@ import type { FC, ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { useClickOutsideRef } from '../hooks/use-click-outside';
 import type { CSSType } from '../../Styled';
+import { useClickOutsideRef } from '../hooks/use-click-outside';
 
 const Wrapper = styled.div`
   position: relative;
@@ -21,7 +21,7 @@ const Trigger = styled.div`
   ${({ isOpen }: { isOpen: boolean }): CSSType =>
     isOpen &&
     css`
-      z-index: 2;
+      z-index: 3;
     `}
 `;
 
