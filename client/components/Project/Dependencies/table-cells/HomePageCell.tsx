@@ -11,7 +11,7 @@ export const HomePageCell = ({
   if (
     !homepage ||
     (repository &&
-      normalizeRepositoryLink(homepage) !== normalizeRepositoryLink(repository))
+      normalizeRepositoryLink(homepage) === normalizeRepositoryLink(repository))
   ) {
     return null;
   }

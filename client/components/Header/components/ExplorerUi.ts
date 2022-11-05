@@ -4,6 +4,7 @@ import type { CSSType } from '../../../Styled';
 
 export const Wrapper = styled.div`
   position: relative;
+  z-index: 5;
 `;
 
 interface ExplorerListProps {

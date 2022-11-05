@@ -19,6 +19,10 @@ export type Action =
       projectPath: string;
       name: string;
     }
+  | {
+      action: 'mutateProjectDependencyReset';
+      projectPath: string;
+    }
   | { action: 'addProject'; projectPath: string }
   | { action: 'removeProject'; projectPath: string };
 
@@ -107,6 +111,22 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
               dependenciesMutate: {
                 ...project.dependenciesMutate,
               },
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'mutateProjectDependencyReset': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              dependenciesMutate: {},
             };
           }
 

@@ -13,7 +13,7 @@ export interface TableRowAbstract {
   drawFolder?: true;
 }
 
-interface Props<T extends TableRowAbstract> {
+export interface Props<T extends TableRowAbstract> {
   columns: {
     name: string;
     label?: ReactNode;

@@ -12,18 +12,25 @@ import { getNormalizedRequiredVersion } from '../../../utils';
 interface Props {
   version: 'installed' | 'latest' | 'wanted';
 }
+
 export const ToInstallHeader: VFC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
 
   const [dependencies] = useFullDependencies(projectPath);
-  const { dispatch } = useProjectStore(projectPath);
+  const { dispatch, project } = useProjectStore(projectPath);
 
   const { tableDataFiltered: dependenciesFiltered } =
     useTableFilter(dependencies);
 
   const dependenciesWithVersion = dependenciesFiltered?.filter(
-    (depednency) => depednency[version],
+    (dependency) =>
+      dependency[version] &&
+      dependency[version] !== getNormalizedRequiredVersion(dependency.required),
   );
+
+  const allChecked = dependenciesWithVersion?.every((dep) => {
+    return project?.dependenciesMutate?.[dep.name]?.required === dep[version];
+  });
 
   const onCheck = useCallback(
     (event: React.MouseEvent) => {
@@ -52,9 +59,10 @@ export const ToInstallHeader: VFC<Props> = ({ version }) => {
       {version} &nbsp;
       {dependenciesWithVersion && dependenciesWithVersion.length > 0 && (
         <Button
+          disabled={allChecked}
           icon="check"
           onClick={onCheck}
-          title="Install project depednencies"
+          title="Install project dependencies"
           variant="success"
         />
       )}
