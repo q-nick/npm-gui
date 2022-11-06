@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
 import { useProjectStore } from '../../../../../app/ContextStore';
+import { useIsProjectBusy } from '../../../../../hooks/use-is-project-busy';
 import { useProjectPath } from '../../../../../hooks/use-project-path';
 import { Button } from '../../../../../ui/Button/Button';
 
@@ -22,6 +23,7 @@ const Line = styled.hr`
 export const TableActions: VFC<Props> = ({ dependency }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
+  const isProjectBusy = useIsProjectBusy(projectPath);
 
   const markedForDeletion =
     !!project?.dependenciesMutate[dependency.name]?.delete;
@@ -30,6 +32,7 @@ export const TableActions: VFC<Props> = ({ dependency }) => {
     <>
       {markedForDeletion && <Line />}
       <Button
+        disabled={isProjectBusy}
         icon={markedForDeletion ? 'x' : 'trash'}
         onClick={(): void =>
           markedForDeletion

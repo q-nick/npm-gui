@@ -16,7 +16,7 @@ export const useExplorer = () => {
 
   const ref = useClickOutsideRef(onClose);
 
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     [currentPath],
     () => fetchJSON<ExplorerResponse>(`/api/explorer/${currentPath}`),
     {
@@ -51,5 +51,6 @@ export const useExplorer = () => {
     setFilter,
     onClickProject,
     setCurrentPath,
+    isFetching,
   };
 };

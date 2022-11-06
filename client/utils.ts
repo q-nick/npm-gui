@@ -18,4 +18,5 @@ export const normalizeRepositoryLink = (link: string): string | undefined =>
     .replace('git://', 'https://')
     .replace('ssh://', 'https://')
     .replace('.git', '')
+    .replace('git@', '')
     .replace(/#.+/, '');

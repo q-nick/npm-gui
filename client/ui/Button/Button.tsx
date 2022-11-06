@@ -53,14 +53,14 @@ const ButtonStyled = styled.button`
     filter: brightness(80%);
   }
 
-  &:disabled {
-    cursor: not-allowed;
-    filter: grayscale(100%);
-  }
-
   ${({ variant }: Readonly<Props>): CSSType => css`
     background-color: ${variantToColor[variant]};
   `}
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #959595 !important;
+  }
 `;
 
 interface IconProps extends IconPropsOriginal {
