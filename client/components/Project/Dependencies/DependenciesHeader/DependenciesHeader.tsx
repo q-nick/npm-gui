@@ -1,10 +1,10 @@
 /* eslint-disable styled-components-a11y/no-onchange */
-import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 
 import type { Manager } from '../../../../../server/types/dependency.types';
-import type { AvailableManagerResponse } from '../../../../../server/types/global.types';
-import { fetchJSON } from '../../../../service/utils';
+import { useAvailableManagers } from '../../../../hooks/use-available-managers';
+import { useIsProjectBusy } from '../../../../hooks/use-is-project-busy';
+import { useProjectPath } from '../../../../hooks/use-project-path';
 import { Button } from '../../../../ui/Button/Button';
 import { Search } from './Search/Search';
 
@@ -35,6 +35,11 @@ const Select = styled.select`
   background-color: #d9534f;
   font-size: 10px;
   padding: 6px;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #959595 !important;
+  }
 `;
 
 export const DependenciesHeader: React.FC<Props> = ({
@@ -42,11 +47,9 @@ export const DependenciesHeader: React.FC<Props> = ({
   onForceReInstall,
   isGlobal,
 }) => {
-  const { data: availableManagers } = useQuery(
-    ['available-managers'],
-    () => fetchJSON<AvailableManagerResponse>(`/api/available-managers`),
-    { refetchOnMount: false, refetchOnWindowFocus: false },
-  );
+  const projectPath = useProjectPath();
+  const availableManagers = useAvailableManagers();
+  const isProjectBusy = useIsProjectBusy(projectPath);
 
   return (
     <header>
@@ -58,6 +61,7 @@ export const DependenciesHeader: React.FC<Props> = ({
             <small>Install:</small>
             &nbsp;
             <Button
+              disabled={isProjectBusy}
               icon="data-transfer-download"
               onClick={(): void => {
                 onInstallAll();
@@ -73,6 +77,7 @@ export const DependenciesHeader: React.FC<Props> = ({
           <>
             &nbsp; &nbsp;
             <Select
+              disabled={isProjectBusy}
               onChange={(event): void => {
                 onForceReInstall(event.target.value as Manager);
               }}

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 
 import { useProjectStore } from '../../../app/ContextStore';
 import { useFullDependencies } from '../../../hooks/use-full-dependencies';
+import { useIsProjectBusy } from '../../../hooks/use-is-project-busy';
 import { useProjectPath } from '../../../hooks/use-project-path';
 import { Button } from '../../../ui/Button/Button';
 import { useTableFilter } from '../../../ui/Table/use-table-filter';
@@ -15,6 +16,7 @@ interface Props {
 
 export const ToInstallHeader: VFC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
+  const isProjectBusy = useIsProjectBusy(projectPath);
 
   const [dependencies] = useFullDependencies(projectPath);
   const { dispatch, project } = useProjectStore(projectPath);
@@ -59,7 +61,7 @@ export const ToInstallHeader: VFC<Props> = ({ version }) => {
       {version} &nbsp;
       {dependenciesWithVersion && dependenciesWithVersion.length > 0 && (
         <Button
-          disabled={allChecked}
+          disabled={allChecked || isProjectBusy}
           icon="check"
           onClick={onCheck}
           title="Install project dependencies"

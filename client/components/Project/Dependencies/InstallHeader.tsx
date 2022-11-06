@@ -2,6 +2,7 @@
 import type { VFC } from 'react';
 
 import { useProjectStore } from '../../../app/ContextStore';
+import { useIsProjectBusy } from '../../../hooks/use-is-project-busy';
 import { useMutateDependencies } from '../../../hooks/use-mutate-dependencies';
 import { useProjectPath } from '../../../hooks/use-project-path';
 import { Button } from '../../../ui/Button/Button';
@@ -9,7 +10,7 @@ import { Button } from '../../../ui/Button/Button';
 export const InstallHeader: VFC = () => {
   const projectPath = useProjectPath();
   const { project } = useProjectStore(projectPath);
-
+  const isProjectBusy = useIsProjectBusy(projectPath);
   const syncDependenciesMutation = useMutateDependencies();
 
   const hasChanges = Object.values(project?.dependenciesMutate || {}).some(
@@ -18,7 +19,7 @@ export const InstallHeader: VFC = () => {
 
   return (
     <Button
-      disabled={!hasChanges || syncDependenciesMutation.isLoading}
+      disabled={!hasChanges || isProjectBusy}
       icon="caret-right"
       onClick={(): void => syncDependenciesMutation.mutate()}
       title="Install project depednencies"

@@ -18,6 +18,7 @@ export const Explorer: VFC = () => {
     isOpen,
     path,
     list,
+    isFetching,
     filter,
     setFilter,
     onClickProject,
@@ -48,6 +49,7 @@ export const Explorer: VFC = () => {
         </li>
         <li>
           <ExplorerButton
+            disabled={isFetching}
             isDirectory
             onClick={(): void => {
               setCurrentPath(window.btoa(`${path}/../`));
@@ -63,7 +65,7 @@ export const Explorer: VFC = () => {
             <li key={folderOrFile.name}>
               {folderOrFile.isDirectory && !folderOrFile.isProject && (
                 <ExplorerButton
-                  disabled={folderOrFile.name === 'node_modules'}
+                  disabled={folderOrFile.name === 'node_modules' || isFetching}
                   isDirectory
                   onClick={(): void => {
                     setCurrentPath(window.btoa(`${path}/${folderOrFile.name}`));
@@ -78,6 +80,7 @@ export const Explorer: VFC = () => {
 
               {folderOrFile.isProject && (
                 <ExplorerButton
+                  disabled={isFetching}
                   isDirectory={false}
                   isProject
                   onClick={onClickProject}
