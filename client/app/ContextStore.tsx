@@ -1,7 +1,12 @@
 import type { FC } from 'react';
-import { createContext, useContext, useMemo, useReducer } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useReducer,
+} from 'react';
 
-import { useProjectPath } from '../hooks/use-project-path';
 import type { Action, State } from './store.reducer';
 import { initialState, storeReducer } from './store.reducer';
 
@@ -55,10 +60,65 @@ export const useProjectStore = (projectPath: string) => {
   };
 };
 
-// TODO move to other location
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
-export const useCurrentProjectStore = () => {
-  const projectPath = useProjectPath();
+let id = 0;
 
-  return useProjectStore(projectPath);
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useProjectsJobs = (projectPath: string) => {
+  const { dispatch } = useProjectStore(projectPath);
+
+  const startJob = useCallback(
+    (description) => {
+      id += 1;
+
+      dispatch({
+        action: 'jobStarted',
+        projectPath,
+        description,
+        jobId: id,
+      });
+
+      return id;
+    },
+    [dispatch, projectPath],
+  );
+
+  const successJob = useCallback(
+    (jobId: number) => {
+      dispatch({
+        action: 'jobSuccess',
+        projectPath,
+        jobId,
+      });
+    },
+    [dispatch, projectPath],
+  );
+
+  const failedJob = useCallback(
+    (jobId: number) => {
+      dispatch({
+        action: 'jobSuccess',
+        projectPath,
+        jobId,
+      });
+    },
+    [dispatch, projectPath],
+  );
+
+  const removeJob = useCallback(
+    (jobId: number) => {
+      dispatch({
+        action: 'jobRemove',
+        jobId,
+        projectPath,
+      });
+    },
+    [dispatch, projectPath],
+  );
+
+  return {
+    startJob,
+    successJob,
+    failedJob,
+    removeJob,
+  };
 };

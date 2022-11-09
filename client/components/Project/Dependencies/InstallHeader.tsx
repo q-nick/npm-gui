@@ -11,7 +11,7 @@ export const InstallHeader: VFC = () => {
   const projectPath = useProjectPath();
   const { project } = useProjectStore(projectPath);
   const isProjectBusy = useIsProjectBusy(projectPath);
-  const syncDependenciesMutation = useMutateDependencies();
+  const syncDependenciesMutation = useMutateDependencies(projectPath);
 
   const hasChanges = Object.values(project?.dependenciesMutate || {}).some(
     (value) => value?.required || value?.delete,

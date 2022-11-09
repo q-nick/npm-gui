@@ -49,7 +49,9 @@
   },
   "homepage": "https://github.com/q-nick/npm-gui#readme",
   "devDependencies": {
+    "@tanstack/query-sync-storage-persister": "^4.14.5",
     "@tanstack/react-query": "^4.14.3",
+    "@tanstack/react-query-persist-client": "^4.14.3",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27",
@@ -86,8 +88,6 @@
     }
   },
   "dependencies": {
-    "@tanstack/query-sync-storage-persister": "^4.14.3",
-    "@tanstack/react-query-persist-client": "^4.14.3",
     "cross-spawn": "^7.0.3",
     "open": "^8.4.0"
   },

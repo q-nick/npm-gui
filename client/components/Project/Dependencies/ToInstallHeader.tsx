@@ -17,9 +17,9 @@ interface Props {
 export const ToInstallHeader: VFC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
   const isProjectBusy = useIsProjectBusy(projectPath);
-
-  const [dependencies] = useFullDependencies(projectPath);
   const { dispatch, project } = useProjectStore(projectPath);
+
+  const { dependencies } = useFullDependencies(projectPath);
 
   const { tableDataFiltered: dependenciesFiltered } =
     useTableFilter(dependencies);

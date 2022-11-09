@@ -21,17 +21,10 @@ export const SelectFilter = <T extends string>({
       onFilterChange(event.target.value as T);
     }}
     onClick={preventEvent}
+    value={selectedValue}
   >
-    <option selected={selectedValue === ''} value="">
-      any
-    </option>
-
-    <option selected={selectedValue === 'dev'} value="dev">
-      dev
-    </option>
-
-    <option selected={selectedValue === 'prod'} value="prod">
-      prod
-    </option>
+    <option value="">any</option>
+    <option value="dev">dev</option>
+    <option value="prod">prod</option>
   </Select>
 );

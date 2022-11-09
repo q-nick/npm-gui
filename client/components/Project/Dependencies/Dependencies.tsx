@@ -102,9 +102,9 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
 
 export const Dependencies: VFC<Props> = ({ projectPath }) => {
   // this are fast
-  const [dependenciesFast] = useFastDependencies(projectPath);
+  const { dependencies: dependenciesFast } = useFastDependencies(projectPath);
   // this are slow
-  const [dependenciesFull] = useFullDependencies(projectPath);
+  const { dependencies: dependenciesFull } = useFullDependencies(projectPath);
 
   // bind async bundle score
   const dependenciesScored = useBundleScore(dependenciesFull || dependenciesFast);
