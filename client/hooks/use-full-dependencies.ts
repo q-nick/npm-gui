@@ -1,16 +1,25 @@
 import { useIsMutating, useQuery } from '@tanstack/react-query';
 
-import type { DependencyInstalled } from '../../server/types/dependency.types';
+import { useProjectsJobs } from '../app/ContextStore';
 import { getProjectDependenciesFull } from '../service/dependencies.service';
 
-export const useFullDependencies = (
-  projectPath: string,
-): [DependencyInstalled[] | undefined, ReturnType<typeof useQuery>] => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
+export const useFullDependencies = (projectPath: string) => {
+  const { startJob, successJob } = useProjectsJobs(projectPath);
+
   const isProjectMutating = useIsMutating([projectPath]) > 0;
 
   const query = useQuery(
     [projectPath, 'get-project-dependencies', 'full'],
-    () => getProjectDependenciesFull(projectPath),
+    async () => {
+      const id = startJob('Get project dependencies full');
+
+      const dependencies = await getProjectDependenciesFull(projectPath);
+
+      successJob(id);
+
+      return dependencies;
+    },
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
@@ -19,5 +28,5 @@ export const useFullDependencies = (
     },
   );
 
-  return [query.data, query];
+  return { dependencies: query.data, ...query };
 };

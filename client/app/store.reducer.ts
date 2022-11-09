@@ -5,7 +5,30 @@ import type { Reducer } from 'react';
 import type { Type } from '../../server/types/dependency.types';
 import { initialProjects, syncProjectsStorage } from './projects.storage';
 
+export interface Job {
+  id: number;
+  description: string;
+  status: 'FAILURE' | 'SUCCESS' | 'WAITING' | 'WORKING';
+  startTime: number;
+}
+
 export type Action =
+  | {
+      action: 'jobRemove';
+      projectPath: string;
+      jobId: number;
+    }
+  | {
+      action: 'jobStarted';
+      projectPath: string;
+      description: string;
+      jobId: number;
+    }
+  | {
+      action: 'jobSuccess';
+      projectPath: string;
+      jobId: number;
+    }
   | {
       action: 'mutateProjectDependency';
       projectPath: string;
@@ -34,6 +57,7 @@ interface DependencyMutation {
 interface Project {
   path: string;
   dependenciesMutate: Record<string, DependencyMutation>;
+  jobs: Job[];
 }
 
 export interface State {
@@ -44,6 +68,7 @@ export const initialState: State = {
   projects: initialProjects.map((path) => ({
     path,
     dependenciesMutate: {},
+    jobs: [],
   })),
 };
 
@@ -54,7 +79,7 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
         ...state,
         projects: [
           ...state.projects,
-          { path: action.projectPath, dependenciesMutate: {} },
+          { path: action.projectPath, dependenciesMutate: {}, jobs: [] },
         ],
       };
 
@@ -127,6 +152,74 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
             return {
               ...project,
               dependenciesMutate: {},
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'jobStarted': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              jobs: [
+                {
+                  description: action.description,
+                  id: action.jobId,
+                  status: 'WORKING',
+                  startTime: Date.now(),
+                },
+                ...project.jobs.slice(0, 10),
+              ],
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'jobSuccess': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              jobs: project.jobs.map((job) => {
+                if (job.id === action.jobId) {
+                  return {
+                    ...job,
+                    description: `${job.description} (${Math.ceil(
+                      (Date.now() - job.startTime) / 1000,
+                    )}s)`,
+                    status: 'SUCCESS',
+                  };
+                }
+
+                return job;
+              }),
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'jobRemove': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              jobs: project.jobs.filter((job) => job.id !== action.jobId),
             };
           }
 

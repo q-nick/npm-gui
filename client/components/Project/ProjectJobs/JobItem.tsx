@@ -1,28 +1,40 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { VFC } from 'react';
+import type { ComponentProps, VFC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
+import type { Job } from '../../../app/store.reducer';
 import { Button } from '../../../ui/Button/Button';
 import { Modal } from '../../../ui/Modal/Modal';
-
-type Task = any;
 
 const CloseButton = styled(Button)`
   margin-right: 15px;
   margin-left: -3px;
 `;
 
-const INDENT = 2;
-
 interface Props {
-  task: Task;
-  onClick: () => void;
+  description: string;
+  status: Job['status'];
+  onRemove: () => void;
 }
 
-export const Job: VFC<Props> = ({ task, onClick }) => {
+const getVariantForStatus = (
+  status: Job['status'],
+): ComponentProps<typeof Button>['variant'] => {
+  if (status === 'SUCCESS') {
+    return 'success';
+  }
+
+  if (status === 'WORKING') {
+    return 'info';
+  }
+
+  return 'primary';
+};
+
+export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <>
@@ -31,20 +43,19 @@ export const Job: VFC<Props> = ({ task, onClick }) => {
           setDetailsOpen(true);
         }}
         title="Show details"
-        variant="primary"
+        variant={getVariantForStatus(status)}
       >
-        {task.description}
-        {/* {task.description} */}
+        {description}
         &nbsp;
-        {task.status}
+        {status}
       </Button>
 
       <CloseButton
-        disabled={task.status === 'RUNNING'}
+        disabled={status === 'WORKING'}
         icon="x"
-        onClick={onClick}
+        onClick={onRemove}
         title="Remove"
-        variant="primary"
+        variant={getVariantForStatus(status)}
       />
 
       {detailsOpen && (
@@ -53,7 +64,7 @@ export const Job: VFC<Props> = ({ task, onClick }) => {
             setDetailsOpen(false);
           }}
         >
-          <pre>{JSON.stringify(task.stdout, null, INDENT)}</pre>
+          {/* <pre>{JSON.stringify(stdout, null, INDENT)}</pre> */}
         </Modal>
       )}
     </>

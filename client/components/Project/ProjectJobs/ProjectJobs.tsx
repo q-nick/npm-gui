@@ -2,14 +2,14 @@
 import type { VFC } from 'react';
 import styled from 'styled-components';
 
-import { useMutateDependencies } from '../../../hooks/use-mutate-dependencies';
-import { Job } from './Job';
+import { useProjectsJobs, useProjectStore } from '../../../app/ContextStore';
+import { JobItem } from './JobItem';
 
 const TaskQueueWrapper = styled.div`
   background: #3e3f3a;
   padding: 5px 15px;
   display: flex;
-  flex-wrap: wrap;
+  overflow: hidden;
 `;
 
 interface Props {
@@ -17,23 +17,17 @@ interface Props {
 }
 
 export const ProjectJobs: VFC<Props> = ({ projectPath }) => {
-  const queue: Record<string, any> = {};
+  const { project } = useProjectStore(projectPath);
+  const { removeJob } = useProjectsJobs(projectPath);
 
-  // const queryClient = useQueryClient({});
-  // eslint-disable-next-line no-console
-  console.log(projectPath);
-
-  // TODO mutation
-  useMutateDependencies();
   return (
     <TaskQueueWrapper>
-      {queue['queueId']?.map((task: any) => (
-        <Job
-          key={task.id}
-          onClick={(): void => {
-            // dispatch({ type: 'removeTask', task, queueId });
-          }}
-          task={task}
+      {project?.jobs.map((job) => (
+        <JobItem
+          description={job.description}
+          key={job.id}
+          onRemove={(): void => removeJob(job.id)}
+          status={job.status}
         />
       ))}
     </TaskQueueWrapper>
