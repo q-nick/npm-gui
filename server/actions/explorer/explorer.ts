@@ -26,9 +26,12 @@ export const explorer: ResponserFunction<
   const ls = readdirSync(normalizedPath).map((name) => ({
     name,
     isDirectory: lstatSync(`${normalizedPath}/${name}`).isDirectory(),
-    isProject: ['package.json', 'package-lock.json', 'yarn.lock'].includes(
-      name,
-    ),
+    isProject: [
+      'package.json',
+      'package-lock.json',
+      'yarn.lock',
+      'pnpm-lock.yaml',
+    ].includes(name),
   }));
 
   return {

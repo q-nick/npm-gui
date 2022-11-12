@@ -12,13 +12,15 @@ const Wrapper = styled.div<{ prod: boolean }>`
   font-weight: ${(props): CSSType => (props.prod ? 'bold' : '')};
 `;
 
-export const NameCell = (
-  { type, name }: Pick<DependencyInstalledExtras, 'name' | 'type'>,
-  row: unknown,
-): ReactNode => {
+export const NameCell = ({
+  type,
+  name,
+  drawFolder,
+}: Pick<DependencyInstalledExtras, 'name' | 'type'> &
+  TableRowAbstract): ReactNode => {
   return (
     <Wrapper prod={type === 'prod'}>
-      {(row as TableRowAbstract).drawFolder && <>&nbsp;└─ </>}
+      {drawFolder && <>&nbsp;└─ </>}
       {name}
     </Wrapper>
   );

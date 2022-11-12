@@ -121,8 +121,6 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
     <>
       <DependenciesHeader
         isGlobal={projectPath === 'global'}
-        onForceReInstall={console.log}
-        onInstallAll={console.log}
       />
 
       <Table
