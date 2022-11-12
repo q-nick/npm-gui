@@ -2,7 +2,6 @@ import type {
   Basic,
   BundleDetails,
   BundleScore,
-  BundleSize,
   DependencyInstalled,
   Manager,
   Type,
@@ -30,15 +29,6 @@ export const getDependencyScore = async (
   return fetchQueuedJSON(`api/score/${dependencyName}`);
 };
 
-export const getDependencySize = async (
-  dependencyName: string,
-  installedVersion?: string | null,
-): Promise<BundleSize> => {
-  return fetchQueuedJSON(
-    `api/bundle-size/${dependencyName}@${installedVersion}`,
-  );
-};
-
 export const getDependencyDetails = async (
   manager: Manager,
   dependencyName: string,
@@ -61,7 +51,7 @@ export const installDependencies = async (
   });
 };
 
-export const installAllDependencies = async (
+export const reinstall = async (
   projectPath: string,
   manager?: Manager,
 ): Promise<void> => {
@@ -79,23 +69,6 @@ export const deleteDependencies = async (
   return fetchJSON(`${getBasePathFor(projectPath)}/${type}`, {
     method: 'DELETE',
     body: JSON.stringify(dependencies),
-    headers: { 'x-cache-id': xCacheId },
-  });
-};
-
-export const updateDependencies = async (
-  projectPath: string,
-  dependenciesToUpdateDevelopment: Basic[],
-  dependenciesToUpdateProduction: Basic[],
-): Promise<void> => {
-  await fetchJSON(`${getBasePathFor(projectPath)}/dev`, {
-    method: 'POST',
-    body: JSON.stringify(dependenciesToUpdateDevelopment),
-    headers: { 'x-cache-id': xCacheId },
-  });
-  await fetchJSON(`${getBasePathFor(projectPath)}/prod`, {
-    method: 'POST',
-    body: JSON.stringify(dependenciesToUpdateProduction),
     headers: { 'x-cache-id': xCacheId },
   });
 };

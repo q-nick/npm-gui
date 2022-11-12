@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import type { Manager } from '../../../../../server/types/dependency.types';
 import { useAvailableManagers } from '../../../../hooks/use-available-managers';
 import { useIsProjectBusy } from '../../../../hooks/use-is-project-busy';
+import { useMutateReinstall } from '../../../../hooks/use-mutate-reinstall';
 import { useProjectPath } from '../../../../hooks/use-project-path';
 import { Button } from '../../../../ui/Button/Button';
 import { Search } from './Search/Search';
@@ -13,8 +14,6 @@ const RightSection = styled.div`
 `;
 
 interface Props {
-  onInstallAll: () => void;
-  onForceReInstall: (manager: Manager) => void;
   isGlobal?: boolean;
 }
 
@@ -42,14 +41,11 @@ const Select = styled.select`
   }
 `;
 
-export const DependenciesHeader: React.FC<Props> = ({
-  onInstallAll,
-  onForceReInstall,
-  isGlobal,
-}) => {
+export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
   const projectPath = useProjectPath();
   const availableManagers = useAvailableManagers();
   const isProjectBusy = useIsProjectBusy(projectPath);
+  const reinstallMutation = useMutateReinstall(projectPath);
 
   return (
     <header>
@@ -63,9 +59,7 @@ export const DependenciesHeader: React.FC<Props> = ({
             <Button
               disabled={isProjectBusy}
               icon="data-transfer-download"
-              onClick={(): void => {
-                onInstallAll();
-              }}
+              onClick={(): void => reinstallMutation.mutate(undefined)}
               title="Run install command"
               variant="primary"
             >
@@ -78,9 +72,9 @@ export const DependenciesHeader: React.FC<Props> = ({
             &nbsp; &nbsp;
             <Select
               disabled={isProjectBusy}
-              onChange={(event): void => {
-                onForceReInstall(event.target.value as Manager);
-              }}
+              onChange={(event): void =>
+                reinstallMutation.mutate(event.target.value as Manager)
+              }
               style={{ display: 'inline-block' }}
               title="Remove and re-install all packages"
               value=""

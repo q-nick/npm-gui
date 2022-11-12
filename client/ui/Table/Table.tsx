@@ -132,7 +132,10 @@ Props<T>): JSX.Element => {
             <tr key={`row-${row.name}`}>
               {columns.map((column) => {
                 return (
-                  <td key={`row-${row.name}-column-${column.name}`}>
+                  <td
+                    key={`row-${row.name}-column-${column.name}`}
+                    style={row.hideBottomBorder ? { borderBottom: 0 } : {}}
+                  >
                     {column.render
                       ? column.render(row, row[column.name])
                       : row[column.name]}

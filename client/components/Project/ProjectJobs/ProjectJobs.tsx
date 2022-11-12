@@ -9,7 +9,6 @@ const TaskQueueWrapper = styled.div`
   background: #3e3f3a;
   padding: 5px 15px;
   display: flex;
-  overflow: hidden;
 `;
 
 interface Props {

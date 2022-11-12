@@ -10,7 +10,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useMutateDependencies = (projectPath: string) => {
-  const { project } = useProjectStore(projectPath);
+  const { project, dispatch } = useProjectStore(projectPath);
   const { startJob, successJob } = useProjectsJobs(projectPath);
 
   return useMutation([projectPath, 'sync-dependencies'], async () => {
@@ -59,6 +59,8 @@ export const useMutateDependencies = (projectPath: string) => {
     if (dependencies.length > 0) {
       await installDependencies(projectPath, 'prod', dependencies);
     }
+
+    dispatch({ action: 'mutateProjectDependencyReset', projectPath });
 
     successJob(id);
   });
