@@ -42,6 +42,7 @@ export interface BundleSize {
 
 export interface BundleDetails {
   name: string;
+  version: string;
   size: number;
   homepage: string;
   repository: string;

@@ -6,8 +6,8 @@ import { addGlobalDependencies } from './actions/dependencies/add/add-global-dep
 import { addDependencies } from './actions/dependencies/add/add-project-dependencies';
 import { deleteGlobalDependency } from './actions/dependencies/delete/delete-global-dependencies';
 import { deleteDependencies } from './actions/dependencies/delete/delete-project-dependencies';
-import { getDependencyScore } from './actions/dependencies/extras/dependency-score';
-import { getExtras } from './actions/dependencies/extras/get-extras';
+import { getDependenciesDetails } from './actions/dependencies/extras/dependency-details';
+import { getDependenciesScore } from './actions/dependencies/extras/dependency-score';
 import {
   getGlobalDependencies,
   getGlobalDependenciesSimple,
@@ -57,8 +57,11 @@ app.delete(
 );
 
 // dependencies extra apis
-app.get('/api/score/:dependencyName', getDependencyScore);
-app.get('/api/extras/:manager/:dependencyNameVersion', getExtras);
+app.get('/api/score/:dependenciesName', getDependenciesScore);
+app.get(
+  '/api/details/:manager/:dependenciesNameVersion',
+  getDependenciesDetails,
+);
 
 // other apis
 app.get('/api/explorer/:path', explorer);

@@ -199,7 +199,9 @@ export const prepareTestProject = async (
       mng: Manager,
       dependencyNameVersion: string,
     ): ReturnType<TestProject['requestGetExtras']> => {
-      return api(app.server).get(`/api/extras/${mng}/${dependencyNameVersion}`);
+      return api(app.server).get(
+        `/api/details/${mng}/${dependencyNameVersion}`,
+      );
     },
   };
 };

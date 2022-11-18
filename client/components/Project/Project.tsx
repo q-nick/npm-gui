@@ -1,3 +1,4 @@
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import type { VFC } from 'react';
 import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
@@ -17,6 +18,8 @@ const Wrapper = styled.div`
 
 export const Project: VFC = () => {
   const projectPath = useProjectPath();
+  const isMutating = useIsMutating([projectPath]) > 0;
+  const isFetching = useIsFetching([projectPath]) > 0;
 
   const {
     state: { projects },
@@ -32,6 +35,14 @@ export const Project: VFC = () => {
       dispatch({ action: 'addProject', projectPath });
     }
   }, [projectPath, projectExists, dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      action: 'busyProject',
+      projectPath,
+      isBusy: isMutating || isFetching,
+    });
+  }, [dispatch, isFetching, isMutating, projectPath]);
 
   if (!projectExists) {
     return null;

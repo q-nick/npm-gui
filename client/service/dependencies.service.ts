@@ -1,13 +1,11 @@
 import type {
   Basic,
-  BundleDetails,
-  BundleScore,
   DependencyInstalled,
   Manager,
   Type,
 } from '../../server/types/dependency.types';
 import { xCacheId } from '../xcache';
-import { fetchJSON, fetchQueuedJSON, getBasePathFor } from './utils';
+import { fetchJSON, getBasePathFor } from './utils';
 
 export const getProjectDependenciesFast = async (
   projectPath: string,
@@ -23,21 +21,21 @@ export const getProjectDependenciesFull = async (
   });
 };
 
-export const getDependencyScore = async (
-  dependencyName: string,
-): Promise<BundleScore> => {
-  return fetchQueuedJSON(`api/score/${dependencyName}`);
-};
+// export const getDependencyScore = async (
+//   dependencyName: string,
+// ): Promise<BundleScore> => {
+//   return fetchQueuedJSON(`api/score/${dependencyName}`);
+// };
 
-export const getDependencyDetails = async (
-  manager: Manager,
-  dependencyName: string,
-  installedVersion?: string | null,
-): Promise<BundleDetails> => {
-  return fetchQueuedJSON(
-    `api/extras/${manager}/${dependencyName}@${installedVersion}`,
-  );
-};
+// export const getDependencyDetails = async (
+//   manager: Manager,
+//   dependencyName: string,
+//   installedVersion?: string | null,
+// ): Promise<BundleDetails> => {
+//   return fetchQueuedJSON(
+//     `api/extras/${manager}/${dependencyName}@${installedVersion}`,
+//   );
+// };
 
 export const installDependencies = async (
   projectPath: string,
