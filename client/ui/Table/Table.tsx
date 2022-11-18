@@ -1,26 +1,14 @@
-import type { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 
 import type { CSSType } from '../../Styled';
 import { Loader } from '../Loader';
+import type { IColumn, TableRowAbstract } from './components/TbodyRow';
+import { TbodyRow } from './components/TbodyRow';
 import { Th } from './components/Th';
 import { useTableSort } from './use-table-sort';
 
-export interface TableRowAbstract {
-  [key: string]: unknown;
-  name: string;
-  hideBottomBorder?: true;
-  drawFolder?: true;
-}
-
 export interface Props<T extends TableRowAbstract> {
-  columns: {
-    name: string;
-    label?: ReactNode;
-    sortable?: true;
-    filterable?: string[] | true;
-    render?: (row: T, abs: unknown) => ReactNode;
-  }[];
+  columns: IColumn<T>[];
   // data
   tableData?: T[];
   isEmpty: boolean;
@@ -129,20 +117,7 @@ Props<T>): JSX.Element => {
 
         <Tbody>
           {tableDataSorted?.map((row) => (
-            <tr key={`row-${row.name}`}>
-              {columns.map((column) => {
-                return (
-                  <td
-                    key={`row-${row.name}-column-${column.name}`}
-                    style={row.hideBottomBorder ? { borderBottom: 0 } : {}}
-                  >
-                    {column.render
-                      ? column.render(row, row[column.name])
-                      : row[column.name]}
-                  </td>
-                );
-              })}
-            </tr>
+            <TbodyRow columns={columns} key={row.name} row={row} />
           ))}
         </Tbody>
       </table>

@@ -28,7 +28,9 @@ persistQueryClient({
       const [firstKey] = queryKey;
       return (
         typeof firstKey === 'string' &&
-        ['get-dependency-score', 'get-dependency-details'].includes(firstKey)
+        ['get-dependencies-score', 'get-dependencies-details'].includes(
+          firstKey,
+        )
       );
     },
   },

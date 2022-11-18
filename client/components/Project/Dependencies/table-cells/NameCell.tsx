@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../server/types/dependency.types';
 import type { CSSType } from '../../../../Styled';
-import type { TableRowAbstract } from '../../../../ui/Table/Table';
+import type { TableRowAbstract } from '../../../../ui/Table/components/TbodyRow';
 
 const Wrapper = styled.div<{ prod: boolean }>`
   text-align: left;

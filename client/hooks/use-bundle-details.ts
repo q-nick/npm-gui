@@ -1,39 +1,60 @@
-import { useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
-import type { DependencyInstalledExtras } from '../../server/types/dependency.types';
-import { getDependencyDetails } from '../service/dependencies.service';
+import type {
+  BundleDetails,
+  DependencyInstalledExtras,
+} from '../../server/types/dependency.types';
+import { fetchJSON } from '../service/utils';
 
 export const useBundleDetails = (
   dependencies?: DependencyInstalledExtras[],
 ): DependencyInstalledExtras[] | undefined => {
-  const sizeQueries = useQueries({
-    queries:
-      dependencies
-        ?.filter((dependency) => dependency.installed)
-        .map((dependency) => {
-          return {
-            queryKey: [
-              'get-dependency-details',
-              dependency.name,
-              dependency.installed,
-            ],
-            queryFn: (): ReturnType<typeof getDependencyDetails> =>
-              getDependencyDetails(
-                dependency.manager,
-                dependency.name,
-                dependency.installed,
-              ),
-            refetchOnWindowFocus: false,
-            refetchOnMount: false,
-            refetchOnReconnect: false,
-            cacheTime: Number.POSITIVE_INFINITY,
-            retry: 3,
-          };
-        }) || [],
-  });
+  const dependenciesToQuery = useMemo(() => {
+    return dependencies
+      ?.filter((dep) => dep.installed)
+      .map((dep) => `${dep.name}@${dep.installed}`);
+  }, [dependencies]);
 
-  return dependencies?.map((dependency) => ({
-    ...dependency,
-    ...sizeQueries.find((x) => x.data?.name === dependency.name)?.data,
-  }));
+  const manager = dependencies?.[0]?.manager;
+
+  const query = useQuery(
+    ['get-dependencies-details', manager, dependenciesToQuery],
+    async () => {
+      const detailsLoaded =
+        manager && dependenciesToQuery && dependenciesToQuery.length > 0
+          ? await fetchJSON<BundleDetails[]>(
+              `/api/details/${manager}/${dependenciesToQuery.join(',')}`,
+            )
+          : [];
+
+      return detailsLoaded;
+    },
+  );
+
+  const dependenciesWithDetails = useMemo(() => {
+    return dependencies?.map((dep) => {
+      const depDetails = query?.data?.find(
+        (details) =>
+          details.name === dep.name && details.version === dep.installed,
+      );
+
+      if (!depDetails) {
+        return dep;
+      }
+
+      return {
+        ...dep,
+        size: depDetails.size,
+        homepage: depDetails.homepage,
+        repository: depDetails.repository,
+        updated: depDetails.updated,
+        created: depDetails.created,
+        versions: depDetails.versions,
+        time: depDetails.time,
+      };
+    });
+  }, [dependencies, query?.data]);
+
+  return dependenciesWithDetails;
 };

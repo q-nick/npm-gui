@@ -2,8 +2,8 @@
 import styled from 'styled-components';
 
 import type { Manager } from '../../../../../server/types/dependency.types';
+import { useProjectStore } from '../../../../app/ContextStore';
 import { useAvailableManagers } from '../../../../hooks/use-available-managers';
-import { useIsProjectBusy } from '../../../../hooks/use-is-project-busy';
 import { useMutateReinstall } from '../../../../hooks/use-mutate-reinstall';
 import { useProjectPath } from '../../../../hooks/use-project-path';
 import { Button } from '../../../../ui/Button/Button';
@@ -43,8 +43,8 @@ const Select = styled.select`
 
 export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
   const projectPath = useProjectPath();
+  const { project } = useProjectStore(projectPath);
   const availableManagers = useAvailableManagers();
-  const isProjectBusy = useIsProjectBusy(projectPath);
   const reinstallMutation = useMutateReinstall(projectPath);
 
   return (
@@ -57,7 +57,7 @@ export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
             <small>Install:</small>
             &nbsp;
             <Button
-              disabled={isProjectBusy}
+              disabled={project?.isBusy}
               icon="data-transfer-download"
               onClick={(): void => reinstallMutation.mutate(undefined)}
               title="Run install command"
@@ -71,7 +71,7 @@ export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
           <>
             &nbsp; &nbsp;
             <Select
-              disabled={isProjectBusy}
+              disabled={project?.isBusy}
               onChange={(event): void =>
                 reinstallMutation.mutate(event.target.value as Manager)
               }

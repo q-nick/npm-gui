@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../../server/types/dependency.types';
-import { useIsProjectBusy } from '../../../../../../hooks/use-is-project-busy';
+import { useProjectStore } from '../../../../../../app/ContextStore';
 import { useProjectPath } from '../../../../../../hooks/use-project-path';
 import { Button } from '../../../../../../ui/Button/Button';
 import { Dropdown } from '../../../../../../ui/Dropdown/Drodpown';
@@ -20,7 +20,7 @@ const ColumnsFlex = styled.div`
 
 export const FindOtherVersion: FC<Props> = ({ dependency }) => {
   const projectPath = useProjectPath();
-  const isProjectBusy = useIsProjectBusy(projectPath);
+  const { project } = useProjectStore(projectPath);
   const {
     setMajor,
     setMinor,
@@ -35,7 +35,7 @@ export const FindOtherVersion: FC<Props> = ({ dependency }) => {
     <Dropdown>
       {(onToggleOpen): ReactNode => (
         <Button
-          disabled={!dependency.versions || isProjectBusy}
+          disabled={!dependency.versions || project?.isBusy}
           onClick={(): void => onToggleOpen(true)}
           title={`Choose specific version of ${dependency.name}`}
           variant="dark"

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
 import { useProjectStore } from '../../../../../app/ContextStore';
-import { useIsProjectBusy } from '../../../../../hooks/use-is-project-busy';
 import { useProjectPath } from '../../../../../hooks/use-project-path';
 import { Button } from '../../../../../ui/Button/Button';
 import { Loader } from '../../../../../ui/Loader';
@@ -26,7 +25,6 @@ export const TableVersion: VFC<Props> = ({
 }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
-  const isProjectBusy = useIsProjectBusy(projectPath);
 
   if (isInstalled) {
     if (version === undefined) {
@@ -55,7 +53,7 @@ export const TableVersion: VFC<Props> = ({
     <Button
       disabled={
         project?.dependenciesMutate[dependency.name]?.required === version ||
-        isProjectBusy
+        project?.isBusy
       }
       icon="cloud-download"
       onClick={(): void => {

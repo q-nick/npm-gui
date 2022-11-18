@@ -14,6 +14,11 @@ export interface Job {
 
 export type Action =
   | {
+      action: 'busyProject';
+      projectPath: string;
+      isBusy: boolean;
+    }
+  | {
       action: 'jobRemove';
       projectPath: string;
       jobId: number;
@@ -58,6 +63,7 @@ interface Project {
   path: string;
   dependenciesMutate: Record<string, DependencyMutation>;
   jobs: Job[];
+  isBusy: boolean;
 }
 
 export interface State {
@@ -69,6 +75,7 @@ export const initialState: State = {
     path,
     dependenciesMutate: {},
     jobs: [],
+    isBusy: false,
   })),
 };
 
@@ -79,7 +86,12 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
         ...state,
         projects: [
           ...state.projects,
-          { path: action.projectPath, dependenciesMutate: {}, jobs: [] },
+          {
+            path: action.projectPath,
+            dependenciesMutate: {},
+            jobs: [],
+            isBusy: false,
+          },
         ],
       };
 
@@ -220,6 +232,22 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
             return {
               ...project,
               jobs: project.jobs.filter((job) => job.id !== action.jobId),
+            };
+          }
+
+          return project;
+        }),
+      };
+    }
+
+    case 'busyProject': {
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.path === action.projectPath) {
+            return {
+              ...project,
+              isBusy: action.isBusy,
             };
           }
 
