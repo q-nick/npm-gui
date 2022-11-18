@@ -15,11 +15,9 @@ interface Parameters {
 const getDependenciesScoreValue = async (
   dependencyName: string,
 ): Promise<BundleScore | undefined> => {
-  console.log('starts', dependencyName);
   const bundleInfoCached = cache[dependencyName];
 
   if (bundleInfoCached) {
-    console.log('is cache', dependencyName);
     return bundleInfoCached;
   }
 
@@ -30,14 +28,15 @@ const getDependenciesScoreValue = async (
     );
     const score = response.match(/>(?<score>\d+)\//)?.groups?.['score'];
 
-    console.log('response', dependencyName, score);
     if (score) {
       // eslint-disable-next-line require-atomic-updates
       cache[dependencyName] = { name: dependencyName, score: +score };
-      return { name: dependencyName, score: +score };
+      return cache[dependencyName];
     }
     return undefined;
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
     return undefined;
   }
 };

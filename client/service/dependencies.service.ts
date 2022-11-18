@@ -1,5 +1,7 @@
 import type {
   Basic,
+  BundleDetails,
+  BundleScore,
   DependencyInstalled,
   Manager,
   Type,
@@ -21,21 +23,26 @@ export const getProjectDependenciesFull = async (
   });
 };
 
-// export const getDependencyScore = async (
-//   dependencyName: string,
-// ): Promise<BundleScore> => {
-//   return fetchQueuedJSON(`api/score/${dependencyName}`);
-// };
+export const getDependenciesScore = async (
+  dependenciesToQuery?: string[],
+): Promise<BundleScore[]> => {
+  return dependenciesToQuery && dependenciesToQuery.length > 0
+    ? await fetchJSON<BundleScore[]>(
+        `/api/score/${dependenciesToQuery.join(',')}`,
+      )
+    : [];
+};
 
-// export const getDependencyDetails = async (
-//   manager: Manager,
-//   dependencyName: string,
-//   installedVersion?: string | null,
-// ): Promise<BundleDetails> => {
-//   return fetchQueuedJSON(
-//     `api/extras/${manager}/${dependencyName}@${installedVersion}`,
-//   );
-// };
+export const getDependenciesDetails = async (
+  manager?: Manager,
+  dependenciesToQuery?: string[],
+): Promise<BundleDetails[]> => {
+  return manager && dependenciesToQuery && dependenciesToQuery.length > 0
+    ? await fetchJSON<BundleDetails[]>(
+        `/api/details/${manager}/${dependenciesToQuery.join(',')}`,
+      )
+    : [];
+};
 
 export const installDependencies = async (
   projectPath: string,

@@ -1,11 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import type {
-  BundleDetails,
-  DependencyInstalledExtras,
-} from '../../server/types/dependency.types';
-import { fetchJSON } from '../service/utils';
+import type { DependencyInstalledExtras } from '../../server/types/dependency.types';
+import { getDependenciesDetails } from '../service/dependencies.service';
 
 export const useBundleDetails = (
   dependencies?: DependencyInstalledExtras[],
@@ -20,15 +17,11 @@ export const useBundleDetails = (
 
   const query = useQuery(
     ['get-dependencies-details', manager, dependenciesToQuery],
-    async () => {
-      const detailsLoaded =
-        manager && dependenciesToQuery && dependenciesToQuery.length > 0
-          ? await fetchJSON<BundleDetails[]>(
-              `/api/details/${manager}/${dependenciesToQuery.join(',')}`,
-            )
-          : [];
-
-      return detailsLoaded;
+    async () => getDependenciesDetails(manager, dependenciesToQuery),
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     },
   );
 
