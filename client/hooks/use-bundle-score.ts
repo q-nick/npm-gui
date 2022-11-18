@@ -1,11 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import type {
-  BundleScore,
-  DependencyInstalledExtras,
-} from '../../server/types/dependency.types';
-import { fetchJSON } from '../service/utils';
+import type { DependencyInstalledExtras } from '../../server/types/dependency.types';
+import { getDependenciesScore } from '../service/dependencies.service';
 
 export const useBundleScore = (
   dependencies?: DependencyInstalledExtras[],
@@ -16,15 +13,11 @@ export const useBundleScore = (
 
   const query = useQuery(
     ['get-dependencies-score', dependenciesToQuery],
-    async () => {
-      const detailsLoaded =
-        dependenciesToQuery && dependenciesToQuery.length > 0
-          ? await fetchJSON<BundleScore[]>(
-              `/api/score/${dependenciesToQuery.join(',')}`,
-            )
-          : [];
-
-      return detailsLoaded;
+    async () => getDependenciesScore(dependenciesToQuery),
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     },
   );
 

@@ -1,9 +1,13 @@
+/* eslint-disable unicorn/no-array-callback-reference */
 /* eslint-disable no-await-in-loop */
 import type { Details } from '../../../types/commands.types';
 import type { BundleDetails, Manager } from '../../../types/dependency.types';
 import type { ResponserFunction } from '../../../types/new-server.types';
+import { notEmpty } from '../../../utils/utils';
 import { executeCommandJSONWithFallback } from '../../execute-command';
 import { getChunks } from './utils';
+
+const cache: Record<string, BundleDetails> = {};
 
 interface Parameters {
   dependenciesNameVersion: string;
@@ -31,6 +35,12 @@ const getDependencyDetailsCross = async (
   dependencyNameVersion: string,
   manager: Manager,
 ): Promise<BundleDetails> => {
+  const bundleInfoCached = cache[`${manager}-${dependencyNameVersion}`];
+
+  if (bundleInfoCached) {
+    return bundleInfoCached;
+  }
+
   const details = await executeCommandJSONWithFallback<
     Details | { data: Details }
   >(undefined, `${manager} info ${dependencyNameVersion} --json`);
@@ -41,12 +51,25 @@ const getDependencyDetailsCross = async (
   const name = extractNameFromDependencyString(dependencyNameVersion);
   const version = extractVersionFromDependencyString(dependencyNameVersion);
 
+  // eslint-disable-next-line require-atomic-updates
+  cache[`${manager}-${dependencyNameVersion}`] = {
+    name,
+    version,
+    versions: detailsData.versions,
+    homepage: detailsData.homepage,
+    repository: detailsData.repository?.url,
+    size: +detailsData.dist.unpackedSize,
+    time: detailsData.time,
+    updated: detailsData.time.modified,
+    created: detailsData.time.created,
+  };
+
   return {
     name,
     version,
     versions: detailsData.versions,
     homepage: detailsData.homepage,
-    repository: detailsData.repository.url,
+    repository: detailsData.repository?.url,
     size: +detailsData.dist.unpackedSize,
     time: detailsData.time,
     updated: detailsData.time.modified,
@@ -70,7 +93,7 @@ export const getDependenciesDetails: ResponserFunction<
         ),
       );
 
-      allDetails.push(...chunkDetails);
+      allDetails.push(...chunkDetails.filter(notEmpty));
     }
 
     return allDetails;

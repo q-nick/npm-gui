@@ -45,7 +45,7 @@ export interface BundleDetails {
   version: string;
   size: number;
   homepage: string;
-  repository: string;
+  repository: string | undefined;
   updated: string;
   created: string;
   versions: string[];

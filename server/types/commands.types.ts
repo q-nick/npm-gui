@@ -4,6 +4,7 @@ export interface OutdatedBody {
   latest: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-type-alias
 export type Outdated = Record<string, OutdatedBody>;
 
 interface InstalledBodyBase {
@@ -39,7 +40,7 @@ export interface Installed {
 }
 
 export interface Details {
-  repository: {
+  repository?: {
     type: string;
     url: string;
     directory: string;
