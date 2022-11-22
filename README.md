@@ -4,7 +4,7 @@
 
 #
 
-![npm-gui main screen](https://github.com/q-nick/npm-gui/raw/gh-pages/screen-1-0-0.png)
+![npm-gui main screen](/readme/main-page.png)
 
 #
 
@@ -13,11 +13,25 @@
 `npm-gui` is a convenient tool for managing javascript project dependencies listed in `package.json`. Under the hood, it will transparently use `npm`, `pnpm`, or `yarn` commands to install, remove or update dependencies
 (_to use **yarn** it requires the **yarn.lock** file to be present in project folder._)
 
-### **npm-gui** key features:
+- global and project dependencies management
+- npm, yarn, and pnpm support
+- security scoring per package
+- package details (homepage, repository)
+- upgrading package version
+- downgrading package version
+- search and install new dependencies
 
-- global dependencies management
-- project dependencies management
-- npm, yarn, pnpm support
+#
+
+## Supported engines:
+
+| lang   | manager  | status |
+| ------ | -------- | ------ |
+| js     | npm      | ✔️     |
+| js     | yarn     | ✔️     |
+| js     | pnpm     | ✔️     |
+| python | pip      | ❌     |
+| php    | composer | ❌     |
 
 #
 
@@ -47,16 +61,14 @@ npm install npm-gui
 
 ### How to use
 
-`npm-gui` app will be accessible in the browser at the address http://localhost:1337/. Remember to first use the command below:
-
-When installed as a global dependency you could run `npm-gui` with the command line:
+`npm-gui` app will be accessible in the browser at the link http://localhost:13377/. Remember to first use the command below:
 
 ```
-~/$ npm-gui
+~/$ npx npm-gui
 ```
 
-Then you could navigate to the folder containing your javascript project (including `package.json`).
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
+By default, the app will use the folder in which you started the command. Then you could navigate to the folder containing your project (containing `package.json`).
+![npm-gui navigation](/readme/navigation-2-zoom-creat-vista.gif)
 
 Or you could run the `npm-gui` command in your desired folder:
 
