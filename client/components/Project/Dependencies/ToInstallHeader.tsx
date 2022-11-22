@@ -56,7 +56,7 @@ export const ToInstallHeader: VFC<Props> = ({ version }) => {
 
   return (
     <>
-      {version} &nbsp;
+      {version === 'wanted' ? 'compatible' : version} &nbsp;
       {dependenciesWithVersion && dependenciesWithVersion.length > 0 && (
         <Button
           disabled={allChecked || project?.isBusy}
