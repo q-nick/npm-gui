@@ -4,7 +4,7 @@
 
 #
 
-![npm-gui main screen](https://github.com/q-nick/npm-gui/raw/gh-pages/screen-1-0-0.png)
+![npm-gui main screen](/readme/main-page.png)
 
 #
 
@@ -68,7 +68,7 @@ npm install npm-gui
 ```
 
 By default, the app will use the folder in which you started the command. Then you could navigate to the folder containing your project (containing `package.json`).
-![npm-gui navigation](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
+![npm-gui navigation](/readme/navigation-2-zoom-creat-vista.gif)
 
 Or you could run the `npm-gui` command in your desired folder:
 
