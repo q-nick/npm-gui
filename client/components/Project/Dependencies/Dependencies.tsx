@@ -100,6 +100,8 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   },
 ];
 
+const columnsGlobal = columns.filter(column => ['name', 'homepage', 'repo', 'npm','score','size', 'updated', 'to', 'install', 'installed', 'latest', 'actions'].includes(column.name))
+
 export const Dependencies: VFC<Props> = ({ projectPath }) => {
   // this are fast
   const { dependencies: dependenciesFast } = useFastDependencies(projectPath);
@@ -117,6 +119,8 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
     tableDataFiltered: dependenciesFiltered,
   } = useTableFilter(dependencies);
 
+  const isGlobal = projectPath === 'global';
+
   return (
     <>
       <DependenciesHeader
@@ -124,7 +128,7 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
       />
 
       <Table
-        columns={columns}
+        columns={isGlobal ? columnsGlobal : columns}
         filters={filters}
         isEmpty={dependencies?.length === 0}
         onFilterChange={setFilterValue}
