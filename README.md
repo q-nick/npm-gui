@@ -1,43 +1,38 @@
 # [npm-gui](http://q-nick.github.io/npm-gui/)
 
-[![Build Status](https://travis-ci.org/q-nick/npm-gui.svg)](https://travis-ci.org/q-nick/npm-gui) <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/dm/npm-gui.svg" alt="Downloads"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/v/npm-gui.svg" alt="Version"></a> <a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/l/npm-gui.svg" alt="License"></a>
+[![CI Build Test](https://github.com/q-nick/npm-gui/actions/workflows/build.yml/badge.svg)](https://github.com/q-nick/npm-gui/actions/workflows/build.yml)
+[![CI Linux](https://github.com/q-nick/npm-gui/actions/workflows/linux.yml/badge.svg)](https://github.com/q-nick/npm-gui/actions/workflows/linux.yml)
+[![CI MacOS](https://github.com/q-nick/npm-gui/actions/workflows/macos.yml/badge.svg)](https://github.com/q-nick/npm-gui/actions/workflows/macos.yml)
+[![CI Windows](https://github.com/q-nick/npm-gui/actions/workflows/windows.yml/badge.svg)](https://github.com/q-nick/npm-gui/actions/workflows/windows.yml)
 
-#
+<a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/dm/npm-gui.svg" alt="Downloads"></a>
+<a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/v/npm-gui.svg" alt="Version"></a>
+<a href="https://www.npmjs.com/package/npm-gui"><img src="https://img.shields.io/npm/l/npm-gui.svg" alt="License"></a>
 
-![npm-gui main screen](https://github.com/q-nick/npm-gui/raw/gh-pages/screen-1-0-0.png)
-
-#
+![](readme/batch-install.GIF)
 
 ## About
 
 `npm-gui` is a convenient tool for managing javascript project dependencies listed in `package.json`. Under the hood, it will transparently use `npm`, `pnpm`, or `yarn` commands to install, remove or update dependencies
-(_to use **yarn** it requires the **yarn.lock** file to be present in project folder._)
+(_to use **yarn** it requires the **yarn.lock** file to be present in the project folder._)
 
-- global and project dependencies management
-- npm, yarn, and pnpm support
-- security scoring per package
-- package details (homepage, repository)
-- upgrading package version
-- downgrading package version
-- search and install new dependencies
-
-#
+- [x] global and project dependencies management
+- [x] npm, yarn, and pnpm support
+- [x] security scoring per package
+- [x] package details (homepage, repository, version history)
+- [x] upgrading package version
+- [x] downgrading package version
+- [x] search and install new dependencies
 
 ## Supported engines:
 
-| lang   | manager  | status |
-| ------ | -------- | ------ |
-| js     | npm      | ✔️     |
-| js     | yarn     | ✔️     |
-| js     | pnpm     | ✔️     |
-| python | pip      | ❌     |
-| php    | composer | ❌     |
-
-#
+| npm | yarn | pnpm | pip | composer |
+| --- | ---- | ---- | --- | -------- |
+| ✔️  | ✔️   | ✔️   | ❌  | ❌       |
 
 ## Getting Started
 
-The simplest way to run `npm-gui` is by using <a href="https://www.npmjs.com/package/npx">`npx`</a>:
+The recommended way to run `npm-gui` is by using <a href="https://www.npmjs.com/package/npx">`npx`</a>:
 
 ```
 ~/$ npx npm-gui
@@ -45,18 +40,24 @@ The simplest way to run `npm-gui` is by using <a href="https://www.npmjs.com/pac
 
 It will run the most recent version of `npm-gui` without installing it on your system.
 
-### Installation
+#### Installation as global dependency
 
 `npm-gui` could also be installed as a global dependency:
 
 ```
-npm install -g npm-gui
+~/$ npm install -g npm-gui
 ```
 
-or locally:
+and then run with just:
 
 ```
-npm install npm-gui
+~/$ npm-gui
+```
+
+#### Installation as local dependency (not-recommended)
+
+```
+~/$ npm install npm-gui
 ```
 
 ### How to use
@@ -68,49 +69,54 @@ npm install npm-gui
 ```
 
 By default, the app will use the folder in which you started the command. Then you could navigate to the folder containing your project (containing `package.json`).
-![npm-gui navigation](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
+
+![npm-gui navigation](readme/open.GIF)
 
 Or you could run the `npm-gui` command in your desired folder:
 
 ```
-~/workspace/project1$ npm-gui
+~/workspace/project1$ npx npm-gui
 ```
 
 If you need to start the app on another `host/port` you could add a `host:port` argument to the command, for example:
 
 ```
-~/$ npm-gui localhost:9000
+~/$ npx npm-gui localhost:9000
 ```
 
-#### Starting
-
-#### Navigating between projects
+## Navigating between projects
 
 To change the project press the **folder icon** in the top-right corner. The navigation panel will allow you to change the folder - it must contain the **yarn.lock or package.json** file to be chosen.
 
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/navigation.gif)
+![](readme/open.GIF)
 
-#### Installing new dependencies
+## Installing new dependencies
 
-To install a new dependency you can use the **search/add button**. After typing the name of the dependency in input - press the search button - results will appear on the list below. You must also decide whether will dependency be installed as production or development. After the successful installation of the new dependency, it will appear on the project list.
+To install a new dependency use input named _find a new package_ and search button - results will appear on the list below. You must also decide whether will dependency be installed as production or development. After the successful installation of the new dependency, it will appear on the project list.
 
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/installing.gif)
+![](readme/install-new.GIF)
 
-#### Removing dependencies
+## Removing dependencies
 
-To remove dependency from your project simply press the **trash icon** on the right.
+To remove dependency from your project press the **trash icon** on the right and green install button to confirm action.
 
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/removing.gif)
+![](readme/deleting.GIF)
 
-#### Updating selected dependencies
+## Updating dependencies
 
-- TODO
+To do a batch dependencies update and save new versions to package.json, for example, _compatible_, press one of the green buttons above the column of project dependencies.
 
-#### Updating all dependencies as...
+![](readme/batch-install.GIF)
 
-To do a batch dependencies update and save new versions to package.json, for example, _wanted_, press one of the green buttons above the list of project dependencies.
+## Additional dependencies details
 
-![](https://raw.githubusercontent.com/q-nick/npm-gui/gh-pages/video/batch-update.gif)
+### Security scoring
+
+### Size details
+
+### Last update
+
+### Other versions
 
 ## Authors and Contributors
 
