@@ -68,7 +68,7 @@ npm install npm-gui
 ```
 
 By default, the app will use the folder in which you started the command. Then you could navigate to the folder containing your project (containing `package.json`).
-![npm-gui navigation](/readme/navigation-2-zoom-creat-vista.gif)
+![npm-gui navigation](readme/gifox.GIF)
 
 Or you could run the `npm-gui` command in your desired folder:
 
