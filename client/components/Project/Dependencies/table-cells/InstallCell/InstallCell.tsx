@@ -5,7 +5,6 @@ import type { DependencyInstalledExtras } from '../../../../../../server/types/d
 import { Install } from './Install';
 
 const Wrapper = styled.div`
-  border-right: 1px solid #dfd7ca;
   background: #f8f5f0;
   height: 24px;
   font-weight: bold;

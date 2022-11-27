@@ -24,8 +24,14 @@ export const Info: VFC = () => {
   };
 
   useEffect(() => {
-    load();
+    if (window.localStorage.getItem('npm-gui-id') !== 'developer') {
+      load();
+    }
   }, []);
+
+  if (!content) {
+    return null;
+  }
 
   return (
     <InfoWrapper>
