@@ -22,7 +22,7 @@ export interface Props<T extends TableRowAbstract> {
 const Wrapper = styled.div<{ maxHeight?: string }>`
   border: 1px solid #dfd7ca;
   border-radius: 2px;
-  margin-top: 15px;
+  margin-top: 7px;
   flex: 1;
   position: relative;
   overflow-y: scroll;

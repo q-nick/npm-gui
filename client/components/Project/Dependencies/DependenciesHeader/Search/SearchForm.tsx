@@ -8,8 +8,8 @@ import { Link } from '../../../../../ui/Button/Link';
 import { Loader } from '../../../../../ui/Loader';
 
 const Form = styled.form`
-  margin-bottom: 6px;
-  margin-top: 6px;
+  /* margin-bottom: 6px;
+  margin-top: 6px; */
 
   & > select {
     display: inline-block;
