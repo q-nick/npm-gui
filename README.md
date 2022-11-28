@@ -70,7 +70,7 @@ and then run with just:
 
 By default, the app will use the folder in which you started the command. Then you could navigate to the folder containing your project (containing `package.json`).
 
-![npm-gui navigation](readme/open.GIF)
+![npm-gui open](readme/open.GIF)
 
 Or you could run the `npm-gui` command in your desired folder:
 
@@ -88,17 +88,17 @@ If you need to start the app on another `host/port` you could add a `host:port` 
 
 To change the project press the **folder icon** in the top-right corner. The navigation panel will allow you to change the folder - it must contain the **yarn.lock or package.json** file to be chosen.
 
-![](readme/open.GIF)
+![](readme/navigate.GIF)
 
 ## Installing new dependencies
 
-To install a new dependency use input named _find a new package_ and search button - results will appear on the list below. You must also decide whether will dependency be installed as production or development. After the successful installation of the new dependency, it will appear on the project list.
+To install a new dependency use input named _find a new package_ and the search button - results will appear on the list below. You must also decide whether will dependency be installed as production or development. After the successful installation of the new dependency, it will appear on the project list.
 
 ![](readme/install-new.GIF)
 
 ## Removing dependencies
 
-To remove dependency from your project press the **trash icon** on the right and green install button to confirm action.
+To remove dependency from your project press the **trash icon** on the right and the green install button to confirm the action.
 
 ![](readme/deleting.GIF)
 
@@ -108,15 +108,25 @@ To do a batch dependencies update and save new versions to package.json, for exa
 
 ![](readme/batch-install.GIF)
 
+## Other versions
+
+To install an older version of the selected package, press the button with arrow `=>` and pick the desired version.
+
+![other version](readme/other-version.GIF)
+
 ## Additional dependencies details
 
 ### Security scoring
 
+![updated](readme/score.PNG)
+
 ### Size details
+
+![updated](readme/size.PNG)
 
 ### Last update
 
-### Other versions
+![updated](readme/updated.PNG)
 
 ## Authors and Contributors
 
