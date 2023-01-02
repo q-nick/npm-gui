@@ -47,7 +47,7 @@
   "bin": {
     "npm-gui": "index.js"
   },
-  "homepage": "https://github.com/q-nick/npm-gui#readme",
+  "homepage": "https://npm-gui.devnullapps.com",
   "devDependencies": {
     "@tanstack/query-sync-storage-persister": "^4.15.1",
     "@tanstack/react-query": "^4.16.1",
