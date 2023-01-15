@@ -13,7 +13,9 @@ export const Info: VFC = () => {
   const [content, setContent] = useState('');
 
   const load = async (): Promise<void> => {
-    const response = await fetch('/api/info');
+    const response = await fetch(
+      `/api/info/${window.localStorage.getItem('npm-gui-id')}`,
+    );
     setContent(await response.text());
     // Tricky one
     setTimeout(() => {
