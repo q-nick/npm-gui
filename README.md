@@ -21,7 +21,7 @@ Homepage and full documentation: https://npm-gui.nullapps.dev
 `npm-gui` is a convenient tool for managing javascript project dependencies listed in `package.json`. Under the hood, it will transparently use `npm`, `pnpm`, or `yarn` commands to install, remove or update dependencies
 (_to use **yarn** it requires the **yarn.lock** file to be present in the project folder._)
 
-![App Demo](readme/batch-install.GIF)
+![App Demo](https://npm-gui.nullapps.dev/batch-install.GIF)
 
 ## Getting Started
 
