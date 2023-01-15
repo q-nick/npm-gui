@@ -48,10 +48,3 @@ render(
 if (window.localStorage.getItem('npm-gui-id') === null) {
   window.localStorage.setItem('npm-gui-id', Date.now().toString());
 }
-
-if (!window.location.host.includes('1234')) {
-  fetch('/api/log', {
-    method: 'POST',
-    body: JSON.stringify({ id: window.localStorage.getItem('npm-gui-id') }),
-  });
-}

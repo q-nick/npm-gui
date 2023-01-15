@@ -22,7 +22,6 @@ import {
 } from './actions/dependencies/install/install-project-dependencies';
 import { explorer } from './actions/explorer/explorer';
 import { info } from './actions/info/info';
-import { log } from './actions/log/log';
 import { search } from './actions/search/search';
 import { projectPathAndManagerMiddleware } from './middlewares/project-path-and-manager.middleware';
 import { Server } from './simple-express';
@@ -68,8 +67,7 @@ app.get('/api/explorer/:path', explorer);
 app.get('/api/explorer/', explorer);
 app.get('/api/available-managers', availableManagers);
 app.post('/api/search/:repoName', search);
-app.get('/api/info', info);
-app.post('/api/log', log);
+app.get('/api/info/:id', info);
 
 /* istanbul ignore next */
 export const start = (
