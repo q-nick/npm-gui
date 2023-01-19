@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import type { ComponentPropsWithoutRef, FC } from 'react';
+import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react';
 import type { SimpleInterpolation } from 'styled-components';
 import styled, { css } from 'styled-components';
 
@@ -9,6 +9,7 @@ interface Props extends ComponentPropsWithoutRef<'a'> {
   variant?: 'danger';
   icon?: string;
   title: string;
+  children: ReactNode;
 }
 
 const StyledLink = styled.a<Pick<Props, 'variant'>>`

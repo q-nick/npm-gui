@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import {
   createContext,
   useCallback,
@@ -21,7 +21,9 @@ export const ContextStore = createContext<Context>({
   dispatch() {},
 });
 
-export const ContextStoreProvider: FC = ({ children }) => {
+export const ContextStoreProvider: FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(storeReducer, {
     ...initialState,
   });
