@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { Children } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
@@ -12,6 +12,7 @@ export interface Props extends ComponentPropsWithoutRef<'button'> {
   icon?: string;
   navigate?: string;
   title: string;
+  children: ReactNode;
 }
 
 const variantToColor = {
