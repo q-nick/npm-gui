@@ -1,4 +1,4 @@
-name: NPM publish CD workflow
+name: Release latest package
 
 on:
   release:
