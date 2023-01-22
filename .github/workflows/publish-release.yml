@@ -32,7 +32,7 @@ jobs:
       # build the project
       - run: npm run build
       # publish to NPM -> there is one caveat, continue reading for the fix
-      - run: npm publish --dry-run --tag latest
+      - run: npm publish --tag latest
         env:
           # Use a token to publish to NPM. See below for how to set it up
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
