@@ -1,8 +1,9 @@
 import type { VFC } from 'react';
 import styled from 'styled-components';
 
+import { Icon } from './Icon/Icon';
+
 const LoaderStyled = styled.span`
-  font-size: inherit;
   animation: spin 1s linear infinite;
   display: inline-block;
   vertical-align: middle;
@@ -12,8 +13,15 @@ const LoaderStyled = styled.span`
       transform: rotate(360deg);
     }
   }
+
+  i {
+    margin-bottom: 0;
+    filter: unset;
+  }
 `;
 
 export const Loader: VFC = () => (
-  <LoaderStyled aria-owns="s" className="oi" data-glyph="reload" />
+  <LoaderStyled>
+    <Icon glyph="reload" />
+  </LoaderStyled>
 );
