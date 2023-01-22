@@ -56,6 +56,16 @@ export const installDependencies = async (
   });
 };
 
+export const installGlobalDependencies = async (
+  dependencies: Basic[],
+): Promise<void> => {
+  return fetchJSON(`${getBasePathFor('global')}`, {
+    method: 'POST',
+    body: JSON.stringify(dependencies),
+    headers: { 'x-cache-id': xCacheId },
+  });
+};
+
 export const reinstall = async (
   projectPath: string,
   manager?: Manager,
@@ -72,6 +82,16 @@ export const deleteDependencies = async (
   dependencies: Basic[],
 ): Promise<void> => {
   return fetchJSON(`${getBasePathFor(projectPath)}/${type}`, {
+    method: 'DELETE',
+    body: JSON.stringify(dependencies),
+    headers: { 'x-cache-id': xCacheId },
+  });
+};
+
+export const deleteGlobalDependencies = async (
+  dependencies: Basic[],
+): Promise<void> => {
+  return fetchJSON(`${getBasePathFor('global')}`, {
     method: 'DELETE',
     body: JSON.stringify(dependencies),
     headers: { 'x-cache-id': xCacheId },
