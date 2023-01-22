@@ -47,7 +47,7 @@ jobs:
       #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    if: github.event_name == 'release' && github.event.action == 'released'
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       # publish to NPM -> there is one caveat, continue reading for the fix
