@@ -64,7 +64,7 @@ export const Project: VFC = () => {
     return (
       <WrapperCenter>
         <Loader />
-        Verifying project
+        Verifying
       </WrapperCenter>
     );
   }

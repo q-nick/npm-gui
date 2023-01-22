@@ -7,6 +7,7 @@ import folder from 'open-iconic/svg/folder.svg';
 import fork from 'open-iconic/svg/fork.svg';
 import globe from 'open-iconic/svg/globe.svg';
 import home from 'open-iconic/svg/home.svg';
+import reload from 'open-iconic/svg/reload.svg';
 import trash from 'open-iconic/svg/trash.svg';
 import x from 'open-iconic/svg/x.svg';
 import type { HTMLAttributes } from 'react';
@@ -26,6 +27,7 @@ const icons = {
   home,
   trash,
   fork,
+  reload,
 };
 
 export interface Props extends HTMLAttributes<HTMLSpanElement> {
