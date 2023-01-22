@@ -80,3 +80,5 @@ To read more visit: https://npm-gui.nullapps.dev/docs/npm-gui/
 - move dependency between dev and prod
 
 - visual indicator if the package seems to be unuse _(depcheck)_
+
+- hint like: "shouldn't this be a dev-dependency?"

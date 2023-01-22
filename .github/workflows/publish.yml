@@ -47,6 +47,7 @@ jobs:
       #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
+    needs: build
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +58,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   prerelease:
+    needs: build
     if: github.event_name == 'release' && github.event.action == 'prereleased'
     runs-on: ubuntu-latest
     steps:
