@@ -2,8 +2,7 @@ name: NPM publish CD workflow
 
 on:
   release:
-    # This specifies that the build will be triggered when we publish a release or pre-release
-    types: [published]
+    types: [prereleased]
 
 jobs:
   build:
@@ -25,9 +24,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: npm ci
-      # run tests just in case
-      # - run: npm run lint
-      # - run: npm run test TODO
       # set up git since we will later push to the repo
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "pawel@devnullapps.com"
@@ -35,33 +31,6 @@ jobs:
       - run: npm version ${{ github.event.release.tag_name }}
       # build the project
       - run: npm run build
-      # # publish to NPM -> there is one caveat, continue reading for the fix
-      # - run: npm publish --dry-run --tag latest
-      #   env:
-      #     # Use a token to publish to NPM. See below for how to set it up
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # # push the version changes to GitHub
-      # - run: git push
-      #   env:
-      #     # The secret is passed automatically. Nothing to configure.
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  release:
-    needs: build
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      # publish to NPM -> there is one caveat, continue reading for the fix
-      - run: npm publish --dry-run --tag latest
-        env:
-          # Use a token to publish to NPM. See below for how to set it up
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  prerelease:
-    needs: build
-    if: github.event_name == 'release' && github.event.action == 'prereleased'
-    runs-on: ubuntu-latest
-    steps:
       # publish to NPM -> there is one caveat, continue reading for the fix
       - run: npm publish --dry-run --tag beta
         env:
