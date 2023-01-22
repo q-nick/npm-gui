@@ -194,12 +194,15 @@ export class Server {
 
     if (!response.headersSent && request.url !== undefined) {
       // static
-      const pathToFile = path.join(__dirname, request.url);
+      const pathToFile = path.join(__dirname, '../', request.url);
 
       if (request.url === '/') {
         // index.html
         response.write(
-          fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8'),
+          fs.readFileSync(
+            path.join(__dirname, '../', 'client', 'index.html'),
+            'utf-8',
+          ),
         );
       } else if (fs.existsSync(pathToFile)) {
         const extname = path
@@ -218,7 +221,10 @@ export class Server {
       } else {
         // 404 always return index.html
         response.write(
-          fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8'),
+          fs.readFileSync(
+            path.join(__dirname, '../', 'client', 'index.html'),
+            'utf-8',
+          ),
         );
       }
     }

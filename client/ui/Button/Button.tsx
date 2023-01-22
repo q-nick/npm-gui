@@ -9,7 +9,7 @@ import { Icon } from '../Icon/Icon';
 
 export interface Props extends ComponentPropsWithoutRef<'button'> {
   variant: 'danger' | 'dark' | 'info' | 'primary' | 'success' | 'warning';
-  icon?: string;
+  icon?: React.ComponentProps<typeof Icon>['glyph'];
   navigate?: string;
   title: string;
   children: ReactNode;
@@ -71,6 +71,13 @@ interface IconProps extends IconPropsOriginal {
 const ButtonIcon = styled(Icon)<IconProps>`
   margin-right: 3px;
   vertical-align: middle;
+  path {
+    fill: white;
+  }
+
+  svg {
+    color: blue; /* Or any color of your choice. */
+  }
 
   ${({ isAlone }: Readonly<IconProps>): CSSType =>
     isAlone &&

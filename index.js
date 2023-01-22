@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // running npm-gui development version
-const { start } = require('./dist');
+const { start } = require('./dist/server');
 
 const [processArguments] = process.argv.slice(2);
 let host = null;

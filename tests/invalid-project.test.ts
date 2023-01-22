@@ -14,7 +14,7 @@ describe(`Invalid project for npm `, () => {
     const encodedTestDirectoryPath = encodePath(testDirectoryPath);
 
     const response = await api(app.server).get(
-      `/api/project/${encodedTestDirectoryPath}/dependencies/install/`,
+      `/api/project/${encodedTestDirectoryPath}/dependencies/install`,
     );
 
     expect(response.status).toBe(HTTP_STATUS_BAD_REQUEST);

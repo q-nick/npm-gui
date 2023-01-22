@@ -4,7 +4,10 @@ import { useIsMutating, useQuery } from '@tanstack/react-query';
 import { getProjectDependenciesFast } from '../service/dependencies.service';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
-export const useFastDependencies = (projectPath: string) => {
+export const useFastDependencies = (
+  projectPath: string,
+  onSuccess?: () => void,
+) => {
   // const { startJob, successJob } = useProjectsJobs(projectPath);
 
   const isProjectMutating = useIsMutating([projectPath]) > 0;
@@ -25,6 +28,7 @@ export const useFastDependencies = (projectPath: string) => {
       refetchOnMount: false,
       enabled: !isProjectMutating,
       retry: false,
+      onSuccess,
     },
   );
 

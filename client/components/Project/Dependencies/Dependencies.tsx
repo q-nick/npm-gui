@@ -104,7 +104,8 @@ const columnsGlobal = columns.filter(column => ['name', 'homepage', 'repo', 'npm
 
 export const Dependencies: VFC<Props> = ({ projectPath }) => {
   // this are fast
-  const { dependencies: dependenciesFast } = useFastDependencies(projectPath);
+  const { dependencies: dependenciesFast, isError } = useFastDependencies(projectPath);
+  console.log(isError)
   // this are slow
   const { dependencies: dependenciesFull } = useFullDependencies(projectPath);
 
@@ -120,6 +121,10 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
   } = useTableFilter(dependencies);
 
   const isGlobal = projectPath === 'global';
+
+  if(isError) {
+    return <>błąd</>;
+  }
 
   return (
     <>

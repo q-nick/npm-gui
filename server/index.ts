@@ -80,3 +80,7 @@ export const start = (
     void open(`http://${host}:${port}`);
   }
 };
+
+// only for parcel?
+// eslint-disable-next-line import/no-commonjs
+module.exports = { start, app };

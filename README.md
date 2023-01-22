@@ -62,3 +62,21 @@ To read more visit: https://npm-gui.nullapps.dev/docs/npm-gui/
 ## Documentation
 
 [Documentation](https://npm-gui.nullapps.dev/docs/npm-gui/)
+
+## Next features on roadmap
+
+- npm-gui integrated into VS Code as an extension
+
+- other package managers like: _poetry_, _composer_, _nuget_
+
+- packages updates history
+
+- re-arrange existing columns
+
+- expandable/collapsable module to reveal it's dependency tree _(npm-remote-ls)_
+
+- number of dependencies per module
+
+- move dependency between dev and prod
+
+- visual indicator if the package seems to be unuse _(depcheck)_
