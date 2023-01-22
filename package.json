@@ -16,6 +16,7 @@
     "manager"
   ],
   "main": "index.js",
+  "module": "dist/module.js",
   "files": [
     "dist",
     "bin"
@@ -23,11 +24,9 @@
   "scripts": {
     "prepack": "npm run build",
     "dev:server": "ts-node-dev --files server/development.ts",
-    "dev:client": "parcel",
+    "dev:client": "parcel serve --target=client",
     "dev": "npm-run-all -p dev:*",
-    "build:server": "tsc --build",
-    "build:client": "parcel build --no-source-maps",
-    "build": "rm -rf dist && npm run build:client && npm run build:server",
+    "build": "rm -rf dist && parcel build --no-source-maps",
     "lint:ts": "tsc",
     "lint:eslint": "eslint . --ignore-path=.gitignore",
     "lint:prettier": "prettier --check . --ignore-path=.gitignore",
@@ -50,13 +49,13 @@
   "homepage": "https://npm-gui.nullapps.dev",
   "devDependencies": {
     "@tanstack/query-sync-storage-persister": "^4.22.0",
-    "@tanstack/react-query": "^4.22.0",
-    "@tanstack/react-query-persist-client": "^4.22.0",
+    "@tanstack/react-query": "^4.22.3",
+    "@tanstack/react-query-persist-client": "^4.22.3",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "v9.0.13",
     "@types/jest": "^27",
     "@types/node": "v11.15.54",
-    "@types/react": "^17.0.52",
+    "@types/react": "^17.0.53",
     "@types/react-dom": "^17.0.18",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
@@ -67,7 +66,7 @@
     "jest-extended": "^1.2.1",
     "npm-run-all": "^4.1.5",
     "open-iconic": "^1.1.1",
-    "parcel": "^2.8.2",
+    "parcel": "^2.8.3",
     "process": "^0.11.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -84,7 +83,14 @@
     "main": false,
     "client": {
       "source": "client/index.html",
-      "context": "browser"
+      "context": "browser",
+      "distDir": "dist"
+    },
+    "server": {
+      "source": "server/index.ts",
+      "context": "node",
+      "outputFormat": "commonjs",
+      "distDir": "dist"
     }
   },
   "dependencies": {

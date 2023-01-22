@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-unassigned-import */
 import './base.css';
-import 'open-iconic/font/css/open-iconic.css';
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

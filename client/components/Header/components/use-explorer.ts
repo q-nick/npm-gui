@@ -34,12 +34,13 @@ export const useExplorer = () => {
     }
   }, [data, history, onClose]);
 
-  useEffect(() => {
-    if (!currentPath && data?.path) {
-      setCurrentPath(data.path);
-      history.push(`/${window.btoa(data.path)}`);
-    }
-  }, [currentPath, data?.path, history]);
+  // TODO
+  // useEffect(() => {
+  //   if (!currentPath && data?.path) {
+  //     setCurrentPath(data.path);
+  //     history.push(`/${window.btoa(data.path)}`);
+  //   }
+  // }, [currentPath, data?.path, history]);
 
   return {
     ref,

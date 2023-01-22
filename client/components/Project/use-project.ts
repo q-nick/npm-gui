@@ -17,11 +17,11 @@ export const useProject = (projectPath: string) => {
     (project) => project.path === projectPath,
   );
 
-  useEffect(() => {
-    if (!projectExists) {
-      dispatch({ action: 'addProject', projectPath });
-    }
-  }, [projectPath, projectExists, dispatch]);
+  // useEffect(() => {
+  //   if (!projectExists) {
+  //     dispatch({ action: 'addProject', projectPath });
+  //   }
+  // }, [projectPath, projectExists, dispatch]);
 
   useEffect(() => {
     dispatch({

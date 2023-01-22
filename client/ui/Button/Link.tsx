@@ -7,7 +7,7 @@ import { Icon } from '../Icon/Icon';
 
 interface Props extends ComponentPropsWithoutRef<'a'> {
   variant?: 'danger';
-  icon?: string;
+  icon?: React.ComponentProps<typeof Icon>['glyph'];
   title: string;
 }
 
