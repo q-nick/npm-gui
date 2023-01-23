@@ -11,6 +11,7 @@ export const uniqueOrNull = (
   return comparision.includes(value) ? null : value;
 };
 
+// eslint-disable-next-line max-statements
 export const getInstalledVersion = (
   installed?: InstalledBody,
 ): string | null => {
@@ -31,6 +32,10 @@ export const getInstalledVersion = (
   }
 
   if ('extraneous' in installed) {
+    return null;
+  }
+
+  if (!('required' in installed)) {
     return null;
   }
 
