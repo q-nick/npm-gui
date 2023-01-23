@@ -1,3 +1,6 @@
+import spawn from 'cross-spawn';
+import { readJSONSync, writeJSONSync } from 'fs-extra';
+import path from 'path';
 import api from 'supertest';
 
 import { app } from '../server';
@@ -52,5 +55,37 @@ describe('Global Packages', () => {
     expect(
       responseListing.body.find((d: Basic) => d.name === 'npm-gui-tests'),
     ).toBe(undefined);
+  });
+
+  test('weird behavior when global package is missing its version', async () => {
+    await api(app.server)
+      .post('/api/global/dependencies')
+      .send([{ name: 'npm-gui-tests', version: '1.0.0' }]);
+
+    // find package.json in global folder
+    const packageJSONPath = path.join(
+      spawn
+        .sync('npm', ['root', '-g'])
+        .stdout.toString()
+        .replace(/[\n\r]/gm, ''),
+      'npm-gui-tests',
+      'package.json',
+    );
+
+    // remove version from package.json
+    const packageJSON = readJSONSync(packageJSONPath);
+    delete packageJSON.version;
+    writeJSONSync(packageJSONPath, packageJSON);
+
+    const response = await api(app.server).get(
+      '/api/global/dependencies/simple',
+    );
+
+    expect(response.body).toPartiallyContain({
+      installed: null,
+      manager: 'npm',
+      name: 'npm-gui-tests',
+      type: 'global',
+    });
   });
 });

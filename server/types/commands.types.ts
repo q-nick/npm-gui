@@ -26,13 +26,18 @@ interface InstalledBodyExtra {
 
 interface InstalledBodyInvalid {
   invalid: string;
-  prbolems: string[];
+  problems: string[];
+}
+
+interface InstalledBodyInvalidOverriden {
+  overriden: boolean;
 }
 
 export type InstalledBody =
   | InstalledBodyBase
   | InstalledBodyExtra
   | InstalledBodyInvalid
+  | InstalledBodyInvalidOverriden
   | InstalledBodyMissing;
 
 export interface Installed {
