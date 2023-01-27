@@ -1,0 +1,5 @@
+<p>
+  The new version of npm-gui is out now! Start it with:
+  <pre style="display:inline-block; vertical-align: middle;">npx npm-gui@latest</pre> Check it out!
+  <a href="https://npm-qui.nullapps.dev">Go to Documentation</a>
+</p>
