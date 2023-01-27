@@ -28,7 +28,7 @@ Homepage and full documentation: https://npm-gui.nullapps.dev
 The recommended way to run `npm-gui` is by using <a href="https://www.npmjs.com/package/npx">`npx`</a>:
 
 ```
-~/$ npx npm-gui
+~/$ npx npm-gui@latest
 ```
 
 It will run the most recent version of `npm-gui` without installing it on your system.
