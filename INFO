@@ -1,7 +1,10 @@
 <div>
   <p style="display:inline-block;color: red; font-weight: bold;">The new version of npm-gui is out now! Start it with:</p>
 
-  <pre style="display:inline-block; vertical-align: middle; color: white;">npx npm-gui@latest</pre> <span style="color: white;">Check it out!</span>
+  <pre style="display:inline-block; vertical-align: middle; color: white;">npx npm-gui@latest</pre>
 
-  <a href="https://npm-gui.nullapps.dev">Go to Documentation</a>
+<span style="color: white;">Check it out!</span>
+
+<a href="https://npm-gui.nullapps.dev" style="colow:white; font-weight: bold;">Go to Documentation</a>
+
 </div>

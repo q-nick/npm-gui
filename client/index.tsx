@@ -6,7 +6,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { App } from './components/App';
 
@@ -35,14 +35,19 @@ persistQueryClient({
   },
 });
 
-render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </React.StrictMode>,
-  document.querySelector('.npm-gui'),
-);
+const container = document.querySelector('.npm-gui');
+
+if (container) {
+  const root = createRoot(container);
+
+  root.render(
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </React.StrictMode>,
+  );
+}
 
 if (window.localStorage.getItem('npm-gui-id') === null) {
   window.localStorage.setItem('npm-gui-id', Date.now().toString());
