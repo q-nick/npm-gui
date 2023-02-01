@@ -18,6 +18,7 @@ export const executeCommand = (
       const spawned = spawn(command, commandArguments, {
         cwd,
         detached: false,
+        shell: process.platform === 'win32',
       });
 
       // wait for stdout, stderr
