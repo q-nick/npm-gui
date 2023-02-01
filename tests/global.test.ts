@@ -1,4 +1,4 @@
-import spawn from 'cross-spawn';
+import { spawnSync } from 'child_process';
 import { readJSONSync, writeJSONSync } from 'fs-extra';
 import path from 'path';
 import api from 'supertest';
@@ -64,8 +64,7 @@ describe('Global Packages', () => {
 
     // find package.json in global folder
     const packageJSONPath = path.join(
-      spawn
-        .sync('npm', ['root', '-g'])
+      spawnSync('npm', ['root', '-g'])
         .stdout.toString()
         .replace(/[\n\r]/gm, ''),
       'npm-gui-tests',

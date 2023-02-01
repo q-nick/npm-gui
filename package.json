@@ -51,7 +51,6 @@
     "@tanstack/query-sync-storage-persister": "^4.22.4",
     "@tanstack/react-query": "^4.23.0",
     "@tanstack/react-query-persist-client": "^4.23.0",
-    "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "v9.0.13",
     "@types/jest": "^27.5.2",
     "@types/node": "v11.15.54",
@@ -94,7 +93,6 @@
     }
   },
   "dependencies": {
-    "cross-spawn": "^7.0.3",
     "open": "^8.4.0"
   },
   "engines": {

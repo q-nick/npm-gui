@@ -1,4 +1,4 @@
-import spawn from 'cross-spawn';
+import { spawn } from 'child_process';
 
 import { ZERO } from '../utils/utils';
 
