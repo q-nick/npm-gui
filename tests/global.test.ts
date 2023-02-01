@@ -64,7 +64,7 @@ describe('Global Packages', () => {
 
     // find package.json in global folder
     const packageJSONPath = path.join(
-      spawnSync('npm', ['root', '-g'])
+      spawnSync('npm', ['root', '-g'], { shell: process.platform === 'win32' })
         .stdout.toString()
         .replace(/[\n\r]/gm, ''),
       'npm-gui-tests',
