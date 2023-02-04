@@ -1,5 +1,4 @@
-import { spawn } from 'child_process';
-
+import { spawn } from '../utils/simple-cross-spawn';
 import { ZERO } from '../utils/utils';
 
 export const executeCommand = (
@@ -18,7 +17,6 @@ export const executeCommand = (
       const spawned = spawn(command, commandArguments, {
         cwd,
         detached: false,
-        shell: process.platform === 'win32',
       });
 
       // wait for stdout, stderr
@@ -34,9 +32,6 @@ export const executeCommand = (
 
       // wait for finish and resolve
       spawned.on('close', (exitStatus: number) => {
-        if (!process.env['NODE_TEST']) {
-          // console.log(exitStatus);
-        }
         if (exitStatus === ZERO) {
           resolve({
             stdout,
