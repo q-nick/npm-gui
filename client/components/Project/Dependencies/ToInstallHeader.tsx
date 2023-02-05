@@ -3,10 +3,9 @@ import type React from 'react';
 import { useCallback } from 'react';
 
 import { useProjectStore } from '../../../app/ContextStore';
-import { useFullDependencies } from '../../../hooks/use-full-dependencies';
+import { useCompleteDependenciesFiltered } from '../../../hooks/use-complete-dependencies-filtered';
 import { useProjectPath } from '../../../hooks/use-project-path';
 import { Button } from '../../../ui/Button/Button';
-import { useTableFilter } from '../../../ui/Table/use-table-filter';
 import { getNormalizedRequiredVersion } from '../../../utils';
 
 interface Props {
@@ -17,10 +16,7 @@ export const ToInstallHeader: FC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 
-  const { dependencies } = useFullDependencies(projectPath);
-
-  const { tableDataFiltered: dependenciesFiltered } =
-    useTableFilter(dependencies);
+  const { dependenciesFiltered } = useCompleteDependenciesFiltered(projectPath);
 
   const dependenciesWithVersion = dependenciesFiltered?.filter(
     (dependency) =>

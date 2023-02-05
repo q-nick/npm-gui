@@ -12,7 +12,7 @@ export interface Props extends ComponentPropsWithoutRef<'button'> {
   icon?: React.ComponentProps<typeof Icon>['glyph'];
   navigate?: string;
   title: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const variantToColor = {

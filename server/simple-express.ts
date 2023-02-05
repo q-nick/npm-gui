@@ -172,10 +172,12 @@ export class Server {
             body: bodyJSON,
           });
           if (typeof data === 'string') {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             response.writeHead(HTTP_STATUS_OK, { 'Content-Type': 'text/html' });
             response.write(data, 'utf-8');
           } else {
             response.writeHead(HTTP_STATUS_OK, {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/json',
             });
             response.write(JSON.stringify(data), 'utf-8');
@@ -187,6 +189,7 @@ export class Server {
         console.error('ERROR HANDLER', error);
       }
       response.writeHead(HTTP_STATUS_BAD_REQUEST, {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
       });
       response.write(JSON.stringify(error), 'utf-8');
@@ -211,6 +214,7 @@ export class Server {
 
         const contentType = mimeTypes[extname];
 
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         response.writeHead(HTTP_STATUS_OK, { 'Content-Type': contentType });
         response.write(
           fs.readFileSync(

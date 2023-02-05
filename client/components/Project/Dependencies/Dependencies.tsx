@@ -1,16 +1,11 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-handler-names */
 /* eslint-disable import/max-dependencies */
-import type { ComponentProps, FC } from 'react';
+import type { FC } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
-import { useBundleDetails } from '../../../hooks/use-bundle-details';
-import { useBundleScore } from '../../../hooks/use-bundle-score';
-import { useFastDependencies } from '../../../hooks/use-fast-dependencies';
-import { useFullDependencies } from '../../../hooks/use-full-dependencies';
+import { useCompleteDependenciesFiltered } from '../../../hooks/use-complete-dependencies-filtered';
 import { Table } from '../../../ui/Table/Table';
-import { useTableFilter } from '../../../ui/Table/use-table-filter';
+import type { DependenciesColumns } from './dependencies';
 import { DependenciesHeader } from './DependenciesHeader/DependenciesHeader';
 import { InstallHeader } from './InstallHeader';
 import { ActionsCell } from './table-cells/ActionsCell/ActionsCell';
@@ -19,7 +14,6 @@ import { HomePageCell } from './table-cells/HomePageCell';
 import { InstallCell } from './table-cells/InstallCell/InstallCell';
 import { InstalledCell } from './table-cells/InstalledCell';
 import { LatestCell } from './table-cells/LatestCell';
-import { LatestGlobalCell } from './table-cells/LatestGlobalCell';
 import { NameCell } from './table-cells/NameCell';
 import { NpmCell } from './table-cells/NpmCell';
 import { OtherVersionCell } from './table-cells/OtherVersionCell/OtherVersionCell';
@@ -34,7 +28,7 @@ interface Props {
   projectPath: string;
 }
 
-const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'] = [
+const columns: DependenciesColumns = [
   {
     name: 'type',
     sortable: true,
@@ -79,19 +73,19 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   {
     name: 'installed',
     sortable: true,
-    label: <ToInstallHeader version='installed' />,
+    label: <ToInstallHeader version="installed" />,
     render: InstalledCell,
   },
   {
     name: 'wanted',
     sortable: true,
-    label: <ToInstallHeader version='wanted' />,
+    label: <ToInstallHeader version="wanted" />,
     render: CompatibleCell,
   },
   {
     name: 'latest',
     sortable: true,
-    label: <ToInstallHeader version='latest' />,
+    label: <ToInstallHeader version="latest" />,
     render: LatestCell,
   },
   {
@@ -101,49 +95,42 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   },
 ];
 
-const columnsGlobal = [
-  ...columns.filter(column => ['name', 'homepage', 'repo', 'npm','score','size', 'updated', 'to', 'install', 'installed'].includes(column.name)),
-  {
-    name: 'latest',
-    sortable: true,
-    label: <ToInstallHeader version='latest' />,
-    render: LatestGlobalCell,
-  },
-  columns.find(column => column.name === 'actions'),
-]
+const columnsGlobal = columns.filter((column) =>
+  [
+    'name',
+    'homepage',
+    'repo',
+    'npm',
+    'score',
+    'size',
+    'updated',
+    'to',
+    'install',
+    'installed',
+    'latest',
+    'actions',
+  ].includes(column.name),
+);
 
 export const Dependencies: FC<Props> = ({ projectPath }) => {
-  // this are fast
-  const { dependencies: dependenciesFast, isError } = useFastDependencies(projectPath);
-  console.log(isError)
-  // this are slow
-  const { dependencies: dependenciesFull } = useFullDependencies(projectPath);
-
-  // bind async bundle score
-  const dependenciesScored = useBundleScore(dependenciesFull || dependenciesFast);
-  // bind async bundle details
-  const dependencies = useBundleDetails(dependenciesScored);
-
   const {
+    isError,
     filters,
+    dependenciesFiltered,
     setFilterValue,
-    tableDataFiltered: dependenciesFiltered,
-  } = useTableFilter(dependencies);
+    dependencies,
+  } = useCompleteDependenciesFiltered(projectPath);
 
-  const isGlobal = projectPath === 'global';
-
-  if(isError) {
+  if (isError) {
     return <>błąd</>;
   }
 
   return (
     <>
-      <DependenciesHeader
-        isGlobal={projectPath === 'global'}
-      />
+      <DependenciesHeader isGlobal={projectPath === 'global'} />
 
       <Table
-        columns={isGlobal ? columnsGlobal : columns}
+        columns={projectPath === 'global' ? columnsGlobal : columns}
         filters={filters}
         isEmpty={dependencies?.length === 0}
         onFilterChange={setFilterValue}

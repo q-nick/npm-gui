@@ -24,6 +24,7 @@ export const executePnpmOutdated = async (
       const rows = error.replace(ansiRegex(), '').split('\n');
       let name = '';
       for (const row of rows) {
+        // eslint-disable-next-line no-div-regex
         const rowResult = /=>.([\d.]+)/.exec(row);
         if (rowResult) {
           outdatedInfo[name] = {

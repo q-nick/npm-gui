@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-type-alias */
 export interface OutdatedBodyPNPM {
   current: string;
   wanted: string;
@@ -20,6 +21,7 @@ interface InstalledBodyBase {
 //   extraneous?: boolean;
 // }
 
+// eslint-disable-next-line line-comment-position, no-inline-comments
 export type InstalledBodyPNPM = InstalledBodyBase; // | InstalledBodyExtra | InstalledBodyMissing;
 
 export type InstalledPNPM = [

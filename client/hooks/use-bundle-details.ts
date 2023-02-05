@@ -3,10 +3,12 @@ import { useMemo } from 'react';
 
 import type { DependencyInstalledExtras } from '../../server/types/dependency.types';
 import { getDependenciesDetails } from '../service/dependencies.service';
+import { useProjectPath } from './use-project-path';
 
 export const useBundleDetails = (
   dependencies?: DependencyInstalledExtras[],
 ): DependencyInstalledExtras[] | undefined => {
+  const projectPath = useProjectPath();
   const dependenciesToQuery = useMemo(() => {
     return dependencies
       ?.filter((dep) => dep.installed)
@@ -36,6 +38,13 @@ export const useBundleDetails = (
         return dep;
       }
 
+      const latestVersion =
+        projectPath === 'global'
+          ? [...depDetails.versions]
+              .reverse()
+              .find((version) => /^\d+\.\d+\.\d+$/.test(version))
+          : dep.latest;
+
       return {
         ...dep,
         size: depDetails.size,
@@ -45,9 +54,10 @@ export const useBundleDetails = (
         created: depDetails.created,
         versions: depDetails.versions,
         time: depDetails.time,
+        latest: latestVersion !== dep.installed ? latestVersion : dep.latest,
       };
     });
-  }, [dependencies, query?.data]);
+  }, [dependencies, projectPath, query?.data]);
 
   return dependenciesWithDetails;
 };
