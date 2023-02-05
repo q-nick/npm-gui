@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type React from 'react';
 import { useCallback } from 'react';
 
@@ -13,7 +13,7 @@ interface Props {
   version: 'installed' | 'latest' | 'wanted';
 }
 
-export const ToInstallHeader: VFC<Props> = ({ version }) => {
+export const ToInstallHeader: FC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 

@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 import { Button } from '../../../ui/Button/Button';
 import {
@@ -11,7 +11,7 @@ import {
 } from './ExplorerUi';
 import { useExplorer } from './use-explorer';
 
-export const Explorer: VFC = () => {
+export const Explorer: FC = () => {
   const {
     ref,
     onToggleIsOpen,

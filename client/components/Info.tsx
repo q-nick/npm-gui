@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ const InfoWrapper = styled.div`
   padding: 5px 15px;
 `;
 
-export const Info: VFC = () => {
+export const Info: FC = () => {
   const [content, setContent] = useState('');
 
   const load = async (): Promise<void> => {

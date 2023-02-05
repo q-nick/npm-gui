@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -44,7 +44,7 @@ const CloseButton = styled(Button)`
   margin-left: -3px;
 `;
 
-export const Header: VFC = () => {
+export const Header: FC = () => {
   const { projectPathEncoded, projects, handleRemoveProject } = useHeader();
 
   return (

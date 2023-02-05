@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
@@ -18,7 +18,7 @@ interface Props {
   isInstalled?: true;
 }
 
-export const TableVersion: VFC<Props> = ({
+export const TableVersion: FC<Props> = ({
   dependency,
   version,
   isInstalled,

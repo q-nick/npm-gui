@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-handler-names */
 /* eslint-disable import/max-dependencies */
-import type { ComponentProps, VFC } from 'react';
+import type { ComponentProps, FC } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
@@ -19,6 +19,7 @@ import { HomePageCell } from './table-cells/HomePageCell';
 import { InstallCell } from './table-cells/InstallCell/InstallCell';
 import { InstalledCell } from './table-cells/InstalledCell';
 import { LatestCell } from './table-cells/LatestCell';
+import { LatestGlobalCell } from './table-cells/LatestGlobalCell';
 import { NameCell } from './table-cells/NameCell';
 import { NpmCell } from './table-cells/NpmCell';
 import { OtherVersionCell } from './table-cells/OtherVersionCell/OtherVersionCell';
@@ -100,9 +101,18 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   },
 ];
 
-const columnsGlobal = columns.filter(column => ['name', 'homepage', 'repo', 'npm','score','size', 'updated', 'to', 'install', 'installed', 'latest', 'actions'].includes(column.name))
+const columnsGlobal = [
+  ...columns.filter(column => ['name', 'homepage', 'repo', 'npm','score','size', 'updated', 'to', 'install', 'installed'].includes(column.name)),
+  {
+    name: 'latest',
+    sortable: true,
+    label: <ToInstallHeader version='latest' />,
+    render: LatestGlobalCell,
+  },
+  columns.find(column => column.name === 'actions'),
+]
 
-export const Dependencies: VFC<Props> = ({ projectPath }) => {
+export const Dependencies: FC<Props> = ({ projectPath }) => {
   // this are fast
   const { dependencies: dependenciesFast, isError } = useFastDependencies(projectPath);
   console.log(isError)

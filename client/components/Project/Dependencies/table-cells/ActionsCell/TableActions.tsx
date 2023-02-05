@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
@@ -19,7 +19,7 @@ const Line = styled.hr`
   margin-top: 10px;
 `;
 
-export const TableActions: VFC<Props> = ({ dependency }) => {
+export const TableActions: FC<Props> = ({ dependency }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 

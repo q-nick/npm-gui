@@ -68,13 +68,13 @@ export const useFindOtherVersion = (dependency: DependencyInstalledExtras) => {
       reversedVersions.reduce<string[]>((accumulator, version) => {
         const { major, minor, patch } = parseSemVersion(version);
         const versionString = `${major}.${minor}.${patch}`;
-
+        // console.log(versionString, version);
         if (
           `${major}.${minor}` === selectedMinor &&
           patch &&
           !accumulator.includes(versionString)
         ) {
-          return [...accumulator, versionString];
+          return [...accumulator, version];
         }
 
         return accumulator;

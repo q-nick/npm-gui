@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { ComponentProps, VFC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -34,7 +34,7 @@ const getVariantForStatus = (
   return 'primary';
 };
 
-export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
+export const JobItem: FC<Props> = ({ description, status, onRemove }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <>
