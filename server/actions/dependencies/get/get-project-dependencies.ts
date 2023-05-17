@@ -183,10 +183,12 @@ const getAllYarnDependencies = async (
   );
 
   return allDependencies.map((dependency) => {
-    const info = installedInfo.find(
-      (x) => x.name.split('@')[0] === dependency.name,
-    );
-    const installed = info?.name.split('@')[1];
+    let atIndex = 0;
+    const info = installedInfo.find( (x) => {
+      atIndex = x.name.lastIndexOf('@');
+      return x.name.slice(0, atIndex) === dependency.name;
+    });
+    const installed = info?.name.slice(atIndex + 1);
 
     const wanted = getWantedVersion(
       installed,

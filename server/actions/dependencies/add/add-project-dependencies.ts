@@ -137,10 +137,12 @@ const getYarnPackageWithInfo = async (
   const type = getTypeFromPackageJson(projectPath, dependencyName);
   const required = getRequiredFromPackageJson(projectPath, dependencyName);
 
-  const info = installedInfo.find(
-    (x) => x.name.split('@')[0] === dependencyName,
-  );
-  const installed = info?.name.split('@')[1];
+  let atIndex = 0;
+  const info = installedInfo.find( (x) => {
+    atIndex = x.name.lastIndexOf('@');
+    return x.name.slice(0, atIndex) === dependencyName;
+  });
+  const installed = info?.name.slice(atIndex + 1);
 
   const wanted = getWantedVersion(
     installed,
