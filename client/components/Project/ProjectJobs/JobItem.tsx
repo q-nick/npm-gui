@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { ComponentProps, VFC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -15,9 +15,9 @@ const CloseButton = styled(Button)`
 `;
 
 interface Props {
-  description: string;
-  status: Job['status'];
-  onRemove: () => void;
+  readonly description: string;
+  readonly status: Job['status'];
+  readonly onRemove: () => void;
 }
 
 const getVariantForStatus = (
@@ -34,7 +34,7 @@ const getVariantForStatus = (
   return 'primary';
 };
 
-export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
+export const JobItem: FC<Props> = ({ description, status, onRemove }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <>
@@ -58,7 +58,7 @@ export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
         variant={getVariantForStatus(status)}
       />
 
-      {detailsOpen && (
+      {detailsOpen ? (
         <Modal
           onClose={(): void => {
             setDetailsOpen(false);
@@ -66,7 +66,7 @@ export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
         >
           {/* <pre>{JSON.stringify(stdout, null, INDENT)}</pre> */}
         </Modal>
-      )}
+      ) : null}
     </>
   );
 };

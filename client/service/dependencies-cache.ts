@@ -1,6 +1,4 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import type { BundleDetails } from '../../server/types/dependency.types';
 

@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable import/no-unassigned-import */
+/* eslint-disable no-console */
 import './base.css';
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';

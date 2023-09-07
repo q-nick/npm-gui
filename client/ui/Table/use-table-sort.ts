@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useCallback, useMemo, useState } from 'react';
 
 import type { TableRowAbstract } from './components/TbodyRow';

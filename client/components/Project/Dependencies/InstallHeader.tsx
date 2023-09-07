@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { VFC } from 'react';
 
 import { useProjectStore } from '../../../app/ContextStore';

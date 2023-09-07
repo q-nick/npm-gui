@@ -8,15 +8,18 @@ import { Th } from './components/Th';
 import { useTableSort } from './use-table-sort';
 
 export interface Props<T extends TableRowAbstract> {
-  columns: IColumn<T>[];
+  readonly columns: IColumn<T>[];
   // data
-  tableData?: T[];
-  isEmpty: boolean;
+  readonly tableData?: T[];
+  readonly isEmpty: boolean;
   // filter
-  filters: Record<string, string>;
-  onFilterChange?: (columnName: string, newFilterValue: string) => void;
+  readonly filters: Record<string, string>;
+  readonly onFilterChange?: (
+    columnName: string,
+    newFilterValue: string,
+  ) => void;
   // other
-  maxHeight?: string;
+  readonly maxHeight?: string;
 }
 
 const Wrapper = styled.div<{ maxHeight?: string }>`
@@ -75,7 +78,7 @@ Props<T>): JSX.Element => {
   return (
     <Wrapper maxHeight={maxHeight}>
       <Info>
-        {isEmpty && <>empty...</>}
+        {isEmpty ? <>empty...</> : null}
 
         {!tableData && (
           <>
@@ -108,7 +111,7 @@ Props<T>): JSX.Element => {
                   sortActive={column.name === sort}
                   sortReversed={sortReversed}
                 >
-                  {column.label !== undefined ? column.label : column.name}
+                  {column.label === undefined ? column.name : column.label}
                 </Th>
               );
             })}

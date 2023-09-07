@@ -1,4 +1,3 @@
-/* eslint-disable styled-components-a11y/no-onchange */
 import styled from 'styled-components';
 
 import type { Manager } from '../../../../../server/types/dependency.types';

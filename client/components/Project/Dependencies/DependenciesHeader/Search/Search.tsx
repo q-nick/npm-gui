@@ -22,7 +22,6 @@ const Wrapper = styled.div`
   z-index: 5;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-type-alias
 const columns: TableProps<SearchResponse[number]>['columns'] = [
   {
     name: 'name',

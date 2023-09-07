@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useProjectsStore } from '../../app/ContextStore';
 import { useProjectPath } from '../../hooks/use-project-path';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export const useHeader = () => {
   const projectPathEncoded = useProjectPath();
 

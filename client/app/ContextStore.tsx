@@ -21,7 +21,7 @@ export const ContextStore = createContext<Context>({
   dispatch() {},
 });
 
-export const ContextStoreProvider: FC<{ children: ReactNode }> = ({
+export const ContextStoreProvider: FC<{ readonly children: ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(storeReducer, {
@@ -64,7 +64,6 @@ export const useProjectStore = (projectPath: string) => {
 
 let id = 0;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useProjectsJobs = (projectPath: string) => {
   const { dispatch } = useProjectStore(projectPath);
 

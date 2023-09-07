@@ -74,10 +74,10 @@ export const start = (
   host = DEFAULT_HOST,
   port = DEFAULT_PORT,
   openBrowser = false,
-): void => {
+) => {
   app.listen(port, host);
   if (openBrowser) {
-    void open(`http://${host}:${port}`);
+    open(`http://${host}:${port}`);
   }
 };
 

@@ -16,8 +16,8 @@ export interface IColumn<T extends TableRowAbstract> {
 }
 
 interface Props<T extends TableRowAbstract> {
-  row: T;
-  columns: IColumn<any>[];
+  readonly row: T;
+  readonly columns: IColumn<any>[];
 }
 
 export const TbodyRow = <T extends TableRowAbstract>({

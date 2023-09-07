@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VFC } from 'react';
 import styled from 'styled-components';
 
@@ -12,7 +11,7 @@ const TaskQueueWrapper = styled.div`
 `;
 
 interface Props {
-  projectPath: string;
+  readonly projectPath: string;
 }
 
 export const ProjectJobs: VFC<Props> = ({ projectPath }) => {

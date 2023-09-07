@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
-/* eslint-disable react/jsx-handler-names */
 /* eslint-disable import/max-dependencies */
 import type { ComponentProps, VFC } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
 import { useBundleDetails } from '../../../hooks/use-bundle-details';
 import { useBundleScore } from '../../../hooks/use-bundle-score';
@@ -30,10 +28,12 @@ import { TypeCell } from './table-cells/TypeCell';
 import { ToInstallHeader } from './ToInstallHeader';
 
 interface Props {
-  projectPath: string;
+  readonly projectPath: string;
 }
 
-const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'] = [
+const columns: ComponentProps<
+  typeof Table<DependencyInstalledExtras>
+>['columns'] = [
   {
     name: 'type',
     sortable: true,
@@ -78,19 +78,19 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   {
     name: 'installed',
     sortable: true,
-    label: <ToInstallHeader version='installed' />,
+    label: <ToInstallHeader version="installed" />,
     render: InstalledCell,
   },
   {
     name: 'wanted',
     sortable: true,
-    label: <ToInstallHeader version='wanted' />,
+    label: <ToInstallHeader version="wanted" />,
     render: CompatibleCell,
   },
   {
     name: 'latest',
     sortable: true,
-    label: <ToInstallHeader version='latest' />,
+    label: <ToInstallHeader version="latest" />,
     render: LatestCell,
   },
   {
@@ -100,17 +100,35 @@ const columns: ComponentProps<typeof Table<DependencyInstalledExtras>>['columns'
   },
 ];
 
-const columnsGlobal = columns.filter(column => ['name', 'homepage', 'repo', 'npm','score','size', 'updated', 'to', 'install', 'installed', 'latest', 'actions'].includes(column.name))
+const columnsGlobal = columns.filter((column) =>
+  [
+    'name',
+    'homepage',
+    'repo',
+    'npm',
+    'score',
+    'size',
+    'updated',
+    'to',
+    'install',
+    'installed',
+    'latest',
+    'actions',
+  ].includes(column.name),
+);
 
 export const Dependencies: VFC<Props> = ({ projectPath }) => {
   // this are fast
-  const { dependencies: dependenciesFast, isError } = useFastDependencies(projectPath);
-  console.log(isError)
+  const { dependencies: dependenciesFast, isError } =
+    useFastDependencies(projectPath);
+  console.log(isError);
   // this are slow
   const { dependencies: dependenciesFull } = useFullDependencies(projectPath);
 
   // bind async bundle score
-  const dependenciesScored = useBundleScore(dependenciesFull || dependenciesFast);
+  const dependenciesScored = useBundleScore(
+    dependenciesFull || dependenciesFast,
+  );
   // bind async bundle details
   const dependencies = useBundleDetails(dependenciesScored);
 
@@ -122,15 +140,13 @@ export const Dependencies: VFC<Props> = ({ projectPath }) => {
 
   const isGlobal = projectPath === 'global';
 
-  if(isError) {
+  if (isError) {
     return <>błąd</>;
   }
 
   return (
     <>
-      <DependenciesHeader
-        isGlobal={projectPath === 'global'}
-      />
+      <DependenciesHeader isGlobal={projectPath === 'global'} />
 
       <Table
         columns={isGlobal ? columnsGlobal : columns}

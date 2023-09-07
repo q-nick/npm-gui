@@ -6,7 +6,6 @@ import { useProjectsJobs, useProjectStore } from '../app/ContextStore';
 import { installDependencies } from '../service/dependencies.service';
 import { useProjectPath } from './use-project-path';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useMutateInstallDependency = () => {
   const projectPath = useProjectPath();
   const { project } = useProjectStore(projectPath);

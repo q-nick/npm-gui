@@ -7,7 +7,6 @@ import { fetchJSON } from '../../../service/utils';
 import { useClickOutsideRef } from '../../../ui/hooks/use-click-outside';
 import { useToggle } from '../../../ui/hooks/use-toggle';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export const useExplorer = () => {
   const { isOpen, onToggleIsOpen, onClose } = useToggle();
   const [filter, setFilter] = useState('');
