@@ -1,4 +1,4 @@
 {
   "root": true,
-  "extends": "turbocharge/node"
+  "extends": "turbocharge/backend"
 }

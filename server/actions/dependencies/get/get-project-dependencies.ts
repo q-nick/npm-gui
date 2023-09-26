@@ -1,17 +1,16 @@
-/* eslint-disable max-lines */
+import { projectProcedure } from '../../../trpc/trpc-router';
 import type { Installed, Outdated } from '../../../types/commands.types';
 import type {
   DependencyBase,
   DependencyInstalled,
   Manager,
 } from '../../../types/dependency.types';
-import type { ResponserFunction } from '../../../types/new-server.types';
 import type { InstalledPNPM } from '../../../types/pnpm.types';
 import type { InstalledYarn, OutdatedYarn } from '../../../types/yarn.types';
 import { getFromCache, putToCache } from '../../../utils/cache';
 import {
+  getAllDependenciesFromPackageJson,
   getAllDependenciesFromPackageJsonAsArray,
-  getDependenciesFromPackageJson,
 } from '../../../utils/get-project-package-json';
 import {
   getInstalledVersion,
@@ -24,8 +23,12 @@ import {
 } from '../../execute-command';
 import { executePnpmOutdated } from '../../pnpm-utils';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
+import {
+  extractNameFromDependencyString,
+  extractVersionFromDependencyString,
+} from '../extras/dependency-details';
 
-const getAllDependenciesSimpleJSON = (
+export const getAllDependenciesSimpleJSON = (
   projectPath: string,
   manager: Manager,
 ): DependencyBase[] => {
@@ -90,7 +93,7 @@ const getAllPnpmDependencies = async (
   projectPath: string,
 ): Promise<DependencyInstalled[]> => {
   // type
-  const dependencies = getDependenciesFromPackageJson(projectPath);
+  const dependencies = getAllDependenciesFromPackageJson(projectPath);
 
   const [
     {
@@ -184,9 +187,11 @@ const getAllYarnDependencies = async (
 
   return allDependencies.map((dependency) => {
     const info = installedInfo.find(
-      (x) => x.name.split('@')[0] === dependency.name,
+      (x) => extractNameFromDependencyString(x.name) === dependency.name,
     );
-    const installed = info?.name.split('@')[1];
+    const installed = info
+      ? extractVersionFromDependencyString(info.name)
+      : null;
 
     const wanted = getWantedVersion(
       installed,
@@ -207,47 +212,43 @@ const getAllYarnDependencies = async (
   });
 };
 
-export const getAllDependenciesSimple: ResponserFunction<
-  unknown,
-  unknown,
-  DependencyBase[]
-> = ({ extraParams: { projectPathDecoded, manager } }) => {
-  const dependencies = getAllDependenciesSimpleJSON(
-    projectPathDecoded,
-    manager,
-  );
+export const getAllDependenciesSimpleProcedure = projectProcedure.query(
+  async ({ ctx: { projectPath, manager } }) => {
+    const dependencies = await getAllDependenciesSimpleJSON(
+      projectPath,
+      manager,
+    );
 
-  return dependencies;
-};
+    return dependencies;
+  },
+);
 
-export const getAllDependencies: ResponserFunction<
-  unknown,
-  unknown,
-  DependencyInstalled[]
-> = async ({ extraParams: { projectPathDecoded, manager, xCacheId } }) => {
-  const cache = getFromCache(xCacheId + manager + projectPathDecoded);
+export const getAllDependenciesProcedure = projectProcedure.query(
+  async ({ ctx: { projectPath, manager, xCacheId } }) => {
+    const cache = getFromCache(xCacheId + manager + projectPath);
 
-  if (cache) {
-    return cache;
-  }
-
-  let dependencies: DependencyInstalled[] = [];
-
-  try {
-    if (manager === 'yarn') {
-      dependencies = await getAllYarnDependencies(projectPathDecoded);
-    } else if (manager === 'pnpm') {
-      dependencies = await getAllPnpmDependencies(projectPathDecoded);
-    } else {
-      dependencies = await getAllNpmDependencies(projectPathDecoded);
+    if (cache) {
+      return cache;
     }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    return [];
-  }
 
-  putToCache(xCacheId + manager + projectPathDecoded, dependencies);
+    let dependencies: DependencyInstalled[] = [];
 
-  return dependencies;
-};
+    try {
+      if (manager === 'yarn') {
+        dependencies = await getAllYarnDependencies(projectPath);
+      } else if (manager === 'pnpm') {
+        dependencies = await getAllPnpmDependencies(projectPath);
+      } else {
+        dependencies = await getAllNpmDependencies(projectPath);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return [];
+    }
+
+    putToCache(xCacheId + manager + projectPath, dependencies);
+
+    return dependencies;
+  },
+);

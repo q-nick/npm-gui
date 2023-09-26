@@ -1,14 +1,15 @@
 #!/usr/bin/env node
+const { app, BrowserWindow } = require('electron');
 
-// running npm-gui development version
-const { start } = require('./dist/server');
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+  });
 
-const [processArguments] = process.argv.slice(2);
-let host = null;
-let port = null;
+  win.loadFile('index.html');
+};
 
-if (processArguments) {
-  [host, port] = processArguments.split(':');
-}
-
-start(host || 'localhost', port || 13377, true);
+app.whenReady().then(() => {
+  createWindow();
+});

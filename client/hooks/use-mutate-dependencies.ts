@@ -1,5 +1,4 @@
 /* eslint-disable max-statements */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMutation } from '@tanstack/react-query';
 
 import { useProjectsJobs, useProjectStore } from '../app/ContextStore';
@@ -10,7 +9,6 @@ import {
   installGlobalDependencies,
 } from '../service/dependencies.service';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const useMutateDependencies = (projectPath: string) => {
   const { project, dispatch } = useProjectStore(projectPath);
   const { startJob, successJob } = useProjectsJobs(projectPath);

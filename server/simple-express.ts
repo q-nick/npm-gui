@@ -54,12 +54,12 @@ export class Server {
     middlewarePath: string,
     requestUrl: string,
   ): Record<string, string> {
-    const splitted = middlewarePath.split(/:\w+/g).filter((value) => value);
+    const splitted = middlewarePath.split(/:\w+/g).filter(Boolean);
     const parametersValues = splitted
       // eslint-disable-next-line unicorn/no-array-reduce
       .reduce((url, split) => url.replace(split, '|'), requestUrl)
       .split('|')
-      .filter((value) => value);
+      .filter(Boolean);
     const parametersNames = middlewarePath.match(/:\w+/g);
     const parameters = parametersNames?.reduce(
       (previousParameters, parameterName, index) => ({
@@ -142,7 +142,7 @@ export class Server {
     const bodyJSON: any = await Server.readBody(request);
     try {
       for (const middleware of this.middlewares) {
-        const pathRegex = new RegExp(middleware.url.replace(/:\w+/g, '.+'));
+        const pathRegex = new RegExp(middleware.url.replaceAll(/:\w+/g, '.+'));
 
         if (request.url !== undefined && pathRegex.test(request.url)) {
           const parameters = Server.parseUrlParams(middleware.url, request.url);
@@ -155,7 +155,7 @@ export class Server {
       }
 
       for (const responser of this.responsers) {
-        const pathRegex = new RegExp(responser.url.replace(/:\w+/g, '.+'));
+        const pathRegex = new RegExp(responser.url.replaceAll(/:\w+/g, '.+'));
         const isMethodOk =
           responser.method === undefined || responser.method === request.method;
         if (
@@ -201,7 +201,7 @@ export class Server {
         response.write(
           fs.readFileSync(
             path.join(__dirname, '../', 'client', 'index.html'),
-            'utf-8',
+            'utf8',
           ),
         );
       } else if (fs.existsSync(pathToFile)) {
@@ -223,7 +223,7 @@ export class Server {
         response.write(
           fs.readFileSync(
             path.join(__dirname, '../', 'client', 'index.html'),
-            'utf-8',
+            'utf8',
           ),
         );
       }

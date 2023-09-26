@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import { Icon } from './Icon/Icon';
@@ -20,7 +20,7 @@ const LoaderStyled = styled.span`
   }
 `;
 
-export const Loader: VFC = () => (
+export const Loader: FC = () => (
   <LoaderStyled>
     <Icon glyph="reload" />
   </LoaderStyled>

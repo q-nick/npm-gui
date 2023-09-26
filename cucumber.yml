@@ -1,0 +1,5 @@
+default:
+  paths: ['./feature/**/*.feature', './feature/*.feature']
+  requireModule: ['@swc-node/register']
+  require: ['./feature/**/*.steps.ts', './feature/*.steps.ts']
+  parallel: 10

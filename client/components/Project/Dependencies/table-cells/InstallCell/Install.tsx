@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
 import { useProjectStore } from '../../../../../app/ContextStore';
@@ -6,10 +6,10 @@ import { useProjectPath } from '../../../../../hooks/use-project-path';
 import { Button } from '../../../../../ui/Button/Button';
 
 interface Props {
-  dependency: DependencyInstalledExtras;
+  readonly dependency: DependencyInstalledExtras;
 }
 
-export const Install: VFC<Props> = ({ dependency }) => {
+export const Install: FC<Props> = ({ dependency }) => {
   const projectPath = useProjectPath();
   const { project, dispatch } = useProjectStore(projectPath);
 
@@ -18,7 +18,7 @@ export const Install: VFC<Props> = ({ dependency }) => {
   return (
     <span>
       {v}{' '}
-      {v && (
+      {v ? (
         <Button
           disabled={project.isBusy}
           icon="x"
@@ -32,7 +32,7 @@ export const Install: VFC<Props> = ({ dependency }) => {
           title="Cancel change"
           variant="danger"
         />
-      )}
+      ) : null}
     </span>
   );
 };

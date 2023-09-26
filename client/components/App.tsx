@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { ContextStoreProvider } from '../app/ContextStore';
@@ -6,7 +6,7 @@ import { Header } from './Header/Header';
 import { Info } from './Info';
 import { Project } from './Project/Project';
 
-export const App: VFC = () => {
+export const App: FC = () => {
   return (
     <ContextStoreProvider>
       <Router>

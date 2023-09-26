@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import type { ReactNode, VFC } from 'react';
+import type { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,7 +22,6 @@ const Wrapper = styled.div`
   z-index: 5;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-type-alias
 const columns: TableProps<SearchResponse[number]>['columns'] = [
   {
     name: 'name',
@@ -60,7 +59,7 @@ const columns: TableProps<SearchResponse[number]>['columns'] = [
   },
 ];
 
-export const Search: VFC = () => {
+export const Search: FC = () => {
   const { searchResults, onSearch } = useSearch();
 
   return (

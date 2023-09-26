@@ -1,23 +1,17 @@
 /* eslint-disable @typescript-eslint/no-type-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { ComponentProps, VFC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
 
 import type { Job } from '../../../app/store.reducer';
 import { Button } from '../../../ui/Button/Button';
 import { Modal } from '../../../ui/Modal/Modal';
 
-const CloseButton = styled(Button)`
-  margin-right: 15px;
-  margin-left: -3px;
-`;
-
 interface Props {
-  description: string;
-  status: Job['status'];
-  onRemove: () => void;
+  readonly description: string;
+  readonly status: Job['status'];
+  readonly onRemove: () => void;
 }
 
 const getVariantForStatus = (
@@ -34,7 +28,7 @@ const getVariantForStatus = (
   return 'primary';
 };
 
-export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
+export const JobItem: FC<Props> = ({ description, status, onRemove }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <>
@@ -50,7 +44,8 @@ export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
         {status}
       </Button>
 
-      <CloseButton
+      <Button
+        className="mr-5 ml-0"
         disabled={status === 'WORKING'}
         icon="x"
         onClick={onRemove}
@@ -58,7 +53,7 @@ export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
         variant={getVariantForStatus(status)}
       />
 
-      {detailsOpen && (
+      {detailsOpen ? (
         <Modal
           onClose={(): void => {
             setDetailsOpen(false);
@@ -66,7 +61,7 @@ export const JobItem: VFC<Props> = ({ description, status, onRemove }) => {
         >
           {/* <pre>{JSON.stringify(stdout, null, INDENT)}</pre> */}
         </Modal>
-      )}
+      ) : null}
     </>
   );
 };

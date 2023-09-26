@@ -256,7 +256,8 @@ export const storeReducer: Reducer<State, Action> = (state, action): State => {
       };
     }
 
-    default:
+    default: {
       return state;
+    }
   }
 };

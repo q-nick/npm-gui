@@ -1,8 +1,9 @@
 {
-  "extends": "eslint-config-turbocharge/node/tsconfig.json",
+  "extends": "eslint-config-turbocharge/backend/tsconfig.json",
   "compilerOptions": {
     "target": "es2015",
     "lib": ["es2015"],
     "outDir": "../dist"
-  }
+  },
+  "include": ["./"]
 }

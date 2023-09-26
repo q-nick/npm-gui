@@ -1,16 +1,14 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 /* eslint-disable no-await-in-loop */
+import { z } from 'zod';
+
+import { publicProcedure } from '../../../trpc/trpc-router';
 import type { BundleScore } from '../../../types/dependency.types';
-import type { ResponserFunction } from '../../../types/new-server.types';
 import { requestGET } from '../../../utils/request-with-promise';
 import { notEmpty } from '../../../utils/utils';
 import { getChunks } from './utils';
 
 const cache: Record<string, BundleScore> = {};
-
-interface Parameters {
-  dependenciesName: string;
-}
 
 const getDependenciesScoreValue = async (
   dependencyName: string,
@@ -41,28 +39,26 @@ const getDependenciesScoreValue = async (
   }
 };
 
-export const getDependenciesScore: ResponserFunction<
-  unknown,
-  Parameters,
-  BundleScore[]
-> = async ({ params: { dependenciesName } }) => {
-  const chunks = getChunks(dependenciesName.split(','), 5);
+export const getDependenciesScoreProcedure = publicProcedure
+  .input(z.array(z.string()))
+  .query(async ({ input: dependenciesName }) => {
+    const chunks = getChunks(dependenciesName, 5);
 
-  try {
-    const allScore: BundleScore[] = [];
+    try {
+      const allScore: BundleScore[] = [];
 
-    for (const chunk of chunks) {
-      const chunkScore = await Promise.all(
-        chunk.map((dependencyName) =>
-          getDependenciesScoreValue(dependencyName),
-        ),
-      );
+      for (const chunk of chunks) {
+        const chunkScore = await Promise.all(
+          chunk.map((dependencyName) =>
+            getDependenciesScoreValue(dependencyName),
+          ),
+        );
 
-      allScore.push(...chunkScore.filter(notEmpty));
+        allScore.push(...chunkScore.filter(notEmpty));
+      }
+
+      return allScore;
+    } catch {
+      return [];
     }
-
-    return allScore;
-  } catch {
-    return [];
-  }
-};
+  });

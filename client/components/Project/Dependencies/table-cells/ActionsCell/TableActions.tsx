@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
@@ -7,7 +7,7 @@ import { useProjectPath } from '../../../../../hooks/use-project-path';
 import { Button } from '../../../../../ui/Button/Button';
 
 interface Props {
-  dependency: DependencyInstalledExtras;
+  readonly dependency: DependencyInstalledExtras;
 }
 
 const Line = styled.hr`
@@ -19,7 +19,7 @@ const Line = styled.hr`
   margin-top: 10px;
 `;
 
-export const TableActions: VFC<Props> = ({ dependency }) => {
+export const TableActions: FC<Props> = ({ dependency }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 
@@ -28,7 +28,7 @@ export const TableActions: VFC<Props> = ({ dependency }) => {
 
   return (
     <>
-      {markedForDeletion && <Line />}
+      {markedForDeletion ? <Line /> : null}
       <Button
         disabled={project?.isBusy}
         icon={markedForDeletion ? 'x' : 'trash'}

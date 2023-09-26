@@ -1,17 +1,12 @@
-/* eslint-disable styled-components-a11y/no-onchange */
 import styled from 'styled-components';
 
 import type { Manager } from '../../../../../server/types/dependency.types';
 import { useProjectStore } from '../../../../app/ContextStore';
-import { useAvailableManagers } from '../../../../hooks/use-available-managers';
 import { useMutateReinstall } from '../../../../hooks/use-mutate-reinstall';
 import { useProjectPath } from '../../../../hooks/use-project-path';
+import { trpc } from '../../../../trpc';
 import { Button } from '../../../../ui/Button/Button';
 import { Search } from './Search/Search';
-
-const RightSection = styled.div`
-  float: right;
-`;
 
 interface Props {
   isGlobal?: boolean;
@@ -44,14 +39,14 @@ const Select = styled.select`
 export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
   const projectPath = useProjectPath();
   const { project } = useProjectStore(projectPath);
-  const availableManagers = useAvailableManagers();
+  const { data: availableManagers } = trpc.availableManagers.useQuery();
   const reinstallMutation = useMutateReinstall(projectPath);
 
   return (
     <header>
       <Search />
 
-      <RightSection>
+      <div className="float-right">
         {isGlobal !== true && (
           <>
             <small>Install:</small>
@@ -97,7 +92,7 @@ export const DependenciesHeader: React.FC<Props> = ({ isGlobal }) => {
             </Select>
           </>
         )}
-      </RightSection>
+      </div>
     </header>
   );
 };

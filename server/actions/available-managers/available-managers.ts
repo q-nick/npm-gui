@@ -1,12 +1,7 @@
-import type { AvailableManagerResponse } from '../../types/global.types';
-import type { ResponserFunction } from '../../types/new-server.types';
+import { publicProcedure } from '../../trpc/trpc-router';
 import { executeCommandSimple } from '../execute-command';
 
-export const availableManagers: ResponserFunction<
-  { path?: string },
-  unknown,
-  AvailableManagerResponse
-> = async () => {
+export const availableManagersProcedure = publicProcedure.query(async () => {
   let npm = true;
   let yarn = true;
   let pnpm = true;
@@ -34,4 +29,4 @@ export const availableManagers: ResponserFunction<
     pnpm,
     yarn,
   };
-};
+});

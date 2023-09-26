@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import type { ExplorerResponse } from '../../../../server/types/global.types';
-import { fetchJSON } from '../../../service/utils';
+import { trpc } from '../../../trpc';
+// import type { ExplorerResponse } from '../../../../server/types/global.types';
+// import { fetchJSON } from '../../../service/utils';
 import { useClickOutsideRef } from '../../../ui/hooks/use-click-outside';
 import { useToggle } from '../../../ui/hooks/use-toggle';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export const useExplorer = () => {
   const { isOpen, onToggleIsOpen, onClose } = useToggle();
   const [filter, setFilter] = useState('');
@@ -16,16 +16,17 @@ export const useExplorer = () => {
 
   const ref = useClickOutsideRef(onClose);
 
-  const { data, isFetching } = useQuery(
-    [currentPath],
-    () => fetchJSON<ExplorerResponse>(`/api/explorer/${currentPath}`),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      retry: false,
-      keepPreviousData: true,
-    },
-  );
+  const { data, isFetching } = trpc.explorer.useQuery(currentPath);
+  // const { data, isFetching } = useQuery(
+  //   [currentPath],
+  //   () => fetchJSON<ExplorerResponse>(`/api/explorer/${currentPath}`),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     refetchOnMount: false,
+  //     retry: false,
+  //     keepPreviousData: true,
+  //   },
+  // );
 
   const onClickProject = useCallback((): void => {
     onClose();

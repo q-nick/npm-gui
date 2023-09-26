@@ -1,8 +1,8 @@
 import { existsSync, unlinkSync } from 'fs';
 import path from 'path';
+import z from 'zod';
 
-import type { Manager } from '../../../types/dependency.types';
-import type { ResponserFunction } from '../../../types/new-server.types';
+import { projectProcedure } from '../../../trpc/trpc-router';
 import { clearCache } from '../../../utils/cache';
 import { deleteFolderRecursive } from '../../../utils/delete-folder-resursive';
 import { executeCommandSimple } from '../../execute-command';
@@ -19,28 +19,28 @@ const clearManagerFiles = (projectPath: string): void => {
   }
 };
 
-export const installDependenciesForceManager: ResponserFunction<
-  unknown,
-  { forceManager: Manager }
-> = async ({
-  params: { forceManager },
-  extraParams: { projectPathDecoded, xCacheId },
-}) => {
-  clearManagerFiles(projectPathDecoded);
+export const installDependenciesProcedure = projectProcedure
+  .input(
+    z.object({
+      forceManager: z.string().optional(),
+    }),
+  )
+  .mutation(
+    async ({
+      ctx: { xCacheId, projectPath, manager },
+      input: { forceManager },
+    }) => {
+      if (forceManager) {
+        clearManagerFiles(projectPath);
+      }
 
-  await executeCommandSimple(projectPathDecoded, `${forceManager} install`);
+      await executeCommandSimple(
+        projectPath,
+        `${forceManager || manager} install`,
+      );
 
-  clearCache(xCacheId + forceManager + projectPathDecoded);
+      clearCache(xCacheId + (forceManager || manager) + projectPath);
 
-  return {};
-};
-
-export const installDependencies: ResponserFunction = async ({
-  extraParams: { projectPathDecoded, manager = 'npm', xCacheId },
-}) => {
-  await executeCommandSimple(projectPathDecoded, `${manager} install`);
-
-  clearCache(xCacheId + manager + projectPathDecoded);
-
-  return {};
-};
+      return {};
+    },
+  );

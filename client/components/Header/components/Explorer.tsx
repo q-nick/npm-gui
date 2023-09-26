@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 import { Button } from '../../../ui/Button/Button';
 import {
@@ -11,7 +11,7 @@ import {
 } from './ExplorerUi';
 import { useExplorer } from './use-explorer';
 
-export const Explorer: VFC = () => {
+export const Explorer: FC = () => {
   const {
     ref,
     onToggleIsOpen,
@@ -63,7 +63,7 @@ export const Explorer: VFC = () => {
           ?.filter((folderOrFile) => folderOrFile.name.includes(filter))
           .map((folderOrFile) => (
             <li key={folderOrFile.name}>
-              {folderOrFile.isDirectory && !folderOrFile.isProject && (
+              {folderOrFile.isDirectory && !folderOrFile.isProject ? (
                 <ExplorerButton
                   disabled={folderOrFile.name === 'node_modules' || isFetching}
                   isDirectory
@@ -76,9 +76,9 @@ export const Explorer: VFC = () => {
                   &nbsp;
                   {folderOrFile.name}/
                 </ExplorerButton>
-              )}
+              ) : null}
 
-              {folderOrFile.isProject && (
+              {folderOrFile.isProject ? (
                 <ExplorerButton
                   disabled={isFetching}
                   isDirectory={false}
@@ -90,7 +90,7 @@ export const Explorer: VFC = () => {
                   &nbsp;
                   {folderOrFile.name}
                 </ExplorerButton>
-              )}
+              ) : null}
 
               {!folderOrFile.isDirectory && !folderOrFile.isProject && (
                 <ExplorerFile>

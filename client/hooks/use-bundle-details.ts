@@ -1,28 +1,27 @@
-import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import type { DependencyInstalledExtras } from '../../server/types/dependency.types';
-import { getDependenciesDetails } from '../service/dependencies.service';
+import { trpc } from '../trpc';
 
 export const useBundleDetails = (
   dependencies?: DependencyInstalledExtras[],
 ): DependencyInstalledExtras[] | undefined => {
-  const dependenciesToQuery = useMemo(() => {
-    return dependencies
-      ?.filter((dep) => dep.installed)
-      .map((dep) => `${dep.name}@${dep.installed}`);
+  const dependenciesNameVersion = useMemo(() => {
+    return (
+      dependencies
+        ?.filter((dep) => dep.installed)
+        .map((dep) => `${dep.name}@${dep.installed}`) || []
+    );
   }, [dependencies]);
 
   const manager = dependencies?.[0]?.manager;
 
-  const query = useQuery(
-    ['get-dependencies-details', manager, dependenciesToQuery],
-    async () => getDependenciesDetails(manager, dependenciesToQuery),
+  const query = trpc.getDependenciesDetails.useQuery(
     {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
+      dependenciesNameVersion,
+      manager: manager || 'unknown',
     },
+    { enabled: !!manager },
   );
 
   const dependenciesWithDetails = useMemo(() => {
