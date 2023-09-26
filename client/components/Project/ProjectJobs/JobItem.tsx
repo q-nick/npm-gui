@@ -3,16 +3,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { ComponentProps, FC } from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
 
 import type { Job } from '../../../app/store.reducer';
 import { Button } from '../../../ui/Button/Button';
 import { Modal } from '../../../ui/Modal/Modal';
-
-const CloseButton = styled(Button)`
-  margin-right: 15px;
-  margin-left: -3px;
-`;
 
 interface Props {
   readonly description: string;
@@ -50,7 +44,8 @@ export const JobItem: FC<Props> = ({ description, status, onRemove }) => {
         {status}
       </Button>
 
-      <CloseButton
+      <Button
+        className="mr-5 ml-0"
         disabled={status === 'WORKING'}
         icon="x"
         onClick={onRemove}

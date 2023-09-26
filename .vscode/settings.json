@@ -5,5 +5,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "jest.autoRun": { "watch": false, "onSave": "test-file" }
+  "jest.autoRun": { "watch": false, "onSave": "test-file" },
+  "cucumberautocomplete.steps": ["./feature/**/*.steps.ts"],
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.smartSnippets": true,
+  "prettier.documentSelectors": ["*.{feature,features}"]
 }

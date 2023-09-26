@@ -1,5 +1,7 @@
+import { z } from 'zod';
+
+import { projectProcedure } from '../../../trpc/trpc-router';
 import type { Basic, Type } from '../../../types/dependency.types';
-import type { ResponserFunction } from '../../../types/new-server.types';
 import { spliceFromCache } from '../../../utils/cache';
 import { executeCommandSimple } from '../../execute-command';
 
@@ -10,12 +12,12 @@ const commandTypeFlag = {
   extraneous: '',
 };
 
-const deleteNpmDependencies = async (
+const removeNpmDependencies = async (
   projectPath: string | undefined,
   dependencies: Basic[],
   type: Type,
 ): Promise<void> => {
-  // delete
+  // remove
   await executeCommandSimple(
     projectPath,
     `npm uninstall ${dependencies.map((d) => d.name).join(' ')} ${
@@ -24,11 +26,11 @@ const deleteNpmDependencies = async (
   );
 };
 
-const deletePnpmDependencies = async (
+const removePnpmDependencies = async (
   projectPath: string | undefined,
   dependencies: Basic[],
 ): Promise<void> => {
-  // delete
+  // remove
   try {
     await executeCommandSimple(
       projectPath,
@@ -43,11 +45,11 @@ const deletePnpmDependencies = async (
   }
 };
 
-const deleteYarnDependencies = async (
+const removeYarnDependencies = async (
   projectPath: string | undefined,
   dependencies: Basic[],
 ): Promise<void> => {
-  // delete
+  // remove
   try {
     await executeCommandSimple(
       projectPath,
@@ -62,30 +64,35 @@ const deleteYarnDependencies = async (
   }
 };
 
-interface Parameters {
-  type: Type;
-  dependencyName: string;
-}
+export const removeDependenciesProcedure = projectProcedure
+  .input(
+    z.object({
+      dependencies: z.array(
+        z.object({
+          name: z.string(),
+        }),
+      ),
+      type: z.enum(['prod', 'dev']),
+    }),
+  )
+  .mutation(
+    async ({
+      input: { projectPath, dependencies, type },
+      ctx: { manager, xCacheId },
+    }) => {
+      console.log(projectPath, dependencies, type);
+      if (manager === 'yarn') {
+        await removeYarnDependencies(projectPath, dependencies);
+      } else if (manager === 'pnpm') {
+        await removePnpmDependencies(projectPath, dependencies);
+      } else {
+        await removeNpmDependencies(projectPath, dependencies, type);
+      }
 
-export const deleteDependencies: ResponserFunction<
-  { name: string }[],
-  Parameters
-> = async ({
-  params: { type },
-  extraParams: { projectPathDecoded, manager, xCacheId },
-  body,
-}) => {
-  if (manager === 'yarn') {
-    await deleteYarnDependencies(projectPathDecoded, body);
-  } else if (manager === 'pnpm') {
-    await deletePnpmDependencies(projectPathDecoded, body);
-  } else {
-    await deleteNpmDependencies(projectPathDecoded, body, type);
-  }
+      for (const dependency of dependencies) {
+        spliceFromCache(xCacheId + manager + projectPath, dependency.name);
+      }
 
-  for (const dependency of body) {
-    spliceFromCache(xCacheId + manager + projectPathDecoded, dependency.name);
-  }
-
-  return {};
-};
+      return {};
+    },
+  );

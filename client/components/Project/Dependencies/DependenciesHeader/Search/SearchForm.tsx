@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -31,11 +31,11 @@ const Form = styled.form`
 `;
 
 export interface Props {
-  onSubmit: (query: string) => void;
-  searchResults: SearchResponse;
+  readonly onSubmit: (query: string) => void;
+  readonly searchResults: SearchResponse;
 }
 
-export const SearchForm: VFC<Props> = ({ onSubmit, searchResults }) => {
+export const SearchForm: FC<Props> = ({ onSubmit, searchResults }) => {
   const [query, setQuery] = useState('');
 
   return (

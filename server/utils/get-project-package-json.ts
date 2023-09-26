@@ -42,6 +42,15 @@ export const getDevelopmentDependenciesFromPackageJson = (
   return packageJson.devDependencies ?? {};
 };
 
+export const getAllDependenciesFromPackageJson = (
+  projectPath: string,
+): Record<string, string> => {
+  return {
+    ...getDependenciesFromPackageJson(projectPath),
+    ...getDevelopmentDependenciesFromPackageJson(projectPath),
+  };
+};
+
 export const getAllDependenciesFromPackageJsonAsArray = (
   projectPath: string,
   manager: Manager,
@@ -49,7 +58,6 @@ export const getAllDependenciesFromPackageJsonAsArray = (
   const dependencies = getDependenciesFromPackageJson(projectPath);
   const devDependencies =
     getDevelopmentDependenciesFromPackageJson(projectPath);
-
   return [
     ...Object.entries(dependencies).map(
       ([name, required]): DependencyBase => ({

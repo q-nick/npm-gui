@@ -1,11 +1,11 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 import { useProjectStore } from '../../../app/ContextStore';
 import { useMutateDependencies } from '../../../hooks/use-mutate-dependencies';
 import { useProjectPath } from '../../../hooks/use-project-path';
 import { Button } from '../../../ui/Button/Button';
 
-export const InstallHeader: VFC = () => {
+export const InstallHeader: FC = () => {
   const projectPath = useProjectPath();
   const { project } = useProjectStore(projectPath);
   const syncDependenciesMutation = useMutateDependencies(projectPath);

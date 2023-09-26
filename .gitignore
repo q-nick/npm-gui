@@ -14,3 +14,4 @@ eslint-config*
 .nyc_output
 .parcel-cache
 coverage
+test-project-dirs

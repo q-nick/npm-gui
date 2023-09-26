@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import { useProjectsJobs, useProjectStore } from '../../../app/ContextStore';
@@ -14,7 +14,7 @@ interface Props {
   readonly projectPath: string;
 }
 
-export const ProjectJobs: VFC<Props> = ({ projectPath }) => {
+export const ProjectJobs: FC<Props> = ({ projectPath }) => {
   const { project } = useProjectStore(projectPath);
   const { removeJob } = useProjectsJobs(projectPath);
 

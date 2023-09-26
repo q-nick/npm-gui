@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import styled from 'styled-components';
 
 import type { DependencyInstalledExtras } from '../../../../../../server/types/dependency.types';
@@ -13,12 +13,12 @@ const Missing = styled.span`
 `;
 
 interface Props {
-  dependency: DependencyInstalledExtras;
-  version: string | null | undefined;
-  isInstalled?: true;
+  readonly dependency: DependencyInstalledExtras;
+  readonly version: string | null | undefined;
+  readonly isInstalled?: true;
 }
 
-export const TableVersion: VFC<Props> = ({
+export const TableVersion: FC<Props> = ({
   dependency,
   version,
   isInstalled,

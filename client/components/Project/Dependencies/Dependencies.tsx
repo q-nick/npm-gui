@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable import/max-dependencies */
-import type { ComponentProps, VFC } from 'react';
+import type { ComponentProps, FC } from 'react';
 
 import type { DependencyInstalledExtras } from '../../../../server/types/dependency.types';
 import { useBundleDetails } from '../../../hooks/use-bundle-details';
@@ -117,7 +117,7 @@ const columnsGlobal = columns.filter((column) =>
   ].includes(column.name),
 );
 
-export const Dependencies: VFC<Props> = ({ projectPath }) => {
+export const Dependencies: FC<Props> = ({ projectPath }) => {
   // this are fast
   const { dependencies: dependenciesFast, isError } =
     useFastDependencies(projectPath);

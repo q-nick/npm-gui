@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type React from 'react';
 import { useCallback } from 'react';
 
@@ -10,10 +10,10 @@ import { useTableFilter } from '../../../ui/Table/use-table-filter';
 import { getNormalizedRequiredVersion } from '../../../utils';
 
 interface Props {
-  version: 'installed' | 'latest' | 'wanted';
+  readonly version: 'installed' | 'latest' | 'wanted';
 }
 
-export const ToInstallHeader: VFC<Props> = ({ version }) => {
+export const ToInstallHeader: FC<Props> = ({ version }) => {
   const projectPath = useProjectPath();
   const { dispatch, project } = useProjectStore(projectPath);
 
@@ -57,7 +57,7 @@ export const ToInstallHeader: VFC<Props> = ({ version }) => {
   return (
     <>
       {version === 'wanted' ? 'compatible' : version} &nbsp;
-      {dependenciesWithVersion && dependenciesWithVersion.length > 0 && (
+      {dependenciesWithVersion && dependenciesWithVersion.length > 0 ? (
         <Button
           disabled={allChecked || project?.isBusy}
           icon="check"
@@ -65,7 +65,7 @@ export const ToInstallHeader: VFC<Props> = ({ version }) => {
           title="Install project dependencies"
           variant="success"
         />
-      )}
+      ) : null}
     </>
   );
 };

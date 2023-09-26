@@ -1,3 +1,4 @@
 {
-  "extends": "eslint-config-turbocharge/react/tsconfig.json"
+  "extends": "eslint-config-turbocharge/react/tsconfig.json",
+  "include": ["../server/trpc/router.ts", "./"]
 }

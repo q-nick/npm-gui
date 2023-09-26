@@ -1,5 +1,7 @@
-import type { SearchResponse } from '../../types/global.types';
-import type { ResponserFunction } from '../../types/new-server.types';
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+
+import { publicProcedure } from '../../trpc/trpc-router';
 import { parseJSON } from '../../utils/parse-json';
 import { requestGET } from '../../utils/request-with-promise';
 
@@ -23,29 +25,30 @@ interface NPMApiResult {
   }[];
 }
 
-export const search: ResponserFunction<
-  { query: string },
-  unknown,
-  SearchResponse
-> = async ({ body: { query } }) => {
-  const response = await requestGET(
-    'api.npms.io',
-    `/v2/search?from=0&size=25&q=${query}`,
-  );
+export const searchProcedure = publicProcedure
+  .input(z.string())
+  .query(async ({ input: searchString }) => {
+    const response = await requestGET(
+      'api.npms.io',
+      `/v2/search?from=0&size=25&q=${searchString}`,
+    );
 
-  const parsed = parseJSON<NPMApiResult>(response);
-  if (!parsed) {
-    throw new Error('Unable to get package info');
-  }
+    const parsed = parseJSON<NPMApiResult>(response);
+    if (!parsed) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Unable to get package info',
+      });
+    }
 
-  return parsed.results.map((result) => ({
-    name: result.package.name,
-    version: result.package.version,
-    score: result.score.final,
-    updated: result.package.date,
-    npm: result.package.links.npm,
-    repository: result.package.links.repository,
-    homepage: result.package.links.homepage,
-    description: result.package.description,
-  }));
-};
+    return parsed.results.map((result) => ({
+      name: result.package.name,
+      version: result.package.version,
+      score: result.score.final,
+      updated: result.package.date,
+      npm: result.package.links.npm,
+      repository: result.package.links.repository,
+      homepage: result.package.links.homepage,
+      description: result.package.description,
+    }));
+  });

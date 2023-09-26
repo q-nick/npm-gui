@@ -1,11 +1,13 @@
 /* eslint-disable max-lines */
+import z from 'zod';
+
+import { projectProcedure } from '../../../trpc/trpc-router';
 import type { Installed, Outdated } from '../../../types/commands.types';
 import type {
   Basic,
   DependencyInstalled,
   Type,
 } from '../../../types/dependency.types';
-import type { ResponserFunction } from '../../../types/new-server.types';
 import type { InstalledPNPM } from '../../../types/pnpm.types';
 import type { InstalledYarn, OutdatedYarn } from '../../../types/yarn.types';
 import { clearCache, updateInCache } from '../../../utils/cache';
@@ -25,6 +27,10 @@ import {
 } from '../../execute-command';
 import { executePnpmOutdated } from '../../pnpm-utils';
 import { extractVersionFromYarnOutdated } from '../../yarn-utils';
+import {
+  extractNameFromDependencyString,
+  extractVersionFromDependencyString,
+} from '../extras/dependency-details';
 
 const getNpmPackageWithInfo = async (
   projectPath: string,
@@ -138,9 +144,9 @@ const getYarnPackageWithInfo = async (
   const required = getRequiredFromPackageJson(projectPath, dependencyName);
 
   const info = installedInfo.find(
-    (x) => x.name.split('@')[0] === dependencyName,
+    (x) => extractNameFromDependencyString(x.name) === dependencyName,
   );
-  const installed = info?.name.split('@')[1];
+  const installed = info ? extractVersionFromDependencyString(info.name) : null;
 
   const wanted = getWantedVersion(
     installed,
@@ -226,30 +232,51 @@ const addYarnDependencies = async (
   return undefined;
 };
 
-export const addDependencies: ResponserFunction<
-  { name: string }[],
-  { type: Type }
-  // eslint-disable-next-line max-statements
-> = async ({
-  params: { type },
-  extraParams: { projectPathDecoded, manager, xCacheId },
-  body,
-}) => {
-  let singleAddUpdate: DependencyInstalled | undefined = undefined;
+export const addDependenciesProcedure = projectProcedure
+  .input(
+    z.object({
+      dependencies: z.array(
+        z.object({
+          name: z.string(),
+          version: z.string().optional(),
+        }),
+      ),
+      type: z.enum(['prod', 'dev']),
+    }),
+  )
+  .mutation(
+    async ({
+      ctx: { xCacheId, projectPath, manager },
+      input: { dependencies, type },
+    }) => {
+      let singleAddUpdate: DependencyInstalled | undefined = undefined;
 
-  if (manager === 'yarn') {
-    singleAddUpdate = await addYarnDependencies(projectPathDecoded, body, type);
-  } else if (manager === 'pnpm') {
-    singleAddUpdate = await addPnpmDependencies(projectPathDecoded, body, type);
-  } else {
-    singleAddUpdate = await addNpmDependencies(projectPathDecoded, body, type);
-  }
+      if (manager === 'yarn') {
+        singleAddUpdate = await addYarnDependencies(
+          projectPath,
+          dependencies,
+          type,
+        );
+      } else if (manager === 'pnpm') {
+        singleAddUpdate = await addPnpmDependencies(
+          projectPath,
+          dependencies,
+          type,
+        );
+      } else {
+        singleAddUpdate = await addNpmDependencies(
+          projectPath,
+          dependencies,
+          type,
+        );
+      }
 
-  if (singleAddUpdate) {
-    updateInCache(xCacheId + manager + projectPathDecoded, singleAddUpdate);
-  } else {
-    clearCache(xCacheId + manager + projectPathDecoded);
-  }
+      if (singleAddUpdate) {
+        updateInCache(xCacheId + manager + projectPath, singleAddUpdate);
+      } else {
+        clearCache(xCacheId + manager + projectPath);
+      }
 
-  return {};
-};
+      return {};
+    },
+  );

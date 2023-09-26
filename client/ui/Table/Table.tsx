@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-import type { CSSType } from '../../Styled';
+// import type { CSSType } from '../../Styled';
 import { Loader } from '../Loader';
 import type { IColumn, TableRowAbstract } from './components/TbodyRow';
 import { TbodyRow } from './components/TbodyRow';
@@ -22,21 +22,21 @@ export interface Props<T extends TableRowAbstract> {
   readonly maxHeight?: string;
 }
 
-const Wrapper = styled.div<{ maxHeight?: string }>`
-  border: 1px solid #dfd7ca;
-  border-radius: 2px;
-  margin-top: 7px;
-  flex: 1;
-  position: relative;
-  overflow-y: scroll;
+// const Wrapper = styled.div<{ maxHeight?: string }>`
+//   border: 1px solid #dfd7ca;
+//   border-radius: 2px;
+//   margin-top: 7px;
+//   flex: 1;
+//   position: relative;
+//   overflow-y: scroll;
 
-  ${({ maxHeight }): CSSType =>
-    maxHeight
-      ? css`
-          max-height: ${maxHeight};
-        `
-      : ''}
-`;
+//   ${({ maxHeight }): CSSType =>
+//     maxHeight
+//       ? css`
+//           max-height: ${maxHeight};
+//         `
+//       : ''}
+// `;
 
 const Info = styled.div`
   position: absolute;
@@ -49,19 +49,11 @@ const Info = styled.div`
   pointer-events: none;
 `;
 
-const Thead = styled.thead`
-  position: sticky;
-  top: 0;
-  background: white;
-  box-shadow: inset 0 -2px 0 #dfd7ca;
-  z-index: 1;
-`;
-
-const Tbody = styled.tbody`
-  td {
-    padding: 3px;
-  }
-`;
+// const Tbody = styled.tbody`
+//   td {
+//     padding: 3px;
+//   }
+// `;
 
 export const Table = <T extends TableRowAbstract>({
   columns,
@@ -75,8 +67,9 @@ Props<T>): JSX.Element => {
   const { sort, sortReversed, onSortChange, tableDataSorted } =
     useTableSort(tableData);
 
+  //  maxHeight={maxHeight}
   return (
-    <Wrapper maxHeight={maxHeight}>
+    <div className="border-stone-300 border rounded overflow-y-scroll">
       <Info>
         {isEmpty ? <>empty...</> : null}
 
@@ -89,7 +82,7 @@ Props<T>): JSX.Element => {
       </Info>
 
       <table>
-        <Thead>
+        <thead className="sticky top-0 bg-white z-10 shadow-[inset_0_-1px_0_#dfd7ca]">
           <tr>
             {columns.map((column) => {
               return (
@@ -116,14 +109,14 @@ Props<T>): JSX.Element => {
               );
             })}
           </tr>
-        </Thead>
+        </thead>
 
-        <Tbody>
+        <tbody>
           {tableDataSorted?.map((row) => (
             <TbodyRow columns={columns} key={row.name} row={row} />
           ))}
-        </Tbody>
+        </tbody>
       </table>
-    </Wrapper>
+    </div>
   );
 };
